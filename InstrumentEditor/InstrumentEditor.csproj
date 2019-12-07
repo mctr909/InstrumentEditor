@@ -49,6 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form\EnvelopeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\EnvelopeForm.Designer.cs">
+      <DependentUpon>EnvelopeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\InstKeyAssignForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\InstKeyAssignForm.Designer.cs">
+      <DependentUpon>InstKeyAssignForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RiffChunk.cs" />
     <Compile Include="DLS\DLS.cs" />
     <Compile Include="DLS\Info.cs" />
@@ -107,6 +119,12 @@
     <Compile Include="Form\WaveSelectForm.Designer.cs">
       <DependentUpon>WaveSelectForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Form\EnvelopeForm.resx">
+      <DependentUpon>EnvelopeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\InstKeyAssignForm.resx">
+      <DependentUpon>InstKeyAssignForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\InstInfoForm.resx">
       <DependentUpon>InstInfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -192,6 +210,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Image\EnvSustain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\envelope.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

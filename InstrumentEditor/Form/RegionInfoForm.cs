@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using DLS;
+
 namespace InstrumentEditor {
     public partial class RegionInfoForm : Form {
         private DLS.DLS mDLS;
-        private DLS.RGN mRegion;
-        private DLS.CK_RGNH mHeader;
-        private DLS.CK_WSMP mSampler;
-        private DLS.CK_WLNK mWaveLink;
-        private DLS.ART mArt;
+        private RGN mRegion;
+        private CK_RGNH mHeader;
+        private CK_WSMP mSampler;
+        private CK_WLNK mWaveLink;
+        private ART mArt;
 
         private readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
@@ -24,7 +26,7 @@ namespace InstrumentEditor {
             mWaveLink = region.WaveLink;
 
             if (null != mRegion.Articulations && null != mRegion.Articulations.ART) {
-                mArt = new DLS.ART();
+                mArt = new ART();
                 foreach (var art in mRegion.Articulations.ART.List) {
                     mArt.List.Add(art.Key, art.Value);
                 }
@@ -55,7 +57,7 @@ namespace InstrumentEditor {
         }
 
         private void btnSelectWave_Click(object sender, EventArgs e) {
-            var ret = new DLS.RGN();
+            var ret = new RGN();
             ret.WaveLink = mWaveLink;
             var fm = new WaveSelectForm(mDLS, ret);
             fm.ShowDialog();
@@ -70,8 +72,7 @@ namespace InstrumentEditor {
                     mWaveLink.TableIndex.ToString("0000"),
                     wave.Info.Name
                 );
-            }
-            else {
+            } else {
                 btnEditWave.Enabled = false;
                 txtWave.Text = "";
             }
@@ -104,7 +105,7 @@ namespace InstrumentEditor {
 
             if (null != envelope1.Art && null != mRegion.Articulations) {
                 if (null == mRegion.Articulations.ART) {
-                    mRegion.Articulations.ART = new DLS.ART();
+                    mRegion.Articulations.ART = new ART();
                 }
 
                 mArt.List.Clear();
@@ -163,8 +164,7 @@ namespace InstrumentEditor {
 
                 Width = grbWave.Left + grbWave.Width + 24;
                 Height = btnAdd.Top + btnAdd.Height + 48;
-            }
-            else {
+            } else {
                 envelope1.Top = grbVolume.Top + grbVolume.Height + 6;
                 envelope1.Left = grbUnityNote.Left;
 
@@ -227,8 +227,7 @@ namespace InstrumentEditor {
                 btnEditWave.Enabled = false;
 
                 btnAdd.Text = "追加";
-            }
-            else {
+            } else {
                 numKeyLow.Value = mHeader.Key.Low;
                 numKeyHigh.Value = mHeader.Key.High;
                 numVelocityLow.Value = mHeader.Velocity.Low;
@@ -243,15 +242,13 @@ namespace InstrumentEditor {
                     var wave = mDLS.WavePool.List[(int)mWaveLink.TableIndex];
                     waveName = wave.Info.Name;
                     btnEditWave.Enabled = true;
-                }
-                else {
+                } else {
                     btnEditWave.Enabled = false;
                 }
 
                 if (uint.MaxValue == mWaveLink.TableIndex) {
                     txtWave.Text = "";
-                }
-                else {
+                } else {
                     txtWave.Text = string.Format(
                         "{0} {1}",
                         mWaveLink.TableIndex.ToString("0000"),
@@ -261,8 +258,7 @@ namespace InstrumentEditor {
 
                 if (0 < mSampler.LoopCount) {
                     chkLoop.Checked = true;
-                }
-                else {
+                } else {
                     chkLoop.Checked = false;
                 }
 

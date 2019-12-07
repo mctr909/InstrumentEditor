@@ -3,11 +3,13 @@ using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
 
+using DLS;
+
 namespace InstrumentEditor {
     public partial class MainForm : Form {
         private string mFilePath;
         private DLS.DLS mDLS;
-        private DLS.INS mClipboardInst;
+        private INS mClipboardInst;
 
         public MainForm() {
             InitializeComponent();
@@ -132,7 +134,7 @@ namespace InstrumentEditor {
         }
         #endregion
 
-        #region ツールストリップ
+        #region ツールストリップ[音色]
         private void tsbAddInst_Click(object sender, EventArgs e) {
             AddInst();
         }
@@ -149,6 +151,34 @@ namespace InstrumentEditor {
             PasteInst();
         }
 
+        private void tsbList_Click(object sender, EventArgs e) {
+            tsbList.Checked = true;
+            tsbKey.Checked = false;
+            tsbEnvelope.Checked = false;
+        }
+
+        private void tsbKey_Click(object sender, EventArgs e) {
+            tsbList.Checked = false;
+            tsbKey.Checked = true;
+            tsbEnvelope.Checked = false;
+        }
+
+        private void tsbEnvelope_Click(object sender, EventArgs e) {
+            tsbList.Checked = false;
+            tsbKey.Checked = false;
+            tsbEnvelope.Checked = true;
+        }
+
+        private void txtInstSearch_Leave(object sender, EventArgs e) {
+            DispInstList();
+        }
+
+        private void txtInstSearch_TextChanged(object sender, EventArgs e) {
+            DispInstList();
+        }
+        #endregion
+
+        #region ツールストリップ[波形]
         private void tsbAddWave_Click(object sender, EventArgs e) {
             AddWave();
         }
@@ -167,14 +197,6 @@ namespace InstrumentEditor {
 
         private void txtWaveSearch_TextChanged(object sender, EventArgs e) {
             DispWaveList();
-        }
-
-        private void txtInstSearch_Leave(object sender, EventArgs e) {
-            DispInstList();
-        }
-
-        private void txtInstSearch_TextChanged(object sender, EventArgs e) {
-            DispInstList();
         }
         #endregion
 
@@ -272,7 +294,7 @@ namespace InstrumentEditor {
                     continue;
                 }
 
-                var wave = new DLS.WAVE(filePath);
+                var wave = new WAVE(filePath);
                 mDLS.WavePool.List.Add(mDLS.WavePool.List.Count, wave);
             }
 
@@ -311,7 +333,7 @@ namespace InstrumentEditor {
             }
 
             //
-            var waveList = new Dictionary<int, DLS.WAVE>();
+            var waveList = new Dictionary<int, WAVE>();
             foreach (var wave in mDLS.WavePool.List) {
                 if (!deleteList.ContainsKey(wave.Key)) {
                     waveList.Add(waveList.Count, wave.Value);
@@ -387,8 +409,19 @@ namespace InstrumentEditor {
             if (null == inst) {
                 return;
             }
-            var fm = new InstInfoForm(mDLS, inst);
-            fm.ShowDialog();
+
+            if (tsbList.Checked) {
+                var fm = new InstInfoForm(mDLS, inst);
+                fm.ShowDialog();
+            }
+            if (tsbKey.Checked) {
+                var fm = new InstKeyAssignForm(mDLS, inst);
+                fm.ShowDialog();
+            }
+            if (tsbEnvelope.Checked) {
+                var fm = new EnvelopeForm(mDLS, inst);
+                fm.ShowDialog();
+            }
             DispInstList();
         }
 
@@ -426,21 +459,21 @@ namespace InstrumentEditor {
                 return;
             }
 
-            mClipboardInst = new DLS.INS();
+            mClipboardInst = new INS();
             mClipboardInst.Header = inst.Header;
 
             // Regions
-            mClipboardInst.Regions = new DLS.LRGN();
+            mClipboardInst.Regions = new LRGN();
             foreach (var rgn in inst.Regions.List) {
-                var tempRgn = new DLS.RGN();
+                var tempRgn = new RGN();
                 tempRgn.Header = rgn.Value.Header;
                 tempRgn.WaveLink = rgn.Value.WaveLink;
 
                 // Sampler
                 tempRgn.Sampler = rgn.Value.Sampler;
-                tempRgn.Loops = new Dictionary<int, DLS.WaveLoop>();
+                tempRgn.Loops = new Dictionary<int, WaveLoop>();
                 foreach (var loop in rgn.Value.Loops) {
-                    var tempLoop = new DLS.WaveLoop();
+                    var tempLoop = new WaveLoop();
                     tempLoop.Size = loop.Value.Size;
                     tempLoop.Type = loop.Value.Type;
                     tempLoop.Start = loop.Value.Start;
@@ -450,8 +483,8 @@ namespace InstrumentEditor {
 
                 // Articulations
                 if (null != rgn.Value.Articulations && null != rgn.Value.Articulations.ART) {
-                    tempRgn.Articulations = new DLS.LART();
-                    tempRgn.Articulations.ART = new DLS.ART();
+                    tempRgn.Articulations = new LART();
+                    tempRgn.Articulations.ART = new ART();
                     foreach (var art in rgn.Value.Articulations.ART.List) {
                         tempRgn.Articulations.ART.List.Add(art.Key, art.Value);
                     }
@@ -462,15 +495,15 @@ namespace InstrumentEditor {
 
             // Articulations
             if (null != inst.Articulations && null != inst.Articulations.ART) {
-                mClipboardInst.Articulations = new DLS.LART();
-                mClipboardInst.Articulations.ART = new DLS.ART();
+                mClipboardInst.Articulations = new LART();
+                mClipboardInst.Articulations.ART = new ART();
                 foreach (var art in inst.Articulations.ART.List) {
                     mClipboardInst.Articulations.ART.List.Add(art.Key, art.Value);
                 }
             }
 
             // Info
-            mClipboardInst.Info = new DLS.INFO();
+            mClipboardInst.Info = new INFO();
             mClipboardInst.Info.Name = inst.Info.Name;
             mClipboardInst.Info.Keywords = inst.Info.Keywords;
             mClipboardInst.Info.Comments = inst.Info.Comments;
@@ -516,17 +549,17 @@ namespace InstrumentEditor {
         }
         #endregion
 
-        private DLS.MidiLocale GetLocale(int index) {
+        private MidiLocale GetLocale(int index) {
             if (0 == lstInst.Items.Count) {
-                return new DLS.MidiLocale();
+                return new MidiLocale();
             }
             if (index < 0) {
-                return new DLS.MidiLocale();
+                return new MidiLocale();
             }
 
             var cols = lstInst.Items[index].ToString().Split('\t');
 
-            var locale = new DLS.MidiLocale();
+            var locale = new MidiLocale();
             locale.BankFlags = (byte)("Drum" == cols[0] ? 0x80 : 0x00);
             locale.ProgramNo = byte.Parse(cols[1]);
             locale.BankMSB = byte.Parse(cols[2]);
@@ -535,7 +568,7 @@ namespace InstrumentEditor {
             return locale;
         }
 
-        private DLS.INS GetSelectedInst() {
+        private INS GetSelectedInst() {
             var locale = GetLocale(lstInst.SelectedIndex);
             if (!mDLS.Instruments.List.ContainsKey(locale)) {
                 return null;
