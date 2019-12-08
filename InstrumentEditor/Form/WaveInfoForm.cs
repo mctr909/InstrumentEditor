@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading.Tasks;
 
+using DLS;
+
 namespace InstrumentEditor {
     unsafe public partial class WaveInfoForm : Form {
         private bool onWaveDisp;
@@ -14,7 +16,7 @@ namespace InstrumentEditor {
         private WavePlayback mWaveOut;
 
         private DLS.DLS mFile;
-        private DLS.WaveLoop mLoop;
+        private WaveLoop mLoop;
         private int mWaveIndex;
 
         private DoubleBufferBitmap mSpecBmp;
@@ -290,12 +292,12 @@ namespace InstrumentEditor {
 
         private void SetPosition() {
             //
-            picSpectrum.Height = 144;
+            picSpectrum.Height = 96;
             //
             hsbTime.Height = 21;
 
             //
-            picWave.Height = 192;
+            picWave.Height = 224;
             numWaveScale.Top = 0;
             picSpectrum.Top = numWaveScale.Top + numWaveScale.Height + 4;
             picWave.Top = picSpectrum.Top + picSpectrum.Height + 4;
@@ -311,7 +313,7 @@ namespace InstrumentEditor {
             ;
 
             //
-            picLoop.Height = 192;
+            picLoop.Height = 224;
             numLoopScale.Top = 0;
             picLoop.Top = numLoopScale.Top + numLoopScale.Height + 4;
 
@@ -361,7 +363,7 @@ namespace InstrumentEditor {
             mSpecTimeDiv = 1.0f / (float)delta / packSize;
             mSpecData = new byte[(int)(mWaveData.Length * mSpecTimeDiv)][];
 
-            var sp = new Spectrum(wave.Format.SampleRate, 27.5, 18, 144);
+            var sp = new Spectrum(wave.Format.SampleRate, 27.5, 12, 96);
             var time = 0.0;
             for (var s = 0; s < mSpecData.Length; ++s) {
                 for (var i = 0; i < packSize && time < mWaveData.Length; ++i) {

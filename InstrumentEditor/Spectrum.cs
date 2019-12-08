@@ -17,36 +17,26 @@ public class Spectrum {
         public double attenuation;
     }
 
-    private double[] mLevel;
     private BANK[] mBanks;
     private double mFreqToOmega;
-    private double mMax;
 
     private readonly double mScale;
     private readonly double mAttenuation;
 
-    public double[] Level {
-        get {
-            return mLevel;
-        }
-    }
+    public double[] Level { get; private set; }
 
     public int Banks {
         get {
-            return mLevel.Length;
+            return Level.Length;
         }
     }
 
-    public double Max {
-        get {
-            return mMax;
-        }
-    }
+    public double Max { get; private set; }
 
     public Spectrum(uint sampleRate, double baseFreq, uint octDiv, uint banks) {
         mFreqToOmega = 8.0 * Math.Atan(1.0) / sampleRate;
         mBanks = new BANK[banks];
-        mLevel = new double[banks];
+        Level = new double[banks];
         for (uint bankNo = 0; bankNo < banks; ++bankNo) {
             mBanks[bankNo] = new BANK();
             var width = 2.0 - 9.0 * bankNo / banks;
@@ -92,7 +82,7 @@ public class Spectrum {
     }
 
     public void SetLevel() {
-        mMax *= 1.0 - 1.0 / 1024.0;
+        Max *= 1.0 - 1.0 / 1024.0;
 
         for (uint b = 0; b < mBanks.Length; ++b) {
             var s = 1.0 - mAttenuation * b / mBanks.Length;
@@ -101,13 +91,13 @@ public class Spectrum {
             }
             mBanks[b].amplitude *= s;
 
-            mLevel[b] = mScale * mBanks[b].amplitude / s;
-            if (mLevel[b] < 1.0) {
-                mLevel[b] = 1.0;
+            Level[b] = mScale * mBanks[b].amplitude / s;
+            if (Level[b] < 1.0) {
+                Level[b] = 1.0;
             }
-            mLevel[b] = Math.Log10(mLevel[b]) / Math.Log10(mScale);
-            if (mMax < mLevel[b]) {
-                mMax = mLevel[b];
+            Level[b] = Math.Log10(Level[b]) / Math.Log10(mScale);
+            if (Max < Level[b]) {
+                Max = Level[b];
             }
         }
     }

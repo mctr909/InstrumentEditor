@@ -42,6 +42,7 @@
             this.ClientSize = new System.Drawing.Size(2177, 687);
             this.Controls.Add(this.ampEnvelope);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "EnvelopeForm";
             this.Text = "InstInfoForm";
             this.ResumeLayout(false);
