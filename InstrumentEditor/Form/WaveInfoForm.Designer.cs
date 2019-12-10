@@ -92,24 +92,24 @@
             this.picSpectrum.Location = new System.Drawing.Point(10, 51);
             this.picSpectrum.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.picSpectrum.Name = "picSpectrum";
-            this.picSpectrum.Size = new System.Drawing.Size(1681, 336);
+            this.picSpectrum.Size = new System.Drawing.Size(1652, 176);
             this.picSpectrum.TabIndex = 2;
             this.picSpectrum.TabStop = false;
             // 
             // hsbTime
             // 
-            this.hsbTime.Location = new System.Drawing.Point(10, 605);
+            this.hsbTime.Location = new System.Drawing.Point(10, 565);
             this.hsbTime.Name = "hsbTime";
-            this.hsbTime.Size = new System.Drawing.Size(1681, 28);
+            this.hsbTime.Size = new System.Drawing.Size(1652, 28);
             this.hsbTime.TabIndex = 3;
             // 
             // picWave
             // 
             this.picWave.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.picWave.Location = new System.Drawing.Point(10, 399);
+            this.picWave.Location = new System.Drawing.Point(10, 239);
             this.picWave.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.picWave.Name = "picWave";
-            this.picWave.Size = new System.Drawing.Size(1681, 200);
+            this.picWave.Size = new System.Drawing.Size(1652, 320);
             this.picWave.TabIndex = 4;
             this.picWave.TabStop = false;
             this.picWave.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picWave_MouseDown);
@@ -124,7 +124,7 @@
             // 
             // numWaveScale
             // 
-            this.numWaveScale.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numWaveScale.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.numWaveScale.Location = new System.Drawing.Point(211, 0);
             this.numWaveScale.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.numWaveScale.Maximum = new decimal(new int[] {
@@ -139,7 +139,7 @@
             0});
             this.numWaveScale.Name = "numWaveScale";
             this.numWaveScale.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numWaveScale.Size = new System.Drawing.Size(125, 37);
+            this.numWaveScale.Size = new System.Drawing.Size(125, 31);
             this.numWaveScale.TabIndex = 0;
             this.numWaveScale.Value = new decimal(new int[] {
             24,
@@ -151,10 +151,10 @@
             // picLoop
             // 
             this.picLoop.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.picLoop.Location = new System.Drawing.Point(10, 49);
+            this.picLoop.Location = new System.Drawing.Point(10, 43);
             this.picLoop.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.picLoop.Name = "picLoop";
-            this.picLoop.Size = new System.Drawing.Size(1681, 200);
+            this.picLoop.Size = new System.Drawing.Size(1652, 250);
             this.picLoop.TabIndex = 6;
             this.picLoop.TabStop = false;
             // 
@@ -170,14 +170,14 @@
             this.grbMain.Controls.Add(this.btnUpdate);
             this.grbMain.Location = new System.Drawing.Point(12, 96);
             this.grbMain.Name = "grbMain";
-            this.grbMain.Size = new System.Drawing.Size(1706, 645);
+            this.grbMain.Size = new System.Drawing.Size(1676, 604);
             this.grbMain.TabIndex = 5;
             this.grbMain.TabStop = false;
             this.grbMain.Text = "ループ範囲選択";
             // 
             // numWaveAmp
             // 
-            this.numWaveAmp.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numWaveAmp.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.numWaveAmp.Location = new System.Drawing.Point(350, 0);
             this.numWaveAmp.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.numWaveAmp.Maximum = new decimal(new int[] {
@@ -192,7 +192,7 @@
             0});
             this.numWaveAmp.Name = "numWaveAmp";
             this.numWaveAmp.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numWaveAmp.Size = new System.Drawing.Size(125, 37);
+            this.numWaveAmp.Size = new System.Drawing.Size(125, 31);
             this.numWaveAmp.TabIndex = 8;
             this.numWaveAmp.Value = new decimal(new int[] {
             1,
@@ -215,6 +215,7 @@
             // btnUpdate
             // 
             this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
+            this.btnUpdate.Enabled = false;
             this.btnUpdate.Location = new System.Drawing.Point(554, 0);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(199, 42);
@@ -230,16 +231,16 @@
             this.grbLoop.Controls.Add(this.numLoopScale);
             this.grbLoop.Controls.Add(this.picLoop);
             this.grbLoop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.grbLoop.Location = new System.Drawing.Point(12, 747);
+            this.grbLoop.Location = new System.Drawing.Point(12, 706);
             this.grbLoop.Name = "grbLoop";
-            this.grbLoop.Size = new System.Drawing.Size(1706, 261);
+            this.grbLoop.Size = new System.Drawing.Size(1676, 302);
             this.grbLoop.TabIndex = 6;
             this.grbLoop.TabStop = false;
             this.grbLoop.Text = "ループ範囲表示";
             // 
             // numLoopAmp
             // 
-            this.numLoopAmp.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numLoopAmp.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.numLoopAmp.Location = new System.Drawing.Point(350, 0);
             this.numLoopAmp.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.numLoopAmp.Maximum = new decimal(new int[] {
@@ -254,7 +255,7 @@
             0});
             this.numLoopAmp.Name = "numLoopAmp";
             this.numLoopAmp.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numLoopAmp.Size = new System.Drawing.Size(125, 37);
+            this.numLoopAmp.Size = new System.Drawing.Size(125, 31);
             this.numLoopAmp.TabIndex = 7;
             this.numLoopAmp.Value = new decimal(new int[] {
             1,
@@ -265,7 +266,7 @@
             // 
             // numLoopScale
             // 
-            this.numLoopScale.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numLoopScale.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.numLoopScale.Location = new System.Drawing.Point(211, 0);
             this.numLoopScale.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.numLoopScale.Maximum = new decimal(new int[] {
@@ -280,7 +281,7 @@
             0});
             this.numLoopScale.Name = "numLoopScale";
             this.numLoopScale.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.numLoopScale.Size = new System.Drawing.Size(125, 37);
+            this.numLoopScale.Size = new System.Drawing.Size(125, 31);
             this.numLoopScale.TabIndex = 0;
             this.numLoopScale.Value = new decimal(new int[] {
             40,
@@ -448,7 +449,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1736, 1020);
+            this.ClientSize = new System.Drawing.Size(1701, 1020);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.btnUpdateAutoTune);

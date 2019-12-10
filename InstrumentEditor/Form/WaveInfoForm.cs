@@ -143,6 +143,7 @@ namespace InstrumentEditor {
         private void btnUpdate_Click(object sender, EventArgs e) {
             if (0 < mFile.WavePool.List[mWaveIndex].Sampler.LoopCount) {
                 mFile.WavePool.List[mWaveIndex].Loops[0] = mLoop;
+                btnUpdate.Enabled = false;
             }
         }
 
@@ -222,6 +223,8 @@ namespace InstrumentEditor {
             onDragWave = false;
             onDragLoopBegin = false;
             onDragLoopEnd = false;
+            var fileLoop = mFile.WavePool.List[mWaveIndex].Loops[0];
+            btnUpdate.Enabled = fileLoop.Start != mLoop.Start || fileLoop.Length != mLoop.Length;
         }
 
         private void picWave_MouseMove(object sender, MouseEventArgs e) {
@@ -292,9 +295,9 @@ namespace InstrumentEditor {
 
         private void SetPosition() {
             //
-            picSpectrum.Height = 96;
+            picSpectrum.Height = 144;
             //
-            hsbTime.Height = 21;
+            hsbTime.Height = 19;
 
             //
             picWave.Height = 224;
@@ -363,7 +366,7 @@ namespace InstrumentEditor {
             mSpecTimeDiv = 1.0f / (float)delta / packSize;
             mSpecData = new byte[(int)(mWaveData.Length * mSpecTimeDiv)][];
 
-            var sp = new Spectrum(wave.Format.SampleRate, 27.5, 12, 96);
+            var sp = new Spectrum(wave.Format.SampleRate, 27.5, 18, 144);
             var time = 0.0;
             for (var s = 0; s < mSpecData.Length; ++s) {
                 for (var i = 0; i < packSize && time < mWaveData.Length; ++i) {
