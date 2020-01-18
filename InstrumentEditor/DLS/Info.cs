@@ -10,6 +10,7 @@ namespace DLS {
 
         public string ArchivalLocation = "";
         public string Artists = "";
+        public string Category = "";
         public string Commissioned = "";
         public string Comments = "";
         public string Copyright = "";
@@ -28,9 +29,9 @@ namespace DLS {
 
         public INFO() { }
 
-        public INFO(byte* ptr, byte* endPtr) {
-            while (ptr < endPtr) {
-                mInfo = (CK_INFO)Marshal.PtrToStructure((IntPtr)ptr, typeof(CK_INFO));
+        public INFO(IntPtr ptr, IntPtr endPtr) {
+            while (ptr.ToInt32() < endPtr.ToInt32()) {
+                mInfo = (CK_INFO)Marshal.PtrToStructure(ptr, typeof(CK_INFO));
                 ptr += sizeof(CK_INFO);
 
                 if (!Enum.IsDefined(typeof(CK_INFO.TYPE), mInfo.Type)) {
@@ -38,7 +39,7 @@ namespace DLS {
                 }
 
                 var temp = new byte[mInfo.Size];
-                Marshal.Copy((IntPtr)ptr, temp, 0, temp.Length);
+                Marshal.Copy(ptr, temp, 0, temp.Length);
                 var text = mEnc.GetString(temp).Replace("\0", "");
 
                 ptr += mInfo.Size + (2 - (mInfo.Size % 2)) % 2;
@@ -49,6 +50,9 @@ namespace DLS {
                     break;
                 case CK_INFO.TYPE.IART:
                     Artists = text;
+                    break;
+                case CK_INFO.TYPE.ICAT:
+                    Category = text;
                     break;
                 case CK_INFO.TYPE.ICMS:
                     Commissioned = text;
@@ -106,6 +110,7 @@ namespace DLS {
 
                 WriteText(bw, CK_INFO.TYPE.IARL, ArchivalLocation);
                 WriteText(bw, CK_INFO.TYPE.IART, Artists);
+                WriteText(bw, CK_INFO.TYPE.ICAT, Category);
                 WriteText(bw, CK_INFO.TYPE.ICMS, Commissioned);
                 WriteText(bw, CK_INFO.TYPE.ICMT, Comments);
                 WriteText(bw, CK_INFO.TYPE.ICOP, Copyright);
@@ -125,7 +130,7 @@ namespace DLS {
                 var ms2 = new MemoryStream();
                 var bw2 = new BinaryWriter(ms2);
                 if (0 < ms.Length) {
-                    bw2.Write((uint)CHUNK_TYPE.LIST);
+                    bw2.Write(new char[] { 'L', 'I', 'S', 'T' });
                     bw2.Write((uint)(ms.Length + 4));
                     bw2.Write((uint)LIST_TYPE.INFO);
                     bw2.Write(ms.ToArray());

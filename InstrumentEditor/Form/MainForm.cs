@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.IO;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 using DLS;
 
@@ -42,15 +43,13 @@ namespace InstrumentEditor {
             using (var fs = new FileStream(filePath, FileMode.Open))
             using (var br = new BinaryReader(fs)) {
                 br.ReadUInt32();
-                var size = br.ReadUInt32();
+                var size = br.ReadInt32();
                 br.ReadUInt32();
 
-                var mBuff = new byte[size - 4];
-                fs.Read(mBuff, 0, mBuff.Length);
-
-                fixed (byte* p = &mBuff[0]) {
-                    mDLS = new DLS.DLS(p, p + mBuff.Length);
-                }
+                var pBuff = Marshal.AllocHGlobal(size - 4);
+                Marshal.Copy(br.ReadBytes(size - 4), 0, pBuff, size - 4);
+                mDLS = new DLS.DLS(pBuff, pBuff + size - 4);
+                Marshal.FreeHGlobal(pBuff);
 
                 fs.Close();
             }

@@ -61,14 +61,11 @@
     <Compile Include="Form\InstKeyAssignForm.Designer.cs">
       <DependentUpon>InstKeyAssignForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="InstrumentsFile.cs" />
     <Compile Include="RiffChunk.cs" />
     <Compile Include="DLS\DLS.cs" />
     <Compile Include="DLS\Info.cs" />
-    <Compile Include="DLS\Lart.cs" />
-    <Compile Include="DLS\Lins.cs" />
-    <Compile Include="DLS\Lrgn.cs" />
     <Compile Include="DLS\define.cs" />
-    <Compile Include="DLS\wvpl.cs" />
     <Compile Include="DoubleBufferBitmap.cs" />
     <Compile Include="DoubleBufferGraphic.cs" />
     <Compile Include="FFT.cs" />

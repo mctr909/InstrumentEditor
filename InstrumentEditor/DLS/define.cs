@@ -2,24 +2,6 @@
 using System.Runtime.InteropServices;
 
 namespace DLS {
-    public enum CHUNK_TYPE : uint {
-        COLH = 0x686C6F63,
-        VERS = 0x73726576,
-        MSYN = 0x6E79736D,
-        PTBL = 0x6C627470,
-        LIST = 0x5453494C,
-        DLID = 0x64696C64,
-        GUID = 0x64697567,
-        INSH = 0x68736E69,
-        RGNH = 0x686E6772,
-        WSMP = 0x706D7377,
-        WLNK = 0x6B6E6C77,
-        ART1 = 0x31747261,
-        ART2 = 0x32747261,
-        FMT_ = 0x20746D66,
-        DATA = 0x61746164
-    }
-
     public enum LIST_TYPE : uint {
         LINS = 0x736E696C,
         WVPL = 0x6C707677,
@@ -528,11 +510,12 @@ namespace DLS {
         public TYPE Type;
 
         [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
-        public uint Size;
+        public int Size;
 
         public enum TYPE : uint {
             IARL = 0x4C524149, // ArchivalLocation
             IART = 0x54524149, // Artists
+            ICAT = 0x54414349, // Category
             ICMS = 0x534D4349, // Commissioned
             ICMT = 0x544D4349, // Comments
             ICOP = 0x504F4349, // Copyright

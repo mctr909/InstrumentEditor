@@ -1,19 +1,21 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 
 unsafe public class RIFF {
-    protected uint mChunkType;
-    protected uint mChunkSize;
+    protected string mChunkType;
+    protected int mChunkSize;
     protected uint mListType;
 
     protected RIFF() { }
 
-    protected RIFF(byte* ptr, byte* endPtr) {
-        while (ptr < endPtr) {
-            mChunkType = *(uint*)ptr;
+    protected RIFF(IntPtr ptr, IntPtr endPtr) {
+        while (ptr.ToInt32() < endPtr.ToInt32()) {
+            mChunkType = Marshal.PtrToStringAnsi(ptr, 4);
             ptr += sizeof(uint);
-            mChunkSize = *(uint*)ptr;
+            mChunkSize = *(int*)ptr;
             ptr += sizeof(uint);
-            if (0x5453494C == mChunkType) {
+            if ("RIFF" == mChunkType) {
                 mListType = *(uint*)ptr;
                 ReadList(ptr + sizeof(uint), ptr + mChunkSize);
             } else {
@@ -42,9 +44,9 @@ unsafe public class RIFF {
         }
     }
 
-    protected virtual void ReadChunk(byte* ptr) { }
+    protected virtual void ReadChunk(IntPtr ptr) { }
 
-    protected virtual void ReadList(byte* ptr, byte* endPtr) { }
+    protected virtual void ReadList(IntPtr ptr, IntPtr endPtr) { }
 
     protected virtual void WriteChunk(BinaryWriter bw) { }
 
