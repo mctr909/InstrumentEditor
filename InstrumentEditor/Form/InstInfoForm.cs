@@ -25,7 +25,7 @@ namespace InstrumentEditor {
 
         private void txtInstName_Leave(object sender, EventArgs e) {
             if (null == mINS.Info) {
-                mINS.Info = new INFO();
+                mINS.Info = new Riff.Info();
             }
             mINS.Info.Name = txtInstName.Text.Trim();
             Text = mINS.Info.Name;
@@ -33,7 +33,7 @@ namespace InstrumentEditor {
 
         private void cmbInstKeyword_Leave(object sender, EventArgs e) {
             if (null == mINS.Info) {
-                mINS.Info = new INFO();
+                mINS.Info = new Riff.Info();
             }
             mINS.Info.Keywords = cmbInstKeyword.Text.Trim();
             setCategoryList();
@@ -41,14 +41,14 @@ namespace InstrumentEditor {
 
         private void cmbInstKeyword_SelectedIndexChanged(object sender, EventArgs e) {
             if (null == mINS.Info) {
-                mINS.Info = new INFO();
+                mINS.Info = new Riff.Info();
             }
             mINS.Info.Keywords = cmbInstKeyword.Text;
         }
 
         private void txtInstComment_Leave(object sender, EventArgs e) {
             if (null == mINS.Info) {
-                mINS.Info = new INFO();
+                mINS.Info = new Riff.Info();
             }
             mINS.Info.Comments = txtInstComment.Text;
         }

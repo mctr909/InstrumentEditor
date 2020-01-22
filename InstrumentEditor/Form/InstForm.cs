@@ -192,7 +192,7 @@ namespace InstrumentEditor {
 			if (null != mINS) {
 				mINS.Header.Locale = inst.Header.Locale;
 				if (null == mINS.Info) {
-					mINS.Info = new DLS.INFO();
+					mINS.Info = new Riff.Info();
 				}
 				mINS.Info.Name = inst.Info.Name;
 				inst = mINS;

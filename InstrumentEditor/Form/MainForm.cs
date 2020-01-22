@@ -502,7 +502,7 @@ namespace InstrumentEditor {
             }
 
             // Info
-            mClipboardInst.Info = new INFO();
+            mClipboardInst.Info = new Riff.Info();
             mClipboardInst.Info.Name = inst.Info.Name;
             mClipboardInst.Info.Keywords = inst.Info.Keywords;
             mClipboardInst.Info.Comments = inst.Info.Comments;
