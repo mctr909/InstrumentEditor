@@ -7,6 +7,20 @@ namespace Riff {
     public class Chunk {
         protected Chunk() { }
 
+        protected Chunk(string filePath) {
+            using (var fs = new FileStream(filePath, FileMode.Open))
+            using (var br = new BinaryReader(fs)) {
+                var size = (int)fs.Length;
+                var pBuff = Marshal.AllocHGlobal(size);
+
+                Marshal.Copy(br.ReadBytes(size), 0, pBuff, size);
+                main(pBuff, pBuff + size);
+
+                Marshal.FreeHGlobal(pBuff);
+                fs.Close();
+            }
+        }
+
         protected Chunk(IntPtr ptr, IntPtr ptrTerm) {
             main(ptr, ptrTerm);
         }

@@ -508,7 +508,7 @@ namespace DLS {
 
         public DLS() { }
 
-        public DLS(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public DLS(string filePath) : base(filePath) { }
 
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {

@@ -91,6 +91,7 @@
     <Compile Include="Form\InstInfoForm.Designer.cs">
       <DependentUpon>InstInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SF2.cs" />
     <Compile Include="Spectrum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

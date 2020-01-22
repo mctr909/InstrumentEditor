@@ -40,19 +40,7 @@ namespace InstrumentEditor {
                 return;
             }
 
-            using (var fs = new FileStream(filePath, FileMode.Open))
-            using (var br = new BinaryReader(fs)) {
-                br.ReadUInt32();
-                var size = br.ReadInt32();
-                br.ReadUInt32();
-
-                var pBuff = Marshal.AllocHGlobal(size - 4);
-                Marshal.Copy(br.ReadBytes(size - 4), 0, pBuff, size - 4);
-                mDLS = new DLS.DLS(pBuff, pBuff + size - 4);
-                Marshal.FreeHGlobal(pBuff);
-
-                fs.Close();
-            }
+            mDLS = new DLS.DLS(filePath);
 
             txtInstSearch.Text = "";
             txtWaveSearch.Text = "";
