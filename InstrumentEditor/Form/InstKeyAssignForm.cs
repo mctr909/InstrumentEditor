@@ -6,7 +6,7 @@ using DLS;
 
 namespace InstrumentEditor {
     public partial class InstKeyAssignForm : Form {
-        private DLS.DLS mDLS;
+        private DLS.File mDLS;
         private INS mINS;
         private bool mOnRange;
         private const int KEY_WIDTH = 10;
@@ -15,7 +15,7 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public InstKeyAssignForm(DLS.DLS dls, INS ins) {
+        public InstKeyAssignForm(DLS.File dls, INS ins) {
             mDLS = dls;
             mINS = ins;
             InitializeComponent();

@@ -498,7 +498,7 @@ namespace DLS {
     }
     #endregion
 
-    public class DLS : Chunk {
+    public class File : Chunk {
         private CK_VERS mVersion;
         private uint mMSYN = 1;
 
@@ -506,9 +506,9 @@ namespace DLS {
         public WVPL WavePool = new WVPL();
         public Info Info = new Info();
 
-        public DLS() { }
+        public File() { }
 
-        public DLS(string filePath) : base(filePath) { }
+        public File(string filePath) : base(filePath) { }
 
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {
@@ -545,10 +545,10 @@ namespace DLS {
         }
 
         public void ToInst(string filePath) {
-            var instFile = new INST.File();
+            var instFile = new Instruments.File();
 
             foreach (var wave in WavePool.List.Values) {
-                var waveInfo = new INST.WaveInfo();
+                var waveInfo = new Instruments.WaveInfo();
                 waveInfo.header.sampleRate = wave.Format.SampleRate;
                 if (0 < wave.Sampler.LoopCount) {
                     waveInfo.header.loopEnable = 1;
@@ -569,13 +569,13 @@ namespace DLS {
                 Marshal.Copy(ptr, waveInfo.data, 0, waveInfo.data.Length);
                 Marshal.FreeHGlobal(ptr);
 
-                waveInfo.infoList.Add("INAM", wave.Info.Name);
-                waveInfo.infoList.Add("ICAT", wave.Info.Keywords);
+                waveInfo.Info.Name = wave.Info.Name;
+                waveInfo.Info.Category = wave.Info.Keywords;
                 instFile.waves.Add(waveInfo);
             }
 
             foreach (var inst in Instruments.List) {
-                var ins = new INST.InstInfo();
+                var ins = new Instruments.InstInfo();
                 ins.header.flag = inst.Key.BankFlags;
                 ins.header.bankMSB = inst.Key.BankMSB;
                 ins.header.bankLSB = inst.Key.BankLSB;
@@ -586,7 +586,7 @@ namespace DLS {
                         if (a.Source != Connection.SRC_TYPE.NONE || a.Control != Connection.SRC_TYPE.NONE) {
                             continue;
                         }
-                        var art = new INST.ART();
+                        var art = new Instruments.ART();
                         art.type = (uint)a.Destination;
                         art.value = (float)a.Value;
                         switch (a.Destination) {
@@ -613,7 +613,7 @@ namespace DLS {
                     }
                 }
 
-                var lyr = new INST.Layer();
+                var lyr = new Instruments.Layer();
                 lyr.header.keyLo = 0;
                 lyr.header.keyHi = 127;
                 lyr.header.velLo = 0;
@@ -621,7 +621,7 @@ namespace DLS {
                 lyr.header.instIdx = 0xFFFFFFFF;
 
                 foreach (var r in inst.Value.Regions.List) {
-                    var rgn = new INST.Region();
+                    var rgn = new Instruments.Region();
                     rgn.header.keyLo = (byte)r.Key.Key.Low;
                     rgn.header.keyHi = (byte)r.Key.Key.High;
                     rgn.header.velLo = (byte)r.Key.Velocity.Low;
@@ -633,7 +633,7 @@ namespace DLS {
                             if (a.Source != Connection.SRC_TYPE.NONE || a.Control != Connection.SRC_TYPE.NONE) {
                                 continue;
                             }
-                            var art = new INST.ART();
+                            var art = new Instruments.ART();
                             art.type = (uint)a.Destination;
                             art.value = (float)a.Value;
                             switch (a.Destination) {
@@ -690,9 +690,9 @@ namespace DLS {
             bw.Write((uint)4);
             bw.Write(mMSYN);
 
-            Instruments.Write(bw);
+            //Instruments.Write(bw);
             WavePool.Write(bw);
-            Info.Write(bw);
+            //Info.Write(bw);
 
             var fs = new FileStream(filePath, FileMode.Create);
             var bw2 = new BinaryWriter(fs);
@@ -1020,8 +1020,11 @@ namespace DLS {
                 bwWave.Write(wav.Value.Bytes);
             }
 
-            if (0 < msWave.Length) {
+            if (0 < msPtbl.Length) {
                 bw.Write(msPtbl.ToArray());
+            }
+
+            if (0 < msWave.Length) {
                 bw.Write("LIST".ToCharArray());
                 bw.Write((uint)(msWave.Length + 4));
                 bw.Write("wvpl".ToCharArray());
@@ -1036,6 +1039,8 @@ namespace DLS {
         public Dictionary<int, WaveLoop> Loops = new Dictionary<int, WaveLoop>();
         public byte[] Data;
         public Info Info = new Info();
+
+        public WAVE() { }
 
         public WAVE(string filePath) {
             FileStream fs = new FileStream(filePath, FileMode.Open);
@@ -1124,6 +1129,7 @@ namespace DLS {
 
         protected override string Write(BinaryWriter bw) {
             var data = Sampler.Bytes;
+
             bw.Write("wsmp".ToCharArray());
             bw.Write((uint)(data.Length + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
             bw.Write(data);

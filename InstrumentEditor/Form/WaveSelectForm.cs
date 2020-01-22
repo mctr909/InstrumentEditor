@@ -3,10 +3,10 @@ using System.Windows.Forms;
 
 namespace InstrumentEditor {
     public partial class WaveSelectForm : Form {
-        private DLS.DLS mDLS;
+        private DLS.File mDLS;
         private DLS.RGN mRegion;
 
-        public WaveSelectForm(DLS.DLS dls, DLS.RGN region) {
+        public WaveSelectForm(DLS.File dls, DLS.RGN region) {
             InitializeComponent();
 
             mDLS = dls;

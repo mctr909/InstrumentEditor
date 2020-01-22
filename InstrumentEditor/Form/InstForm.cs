@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace InstrumentEditor {
 	public partial class InstForm : Form {
-		private DLS.DLS mDLS;
+		private DLS.File mDLS;
 		private DLS.INS mINS;
 
 		private readonly string[] GM_INST_NAME = new string[] {
@@ -137,13 +137,13 @@ namespace InstrumentEditor {
 			"Gunshot"
 		};
 
-		public InstForm(DLS.DLS dls) {
+		public InstForm(DLS.File dls) {
 			InitializeComponent();
 			StartPosition = FormStartPosition.CenterParent;
 			mDLS = dls;
 		}
 
-		public InstForm(DLS.DLS dls, DLS.INS ins) {
+		public InstForm(DLS.File dls, DLS.INS ins) {
 			InitializeComponent();
 			StartPosition = FormStartPosition.CenterParent;
 			mDLS = dls;

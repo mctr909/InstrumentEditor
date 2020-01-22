@@ -9,13 +9,13 @@ using DLS;
 namespace InstrumentEditor {
     public partial class MainForm : Form {
         private string mFilePath;
-        private DLS.DLS mDLS;
+        private DLS.File mDLS;
         private INS mClipboardInst;
 
         public MainForm() {
             InitializeComponent();
             SetTabSize();
-            mDLS = new DLS.DLS();
+            mDLS = new DLS.File();
         }
 
         private void Form1_SizeChanged(object sender, EventArgs e) {
@@ -24,7 +24,7 @@ namespace InstrumentEditor {
 
         #region メニューバー[ファイル]
         private void 新規作成NToolStripMenuItem_Click(object sender, EventArgs e) {
-            mDLS = new DLS.DLS();
+            mDLS = new DLS.File();
             DispInstList();
             DispWaveList();
             tabControl.SelectedIndex = 0;
@@ -33,14 +33,24 @@ namespace InstrumentEditor {
 
         unsafe private void 開くOToolStripMenuItem_Click(object sender, EventArgs e) {
             openFileDialog1.FileName = "";
-            openFileDialog1.Filter = "DLSファイル(*.dls)|*.dls";
+            openFileDialog1.Filter = "DLSファイル(*.dls)|*.dls|SF2ファイル(*.sf2)|*.sf2";
             openFileDialog1.ShowDialog();
             var filePath = openFileDialog1.FileName;
-            if (!File.Exists(filePath)) {
+            if (!System.IO.File.Exists(filePath)) {
                 return;
             }
 
-            mDLS = new DLS.DLS(filePath);
+            switch(Path.GetExtension(filePath)) {
+            case ".dls":
+                mDLS = new DLS.File(filePath);
+                break;
+            case ".sf2":
+                var sf2 = new SF2.SF2(filePath);
+                sf2.ToInst(filePath);
+                break;
+            case ".ins":
+                break;
+            }
 
             txtInstSearch.Text = "";
             txtWaveSearch.Text = "";
@@ -57,7 +67,7 @@ namespace InstrumentEditor {
         }
 
         private void 上書き保存ToolStripMenuItem_Click(object sender, EventArgs e) {
-            if (string.IsNullOrWhiteSpace(mFilePath) || !File.Exists(mFilePath)) {
+            if (string.IsNullOrWhiteSpace(mFilePath) || !System.IO.File.Exists(mFilePath)) {
                 名前を付けて保存ToolStripMenuItem_Click(sender, e);
             }
             mDLS.Save(mFilePath);
@@ -277,7 +287,7 @@ namespace InstrumentEditor {
             var filePaths = openFileDialog1.FileNames;
 
             foreach (var filePath in filePaths) {
-                if (!File.Exists(filePath)) {
+                if (!System.IO.File.Exists(filePath)) {
                     continue;
                 }
 

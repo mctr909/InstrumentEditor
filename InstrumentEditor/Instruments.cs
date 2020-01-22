@@ -4,7 +4,9 @@ using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace INST {
+using Riff;
+
+namespace Instruments {
     #region struct
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct WPTR {
@@ -122,7 +124,7 @@ namespace INST {
     public class WaveInfo {
         public WAVH header;
         public Int16[] data = null;
-        public Dictionary<string, string> infoList = new Dictionary<string, string>();
+        public Info Info = new Info();
 
         public KeyValuePair<WPTR, byte[]> Write() {
             var msWave = new MemoryStream();
@@ -160,31 +162,7 @@ namespace INST {
                 Marshal.FreeHGlobal(ptr);
             }
 
-            if (0 < infoList.Count) {
-                var ms = new MemoryStream();
-                var bw = new BinaryWriter(ms);
-                bw.Write(new char[] { 'L', 'I', 'S', 'T' });
-                bw.Write(0xFFFFFFFF);
-                bw.Write(new char[] { 'I', 'N', 'F', 'O' });
-                foreach (var info in infoList) {
-                    var arrId = new byte[4];
-                    Encoding.ASCII.GetBytes(info.Key, 0, 4, arrId, 0);
-                    var arrText = Encoding.ASCII.GetBytes(info.Value);
-                    bw.Write(arrId);
-                    if (0 == arrText.Length % 2) {
-                        bw.Write(arrText.Length);
-                        bw.Write(arrText);
-                    } else {
-                        bw.Write(arrText.Length + 1);
-                        bw.Write(arrText);
-                        bw.Write((byte)0);
-                    }
-                }
-                bw.Seek(4, SeekOrigin.Begin);
-                bw.Write((uint)ms.Length - 8);
-
-                bwWave.Write(ms.ToArray());
-            }
+            Info.Write(bwWave);
 
             msWave.Seek(4, SeekOrigin.Begin);
             bwWave.Write((uint)msWave.Length - 8);

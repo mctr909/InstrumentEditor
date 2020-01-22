@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 
 using Riff;
+using DLS;
 
 namespace SF2 {
     #region enum
@@ -209,9 +210,10 @@ namespace SF2 {
 
         public SF2(string path) : base(path) {
             mPath = path;
-            OutputPresetList();
-            OutputInstList();
-            OutputSampleList();
+            //OutputPresetList();
+            //OutputInstList();
+            //OutputSampleList();
+            ToInst(path);
         }
 
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
@@ -352,6 +354,48 @@ namespace SF2 {
             }
             sw.Close();
             sw.Dispose();
+        }
+
+        public void ToInst(string filePath) {
+            var instFile = new DLS.File();
+
+            for (var idx = 0; idx < mPdta.SampleList.Count - 1; idx++) {
+                var smpl = mPdta.SampleList[idx];
+                var wi = new WAVE();
+                wi.Format.Tag = 1;
+                wi.Format.SampleRate = smpl.sampleRate;
+                wi.Format.Channels = 1;
+                wi.Format.Bits = 16;
+                wi.Format.BlockAlign = 2;
+                wi.Format.BytesPerSec = smpl.sampleRate * 2;
+
+                wi.Sampler.UnityNote = smpl.originalKey;
+
+                if (1 == (byte)(smpl.type & 1)) {
+                    var loop = new WaveLoop();
+                    loop.Size = 8;
+                    loop.Start = smpl.loopstart - smpl.start;
+                    loop.Length = smpl.loopend - smpl.loopstart + 1;
+                    wi.Sampler.LoopCount = 1;
+                    wi.Loops.Add(0, loop);
+                }
+
+                wi.Info.Name = Encoding.ASCII.GetString(smpl.name);
+
+                var wavePos = (int)(smpl.start * 2);
+                var waveLen = (int)(smpl.end - smpl.start + 1) * 2;
+                var wavePtr = Marshal.AllocHGlobal(waveLen);
+                wi.Data = new byte[waveLen];
+
+                Marshal.Copy(mSdta.Data, wavePos, wavePtr, waveLen);
+                Marshal.Copy(wavePtr, wi.Data, 0, waveLen);
+                Marshal.FreeHGlobal(wavePtr);
+
+                instFile.WavePool.List.Add(idx, wi);
+            }
+
+            instFile.Save(Path.GetDirectoryName(filePath)
+                + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".dls");
         }
     }
 
@@ -647,14 +691,15 @@ namespace SF2 {
     }
 
     public class SDTA : Chunk {
-        public IntPtr pData { get; private set; }
+        public byte[] Data { get; private set; }
 
         public SDTA(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
 
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {
             case "smpl":
-                pData = ptr;
+                Data = new byte[chunkSize];
+                Marshal.Copy(ptr, Data, 0, chunkSize);
                 break;
             default:
                 break;

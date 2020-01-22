@@ -4,10 +4,10 @@ using DLS;
 
 namespace InstrumentEditor {
 	public partial class EnvelopeForm : Form {
-        private DLS.DLS mDLS;
+        private DLS.File mDLS;
         private INS mINS;
 
-        public EnvelopeForm(DLS.DLS dls, INS ins) {
+        public EnvelopeForm(DLS.File dls, INS ins) {
             mDLS = dls;
             mINS = ins;
             InitializeComponent();

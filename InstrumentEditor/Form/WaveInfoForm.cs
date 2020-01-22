@@ -15,7 +15,7 @@ namespace InstrumentEditor {
 
         private WavePlayback mWaveOut;
 
-        private DLS.DLS mFile;
+        private DLS.File mFile;
         private WaveLoop mLoop;
         private int mWaveIndex;
 
@@ -41,7 +41,7 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public WaveInfoForm(DLS.DLS dls, int index) {
+        public WaveInfoForm(DLS.File dls, int index) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 

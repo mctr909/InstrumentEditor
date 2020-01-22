@@ -5,10 +5,10 @@ using DLS;
 
 namespace InstrumentEditor {
 	public partial class InstInfoForm : Form {
-        private DLS.DLS mDLS;
+        private DLS.File mDLS;
         private INS mINS;
 
-        public InstInfoForm(DLS.DLS dls, INS ins) {
+        public InstInfoForm(DLS.File dls, INS ins) {
             mDLS = dls;
             mINS = ins;
             InitializeComponent();

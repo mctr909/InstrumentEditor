@@ -5,7 +5,7 @@ using DLS;
 
 namespace InstrumentEditor {
     public partial class RegionInfoForm : Form {
-        private DLS.DLS mDLS;
+        private DLS.File mDLS;
         private RGN mRegion;
         private CK_RGNH mHeader;
         private CK_WSMP mSampler;
@@ -16,7 +16,7 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionInfoForm(DLS.DLS dls, DLS.RGN region) {
+        public RegionInfoForm(DLS.File dls, DLS.RGN region) {
             InitializeComponent();
 
             mDLS = dls;
