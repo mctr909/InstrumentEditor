@@ -60,10 +60,10 @@ namespace Instruments {
     #endregion
 
     public class File {
-        public List<WaveInfo> waves = new List<WaveInfo>();
-        public List<InstInfo> instList = new List<InstInfo>();
+        public List<Wave> waves = new List<Wave>();
+        public List<Inst> instList = new List<Inst>();
 
-        public void Write(string path) {
+        public void Save(string path) {
             var fs = new FileStream(path, FileMode.Create);
             var bw = new BinaryWriter(fs);
 
@@ -121,7 +121,7 @@ namespace Instruments {
         }
     }
 
-    public class WaveInfo {
+    public class Wave {
         public WAVH header;
         public Int16[] data = null;
         public Info Info = new Info();
@@ -171,7 +171,7 @@ namespace Instruments {
         }
     }
 
-    public class InstInfo {
+    public class Inst {
         public INSH header;
         public List<Layer> layers = new List<Layer>();
         public List<ART> arts = new List<ART>();

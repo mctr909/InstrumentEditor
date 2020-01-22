@@ -548,7 +548,7 @@ namespace DLS {
             var instFile = new Instruments.File();
 
             foreach (var wave in WavePool.List.Values) {
-                var waveInfo = new Instruments.WaveInfo();
+                var waveInfo = new Instruments.Wave();
                 waveInfo.header.sampleRate = wave.Format.SampleRate;
                 if (0 < wave.Sampler.LoopCount) {
                     waveInfo.header.loopEnable = 1;
@@ -575,7 +575,7 @@ namespace DLS {
             }
 
             foreach (var inst in Instruments.List) {
-                var ins = new Instruments.InstInfo();
+                var ins = new Instruments.Inst();
                 ins.header.flag = inst.Key.BankFlags;
                 ins.header.bankMSB = inst.Key.BankMSB;
                 ins.header.bankLSB = inst.Key.BankLSB;
@@ -669,7 +669,7 @@ namespace DLS {
                 instFile.instList.Add(ins);
             }
 
-            instFile.Write(Path.GetDirectoryName(filePath)
+            instFile.Save(Path.GetDirectoryName(filePath)
                 + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".ins");
         }
 
