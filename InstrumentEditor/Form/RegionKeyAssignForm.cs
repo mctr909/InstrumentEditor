@@ -2,12 +2,12 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-using DLS;
+using Instruments;
 
 namespace InstrumentEditor {
-    public partial class InstKeyAssignForm : Form {
-        private DLS.File mDLS;
-        private INS mINS;
+    public partial class RegionKeyAssignForm : Form {
+        private File mFile;
+        private Inst mInst;
         private bool mOnRange;
         private const int KEY_WIDTH = 10;
 
@@ -15,9 +15,9 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public InstKeyAssignForm(DLS.File dls, INS ins) {
-            mDLS = dls;
-            mINS = ins;
+        public RegionKeyAssignForm(File file, Inst inst) {
+            mFile = file;
+            mInst = inst;
             InitializeComponent();
             SetTabSize();
             DispRegionInfo();
@@ -109,11 +109,11 @@ namespace InstrumentEditor {
         }
 
         private void lstRegion_DoubleClick(object sender, EventArgs e) {
-            EditRegion(ListToRegeonId());
+            EditRegion(ListToRange());
         }
 
         private void picRegion_DoubleClick(object sender, EventArgs e) {
-            EditRegion(PosToRegionId());
+            EditRegion(PosToRange());
         }
 
         private void picRegion_MouseEnter(object sender, EventArgs e) {
@@ -125,7 +125,7 @@ namespace InstrumentEditor {
         }
 
         private void DispRegionInfo() {
-            Text = mINS.Info.Name.Trim();
+            Text = mInst.Info.Name.Trim();
 
             var bmp = new Bitmap(picRegion.Width, picRegion.Height);
             var g = Graphics.FromImage(bmp);
@@ -135,41 +135,49 @@ namespace InstrumentEditor {
             var idx = lstRegion.SelectedIndex;
             lstRegion.Items.Clear();
 
-            foreach (var region in mINS.Regions.List.Values) {
-                var key = region.Header.Key;
-                var vel = region.Header.Velocity;
+            foreach (var region in mInst.Region.Array) {
+                var range = region.Header;
                 g.FillRectangle(
                     greenFill,
-                    key.Low * KEY_WIDTH,
-                    bmp.Height - (vel.High + 1) * 4 - 1,
-                    (key.High - key.Low + 1) * KEY_WIDTH,
-                    (vel.High - vel.Low + 1) * 4
+                    range.KeyLo * KEY_WIDTH,
+                    bmp.Height - (range.VelHi + 1) * 4 - 1,
+                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
+                    (range.VelHi - range.VelLo + 1) * 4
                 );
                 g.DrawRectangle(
                     blueLine,
-                    key.Low * KEY_WIDTH,
-                    bmp.Height - (vel.High + 1) * 4,
-                    (key.High - key.Low + 1) * KEY_WIDTH,
-                    (vel.High - vel.Low + 1) * 4
+                    range.KeyLo * KEY_WIDTH,
+                    bmp.Height - (range.VelHi + 1) * 4,
+                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
+                    (range.VelHi - range.VelLo + 1) * 4
                 );
+
+                var waveIndex = int.MaxValue;
+                foreach (var art in region.Art.Values) {
+                    if (art.Type == ART_TYPE.WAVE_INDEX) {
+                        waveIndex = (int)art.Value;
+                        break;
+                    }
+                }
+
                 var waveName = "";
-                if (mDLS.WavePool.List.ContainsKey((int)region.WaveLink.TableIndex)) {
-                    var wave = mDLS.WavePool.List[(int)region.WaveLink.TableIndex];
+                if (mFile.Wave.ContainsKey(waveIndex)) {
+                    var wave = mFile.Wave[waveIndex];
                     waveName = wave.Info.Name;
                 }
 
                 var regionInfo = string.Format(
                     "音程 {0} {1}    強弱 {2} {3}",
-                    region.Header.Key.Low.ToString("000"),
-                    region.Header.Key.High.ToString("000"),
-                    region.Header.Velocity.Low.ToString("000"),
-                    region.Header.Velocity.High.ToString("000")
+                    region.Header.KeyLo.ToString("000"),
+                    region.Header.KeyHi.ToString("000"),
+                    region.Header.VelLo.ToString("000"),
+                    region.Header.VelHi.ToString("000")
                 );
-                if (uint.MaxValue != region.WaveLink.TableIndex) {
+                if (int.MaxValue != waveIndex) {
                     regionInfo = string.Format(
                         "{0}    波形 {1} {2}",
                         regionInfo,
-                        region.WaveLink.TableIndex.ToString("0000"),
+                        waveIndex.ToString("0000"),
                         waveName
                     );
                 }
@@ -189,22 +197,21 @@ namespace InstrumentEditor {
         }
 
         private void AddRegion() {
-            var region = new RGN();
-            region.Header.Key.Low = ushort.MaxValue;
-            region.WaveLink.TableIndex = uint.MaxValue;
-            var fm = new RegionInfoForm(mDLS, region);
+            var region = new Instruments.Region();
+            region.Header.KeyLo = byte.MaxValue;
+            var fm = new RegionInfoForm(mFile, region);
             fm.ShowDialog();
 
-            if (ushort.MaxValue != region.Header.Key.Low) {
-                mINS.Regions.List.Add(region.Header, region);
+            if (byte.MaxValue != region.Header.KeyLo) {
+                mInst.Region.Add(region);
                 DispRegionInfo();
             }
         }
 
-        private void EditRegion(CK_RGNH regionId) {
-            if (mINS.Regions.List.ContainsKey(regionId)) {
-                var region = mINS.Regions.List[regionId];
-                var fm = new RegionInfoForm(mDLS, region);
+        private void EditRegion(RANGE range) {
+            if (mInst.Region.ContainsKey(range)) {
+                var region = mInst.Region.FindFirst(range);
+                var fm = new RegionInfoForm(mFile, region);
                 fm.ShowDialog();
                 DispRegionInfo();
             } else {
@@ -217,16 +224,13 @@ namespace InstrumentEditor {
 
             foreach (int idx in lstRegion.SelectedIndices) {
                 var cols = lstRegion.Items[idx].ToString().Split(' ');
-
-                var rgn = new CK_RGNH();
-                rgn.Key.Low = byte.Parse(cols[1]);
-                rgn.Key.High = byte.Parse(cols[2]);
-                rgn.Velocity.Low = byte.Parse(cols[7]);
-                rgn.Velocity.High = byte.Parse(cols[8]);
-
-                if (mINS.Regions.List.ContainsKey(rgn)) {
-                    mINS.Regions.List.Remove(rgn);
-                }
+                var range = new RANGE {
+                    KeyLo = byte.Parse(cols[1]),
+                    KeyHi = byte.Parse(cols[2]),
+                    VelLo = byte.Parse(cols[7]),
+                    VelHi = byte.Parse(cols[8])
+                };
+                mInst.Region.Remove(range);
             }
 
             DispRegionInfo();
@@ -260,34 +264,30 @@ namespace InstrumentEditor {
             return posRegion;
         }
 
-        private CK_RGNH PosToRegionId() {
-            var region = new CK_RGNH();
+        private RANGE PosToRange() {
+            var range = new RANGE();
             var posRegion = PosToRegion();
-            foreach (var rgn in mINS.Regions.List.Values) {
-                var key = rgn.Header.Key;
-                var vel = rgn.Header.Velocity;
-                if (key.Low <= posRegion.X && posRegion.X <= key.High
-                && vel.Low <= posRegion.Y && posRegion.Y <= vel.High) {
-                    region = rgn.Header;
+            foreach (var rgn in mInst.Region.Array) {
+                if (rgn.Header.KeyLo <= posRegion.X && posRegion.X <= rgn.Header.KeyHi
+                && rgn.Header.VelLo <= posRegion.Y && posRegion.Y <= rgn.Header.VelHi) {
+                    range = rgn.Header;
                     break;
                 }
             }
-
-            return region;
+            return range;
         }
 
-        private CK_RGNH ListToRegeonId() {
+        private RANGE ListToRange() {
             if (lstRegion.SelectedIndex < 0) {
-                return new CK_RGNH();
+                return new RANGE();
             }
-
             var cols = lstRegion.Items[lstRegion.SelectedIndex].ToString().Split(' ');
-            var region = new CK_RGNH();
-            region.Key.Low = ushort.Parse(cols[1]);
-            region.Key.High = ushort.Parse(cols[2]);
-            region.Velocity.Low = ushort.Parse(cols[7]);
-            region.Velocity.High = ushort.Parse(cols[8]);
-
+            var region = new RANGE {
+                KeyLo = byte.Parse(cols[1]),
+                KeyHi = byte.Parse(cols[2]),
+                VelLo = byte.Parse(cols[7]),
+                VelHi = byte.Parse(cols[8])
+            };
             return region;
         }
         #endregion

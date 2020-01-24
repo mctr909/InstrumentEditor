@@ -55,11 +55,11 @@
     <Compile Include="Form\EnvelopeForm.Designer.cs">
       <DependentUpon>EnvelopeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\InstKeyAssignForm.cs">
+    <Compile Include="Form\RegionKeyAssignForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\InstKeyAssignForm.Designer.cs">
-      <DependentUpon>InstKeyAssignForm.cs</DependentUpon>
+    <Compile Include="Form\RegionKeyAssignForm.Designer.cs">
+      <DependentUpon>RegionKeyAssignForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Instruments.cs" />
     <Compile Include="Riff.cs" />
@@ -73,11 +73,11 @@
     <Compile Include="Form\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\InstForm.cs">
+    <Compile Include="Form\AddPresetForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\InstForm.Designer.cs">
-      <DependentUpon>InstForm.cs</DependentUpon>
+    <Compile Include="Form\AddPresetForm.Designer.cs">
+      <DependentUpon>AddPresetForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\RegionInfoForm.cs">
       <SubType>Form</SubType>
@@ -85,11 +85,11 @@
     <Compile Include="Form\RegionInfoForm.Designer.cs">
       <DependentUpon>RegionInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\InstInfoForm.cs">
+    <Compile Include="Form\PresetInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\InstInfoForm.Designer.cs">
-      <DependentUpon>InstInfoForm.cs</DependentUpon>
+    <Compile Include="Form\PresetInfoForm.Designer.cs">
+      <DependentUpon>PresetInfoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SF2.cs" />
     <Compile Include="Spectrum.cs" />
@@ -118,17 +118,17 @@
     <EmbeddedResource Include="Form\EnvelopeForm.resx">
       <DependentUpon>EnvelopeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\InstKeyAssignForm.resx">
-      <DependentUpon>InstKeyAssignForm.cs</DependentUpon>
+    <EmbeddedResource Include="Form\RegionKeyAssignForm.resx">
+      <DependentUpon>RegionKeyAssignForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\InstInfoForm.resx">
-      <DependentUpon>InstInfoForm.cs</DependentUpon>
+    <EmbeddedResource Include="Form\PresetInfoForm.resx">
+      <DependentUpon>PresetInfoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\InstForm.resx">
-      <DependentUpon>InstForm.cs</DependentUpon>
+    <EmbeddedResource Include="Form\AddPresetForm.resx">
+      <DependentUpon>AddPresetForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\RegionInfoForm.resx">
       <DependentUpon>RegionInfoForm.cs</DependentUpon>

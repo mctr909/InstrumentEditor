@@ -47,28 +47,9 @@ namespace Riff {
             }
         }
 
-        public byte[] Bytes {
-            get {
-                var ms = new MemoryStream();
-                var bw = new BinaryWriter(ms);
-                var type = Write(bw);
-
-                var ms2 = new MemoryStream();
-                var bw2 = new BinaryWriter(ms2);
-                bw2.Write("LIST".ToCharArray());
-                bw2.Write((uint)(ms.Length + 4));
-                bw2.Write(type.ToCharArray());
-                bw2.Write(ms.ToArray());
-
-                return ms2.ToArray();
-            }
-        }
-
-        protected virtual void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) { }
-
         protected virtual void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) { }
 
-        protected virtual string Write(BinaryWriter bw) { return ""; }
+        protected virtual void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) { }
     }
 
     public class Info {

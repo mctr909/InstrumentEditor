@@ -1,76 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Runtime.InteropServices;
 
 using Riff;
+using Instruments;
 
 namespace DLS {
     #region struct
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct MidiLocale {
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
         public byte BankLSB;
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
         public byte BankMSB;
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
         private byte Reserve1;
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
-        public byte BankFlags;
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
-        public byte ProgramNo;
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
+        public byte BankFlg;
+        public byte ProgNum;
         private byte Reserve2;
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
         private byte Reserve3;
-        [MarshalAs(UnmanagedType.U1, SizeConst = 1)]
         private byte Reserve4;
 
-        public byte[] Bytes {
-            get {
-                return new byte[] {
-                    BankLSB,
-                    BankMSB,
-                    Reserve1,
-                    BankFlags,
-                    ProgramNo,
-                    Reserve2,
-                    Reserve3,
-                    Reserve4
-                };
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write(BankLSB);
+            bw.Write(BankMSB);
+            bw.Write(Reserve1);
+            bw.Write(BankFlg);
+            bw.Write(ProgNum);
+            bw.Write(Reserve2);
+            bw.Write(Reserve3);
+            bw.Write(Reserve4);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Range {
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
-        public ushort Low;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
-        public ushort High;
+        public ushort Lo;
+        public ushort Hi;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[4];
-                BitConverter.GetBytes(Low).CopyTo(buff, 0);
-                BitConverter.GetBytes(High).CopyTo(buff, 2);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write(Lo);
+            bw.Write(Hi);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Connection {
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
+        [MarshalAs(UnmanagedType.U2)]
         public SRC_TYPE Source;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
+        [MarshalAs(UnmanagedType.U2)]
         public SRC_TYPE Control;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
+        [MarshalAs(UnmanagedType.U2)]
         public DST_TYPE Destination;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort Transform;
-        [MarshalAs(UnmanagedType.I4, SizeConst = 4)]
         public int Scale;
 
         public TRN_TYPE OutTransform {
@@ -264,168 +244,116 @@ namespace DLS {
             }
         }
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[12];
-                BitConverter.GetBytes((ushort)Source).CopyTo(buff, 0);
-                BitConverter.GetBytes((ushort)Control).CopyTo(buff, 2);
-                BitConverter.GetBytes((ushort)Destination).CopyTo(buff, 4);
-                BitConverter.GetBytes((ushort)Transform).CopyTo(buff, 6);
-                BitConverter.GetBytes(Scale).CopyTo(buff, 8);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write((ushort)Source);
+            bw.Write((ushort)Control);
+            bw.Write((ushort)Destination);
+            bw.Write(Transform);
+            bw.Write(Scale);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct WaveLoop {
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Size;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Type;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Start;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Length;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[16];
-                BitConverter.GetBytes(16).CopyTo(buff, 0);
-                BitConverter.GetBytes(0).CopyTo(buff, 4);
-                BitConverter.GetBytes(Start).CopyTo(buff, 8);
-                BitConverter.GetBytes(Length).CopyTo(buff, 12);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write(16);
+            bw.Write(0);
+            bw.Write(Start);
+            bw.Write(Length);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct CK_VERS {
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint MSB;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint LSB;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[8];
-                BitConverter.GetBytes(MSB).CopyTo(buff, 0);
-                BitConverter.GetBytes(LSB).CopyTo(buff, 4);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write("vers".ToCharArray());
+            bw.Write(Marshal.SizeOf<CK_VERS>());
+            bw.Write(MSB);
+            bw.Write(LSB);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    public struct CK_COLH {
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
-        public uint Instruments;
-
-        public byte[] Bytes {
-            get {
-                var buff = new byte[4];
-                BitConverter.GetBytes(Instruments).CopyTo(buff, 0);
-                return buff;
-            }
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CK_INSH {
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Regions;
         public MidiLocale Locale;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[12];
-                BitConverter.GetBytes(Regions).CopyTo(buff, 0);
-                Locale.Bytes.CopyTo(buff, 4);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write("insh".ToCharArray());
+            bw.Write(Marshal.SizeOf<CK_INSH>());
+            bw.Write(Regions);
+            Locale.Write(bw);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 2)]
     public struct CK_RGNH {
         public Range Key;
-        public Range Velocity;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
+        public Range Vel;
         public ushort Options;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort KeyGroup;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort Layer;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[0 == Layer ? 12 : 14];
-                Key.Bytes.CopyTo(buff, 0);
-                Velocity.Bytes.CopyTo(buff, 4);
-                BitConverter.GetBytes(Options).CopyTo(buff, 8);
-                BitConverter.GetBytes(KeyGroup).CopyTo(buff, 10);
-                if (0 != Layer) {
-                    BitConverter.GetBytes(Layer).CopyTo(buff, 12);
-                }
-                return buff;
+        public void Write(BinaryWriter bw) {
+            bw.Write("rgnh".ToCharArray());
+            if (0 == Layer) {
+                bw.Write(Marshal.SizeOf<CK_RGNH>() - 2);
+            } else {
+                bw.Write(Marshal.SizeOf<CK_RGNH>());
+            }
+            Key.Write(bw);
+            Vel.Write(bw);
+            bw.Write(Options);
+            bw.Write(KeyGroup);
+            if (0 != Layer) {
+                bw.Write(Layer);
             }
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct CK_ART1 {
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Size;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Count;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[8];
-                BitConverter.GetBytes(Size).CopyTo(buff, 0);
-                BitConverter.GetBytes(Count).CopyTo(buff, 4);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write(Size);
+            bw.Write(Count);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CK_WLNK {
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort Options;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort PhaseGroup;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Channel;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint TableIndex;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[12];
-                BitConverter.GetBytes(Options).CopyTo(buff, 0);
-                BitConverter.GetBytes(PhaseGroup).CopyTo(buff, 2);
-                BitConverter.GetBytes(Channel).CopyTo(buff, 4);
-                BitConverter.GetBytes(TableIndex).CopyTo(buff, 8);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write("wlnk".ToCharArray());
+            bw.Write(Marshal.SizeOf<CK_WLNK>());
+            bw.Write(Options);
+            bw.Write(PhaseGroup);
+            bw.Write(Channel);
+            bw.Write(TableIndex);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CK_WSMP {
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Size;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort UnityNote;
-        [MarshalAs(UnmanagedType.I2, SizeConst = 2)]
         public short FineTune;
-        [MarshalAs(UnmanagedType.I4, SizeConst = 4)]
         public int GainInt;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Options;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint LoopCount;
 
         public double Gain {
@@ -437,68 +365,51 @@ namespace DLS {
             }
         }
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[20];
-                BitConverter.GetBytes(Size).CopyTo(buff, 0);
-                BitConverter.GetBytes(UnityNote).CopyTo(buff, 4);
-                BitConverter.GetBytes(FineTune).CopyTo(buff, 6);
-                BitConverter.GetBytes(GainInt).CopyTo(buff, 8);
-                BitConverter.GetBytes(Options).CopyTo(buff, 12);
-                BitConverter.GetBytes(LoopCount).CopyTo(buff, 16);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write(Size);
+            bw.Write(UnityNote);
+            bw.Write(FineTune);
+            bw.Write(GainInt);
+            bw.Write(Options);
+            bw.Write(LoopCount);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct CK_PTBL {
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Size;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint Count;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[8];
-                BitConverter.GetBytes(Size).CopyTo(buff, 0);
-                BitConverter.GetBytes(Count).CopyTo(buff, 4);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write(Size);
+            bw.Write(Count);
         }
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct CK_FMT {
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort Tag;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort Channels;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint SampleRate;
-        [MarshalAs(UnmanagedType.U4, SizeConst = 4)]
         public uint BytesPerSec;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort BlockAlign;
-        [MarshalAs(UnmanagedType.U2, SizeConst = 2)]
         public ushort Bits;
 
-        public byte[] Bytes {
-            get {
-                var buff = new byte[16];
-                BitConverter.GetBytes(Tag).CopyTo(buff, 0);
-                BitConverter.GetBytes(Channels).CopyTo(buff, 2);
-                BitConverter.GetBytes(SampleRate).CopyTo(buff, 4);
-                BitConverter.GetBytes(BytesPerSec).CopyTo(buff, 8);
-                BitConverter.GetBytes(BlockAlign).CopyTo(buff, 12);
-                BitConverter.GetBytes(Bits).CopyTo(buff, 14);
-                return buff;
-            }
+        public void Write(BinaryWriter bw) {
+            bw.Write("fmt ".ToCharArray());
+            bw.Write(Marshal.SizeOf<CK_FMT>());
+            bw.Write(Tag);
+            bw.Write(Channels);
+            bw.Write(SampleRate);
+            bw.Write(BytesPerSec);
+            bw.Write(BlockAlign);
+            bw.Write(Bits);
         }
     }
     #endregion
 
     public class File : Chunk {
+        private string mFilePath;
         private CK_VERS mVersion;
         private uint mMSYN = 1;
 
@@ -508,7 +419,9 @@ namespace DLS {
 
         public File() { }
 
-        public File(string filePath) : base(filePath) { }
+        public File(string filePath) : base(filePath) {
+            mFilePath = filePath;
+        }
 
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {
@@ -544,135 +457,6 @@ namespace DLS {
             }
         }
 
-        public void ToInst(string filePath) {
-            var instFile = new Instruments.File();
-
-            foreach (var wave in WavePool.List.Values) {
-                var waveInfo = new Instruments.Wave();
-                waveInfo.header.sampleRate = wave.Format.SampleRate;
-                if (0 < wave.Sampler.LoopCount) {
-                    waveInfo.header.loopEnable = 1;
-                    waveInfo.header.loopBegin = wave.Loops[0].Start;
-                    waveInfo.header.loopLength = wave.Loops[0].Length;
-                } else {
-                    waveInfo.header.loopEnable = 0;
-                    waveInfo.header.loopBegin = 0;
-                    waveInfo.header.loopLength = (uint)(wave.Data.Length / wave.Format.BlockAlign);
-                }
-                waveInfo.header.unityNote = (byte)wave.Sampler.UnityNote;
-                waveInfo.header.gain = wave.Sampler.Gain;
-                waveInfo.header.pitch = Math.Pow(2.0, wave.Sampler.FineTune / 1200.0);
-
-                var ptr = Marshal.AllocHGlobal(wave.Data.Length);
-                Marshal.Copy(wave.Data, 0, ptr, wave.Data.Length);
-                waveInfo.data = new short[wave.Data.Length / 2];
-                Marshal.Copy(ptr, waveInfo.data, 0, waveInfo.data.Length);
-                Marshal.FreeHGlobal(ptr);
-
-                waveInfo.Info.Name = wave.Info.Name;
-                waveInfo.Info.Category = wave.Info.Keywords;
-                instFile.waves.Add(waveInfo);
-            }
-
-            foreach (var inst in Instruments.List) {
-                var ins = new Instruments.Inst();
-                ins.header.flag = inst.Key.BankFlags;
-                ins.header.bankMSB = inst.Key.BankMSB;
-                ins.header.bankLSB = inst.Key.BankLSB;
-                ins.header.progNum = inst.Key.ProgramNo;
-
-                if (null != inst.Value.Articulations && null != inst.Value.Articulations.ART) {
-                    foreach (var a in inst.Value.Articulations.ART.List.Values) {
-                        if (a.Source != Connection.SRC_TYPE.NONE || a.Control != Connection.SRC_TYPE.NONE) {
-                            continue;
-                        }
-                        var art = new Instruments.ART();
-                        art.type = (uint)a.Destination;
-                        art.value = (float)a.Value;
-                        switch (a.Destination) {
-                        case Connection.DST_TYPE.EG1_ATTACK_TIME:
-                        case Connection.DST_TYPE.EG1_HOLD_TIME:
-                        case Connection.DST_TYPE.EG1_DECAY_TIME:
-                        case Connection.DST_TYPE.EG1_SUSTAIN_LEVEL:
-                        case Connection.DST_TYPE.EG1_RELEASE_TIME:
-                        case Connection.DST_TYPE.EG2_ATTACK_TIME:
-                        case Connection.DST_TYPE.EG2_HOLD_TIME:
-                        case Connection.DST_TYPE.EG2_DECAY_TIME:
-                        case Connection.DST_TYPE.EG2_SUSTAIN_LEVEL:
-                        case Connection.DST_TYPE.EG2_RELEASE_TIME:
-                            ins.arts.Add(art);
-                            break;
-                        case Connection.DST_TYPE.PAN:
-                        case Connection.DST_TYPE.GAIN:
-                        case Connection.DST_TYPE.PITCH:
-                        case Connection.DST_TYPE.FILTER_Q:
-                        case Connection.DST_TYPE.FILTER_CUTOFF:
-                            ins.arts.Add(art);
-                            break;
-                        }
-                    }
-                }
-
-                var lyr = new Instruments.Layer();
-                lyr.header.keyLo = 0;
-                lyr.header.keyHi = 127;
-                lyr.header.velLo = 0;
-                lyr.header.velHi = 127;
-                lyr.header.instIdx = 0xFFFFFFFF;
-
-                foreach (var r in inst.Value.Regions.List) {
-                    var rgn = new Instruments.Region();
-                    rgn.header.keyLo = (byte)r.Key.Key.Low;
-                    rgn.header.keyHi = (byte)r.Key.Key.High;
-                    rgn.header.velLo = (byte)r.Key.Velocity.Low;
-                    rgn.header.velHi = (byte)r.Key.Velocity.High;
-                    rgn.header.waveIdx = r.Value.WaveLink.TableIndex;
-
-                    if (null != r.Value.Articulations && null != r.Value.Articulations.ART) {
-                        foreach (var a in r.Value.Articulations.ART.List.Values) {
-                            if (a.Source != Connection.SRC_TYPE.NONE || a.Control != Connection.SRC_TYPE.NONE) {
-                                continue;
-                            }
-                            var art = new Instruments.ART();
-                            art.type = (uint)a.Destination;
-                            art.value = (float)a.Value;
-                            switch (a.Destination) {
-                            case Connection.DST_TYPE.EG1_ATTACK_TIME:
-                            case Connection.DST_TYPE.EG1_HOLD_TIME:
-                            case Connection.DST_TYPE.EG1_DECAY_TIME:
-                            case Connection.DST_TYPE.EG1_SUSTAIN_LEVEL:
-                            case Connection.DST_TYPE.EG1_RELEASE_TIME:
-                            case Connection.DST_TYPE.EG2_ATTACK_TIME:
-                            case Connection.DST_TYPE.EG2_HOLD_TIME:
-                            case Connection.DST_TYPE.EG2_DECAY_TIME:
-                            case Connection.DST_TYPE.EG2_SUSTAIN_LEVEL:
-                            case Connection.DST_TYPE.EG2_RELEASE_TIME:
-                                rgn.arts.Add(art);
-                                break;
-                            case Connection.DST_TYPE.PAN:
-                            case Connection.DST_TYPE.GAIN:
-                            case Connection.DST_TYPE.PITCH:
-                            case Connection.DST_TYPE.FILTER_Q:
-                            case Connection.DST_TYPE.FILTER_CUTOFF:
-                                ins.arts.Add(art);
-                                break;
-                            }
-                        }
-                    }
-
-                    lyr.regions.Add(rgn);
-                }
-
-                ins.layers.Add(lyr);
-                ins.infoList.Add("INAM", inst.Value.Info.Name);
-                ins.infoList.Add("ICAT", inst.Value.Info.Keywords);
-                instFile.instList.Add(ins);
-            }
-
-            instFile.Save(Path.GetDirectoryName(filePath)
-                + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".ins");
-        }
-
         public void Save(string filePath) {
             var ms = new MemoryStream();
             var bw = new BinaryWriter(ms);
@@ -682,17 +466,15 @@ namespace DLS {
             bw.Write((uint)4);
             bw.Write((uint)Instruments.List.Count);
 
-            bw.Write("vers".ToCharArray());
-            bw.Write((uint)Marshal.SizeOf<CK_VERS>());
-            bw.Write(mVersion.Bytes);
+            mVersion.Write(bw);
 
             bw.Write("msyn".ToCharArray());
             bw.Write((uint)4);
             bw.Write(mMSYN);
 
-            //Instruments.Write(bw);
+            Instruments.Write(bw);
             WavePool.Write(bw);
-            //Info.Write(bw);
+            Info.Write(bw);
 
             var fs = new FileStream(filePath, FileMode.Create);
             var bw2 = new BinaryWriter(fs);
@@ -703,14 +485,251 @@ namespace DLS {
             fs.Close();
             fs.Dispose();
         }
+
+        public Instruments.File ToIns() {
+            var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
+            var instFile = new Instruments.File();
+
+            foreach (var wave in WavePool.List.Values) {
+                var waveInfo = new Wave();
+                waveInfo.Header.SampleRate = wave.Format.SampleRate;
+                if (0 < wave.Sampler.LoopCount) {
+                    waveInfo.Header.LoopEnable = 1;
+                    waveInfo.Header.LoopBegin = wave.Loops[0].Start;
+                    waveInfo.Header.LoopLength = wave.Loops[0].Length;
+                } else {
+                    waveInfo.Header.LoopEnable = 0;
+                    waveInfo.Header.LoopBegin = 0;
+                    waveInfo.Header.LoopLength = (uint)(wave.Data.Length / wave.Format.BlockAlign);
+                }
+                waveInfo.Header.UnityNote = (byte)wave.Sampler.UnityNote;
+                waveInfo.Header.Gain = wave.Sampler.Gain;
+                waveInfo.Header.Pitch = Math.Pow(2.0, wave.Sampler.FineTune / 1200.0);
+
+                var ptr = Marshal.AllocHGlobal(wave.Data.Length);
+                Marshal.Copy(wave.Data, 0, ptr, wave.Data.Length);
+                waveInfo.Data = new short[wave.Data.Length / 2];
+                Marshal.Copy(ptr, waveInfo.Data, 0, waveInfo.Data.Length);
+                Marshal.FreeHGlobal(ptr);
+
+                waveInfo.Info.Name = wave.Info.Name;
+                waveInfo.Info.Category = wave.Info.Keywords;
+                waveInfo.Info.CreationDate = now;
+                waveInfo.Info.SourceForm = Path.GetFileName(mFilePath);
+
+                instFile.Wave.Add(waveInfo);
+            }
+
+            foreach (var dlsInst in Instruments.List) {
+                var pres = new Preset();
+                pres.Header.BankFlg = dlsInst.Key.BankFlg;
+                pres.Header.BankMSB = dlsInst.Key.BankMSB;
+                pres.Header.BankLSB = dlsInst.Key.BankLSB;
+                pres.Header.ProgNum = dlsInst.Key.ProgNum;
+
+                if (null != dlsInst.Value.Articulations && null != dlsInst.Value.Articulations.ART) {
+                    foreach (var instArt in dlsInst.Value.Articulations.ART.List.Values) {
+                        if (instArt.Source != Connection.SRC_TYPE.NONE || instArt.Control != Connection.SRC_TYPE.NONE) {
+                            continue;
+                        }
+
+                        var art = new Instruments.ART {
+                            Value = (float)instArt.Value
+                        };
+
+                        switch (instArt.Destination) {
+                        case Connection.DST_TYPE.EG1_ATTACK_TIME:
+                            art.Type = ART_TYPE.EG_AMP_ATTACK;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG1_HOLD_TIME:
+                            art.Type = ART_TYPE.EG_AMP_HOLD;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG1_DECAY_TIME:
+                            art.Type = ART_TYPE.EG_AMP_DECAY;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG1_SUSTAIN_LEVEL:
+                            art.Type = ART_TYPE.EG_AMP_SUSTAIN;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG1_RELEASE_TIME:
+                            art.Type = ART_TYPE.EG_AMP_RELEASE;
+                            pres.Art.Add(art);
+                            break;
+
+                        case Connection.DST_TYPE.EG2_ATTACK_TIME:
+                            art.Type = ART_TYPE.EG_CUTOFF_ATTACK;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG2_HOLD_TIME:
+                            art.Type = ART_TYPE.EG_CUTOFF_HOLD;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG2_DECAY_TIME:
+                            art.Type = ART_TYPE.EG_CUTOFF_DECAY;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG2_SUSTAIN_LEVEL:
+                            art.Type = ART_TYPE.EG_CUTOFF_SUSTAIN;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.EG2_RELEASE_TIME:
+                            art.Type = ART_TYPE.EG_CUTOFF_RELEASE;
+                            pres.Art.Add(art);
+                            break;
+
+                        case Connection.DST_TYPE.GAIN:
+                            art.Type = ART_TYPE.GAIN_CONST;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.PAN:
+                            art.Type = ART_TYPE.PAN_CONST;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.PITCH:
+                            art.Type = ART_TYPE.PITCH_CONST;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.FILTER_Q:
+                            art.Type = ART_TYPE.LPF_RESONANCE;
+                            pres.Art.Add(art);
+                            break;
+                        case Connection.DST_TYPE.FILTER_CUTOFF:
+                            art.Type = ART_TYPE.LPF_CUTOFF_CONST;
+                            pres.Art.Add(art);
+                            break;
+                        }
+                    }
+                }
+
+                var lyr = new Layer();
+                lyr.Header.KeyLo = 0;
+                lyr.Header.KeyHi = 127;
+                lyr.Header.VelLo = 0;
+                lyr.Header.VelHi = 127;
+
+                lyr.Art.Add(new Instruments.ART {
+                    Type = ART_TYPE.INST_INDEX,
+                    Value = instFile.Inst.Count
+                });
+
+                pres.Layer.Add(lyr);
+                pres.Info.Name = dlsInst.Value.Info.Name;
+                pres.Info.Category = dlsInst.Value.Info.Keywords;
+                pres.Info.CreationDate = now;
+                pres.Info.SourceForm = Path.GetFileName(mFilePath);
+                instFile.Preset.Add(pres.Header, pres);
+
+                var inst = new Inst();
+                inst.Info.Name = dlsInst.Value.Info.Name;
+                inst.Info.CreationDate = now;
+                inst.Info.SourceForm = Path.GetFileName(mFilePath);
+
+                foreach (var dlsRegion in dlsInst.Value.Regions.List) {
+                    var rgn = new Region();
+                    rgn.Header.KeyLo = (byte)dlsRegion.Key.Key.Lo;
+                    rgn.Header.KeyHi = (byte)dlsRegion.Key.Key.Hi;
+                    rgn.Header.VelLo = (byte)dlsRegion.Key.Vel.Lo;
+                    rgn.Header.VelHi = (byte)dlsRegion.Key.Vel.Hi;
+
+                    rgn.Art.Add(new Instruments.ART {
+                        Type = ART_TYPE.WAVE_INDEX,
+                        Value = dlsRegion.Value.WaveLink.TableIndex
+                    });
+
+                    if (null != dlsRegion.Value.Articulations && null != dlsRegion.Value.Articulations.ART) {
+                        foreach (var regionArt in dlsRegion.Value.Articulations.ART.List.Values) {
+                            if (regionArt.Source != Connection.SRC_TYPE.NONE || regionArt.Control != Connection.SRC_TYPE.NONE) {
+                                continue;
+                            }
+
+                            var art = new Instruments.ART {
+                                Value = (float)regionArt.Value
+                            };
+
+                            switch (regionArt.Destination) {
+                            case Connection.DST_TYPE.EG1_ATTACK_TIME:
+                                art.Type = ART_TYPE.EG_AMP_ATTACK;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG1_HOLD_TIME:
+                                art.Type = ART_TYPE.EG_AMP_HOLD;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG1_DECAY_TIME:
+                                art.Type = ART_TYPE.EG_AMP_DECAY;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG1_SUSTAIN_LEVEL:
+                                art.Type = ART_TYPE.EG_AMP_SUSTAIN;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG1_RELEASE_TIME:
+                                art.Type = ART_TYPE.EG_AMP_RELEASE;
+                                rgn.Art.Add(art);
+                                break;
+
+                            case Connection.DST_TYPE.EG2_ATTACK_TIME:
+                                art.Type = ART_TYPE.EG_CUTOFF_ATTACK;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG2_HOLD_TIME:
+                                art.Type = ART_TYPE.EG_CUTOFF_HOLD;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG2_DECAY_TIME:
+                                art.Type = ART_TYPE.EG_CUTOFF_DECAY;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG2_SUSTAIN_LEVEL:
+                                art.Type = ART_TYPE.EG_CUTOFF_SUSTAIN;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.EG2_RELEASE_TIME:
+                                art.Type = ART_TYPE.EG_CUTOFF_RELEASE;
+                                rgn.Art.Add(art);
+                                break;
+
+                            case Connection.DST_TYPE.GAIN:
+                                art.Type = ART_TYPE.GAIN_CONST;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.PAN:
+                                art.Type = ART_TYPE.PAN_CONST;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.PITCH:
+                                art.Type = ART_TYPE.PITCH_CONST;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.FILTER_Q:
+                                art.Type = ART_TYPE.LPF_RESONANCE;
+                                rgn.Art.Add(art);
+                                break;
+                            case Connection.DST_TYPE.FILTER_CUTOFF:
+                                art.Type = ART_TYPE.LPF_CUTOFF_CONST;
+                                rgn.Art.Add(art);
+                                break;
+                            }
+                        }
+                    }
+                    inst.Region.Add(rgn);
+                }
+                instFile.Inst.Add(inst);
+            }
+
+            return instFile;
+        }
     }
 
     public class LINS : Chunk {
         public sealed class Sort : IComparer<MidiLocale> {
             // IComparerの実装
             public int Compare(MidiLocale x, MidiLocale y) {
-                var xKey = ((x.BankFlags & 0x80) << 17) | (x.ProgramNo << 16) | (x.BankMSB << 8) | x.BankLSB;
-                var yKey = ((y.BankFlags & 0x80) << 17) | (y.ProgramNo << 16) | (y.BankMSB << 8) | y.BankLSB;
+                var xKey = ((x.BankFlg & 0x80) << 17) | (x.ProgNum << 16) | (x.BankMSB << 8) | x.BankLSB;
+                var yKey = ((y.BankFlg & 0x80) << 17) | (y.ProgNum << 16) | (y.BankMSB << 8) | y.BankLSB;
                 return xKey - yKey;
             }
         }
@@ -735,11 +754,11 @@ namespace DLS {
             }
         }
 
-        public new void Write(BinaryWriter bw) {
+        public void Write(BinaryWriter bw) {
             var msLins = new MemoryStream();
             var bwLins = new BinaryWriter(msLins);
             foreach (var ins in List) {
-                bwLins.Write(ins.Value.Bytes);
+                ins.Value.Write(bwLins);
             }
 
             if (0 < msLins.Length) {
@@ -760,8 +779,8 @@ namespace DLS {
         public INS() { }
 
         public INS(byte programNo, byte bankMSB = 0, byte bankLSB = 0, bool isDrum = false) {
-            Header.Locale.BankFlags = (byte)(isDrum ? 0x80 : 0x00);
-            Header.Locale.ProgramNo = programNo;
+            Header.Locale.BankFlg = (byte)(isDrum ? 0x80 : 0x00);
+            Header.Locale.ProgNum = programNo;
             Header.Locale.BankMSB = bankMSB;
             Header.Locale.BankLSB = bankLSB;
         }
@@ -771,7 +790,7 @@ namespace DLS {
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {
             case "insh":
-                Header = (CK_INSH)Marshal.PtrToStructure(ptr, typeof(CK_INSH));
+                Header = Marshal.PtrToStructure<CK_INSH>(ptr);
                 break;
             default:
                 throw new Exception(string.Format("Unknown ChunkType [{0}]", chunkType));
@@ -795,17 +814,22 @@ namespace DLS {
             }
         }
 
-        protected override string Write(BinaryWriter bw) {
-            var data = Header.Bytes;
-            bw.Write("insh".ToCharArray());
-            bw.Write(data.Length);
-            bw.Write(data);
+        public void Write(BinaryWriter bw) {
+            var msIns = new MemoryStream();
+            var bwIns = new BinaryWriter(msIns);
+            bwIns.Write("LIST".ToCharArray());
+            bwIns.Write(0xFFFFFFFF);
+            bwIns.Write("ins ".ToCharArray());
 
-            Regions.Write(bw);
-            Articulations.Write(bw);
-            Info.Write(bw);
+            Header.Write(bwIns);
 
-            return "ins ";
+            Regions.Write(bwIns);
+            Articulations.Write(bwIns);
+            Info.Write(bwIns);
+
+            bwIns.Seek(4, SeekOrigin.Begin);
+            bwIns.Write((uint)msIns.Length - 8);
+            bw.Write(msIns.ToArray());
         }
     }
 
@@ -813,8 +837,8 @@ namespace DLS {
         public sealed class Sort : IComparer<CK_RGNH> {
             // IComparerの実装
             public int Compare(CK_RGNH x, CK_RGNH y) {
-                var xKey = (x.Key.Low << 24) | (x.Key.High << 16) | (x.Velocity.Low << 8) | x.Velocity.High;
-                var yKey = (y.Key.Low << 24) | (y.Key.High << 16) | (y.Velocity.Low << 8) | y.Velocity.High;
+                var xKey = (x.Key.Lo << 24) | (x.Key.Hi << 16) | (x.Vel.Lo << 8) | x.Vel.Hi;
+                var yKey = (y.Key.Lo << 24) | (y.Key.Hi << 16) | (y.Vel.Lo << 8) | y.Vel.Hi;
                 return xKey - yKey;
             }
         }
@@ -836,11 +860,11 @@ namespace DLS {
             }
         }
 
-        public new void Write(BinaryWriter bw) {
+        public void Write(BinaryWriter bw) {
             var msList = new MemoryStream();
             var bwList = new BinaryWriter(msList);
             foreach (var rgn in List) {
-                bwList.Write(rgn.Value.Bytes);
+                rgn.Value.Write(bwList);
             }
 
             if (0 < msList.Length) {
@@ -862,10 +886,10 @@ namespace DLS {
         public RGN() { }
 
         public RGN(byte noteLow = 0, byte noteHigh = 127, byte velocityLow = 0, byte velocityHigh = 127) {
-            Header.Key.Low = noteLow;
-            Header.Key.High = noteHigh;
-            Header.Velocity.Low = velocityLow;
-            Header.Velocity.High = velocityHigh;
+            Header.Key.Lo = noteLow;
+            Header.Key.Hi = noteHigh;
+            Header.Vel.Lo = velocityLow;
+            Header.Vel.Hi = velocityHigh;
         }
 
         public RGN(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
@@ -873,21 +897,21 @@ namespace DLS {
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {
             case "rgnh":
-                Header = (CK_RGNH)Marshal.PtrToStructure(ptr, typeof(CK_RGNH));
+                Header = Marshal.PtrToStructure<CK_RGNH>(ptr);
                 if (chunkSize < Marshal.SizeOf<CK_RGNH>()) {
                     Header.Layer = 0;
                 }
                 break;
             case "wsmp":
-                Sampler = (CK_WSMP)Marshal.PtrToStructure(ptr, typeof(CK_WSMP));
+                Sampler = Marshal.PtrToStructure<CK_WSMP>(ptr);
                 var pLoop = ptr + Marshal.SizeOf<CK_WSMP>();
                 for (var i = 0; i < Sampler.LoopCount; ++i) {
-                    Loops.Add(Loops.Count, (WaveLoop)Marshal.PtrToStructure(pLoop, typeof(WaveLoop)));
+                    Loops.Add(Loops.Count, Marshal.PtrToStructure<WaveLoop>(pLoop));
                     pLoop += Marshal.SizeOf<WaveLoop>();
                 }
                 break;
             case "wlnk":
-                WaveLink = (CK_WLNK)Marshal.PtrToStructure(ptr, typeof(CK_WLNK));
+                WaveLink = Marshal.PtrToStructure<CK_WLNK>(ptr);
                 break;
             default:
                 throw new Exception(string.Format("Unknown ChunkType [{0}]", chunkType));
@@ -905,28 +929,28 @@ namespace DLS {
             }
         }
 
-        protected override string Write(BinaryWriter bw) {
-            var data = Header.Bytes;
-            bw.Write("rgnh".ToCharArray());
-            bw.Write(data.Length);
-            bw.Write(data);
+        public void Write(BinaryWriter bw) {
+            var msRgn = new MemoryStream();
+            var bwRgn = new BinaryWriter(msRgn);
+            bwRgn.Write("LIST".ToCharArray());
+            bwRgn.Write(0xFFFFFFFF);
+            bwRgn.Write("rgn ".ToCharArray());
 
-            data = Sampler.Bytes;
-            bw.Write("wsmp".ToCharArray());
-            bw.Write((uint)(data.Length + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
-            bw.Write(data);
+            Header.Write(bwRgn);
+
+            bwRgn.Write("wsmp".ToCharArray());
+            bwRgn.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
+            Sampler.Write(bwRgn);
             for (var i = 0; i < Sampler.LoopCount && i < Loops.Count; ++i) {
-                bw.Write(Loops[i].Bytes);
+                Loops[i].Write(bwRgn);
             }
 
-            data = WaveLink.Bytes;
-            bw.Write("wlnk".ToCharArray());
-            bw.Write(data.Length);
-            bw.Write(data);
+            WaveLink.Write(bwRgn);
+            Articulations.Write(bwRgn);
 
-            Articulations.Write(bw);
-
-            return "rgn ";
+            bwRgn.Seek(4, SeekOrigin.Begin);
+            bwRgn.Write((uint)msRgn.Length - 8);
+            bw.Write(msRgn.ToArray());
         }
     }
 
@@ -948,7 +972,7 @@ namespace DLS {
             }
         }
 
-        public new void Write(BinaryWriter bw) {
+        public void Write(BinaryWriter bw) {
             if (null == ART) {
                 return;
             }
@@ -960,7 +984,7 @@ namespace DLS {
             bwArt.Write((uint)8);
             bwArt.Write((uint)ART.List.Count);
             foreach (var art in ART.List) {
-                bwArt.Write(art.Value.Bytes);
+                art.Value.Write(bwArt);
             }
 
             if (0 < msArt.Length) {
@@ -978,11 +1002,11 @@ namespace DLS {
         public ART() { }
 
         public ART(IntPtr ptr) {
-            var info = (CK_ART1)Marshal.PtrToStructure(ptr, typeof(CK_ART1));
+            var info = Marshal.PtrToStructure<CK_ART1>(ptr);
             ptr += Marshal.SizeOf<CK_ART1>();
 
             for (var i = 0; i < info.Count; ++i) {
-                List.Add(i, (Connection)Marshal.PtrToStructure(ptr, typeof(Connection)));
+                List.Add(i, Marshal.PtrToStructure<Connection>(ptr));
                 ptr += Marshal.SizeOf<Connection>();
             }
         }
@@ -1005,7 +1029,7 @@ namespace DLS {
             }
         }
 
-        public new void Write(BinaryWriter bw) {
+        public void Write(BinaryWriter bw) {
             var msPtbl = new MemoryStream();
             var bwPtbl = new BinaryWriter(msPtbl);
             bwPtbl.Write("ptbl".ToCharArray());
@@ -1015,9 +1039,9 @@ namespace DLS {
 
             var msWave = new MemoryStream();
             var bwWave = new BinaryWriter(msWave);
-            foreach (var wav in List) {
+            foreach (var wave in List) {
                 bwPtbl.Write((uint)msWave.Position);
-                bwWave.Write(wav.Value.Bytes);
+                wave.Value.Write(bwWave);
             }
 
             if (0 < msPtbl.Length) {
@@ -1042,58 +1066,6 @@ namespace DLS {
 
         public WAVE() { }
 
-        public WAVE(string filePath) {
-            FileStream fs = new FileStream(filePath, FileMode.Open);
-            BinaryReader br = new BinaryReader(fs);
-
-            var riff = br.ReadUInt32();
-            var riffSize = br.ReadUInt32();
-            var riffType = br.ReadUInt32();
-
-            while (fs.Position < fs.Length) {
-                var chunkType = Encoding.ASCII.GetString(br.ReadBytes(4));
-                var chunkSize = br.ReadUInt32();
-                var pChunkData = Marshal.AllocHGlobal((int)chunkSize);
-                Marshal.StructureToPtr(br.ReadBytes((int)chunkSize), pChunkData, true);
-
-                switch (chunkType) {
-                case "fmt ":
-                    Format = (CK_FMT)Marshal.PtrToStructure(pChunkData, typeof(CK_FMT));
-                    break;
-                case "data":
-                    Marshal.Copy(pChunkData, Data, 0, Data.Length);
-                    break;
-                case "wsmp":
-                    Sampler = (CK_WSMP)Marshal.PtrToStructure(pChunkData, typeof(CK_WSMP));
-                    var pLoop = pChunkData + Marshal.SizeOf<CK_WSMP>();
-                    for (var i = 0; i < Sampler.LoopCount; ++i) {
-                        Loops.Add(Loops.Count, (WaveLoop)Marshal.PtrToStructure(pLoop, typeof(WaveLoop)));
-                        pLoop += Marshal.SizeOf<WaveLoop>();
-                    }
-                    break;
-                case "LIST":
-                    switch (Marshal.PtrToStringAnsi(pChunkData, 4)) {
-                    case "INFO":
-                        Info = new Info(pChunkData + 4, pChunkData + (int)chunkSize);
-                        break;
-                    }
-                    break;
-                }
-                Marshal.FreeHGlobal(pChunkData);
-            }
-
-            if (null == Info) {
-                Info = new Info();
-                Info.Name = Path.GetFileNameWithoutExtension(filePath);
-            } else if (string.IsNullOrWhiteSpace(Info.Name)) {
-                Info.Name = Path.GetFileNameWithoutExtension(filePath);
-            }
-
-            br.Dispose();
-            fs.Close();
-            fs.Dispose();
-        }
-
         public WAVE(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
 
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
@@ -1102,17 +1074,17 @@ namespace DLS {
             case "guid":
                 break;
             case "fmt ":
-                Format = (CK_FMT)Marshal.PtrToStructure(ptr, typeof(CK_FMT));
+                Format = Marshal.PtrToStructure<CK_FMT>(ptr);
                 break;
             case "data":
                 Data = new byte[chunkSize];
                 Marshal.Copy(ptr, Data, 0, Data.Length);
                 break;
             case "wsmp":
-                Sampler = (CK_WSMP)Marshal.PtrToStructure(ptr, typeof(CK_WSMP));
+                Sampler = Marshal.PtrToStructure<CK_WSMP>(ptr);
                 var pLoop = ptr + Marshal.SizeOf<CK_WSMP>();
                 for (var i = 0; i < Sampler.LoopCount; ++i) {
-                    Loops.Add(Loops.Count, (WaveLoop)Marshal.PtrToStructure(pLoop, typeof(WaveLoop)));
+                    Loops.Add(Loops.Count, Marshal.PtrToStructure<WaveLoop>(pLoop));
                     pLoop += Marshal.SizeOf<WaveLoop>();
                 }
                 break;
@@ -1127,80 +1099,31 @@ namespace DLS {
             }
         }
 
-        protected override string Write(BinaryWriter bw) {
-            var data = Sampler.Bytes;
+        public void Write(BinaryWriter bw) {
+            var msSmp = new MemoryStream();
+            var bwSmp = new BinaryWriter(msSmp);
+            bwSmp.Write("LIST".ToCharArray());
+            bwSmp.Write(0xFFFFFFFF);
+            bwSmp.Write("wave".ToCharArray());
 
-            bw.Write("wsmp".ToCharArray());
-            bw.Write((uint)(data.Length + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
-            bw.Write(data);
+            bwSmp.Write("wsmp".ToCharArray());
+            bwSmp.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
+            Sampler.Write(bwSmp);
             foreach (var loop in Loops.Values) {
-                bw.Write(loop.Bytes);
+                loop.Write(bwSmp);
             }
 
-            data = Format.Bytes;
-            bw.Write("fmt ".ToCharArray());
-            bw.Write(data.Length);
-            bw.Write(data);
+            Format.Write(bwSmp);
 
-            bw.Write("data".ToCharArray());
-            bw.Write(Data.Length);
-            bw.Write(Data);
+            bwSmp.Write("data".ToCharArray());
+            bwSmp.Write(Data.Length);
+            bwSmp.Write(Data);
 
-            Info.Write(bw);
+            Info.Write(bwSmp);
 
-            return "wave";
-        }
-
-        public void ToFile(string filePath) {
-            if (16 != Format.Bits) {
-                return;
-            }
-
-            FileStream fs = new FileStream(filePath, FileMode.Create);
-            BinaryWriter bw = new BinaryWriter(fs);
-
-            var msr = new MemoryStream(Data);
-            var bmr = new BinaryReader(msr);
-            var msw = new MemoryStream();
-            var bmw = new BinaryWriter(msw);
-
-            while (msr.Position < msr.Length) {
-                bmw.Write(bmr.ReadInt16());
-            }
-
-            bw.Write("RIFF".ToCharArray());
-            bw.Write((uint)0);
-            bw.Write("WAVE".ToCharArray());
-
-            bw.Write("fmt ".ToCharArray());
-            bw.Write((uint)16);
-            bw.Write(Format.Tag);
-            bw.Write(Format.Channels);
-            bw.Write(Format.SampleRate);
-            bw.Write(Format.BytesPerSec);
-            bw.Write(Format.BlockAlign);
-            bw.Write(Format.Bits);
-
-            bw.Write("data".ToCharArray());
-            bw.Write((uint)msw.Length);
-            bw.Write(msw.ToArray());
-
-            var data = Sampler.Bytes;
-            bw.Write("wsmp".ToCharArray());
-            bw.Write((uint)(data.Length + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
-            bw.Write(data);
-            foreach (var loop in Loops.Values) {
-                bw.Write(loop.Bytes);
-            }
-
-            Info.Write(bw);
-
-            fs.Seek(4, SeekOrigin.Begin);
-            bw.Write((uint)(fs.Length - 8));
-
-            bw.Dispose();
-            fs.Close();
-            fs.Dispose();
+            bwSmp.Seek(4, SeekOrigin.Begin);
+            bwSmp.Write((uint)msSmp.Length - 8);
+            bw.Write(msSmp.ToArray());
         }
     }
 }

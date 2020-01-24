@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using Instruments;
 
 namespace InstrumentEditor {
     unsafe public class WavePlayback : WaveOutLib {
@@ -20,24 +20,11 @@ namespace InstrumentEditor {
             Stop();
         }
 
-        public void SetValue(DLS.WAVE wave) {
-            mWave = new short[8 * wave.Data.Length / wave.Format.Bits];
-            mSampleRate = (int)wave.Format.SampleRate;
-            var br = new BinaryReader(new MemoryStream(wave.Data));
-
-            switch (wave.Format.Bits) {
-                case 8:
-                    for (var i = 0; i < mWave.Length; ++i) {
-                        mWave[i] = (short)((br.ReadByte() - 128) * 256);
-                    }
-                    break;
-                case 16:
-                    for (var i = 0; i < mWave.Length; ++i) {
-                        mWave[i] = br.ReadInt16();
-                    }
-                    break;
-                default:
-                    return;
+        public void SetValue(Wave wave) {
+            mWave = new short[wave.Data.Length];
+            mSampleRate = (int)wave.Header.SampleRate;
+            for (var i = 0; i < mWave.Length; ++i) {
+                mWave[i] = wave.Data[i];
             }
         }
 

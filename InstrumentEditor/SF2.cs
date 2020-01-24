@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 
 using Riff;
-using DLS;
+using Instruments;
 
 namespace SF2 {
     #region enum
@@ -144,76 +144,55 @@ namespace SF2 {
         public double sustain;
         public double release;
     }
-
-    public struct PRESET_RANGE {
-        public byte keyLo;
-        public byte keyHi;
-        public byte velLo;
-        public byte velHi;
-
-        public int instId;
-        public double gain;
-        public double pan;
-        public double coarseTune;
-        public double fineTune;
-
-        public void Init() {
-            keyHi = 127;
-            velHi = 127;
-
-            instId = -1;
-            gain = 1.0;
-            pan = 0.0;
-            coarseTune = 1.0;
-            fineTune = 1.0;
-        }
-    }
-
-    public struct INST_RANGE {
-        public byte keyLo;
-        public byte keyHi;
-        public byte velLo;
-        public byte velHi;
-
-        public bool loopEnable;
-        public int sampleId;
-        public int rootKey;
-        public uint waveBegin;
-        public uint waveEnd;
-        public double gain;
-        public double pan;
-        public double coarseTune;
-        public double fineTune;
-
-        public ENVELOPE env;
-
-        public void Init() {
-            keyHi = 127;
-            velHi = 127;
-
-            sampleId = -1;
-            rootKey = -1;
-            gain = 1.0;
-            coarseTune = 1.0;
-            fineTune = 1.0;
-
-            env.sustain = -1.0;
-            env.hold = -1.0;
-        }
-    }
     #endregion
 
-    public class SF2 : Chunk {
+    public class InstRange {
+        public byte keyLo;
+        public byte keyHi;
+        public byte velLo;
+        public byte velHi;
+        public int  sampleId;
+        public uint waveBegin;
+        public uint waveEnd;
+        public Dictionary<E_OPER, double> Art = new Dictionary<E_OPER, double>();
+
+        public InstRange() {
+            keyHi = 127;
+            velHi = 127;
+            sampleId = -1;
+        }
+    }
+
+    public class PresetRange {
+        public byte keyLo;
+        public byte keyHi;
+        public byte velLo;
+        public byte velHi;
+        public Dictionary<E_OPER, double> Art = new Dictionary<E_OPER, double>();
+    }
+
+    public class Inst {
+        public string Name;
+        public Dictionary<E_OPER, double> GlobalArt = new Dictionary<E_OPER, double>();
+        public List<InstRange> Range = new List<InstRange>();
+    }
+
+    public class Preset {
+        public string Name;
+        public Dictionary<E_OPER, double> GlobalArt = new Dictionary<E_OPER, double>();
+        public List<PresetRange> Range = new List<PresetRange>();
+    }
+
+    public class File : Chunk {
         private string mPath;
         private PDTA mPdta;
         private SDTA mSdta;
 
-        public SF2(string path) : base(path) {
-            mPath = path;
+        public File(string filePath) : base(filePath) {
+            mPath = filePath;
             //OutputPresetList();
             //OutputInstList();
             //OutputSampleList();
-            ToInst(path);
         }
 
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
@@ -236,22 +215,40 @@ namespace SF2 {
                     preset.Key.bankMSB,
                     preset.Key.progNum,
                     1 == preset.Key.bankFlg ? "Drum" : "Note",
-                    preset.Value.Item1
+                    preset.Value.Name
                 );
                 sw.Write(",\"Key\nLow\",\"Key\nHigh\",\"Vel\nLow\",\"Vel\nHigh\"");
-                sw.WriteLine(",Gain,Pan,Inst");
-                foreach (var prgn in preset.Value.Item2) {
+                sw.WriteLine(",Gain,Pan,Half tone,Fine tune,Inst");
+
+                sw.Write(",,,--,--,--,--");
+                sw.Write(",{0},{1},{2},{3},{4}:{5}",
+                    preset.Value.GlobalArt.ContainsKey(E_OPER.INITIAL_ATTENUATION)
+                        ? preset.Value.GlobalArt[E_OPER.INITIAL_ATTENUATION].ToString("0.000") : "--",
+                    preset.Value.GlobalArt.ContainsKey(E_OPER.PAN)
+                        ? preset.Value.GlobalArt[E_OPER.PAN].ToString("0.000") : "--",
+                    preset.Value.GlobalArt.ContainsKey(E_OPER.COARSE_TUNE)
+                        ? preset.Value.GlobalArt[E_OPER.COARSE_TUNE].ToString("0.000") : "--",
+                    preset.Value.GlobalArt.ContainsKey(E_OPER.FINETUNE)
+                        ? preset.Value.GlobalArt[E_OPER.FINETUNE].ToString("0.000") : "--",
+                    preset.Value.GlobalArt.ContainsKey(E_OPER.INSTRUMENT)
+                        ? preset.Value.GlobalArt[E_OPER.INSTRUMENT].ToString() : "--",
+                    preset.Value.GlobalArt.ContainsKey(E_OPER.INSTRUMENT)
+                        ? mPdta.InstList[(int)preset.Value.GlobalArt[E_OPER.INSTRUMENT]].Name : "--"
+                );
+                sw.WriteLine();
+
+                foreach (var prgn in preset.Value.Range) {
                     sw.Write(",,,{0},{1},{2},{3}",
                         prgn.keyLo, prgn.keyHi,
                         prgn.velLo, prgn.velHi
                     );
                     sw.Write(",{0},{1},{2},{3},{4}:{5}",
-                        prgn.gain.ToString("0.000"),
-                        prgn.pan.ToString("0.000"),
-                        prgn.coarseTune.ToString("0.000"),
-                        prgn.fineTune.ToString("0.000"),
-                        prgn.instId,
-                        mPdta.InstList[prgn.instId].Item1
+                        prgn.Art.ContainsKey(E_OPER.INITIAL_ATTENUATION) ? prgn.Art[E_OPER.INITIAL_ATTENUATION].ToString("0.000") : "--",
+                        prgn.Art.ContainsKey(E_OPER.PAN) ? prgn.Art[E_OPER.PAN].ToString("0.000") : "--",
+                        prgn.Art.ContainsKey(E_OPER.COARSE_TUNE) ? prgn.Art[E_OPER.COARSE_TUNE].ToString("0.000") : "--",
+                        prgn.Art.ContainsKey(E_OPER.FINETUNE) ? prgn.Art[E_OPER.FINETUNE].ToString("0.000") : "--",
+                        prgn.Art.ContainsKey(E_OPER.INSTRUMENT) ? prgn.Art[E_OPER.INSTRUMENT].ToString() : "--",
+                        prgn.Art.ContainsKey(E_OPER.INSTRUMENT) ? mPdta.InstList[(int)prgn.Art[E_OPER.INSTRUMENT]].Name : "--"
                     );
                     sw.WriteLine();
                 }
@@ -265,53 +262,153 @@ namespace SF2 {
                 + "\\" + Path.GetFileNameWithoutExtension(mPath) + "_inst.csv");
             int instNo = 0;
             foreach (var inst in mPdta.InstList) {
-                sw.Write("{0}:{1}", instNo, inst.Item1);
+                sw.Write("{0}:{1}", instNo, inst.Name);
                 sw.Write(",\"Key\nLow\",\"Key\nHigh\",\"Vel\nLow\",\"Vel\nHigh\"");
                 sw.Write(",Gain,Pan");
-                sw.Write(",RootKey");
-                sw.Write(",\"Tune\nHalf tone\",\"Tune\nCent\"");
+                sw.Write(",RootKey,\"Tune\nHalf tone\",\"Tune\nCent\"");
                 sw.Write(",A,H,D,S,R");
                 sw.WriteLine(",Sample,Offset,Length,\"Loop\nBegin\",\"Loop\nLength\"");
+
+                sw.Write(",--,--,--,--");
+
+                if (inst.GlobalArt.ContainsKey(E_OPER.INITIAL_ATTENUATION)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.INITIAL_ATTENUATION].ToString("0.000"));
+                } else {
+                    sw.Write(",--");
+                }
+                if (inst.GlobalArt.ContainsKey(E_OPER.PAN)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.PAN].ToString("0.000"));
+                } else {
+                    sw.Write(",--");
+                }
+
+                if (inst.GlobalArt.ContainsKey(E_OPER.OVERRIDING_ROOTKEY)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.OVERRIDING_ROOTKEY]);
+                } else {
+                    sw.Write(",--");
+                }
+                if (inst.GlobalArt.ContainsKey(E_OPER.COARSE_TUNE)) {
+                    if (1.0 == inst.GlobalArt[E_OPER.COARSE_TUNE]) {
+                        sw.Write(",0");
+                    } else {
+                        sw.Write(",{0}", (12.0 / Math.Log(2.0, inst.GlobalArt[E_OPER.COARSE_TUNE])).ToString("0.000"));
+                    }
+                } else {
+                    sw.Write(",--");
+                }
+                if (inst.GlobalArt.ContainsKey(E_OPER.FINETUNE)) {
+                    if (1.0 == inst.GlobalArt[E_OPER.FINETUNE]) {
+                        sw.Write(",0");
+                    } else {
+                        sw.Write(",{0}", (1200.0 / Math.Log(2.0, inst.GlobalArt[E_OPER.FINETUNE])).ToString("0.000"));
+                    }
+                } else {
+                    sw.Write(",--");
+                }
+
+                if (inst.GlobalArt.ContainsKey(E_OPER.ENV_VOL_ATTACK)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.ENV_VOL_ATTACK].ToString("0.000"));
+                } else {
+                    sw.Write(",--");
+                }
+                if (inst.GlobalArt.ContainsKey(E_OPER.ENV_VOL_HOLD)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.ENV_VOL_HOLD].ToString("0.000"));
+                } else {
+                    sw.Write(",--");
+                }
+                if (inst.GlobalArt.ContainsKey(E_OPER.ENV_VOL_DECAY)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.ENV_VOL_DECAY].ToString("0.000"));
+                } else {
+                    sw.Write(",--");
+                }
+                if (inst.GlobalArt.ContainsKey(E_OPER.ENV_VOL_SUSTAIN)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.ENV_VOL_SUSTAIN].ToString("0.000"));
+                } else {
+                    sw.Write(",--");
+                }
+                if (inst.GlobalArt.ContainsKey(E_OPER.ENV_VOL_RELEASE)) {
+                    sw.Write(",{0}", inst.GlobalArt[E_OPER.ENV_VOL_RELEASE].ToString("0.000"));
+                } else {
+                    sw.Write(",--");
+                }
+
+                sw.WriteLine();
+
                 instNo++;
-                foreach (var irgn in inst.Item2) {
+                foreach (var irgn in inst.Range) {
                     var smpl = mPdta.SampleList[irgn.sampleId];
                     var smplName = Encoding.ASCII.GetString(smpl.name).Replace("\0", "").TrimEnd();
                     sw.Write(",{0},{1},{2},{3}",
                         irgn.keyLo, irgn.keyHi,
                         irgn.velLo, irgn.velHi
                     );
-                    sw.Write(",{0},{1}",
-                        irgn.gain.ToString("0.000"),
-                        irgn.pan.ToString("0.000")
-                    );
 
-                    if (0 <= irgn.rootKey) {
-                        sw.Write(",{0}", irgn.rootKey);
+                    if (irgn.Art.ContainsKey(E_OPER.INITIAL_ATTENUATION)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.INITIAL_ATTENUATION].ToString("0.000"));
+                    } else {
+                        sw.Write(",--");
+                    }
+                    if (irgn.Art.ContainsKey(E_OPER.PAN)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.PAN].ToString("0.000"));
                     } else {
                         sw.Write(",--");
                     }
 
-                    if (1.0 == irgn.coarseTune) {
-                        sw.Write(",0");
+                    if (irgn.Art.ContainsKey(E_OPER.OVERRIDING_ROOTKEY)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.OVERRIDING_ROOTKEY]);
                     } else {
-                        sw.Write(",{0}", 12.0 / Math.Log(2.0, irgn.coarseTune));
+                        sw.Write(",--");
                     }
-                    if (1.0 == irgn.fineTune) {
-                        sw.Write(",0");
+                    if (irgn.Art.ContainsKey(E_OPER.COARSE_TUNE)) {
+                        if (1.0 == irgn.Art[E_OPER.COARSE_TUNE]) {
+                            sw.Write(",0");
+                        } else {
+                            sw.Write(",{0}", (12.0 / Math.Log(2.0, irgn.Art[E_OPER.COARSE_TUNE])).ToString("0.000"));
+                        }
                     } else {
-                        sw.Write(",{0}", 1200.0 / Math.Log(2.0, irgn.fineTune));
+                        sw.Write(",--");
+                    }
+                    if (irgn.Art.ContainsKey(E_OPER.FINETUNE)) {
+                        if (1.0 == irgn.Art[E_OPER.FINETUNE]) {
+                            sw.Write(",0");
+                        } else {
+                            sw.Write(",{0}", (1200.0 / Math.Log(2.0, irgn.Art[E_OPER.FINETUNE])).ToString("0.000"));
+                        }
+                    } else {
+                        sw.Write(",--");
                     }
 
-                    sw.Write(",{0}", irgn.env.attack.ToString("0.000"));
-                    sw.Write(",{0}", irgn.env.hold.ToString("0.000"));
-                    sw.Write(",{0}", irgn.env.decay.ToString("0.000"));
-                    sw.Write(",{0}", irgn.env.sustain.ToString("0.000"));
-                    sw.Write(",{0}", irgn.env.release.ToString("0.000"));
+                    if (irgn.Art.ContainsKey(E_OPER.ENV_VOL_ATTACK)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.ENV_VOL_ATTACK].ToString("0.000"));
+                    } else {
+                        sw.Write(",--");
+                    }
+                    if (irgn.Art.ContainsKey(E_OPER.ENV_VOL_HOLD)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.ENV_VOL_HOLD].ToString("0.000"));
+                    } else {
+                        sw.Write(",--");
+                    }
+                    if (irgn.Art.ContainsKey(E_OPER.ENV_VOL_DECAY)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.ENV_VOL_DECAY].ToString("0.000"));
+                    } else {
+                        sw.Write(",--");
+                    }
+                    if (irgn.Art.ContainsKey(E_OPER.ENV_VOL_SUSTAIN)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.ENV_VOL_SUSTAIN].ToString("0.000"));
+                    } else {
+                        sw.Write(",--");
+                    }
+                    if (irgn.Art.ContainsKey(E_OPER.ENV_VOL_RELEASE)) {
+                        sw.Write(",{0}", irgn.Art[E_OPER.ENV_VOL_RELEASE].ToString("0.000"));
+                    } else {
+                        sw.Write(",--");
+                    }
 
                     var waveBegin = smpl.start + irgn.waveBegin;
                     var waveEnd = smpl.end + irgn.waveEnd;
                     var waveLen = waveEnd - waveBegin + 1;
-                    if (irgn.loopEnable) {
+
+                    if (irgn.Art.ContainsKey(E_OPER.SAMPLE_MODES)) {
                         var loopBegin = smpl.loopstart - waveBegin;
                         var loopLen = smpl.loopend - smpl.loopstart + 1;
                         sw.WriteLine(",{0}:{1},0x{2},{3},{4},{5}",
@@ -356,52 +453,253 @@ namespace SF2 {
             sw.Dispose();
         }
 
-        public void ToInst(string filePath) {
-            var instFile = new DLS.File();
+        public Instruments.File ToIns() {
+            var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
+            var instFile = new Instruments.File();
 
             for (var idx = 0; idx < mPdta.SampleList.Count - 1; idx++) {
                 var smpl = mPdta.SampleList[idx];
-                var wi = new WAVE();
-                wi.Format.Tag = 1;
-                wi.Format.SampleRate = smpl.sampleRate;
-                wi.Format.Channels = 1;
-                wi.Format.Bits = 16;
-                wi.Format.BlockAlign = 2;
-                wi.Format.BytesPerSec = smpl.sampleRate * 2;
-
-                wi.Sampler.UnityNote = smpl.originalKey;
+                var wi = new Wave();
+                wi.Header.SampleRate = smpl.sampleRate;
+                wi.Header.UnityNote = smpl.originalKey;
 
                 if (1 == (byte)(smpl.type & 1)) {
-                    var loop = new WaveLoop();
-                    loop.Size = 8;
-                    loop.Start = smpl.loopstart - smpl.start;
-                    loop.Length = smpl.loopend - smpl.loopstart + 1;
-                    wi.Sampler.LoopCount = 1;
-                    wi.Loops.Add(0, loop);
+                    wi.Header.LoopBegin = smpl.loopstart - smpl.start;
+                    wi.Header.LoopLength = smpl.loopend - smpl.loopstart + 1;
+                    wi.Header.LoopEnable = 1;
+                } else {
+                    wi.Header.LoopBegin = smpl.start;
+                    wi.Header.LoopLength = smpl.end - smpl.start + 1;
+                    wi.Header.LoopEnable = 0;
                 }
 
-                wi.Info.Name = Encoding.ASCII.GetString(smpl.name);
+                wi.Header.Gain = 1.0;
+                wi.Header.Pitch = 1.0;
 
                 var wavePos = (int)(smpl.start * 2);
                 var waveLen = (int)(smpl.end - smpl.start + 1) * 2;
                 var wavePtr = Marshal.AllocHGlobal(waveLen);
-                wi.Data = new byte[waveLen];
-
+                wi.Data = new short[waveLen / 2];
                 Marshal.Copy(mSdta.Data, wavePos, wavePtr, waveLen);
-                Marshal.Copy(wavePtr, wi.Data, 0, waveLen);
+                Marshal.Copy(wavePtr, wi.Data, 0, waveLen / 2);
                 Marshal.FreeHGlobal(wavePtr);
 
-                instFile.WavePool.List.Add(idx, wi);
+                wi.Info.Name = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
+                wi.Info.CreationDate = now;
+                wi.Info.SourceForm = Path.GetFileName(mPath);
+
+                instFile.Wave.Add(wi);
             }
 
-            instFile.Save(Path.GetDirectoryName(filePath)
-                + "\\" + Path.GetFileNameWithoutExtension(filePath) + ".dls");
+            foreach (var sf2Inst in mPdta.InstList) {
+                var inst = new Instruments.Inst();
+
+                inst.Info.Name = sf2Inst.Name.Replace("\0", "");
+                inst.Info.CreationDate = now;
+                inst.Info.SourceForm = Path.GetFileName(mPath);
+
+                foreach (var art in sf2Inst.GlobalArt) {
+                    var globalArt = new ART {
+                        Value = (float)art.Value
+                    };
+                    switch (art.Key) {
+                    case E_OPER.INITIAL_ATTENUATION:
+                        globalArt.Type = ART_TYPE.GAIN_CONST;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.PAN:
+                        globalArt.Type = ART_TYPE.PAN_CONST;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.COARSE_TUNE:
+                        globalArt.Type = ART_TYPE.COASE_TUNE;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.FINETUNE:
+                        globalArt.Type = ART_TYPE.PITCH_CONST;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.OVERRIDING_ROOTKEY:
+                        globalArt.Type = ART_TYPE.OVERRIDE_KEY;
+                        inst.Art.Add(globalArt);
+                        break;
+
+                    case E_OPER.ENV_VOL_ATTACK:
+                        globalArt.Type = ART_TYPE.EG_AMP_ATTACK;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.ENV_VOL_HOLD:
+                        globalArt.Type = ART_TYPE.EG_AMP_HOLD;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.ENV_VOL_DECAY:
+                        globalArt.Type = ART_TYPE.EG_AMP_DECAY;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.ENV_VOL_SUSTAIN:
+                        globalArt.Type = ART_TYPE.EG_AMP_SUSTAIN;
+                        inst.Art.Add(globalArt);
+                        break;
+                    case E_OPER.ENV_VOL_RELEASE:
+                        globalArt.Type = ART_TYPE.EG_AMP_RELEASE;
+                        inst.Art.Add(globalArt);
+                        break;
+                    }
+                }
+
+                foreach (var sf2InstRng in sf2Inst.Range) {
+                    var rgn = new Region();
+                    rgn.Header.KeyLo = sf2InstRng.keyLo;
+                    rgn.Header.KeyHi = sf2InstRng.keyHi;
+                    rgn.Header.VelLo = sf2InstRng.velLo;
+                    rgn.Header.VelHi = sf2InstRng.velHi;
+
+                    rgn.Art.Add(new ART {
+                        Type = ART_TYPE.WAVE_INDEX,
+                        Value = sf2InstRng.sampleId
+                    });
+
+                    foreach (var art in sf2InstRng.Art) {
+                        var layerArt = new ART {
+                            Value = (float)art.Value
+                        };
+                        switch (art.Key) {
+                        case E_OPER.INITIAL_ATTENUATION:
+                            layerArt.Type = ART_TYPE.GAIN_CONST;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.PAN:
+                            layerArt.Type = ART_TYPE.PAN_CONST;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.COARSE_TUNE:
+                            layerArt.Type = ART_TYPE.COASE_TUNE;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.FINETUNE:
+                            layerArt.Type = ART_TYPE.PITCH_CONST;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.OVERRIDING_ROOTKEY:
+                            layerArt.Type = ART_TYPE.OVERRIDE_KEY;
+                            rgn.Art.Add(layerArt);
+                            break;
+
+                        case E_OPER.ENV_VOL_ATTACK:
+                            layerArt.Type = ART_TYPE.EG_AMP_ATTACK;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.ENV_VOL_HOLD:
+                            layerArt.Type = ART_TYPE.EG_AMP_HOLD;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.ENV_VOL_DECAY:
+                            layerArt.Type = ART_TYPE.EG_AMP_DECAY;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.ENV_VOL_SUSTAIN:
+                            layerArt.Type = ART_TYPE.EG_AMP_SUSTAIN;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        case E_OPER.ENV_VOL_RELEASE:
+                            layerArt.Type = ART_TYPE.EG_AMP_RELEASE;
+                            rgn.Art.Add(layerArt);
+                            break;
+                        }
+                    }
+
+                    inst.Region.Add(rgn);
+                }
+
+                instFile.Inst.Add(inst);
+            }
+
+            foreach (var sf2Pres in mPdta.PresetList) {
+                var preset = new Instruments.Preset();
+                preset.Header.BankFlg = sf2Pres.Key.bankFlg;
+                preset.Header.BankMSB = sf2Pres.Key.bankMSB;
+                preset.Header.BankLSB = sf2Pres.Key.bankLSB;
+                preset.Header.ProgNum = sf2Pres.Key.progNum;
+
+                preset.Info.Name = sf2Pres.Value.Name.Replace("\0", "");
+                preset.Info.CreationDate = now;
+                preset.Info.SourceForm = Path.GetFileName(mPath);
+
+                foreach (var art in sf2Pres.Value.GlobalArt) {
+                    var globalArt = new ART {
+                        Value = (float)art.Value
+                    };
+                    switch (art.Key) {
+                    case E_OPER.INITIAL_ATTENUATION:
+                        globalArt.Type = ART_TYPE.GAIN_CONST;
+                        preset.Art.Add(globalArt);
+                        break;
+                    case E_OPER.PAN:
+                        globalArt.Type = ART_TYPE.PAN_CONST;
+                        preset.Art.Add(globalArt);
+                        break;
+                    case E_OPER.COARSE_TUNE:
+                        globalArt.Type = ART_TYPE.COASE_TUNE;
+                        preset.Art.Add(globalArt);
+                        break;
+                    case E_OPER.FINETUNE:
+                        globalArt.Type = ART_TYPE.PITCH_CONST;
+                        preset.Art.Add(globalArt);
+                        break;
+                    case E_OPER.INSTRUMENT:
+                        globalArt.Type = ART_TYPE.INST_INDEX;
+                        preset.Art.Add(globalArt);
+                        break;
+                    }
+                }
+
+                foreach (var sf2PresRng in sf2Pres.Value.Range) {
+                    var layer = new Layer();
+                    layer.Header.KeyLo = sf2PresRng.keyLo;
+                    layer.Header.KeyHi = sf2PresRng.keyHi;
+                    layer.Header.VelLo = sf2PresRng.velLo;
+                    layer.Header.VelHi = sf2PresRng.velHi;
+
+                    foreach(var art in sf2PresRng.Art) {
+                        var layerArt = new ART {
+                            Value = (float)art.Value
+                        };
+                        switch (art.Key) {
+                        case E_OPER.INITIAL_ATTENUATION:
+                            layerArt.Type = ART_TYPE.GAIN_CONST;
+                            layer.Art.Add(layerArt);
+                            break;
+                        case E_OPER.PAN:
+                            layerArt.Type = ART_TYPE.PAN_CONST;
+                            layer.Art.Add(layerArt);
+                            break;
+                        case E_OPER.COARSE_TUNE:
+                            layerArt.Type = ART_TYPE.COASE_TUNE;
+                            layer.Art.Add(layerArt);
+                            break;
+                        case E_OPER.FINETUNE:
+                            layerArt.Type = ART_TYPE.PITCH_CONST;
+                            layer.Art.Add(layerArt);
+                            break;
+                        case E_OPER.INSTRUMENT:
+                            layerArt.Type = ART_TYPE.INST_INDEX;
+                            layer.Art.Add(layerArt);
+                            break;
+                        }
+                    }
+
+                    preset.Layer.Add(layer);
+                }
+                instFile.Preset.Add(preset.Header, preset);
+            }
+
+            return instFile;
         }
     }
 
     public class PDTA : Chunk {
-        public Dictionary<INST_ID, Tuple<string, PRESET_RANGE[]>> PresetList = new Dictionary<INST_ID, Tuple<string, PRESET_RANGE[]>>();
-        public List<Tuple<string, INST_RANGE[]>> InstList = new List<Tuple<string, INST_RANGE[]>>();
+        public Dictionary<INST_ID, Preset> PresetList = new Dictionary<INST_ID, Preset>();
+        public List<Inst> InstList = new List<Inst>();
         public List<SHDR> SampleList = new List<SHDR>();
 
         private List<PHDR> mPHDR = new List<PHDR>();
@@ -420,24 +718,28 @@ namespace SF2 {
 
         private void SetPresetList() {
             for (int i = 0; i < mPHDR.Count; i++) {
-                var preset = mPHDR[i];
+                var phdr = mPHDR[i];
                 int bagCount;
                 if (i < mPHDR.Count - 1) {
-                    bagCount = mPHDR[i + 1].bagIndex - preset.bagIndex;
+                    bagCount = mPHDR[i + 1].bagIndex - phdr.bagIndex;
                 } else {
-                    bagCount = mPBAG.Count - preset.bagIndex;
+                    bagCount = mPBAG.Count - phdr.bagIndex;
                 }
-                var list = new List<PRESET_RANGE>();
-                for (int ib = 0, bagIdx = preset.bagIndex; ib < bagCount; ib++, bagIdx++) {
+
+                var preset = new Preset {
+                    Name = Encoding.ASCII.GetString(phdr.name).Replace("\0", "").TrimEnd()
+                };
+
+                for (int ib = 0, bagIdx = phdr.bagIndex; ib < bagCount; ib++, bagIdx++) {
                     var bag = mPBAG[bagIdx];
-                    var range = new PRESET_RANGE();
-                    range.Init();
                     int genCount;
                     if (bagIdx < mPBAG.Count - 1) {
                         genCount = mPBAG[bagIdx + 1].genIndex - bag.genIndex;
                     } else {
                         genCount = mPGEN.Count - bag.genIndex;
                     }
+
+                    var range = new PresetRange();
                     for (int j = 0, genIdx = bag.genIndex; j < genCount; j++, genIdx++) {
                         var gen = mPGEN[genIdx];
                         switch (gen.genOper) {
@@ -449,36 +751,41 @@ namespace SF2 {
                             range.velLo = (byte)(gen.genAmount & 0x7F);
                             range.velHi = (byte)((gen.genAmount >> 8) & 0x7F);
                             break;
+                        case E_OPER.INSTRUMENT:
+                            range.Art.Add(gen.genOper, gen.genAmount);
+                            break;
+
                         case E_OPER.INITIAL_ATTENUATION:
-                            range.gain = Math.Pow(10.0, -gen.genAmount / 200.0);
+                            range.Art.Add(gen.genOper, Math.Pow(10.0, -gen.genAmount / 200.0));
                             break;
                         case E_OPER.PAN:
-                            range.pan = gen.genAmount / 500.0;
+                            range.Art.Add(gen.genOper, gen.genAmount / 500.0);
                             break;
                         case E_OPER.COARSE_TUNE:
-                            range.coarseTune = Math.Pow(2.0, gen.genAmount / 120.0);
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 120.0));
                             break;
                         case E_OPER.FINETUNE:
-                            range.fineTune = Math.Pow(2.0, gen.genAmount / 1200.0);
-                            break;
-                        case E_OPER.INSTRUMENT:
-                            range.instId = gen.genAmount;
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 1200.0));
                             break;
                         default:
                             break;
                         }
                     }
-                    if (0 <= range.instId) {
-                        list.Add(range);
+
+                    if (range.Art.ContainsKey(E_OPER.INSTRUMENT)) {
+                        preset.Range.Add(range);
+                    } else {
+                        preset.GlobalArt = range.Art;
                     }
                 }
-                var id = new INST_ID();
-                id.bankFlg = (byte)(0 < (preset.bank & 0x80) ? 1 : 0);
-                id.bankMSB = (byte)(preset.bank & 0x7F);
-                id.progNum = (byte)preset.presetno;
+
+                var id = new INST_ID {
+                    bankFlg = (byte)(0 < (phdr.bank & 0x80) ? 1 : 0),
+                    bankMSB = (byte)(phdr.bank & 0x7F),
+                    progNum = (byte)phdr.presetno
+                };
                 if (!PresetList.ContainsKey(id)) {
-                    PresetList.Add(id, new Tuple<string, PRESET_RANGE[]>(
-                        Encoding.ASCII.GetString(preset.name).Replace("\0", "").TrimEnd(), list.ToArray()));
+                    PresetList.Add(id, preset);
                 }
             }
             mPHDR.Clear();
@@ -496,9 +803,11 @@ namespace SF2 {
                 } else {
                     bagCount = mIBAG.Count - inst.bagIndex;
                 }
-                var global = new INST_RANGE();
-                global.Init();
-                var list = new List<INST_RANGE>();
+
+                var instrument = new Inst {
+                    Name = Encoding.ASCII.GetString(inst.name).Replace("\0", "").TrimEnd()
+                };
+
                 for (int ib = 0, bagIdx = inst.bagIndex; ib < bagCount; ib++, bagIdx++) {
                     var bag = mIBAG[bagIdx];
                     int genCount;
@@ -507,8 +816,8 @@ namespace SF2 {
                     } else {
                         genCount = mIGEN.Count - bag.genIndex;
                     }
-                    var range = new INST_RANGE();
-                    range.Init();
+
+                    var range = new InstRange();
                     for (int j = 0, genIdx = bag.genIndex; j < genCount; j++, genIdx++) {
                         var gen = mIGEN[genIdx];
                         switch (gen.genOper) {
@@ -520,24 +829,7 @@ namespace SF2 {
                             range.velLo = (byte)(gen.genAmount & 0x7F);
                             range.velHi = (byte)((gen.genAmount >> 8) & 0x7F);
                             break;
-                        case E_OPER.INITIAL_ATTENUATION:
-                            range.gain = Math.Pow(10.0, -gen.genAmount / 200.0);
-                            break;
-                        case E_OPER.PAN:
-                            range.pan = gen.genAmount / 500.0;
-                            break;
-                        case E_OPER.COARSE_TUNE:
-                            range.coarseTune = Math.Pow(2.0, gen.genAmount / 120.0);
-                            break;
-                        case E_OPER.FINETUNE:
-                            range.fineTune = Math.Pow(2.0, gen.genAmount / 1200.0);
-                            break;
-                        case E_OPER.OVERRIDING_ROOTKEY:
-                            range.rootKey = gen.genAmount;
-                            break;
-                        case E_OPER.SAMPLE_MODES:
-                            range.loopEnable = 0 < (gen.genAmount & 1);
-                            break;
+
                         case E_OPER.SAMPLE_ID:
                             range.sampleId = gen.genAmount;
                             break;
@@ -553,83 +845,53 @@ namespace SF2 {
                         case E_OPER.ADDRS_OFFSET_END_MSB:
                             range.waveEnd |= (uint)((ushort)gen.genAmount << 16);
                             break;
+
+                        case E_OPER.INITIAL_ATTENUATION:
+                            range.Art.Add(gen.genOper, Math.Pow(10.0, -gen.genAmount / 200.0));
+                            break;
+                        case E_OPER.PAN:
+                            range.Art.Add(gen.genOper, gen.genAmount / 500.0);
+                            break;
+                        case E_OPER.OVERRIDING_ROOTKEY:
+                            range.Art.Add(gen.genOper, gen.genAmount);
+                            break;
+                        case E_OPER.COARSE_TUNE:
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 120.0));
+                            break;
+                        case E_OPER.FINETUNE:
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 1200.0));
+                            break;
+                        case E_OPER.SAMPLE_MODES:
+                            range.Art.Add(gen.genOper, gen.genAmount & 1);
+                            break;
+
                         case E_OPER.ENV_VOL_ATTACK:
-                            range.env.attack = Math.Pow(2.0, gen.genAmount / 1200.0);
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 1200.0));
                             break;
                         case E_OPER.ENV_VOL_HOLD:
-                            range.env.hold = Math.Pow(2.0, gen.genAmount / 1200.0);
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 1200.0));
                             break;
                         case E_OPER.ENV_VOL_DECAY:
-                            range.env.decay = Math.Pow(2.0, gen.genAmount / 1200.0);
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 1200.0));
                             break;
                         case E_OPER.ENV_VOL_SUSTAIN:
-                            range.env.sustain = Math.Pow(10.0, -gen.genAmount / 200.0);
+                            range.Art.Add(gen.genOper, Math.Pow(10.0, -gen.genAmount / 200.0));
                             break;
                         case E_OPER.ENV_VOL_RELEASE:
-                            range.env.release = Math.Pow(2.0, gen.genAmount / 1200.0);
+                            range.Art.Add(gen.genOper, Math.Pow(2.0, gen.genAmount / 1200.0));
                             break;
                         default:
                             break;
                         }
                     }
-                    if (range.sampleId < 0) {
-                        global = range;
-                    } else {
-                        // set global value
-                        if (range.rootKey < 0) {
-                            range.rootKey = global.rootKey;
-                        }
-                        if (range.coarseTune == 0.0) {
-                            range.coarseTune = global.coarseTune;
-                        }
-                        if (range.fineTune == 0.0) {
-                            range.fineTune = global.fineTune;
-                        }
-                        if (range.env.attack <= 0.0) {
-                            range.env.attack = global.env.attack;
-                        }
-                        if (range.env.decay <= 0.0) {
-                            range.env.decay = global.env.decay;
-                        }
-                        if (range.env.release <= 0.0) {
-                            range.env.release = global.env.release;
-                        }
-                        if (range.env.hold < 0.0) {
-                            range.env.hold = global.env.hold;
-                        }
-                        if (range.env.sustain < 0.0) {
-                            range.env.sustain = global.env.sustain;
-                        }
 
-                        // set default value
-                        if (range.coarseTune == 0.0) {
-                            range.coarseTune = 1.0;
-                        }
-                        if (range.fineTune == 0.0) {
-                            range.fineTune = 1.0;
-                        }
-                        if (range.env.attack <= 1.0) {
-                            range.env.attack = 1.0;
-                        }
-                        if (range.env.decay <= 1.0) {
-                            range.env.decay = 1.0;
-                        }
-                        if (range.env.release <= 1.0) {
-                            range.env.release = 1.0;
-                        }
-                        if (range.env.hold < 0.0) {
-                            range.env.hold = 0.0;
-                        }
-                        if (range.env.sustain < 0.0) {
-                            range.env.sustain = 1.0;
-                        }
-                        range.env.hold += range.env.attack;
-                        //
-                        list.Add(range);
+                    if (range.sampleId < 0) {
+                        instrument.GlobalArt = range.Art;
+                    } else {
+                        instrument.Range.Add(range);
                     }
                 }
-                InstList.Add(new Tuple<string, INST_RANGE[]>(
-                    Encoding.ASCII.GetString(inst.name).Replace("\0", "").TrimEnd(), list.ToArray()));
+                InstList.Add(instrument);
             }
             mINST.Clear();
             mIBAG.Clear();

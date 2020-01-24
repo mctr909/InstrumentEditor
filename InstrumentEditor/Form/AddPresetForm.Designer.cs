@@ -1,5 +1,5 @@
 ﻿namespace InstrumentEditor {
-    partial class InstForm
+    partial class AddPresetForm
 	{
         /// <summary>
         /// Required designer variable.

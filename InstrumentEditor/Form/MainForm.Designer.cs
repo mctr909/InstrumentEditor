@@ -44,8 +44,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.tbpInstList = new System.Windows.Forms.TabPage();
-            this.lstInst = new System.Windows.Forms.ListBox();
+            this.tbpPresetList = new System.Windows.Forms.TabPage();
+            this.lstPreset = new System.Windows.Forms.ListBox();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.tsbAddInst = new System.Windows.Forms.ToolStripButton();
             this.tsbDeleteInst = new System.Windows.Forms.ToolStripButton();
@@ -68,17 +68,20 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.txtWaveSearch = new System.Windows.Forms.ToolStripTextBox();
             this.tabControl = new System.Windows.Forms.TabControl();
+            this.tbpInstList = new System.Windows.Forms.TabPage();
+            this.lstInst = new System.Windows.Forms.ListBox();
             this.BottomToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.TopToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.menuStrip1.SuspendLayout();
-            this.tbpInstList.SuspendLayout();
+            this.tbpPresetList.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.tbpWaveList.SuspendLayout();
             this.toolStrip3.SuspendLayout();
             this.tabControl.SuspendLayout();
+            this.tbpInstList.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -91,7 +94,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(13, 4, 0, 4);
-            this.menuStrip1.Size = new System.Drawing.Size(1258, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(849, 42);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -196,32 +199,32 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // tbpInstList
+            // tbpPresetList
             // 
-            this.tbpInstList.Controls.Add(this.lstInst);
-            this.tbpInstList.Controls.Add(this.toolStrip2);
-            this.tbpInstList.Font = new System.Drawing.Font("Meiryo UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.tbpInstList.Location = new System.Drawing.Point(8, 39);
-            this.tbpInstList.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.tbpInstList.Name = "tbpInstList";
-            this.tbpInstList.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.tbpInstList.Size = new System.Drawing.Size(751, 687);
-            this.tbpInstList.TabIndex = 0;
-            this.tbpInstList.Text = "音色一覧";
-            this.tbpInstList.UseVisualStyleBackColor = true;
+            this.tbpPresetList.Controls.Add(this.lstPreset);
+            this.tbpPresetList.Controls.Add(this.toolStrip2);
+            this.tbpPresetList.Font = new System.Drawing.Font("Meiryo UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.tbpPresetList.Location = new System.Drawing.Point(8, 39);
+            this.tbpPresetList.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.tbpPresetList.Name = "tbpPresetList";
+            this.tbpPresetList.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.tbpPresetList.Size = new System.Drawing.Size(751, 687);
+            this.tbpPresetList.TabIndex = 0;
+            this.tbpPresetList.Text = "プリセット一覧";
+            this.tbpPresetList.UseVisualStyleBackColor = true;
             // 
-            // lstInst
+            // lstPreset
             // 
-            this.lstInst.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lstInst.FormattingEnabled = true;
-            this.lstInst.ItemHeight = 27;
-            this.lstInst.Location = new System.Drawing.Point(7, 62);
-            this.lstInst.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.lstInst.Name = "lstInst";
-            this.lstInst.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstInst.Size = new System.Drawing.Size(255, 112);
-            this.lstInst.TabIndex = 3;
-            this.lstInst.DoubleClick += new System.EventHandler(this.lstInst_DoubleClick);
+            this.lstPreset.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lstPreset.FormattingEnabled = true;
+            this.lstPreset.ItemHeight = 27;
+            this.lstPreset.Location = new System.Drawing.Point(7, 62);
+            this.lstPreset.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.lstPreset.Name = "lstPreset";
+            this.lstPreset.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lstPreset.Size = new System.Drawing.Size(255, 85);
+            this.lstPreset.TabIndex = 3;
+            this.lstPreset.DoubleClick += new System.EventHandler(this.lstPreset_DoubleClick);
             // 
             // toolStrip2
             // 
@@ -242,7 +245,7 @@
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStrip2.Size = new System.Drawing.Size(706, 38);
+            this.toolStrip2.Size = new System.Drawing.Size(707, 38);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -355,7 +358,7 @@
             this.txtInstSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtInstSearch.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.txtInstSearch.Name = "txtInstSearch";
-            this.txtInstSearch.Size = new System.Drawing.Size(400, 38);
+            this.txtInstSearch.Size = new System.Drawing.Size(401, 38);
             this.txtInstSearch.Leave += new System.EventHandler(this.txtInstSearch_Leave);
             this.txtInstSearch.TextChanged += new System.EventHandler(this.txtInstSearch_TextChanged);
             // 
@@ -381,7 +384,7 @@
             this.lstWave.Name = "lstWave";
             this.lstWave.ScrollAlwaysVisible = true;
             this.lstWave.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstWave.Size = new System.Drawing.Size(576, 436);
+            this.lstWave.Size = new System.Drawing.Size(576, 409);
             this.lstWave.TabIndex = 1;
             this.lstWave.DoubleClick += new System.EventHandler(this.lstWave_DoubleClick);
             // 
@@ -400,7 +403,7 @@
             this.toolStrip3.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStrip3.Size = new System.Drawing.Size(608, 38);
+            this.toolStrip3.Size = new System.Drawing.Size(609, 38);
             this.toolStrip3.TabIndex = 0;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -457,21 +460,45 @@
             this.txtWaveSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtWaveSearch.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.txtWaveSearch.Name = "txtWaveSearch";
-            this.txtWaveSearch.Size = new System.Drawing.Size(400, 38);
+            this.txtWaveSearch.Size = new System.Drawing.Size(401, 38);
             this.txtWaveSearch.Leave += new System.EventHandler(this.txtWaveSearch_Leave);
             this.txtWaveSearch.TextChanged += new System.EventHandler(this.txtWaveSearch_TextChanged);
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tbpWaveList);
+            this.tabControl.Controls.Add(this.tbpPresetList);
             this.tabControl.Controls.Add(this.tbpInstList);
             this.tabControl.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.tabControl.Location = new System.Drawing.Point(16, 48);
+            this.tabControl.Location = new System.Drawing.Point(15, 48);
             this.tabControl.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(767, 734);
             this.tabControl.TabIndex = 4;
+            // 
+            // tbpInstList
+            // 
+            this.tbpInstList.Controls.Add(this.lstInst);
+            this.tbpInstList.Location = new System.Drawing.Point(8, 39);
+            this.tbpInstList.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.tbpInstList.Name = "tbpInstList";
+            this.tbpInstList.Size = new System.Drawing.Size(751, 687);
+            this.tbpInstList.TabIndex = 4;
+            this.tbpInstList.Text = "音色一覧";
+            this.tbpInstList.UseVisualStyleBackColor = true;
+            // 
+            // lstInst
+            // 
+            this.lstInst.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lstInst.FormattingEnabled = true;
+            this.lstInst.ItemHeight = 27;
+            this.lstInst.Location = new System.Drawing.Point(7, 6);
+            this.lstInst.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.lstInst.Name = "lstInst";
+            this.lstInst.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.lstInst.Size = new System.Drawing.Size(277, 112);
+            this.lstInst.TabIndex = 4;
             // 
             // BottomToolStripPanel
             // 
@@ -513,7 +540,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1258, 793);
+            this.ClientSize = new System.Drawing.Size(849, 828);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -524,8 +551,8 @@
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tbpInstList.ResumeLayout(false);
-            this.tbpInstList.PerformLayout();
+            this.tbpPresetList.ResumeLayout(false);
+            this.tbpPresetList.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             this.tbpWaveList.ResumeLayout(false);
@@ -533,6 +560,7 @@
             this.toolStrip3.ResumeLayout(false);
             this.toolStrip3.PerformLayout();
             this.tabControl.ResumeLayout(false);
+            this.tbpInstList.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -556,8 +584,8 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.TabPage tbpInstList;
-        private System.Windows.Forms.ListBox lstInst;
+        private System.Windows.Forms.TabPage tbpPresetList;
+        private System.Windows.Forms.ListBox lstPreset;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton tsbAddInst;
         private System.Windows.Forms.ToolStripButton tsbDeleteInst;
@@ -585,6 +613,8 @@
         private System.Windows.Forms.ToolStripButton tsbKey;
         private System.Windows.Forms.ToolStripButton tsbEnvelope;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.TabPage tbpInstList;
+        private System.Windows.Forms.ListBox lstInst;
     }
 }
 

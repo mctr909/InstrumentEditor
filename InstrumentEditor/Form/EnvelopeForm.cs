@@ -1,22 +1,21 @@
 ﻿using System.Windows.Forms;
 
-using DLS;
+using Instruments;
 
 namespace InstrumentEditor {
 	public partial class EnvelopeForm : Form {
-        private DLS.File mDLS;
-        private INS mINS;
+        private File mFile;
+        private Region mRegion;
 
-        public EnvelopeForm(DLS.File dls, INS ins) {
-            mDLS = dls;
-            mINS = ins;
+        public EnvelopeForm(File file, Region region) {
+            mFile = file;
+            mRegion = region;
             InitializeComponent();
             DispRegionInfo();
         }
 
         private void DispRegionInfo() {
-            ampEnvelope.Art = mINS.Articulations.ART;
-            Text = mINS.Info.Name.Trim();
+            ampEnvelope.Art = mRegion.Art;
         }
     }
 }

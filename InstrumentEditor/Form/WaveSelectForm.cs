@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using Instruments;
+
 namespace InstrumentEditor {
     public partial class WaveSelectForm : Form {
-        private DLS.File mDLS;
-        private DLS.RGN mRegion;
+        private File mFile;
+        private Region mRegion;
 
-        public WaveSelectForm(DLS.File dls, DLS.RGN region) {
+        public WaveSelectForm(File file, Region region) {
             InitializeComponent();
-
-            mDLS = dls;
+            mFile = file;
             mRegion = region;
         }
 
@@ -26,10 +27,9 @@ namespace InstrumentEditor {
             if (0 == lstWave.Items.Count) {
                 return;
             }
-
-            var cols = lstWave.SelectedItem.ToString().Split('\t');
+            var cols = lstWave.SelectedItem.ToString().Split('|');
             var idx = int.Parse(cols[0]);
-            var fm = new WaveInfoForm(mDLS, idx);
+            var fm = new WaveInfoForm(mFile, idx);
             var index = lstWave.SelectedIndex;
             fm.ShowDialog();
             DispWaveList(txtSearch.Text);
@@ -38,8 +38,8 @@ namespace InstrumentEditor {
 
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstWave.SelectedIndex) {
-                var cols = lstWave.SelectedItem.ToString().Split('\t');
-                mRegion.WaveLink.TableIndex = uint.Parse(cols[0]);
+                var cols = lstWave.SelectedItem.ToString().Split('|');
+                mRegion.Art.Update(ART_TYPE.WAVE_INDEX, uint.Parse(cols[0]));
             }
             Close();
         }
@@ -71,12 +71,13 @@ namespace InstrumentEditor {
         private void DispWaveList(string keyword) {
             lstWave.Items.Clear();
             int count = 0;
-            foreach (var wave in mDLS.WavePool.List) {
+            for (var iWave = 0; iWave < mFile.Wave.Count; iWave++) {
+                var wave = mFile.Wave[iWave];
                 var name = "";
-                if (null == wave.Value.Info || string.IsNullOrWhiteSpace(wave.Value.Info.Name)) {
+                if (null == wave.Info || string.IsNullOrWhiteSpace(wave.Info.Name)) {
                     name = string.Format("Wave[{0}]", count);
                 } else {
-                    name = wave.Value.Info.Name;
+                    name = wave.Info.Name;
                 }
 
                 if (!string.IsNullOrEmpty(keyword) && name.IndexOf(keyword) < 0) {
@@ -84,27 +85,37 @@ namespace InstrumentEditor {
                 }
 
                 var use = false;
-                foreach (var inst in mDLS.Instruments.List.Values) {
-                    foreach (var rgn in inst.Regions.List.Values) {
-                        if (count == rgn.WaveLink.TableIndex) {
-                            use = true;
-                            break;
+                foreach (var inst in mFile.Inst.Array) {
+                    foreach (var rgn in inst.Region.Array) {
+                        foreach(var art in rgn.Art.Values) {
+                            if (art.Type != ART_TYPE.WAVE_INDEX) {
+                                continue;
+                            }
+                            if (count == (int)art.Value) {
+                                use = true;
+                                break;
+                            }
                         }
                     }
                 }
 
                 lstWave.Items.Add(string.Format(
                     "{0}\t{1}\t{2}\t{3}",
-                    wave.Key.ToString("0000"),
-                    (use ? "use" : "   "),
-                    (0 < wave.Value.Sampler.LoopCount ? "loop" : "    "),
+                    iWave.ToString("0000"),
+                    use ? "use" : "   ",
+                    0 < wave.Header.LoopEnable ? "loop" : "    ",
                     name
                 ));
                 ++count;
             }
 
-            if (mRegion.WaveLink.TableIndex < lstWave.Items.Count) {
-                lstWave.SelectedIndex = (int)mRegion.WaveLink.TableIndex;
+            foreach (var art in mRegion.Art.Values) {
+                if (art.Type != ART_TYPE.WAVE_INDEX) {
+                    continue;
+                }
+                if (art.Value < lstWave.Items.Count) {
+                    lstWave.SelectedIndex = (int)art.Value;
+                }
             }
         }
     }

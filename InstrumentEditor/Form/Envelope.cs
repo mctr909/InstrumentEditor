@@ -2,9 +2,11 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 
+using Instruments;
+
 namespace InstrumentEditor {
     public partial class Envelope : UserControl {
-        private DLS.ART mArt;
+        private Lart mLart;
         private static int TrackBarWidth = 600;
 
         public Envelope() {
@@ -178,103 +180,53 @@ namespace InstrumentEditor {
             disp();
         }
 
-        public DLS.ART Art {
-            get { return mArt; }
+        public Lart Art {
+            get { return mLart; }
             set {
-                mArt = value;
+                mLart = value;
                 disp();
             }
         }
 
-        public void SetList(Dictionary<int, DLS.Connection> list) {
+        public void SetList(Lart list) {
             if (chkAmpAttack.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG1_ATTACK_TIME;
-                v.Value = ampAttack;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_AMP_ATTACK,(float)ampAttack);
             }
 
             if (chkAmpHold.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG1_HOLD_TIME;
-                v.Value = ampHold;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_AMP_HOLD, (float)ampHold);
             }
 
             if (chkAmpDecay.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG1_DECAY_TIME;
-                v.Value = ampDecay;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_AMP_DECAY, (float)ampDecay);
             }
 
             if (chkAmpSustain.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG1_SUSTAIN_LEVEL;
-                v.Value = ampSustain;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_AMP_SUSTAIN, (float)ampSustain);
             }
 
             if (chkAmpReleace.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG1_RELEASE_TIME;
-                v.Value = ampReleace;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_AMP_RELEASE, (float)ampReleace);
             }
 
             if (chkEqAttack.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG2_ATTACK_TIME;
-                v.Value = eqAttack;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_CUTOFF_ATTACK, (float)eqAttack);
             }
 
             if (chkEqHold.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG2_HOLD_TIME;
-                v.Value = eqHold;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_CUTOFF_HOLD, (float)eqHold);
             }
 
             if (chkEqDecay.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG2_DECAY_TIME;
-                v.Value = eqDecay;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_CUTOFF_DECAY, (float)eqDecay);
             }
 
             if (chkEqSustain.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG2_SUSTAIN_LEVEL;
-                v.Value = eqSustain;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_CUTOFF_SUSTAIN, (float)eqSustain);
             }
 
             if (chkEqReleace.Checked) {
-                var v = new DLS.Connection();
-                v.Source = DLS.Connection.SRC_TYPE.NONE;
-                v.Control = DLS.Connection.SRC_TYPE.NONE;
-                v.Destination = DLS.Connection.DST_TYPE.EG2_RELEASE_TIME;
-                v.Value = eqReleace;
-                list.Add(list.Count, v);
+                list.Update(ART_TYPE.EG_CUTOFF_RELEASE, (float)eqReleace);
             }
         }
 
@@ -584,51 +536,43 @@ namespace InstrumentEditor {
             eqDecay = 0;
             eqReleace = 0;
 
-            if (null != mArt) {
-                foreach (var art in mArt.List.Values) {
-                    if (DLS.Connection.SRC_TYPE.NONE != art.Source) {
-                        continue;
-                    }
+            if (null != mLart) {
+                foreach (var art in mLart.Values) {
+                    switch (art.Type) {
+                    case ART_TYPE.EG_AMP_ATTACK:
+                        ampAttack = art.Value;
+                        break;
+                    case ART_TYPE.EG_AMP_HOLD:
+                        ampHold = art.Value;
+                        break;
+                    case ART_TYPE.EG_AMP_DECAY:
+                        ampDecay = art.Value;
+                        break;
+                    case ART_TYPE.EG_AMP_SUSTAIN:
+                        ampSustain = art.Value;
+                        break;
+                    case ART_TYPE.EG_AMP_RELEASE:
+                        ampReleace = art.Value;
+                        break;
 
-                    if (DLS.Connection.SRC_TYPE.NONE != art.Control) {
-                        continue;
-                    }
+                    case ART_TYPE.EG_CUTOFF_ATTACK:
+                        eqAttack = art.Value;
+                        break;
+                    case ART_TYPE.EG_CUTOFF_HOLD:
+                        eqHold = art.Value;
+                        break;
+                    case ART_TYPE.EG_CUTOFF_DECAY:
+                        eqDecay = art.Value;
+                        break;
+                    case ART_TYPE.EG_CUTOFF_SUSTAIN:
+                        eqSustain = art.Value;
+                        break;
+                    case ART_TYPE.EG_CUTOFF_RELEASE:
+                        eqReleace = art.Value;
+                        break;
 
-                    switch (art.Destination) {
-                        case DLS.Connection.DST_TYPE.EG1_ATTACK_TIME:
-                            ampAttack = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG1_HOLD_TIME:
-                            ampHold = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG1_DECAY_TIME:
-                            ampDecay = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG1_SUSTAIN_LEVEL:
-                            ampSustain = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG1_RELEASE_TIME:
-                            ampReleace = art.Value;
-                            break;
-
-                        case DLS.Connection.DST_TYPE.EG2_ATTACK_TIME:
-                            eqAttack = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG2_HOLD_TIME:
-                            eqHold = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG2_DECAY_TIME:
-                            eqDecay = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG2_SUSTAIN_LEVEL:
-                            eqSustain = art.Value;
-                            break;
-                        case DLS.Connection.DST_TYPE.EG2_RELEASE_TIME:
-                            eqReleace = art.Value;
-                            break;
-
-                        default:
-                            break;
+                    default:
+                        break;
                     }
                 }
             }

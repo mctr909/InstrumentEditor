@@ -1,36 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
-using DLS;
+using Instruments;
 
 namespace InstrumentEditor {
     public partial class RegionInfoForm : Form {
-        private DLS.File mDLS;
-        private RGN mRegion;
-        private CK_RGNH mHeader;
-        private CK_WSMP mSampler;
-        private CK_WLNK mWaveLink;
-        private ART mArt;
+        private File mFile;
+        private Region mRegion;
 
         private readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionInfoForm(DLS.File dls, DLS.RGN region) {
+        public RegionInfoForm(File file, Region region) {
             InitializeComponent();
 
-            mDLS = dls;
+            mFile = file;
             mRegion = region;
-            mHeader = region.Header;
-            mSampler = region.Sampler;
-            mWaveLink = region.WaveLink;
-
-            if (null != mRegion.Articulations && null != mRegion.Articulations.ART) {
-                mArt = new ART();
-                foreach (var art in mRegion.Articulations.ART.List) {
-                    mArt.List.Add(art.Key, art.Value);
-                }
-            }
 
             SetPosition();
             DispRegionInfo();
@@ -57,19 +44,23 @@ namespace InstrumentEditor {
         }
 
         private void btnSelectWave_Click(object sender, EventArgs e) {
-            var ret = new RGN();
-            ret.WaveLink = mWaveLink;
-            var fm = new WaveSelectForm(mDLS, ret);
+            var waveIndex = 0;
+            foreach(var art in mRegion.Art.Values) {
+                if (art.Type == ART_TYPE.WAVE_INDEX) {
+                    waveIndex = (int)art.Value;
+                    break;
+                }
+            }
+
+            var fm = new WaveSelectForm(mFile, mRegion);
             fm.ShowDialog();
 
-            mWaveLink = ret.WaveLink;
-
-            if (mDLS.WavePool.List.ContainsKey((int)mWaveLink.TableIndex)) {
-                var wave = mDLS.WavePool.List[(int)mWaveLink.TableIndex];
+            if (mFile.Wave.ContainsKey(waveIndex)) {
+                var wave = mFile.Wave[waveIndex];
                 btnEditWave.Enabled = true;
                 txtWave.Text = string.Format(
                     "{0} {1}",
-                    mWaveLink.TableIndex.ToString("0000"),
+                    waveIndex.ToString("0000"),
                     wave.Info.Name
                 );
             } else {
@@ -79,43 +70,28 @@ namespace InstrumentEditor {
         }
 
         private void btnEditWave_Click(object sender, EventArgs e) {
-            var fm = new WaveInfoForm(mDLS, (int)mWaveLink.TableIndex);
-            fm.ShowDialog();
+            foreach(var art in mRegion.Art.Values) {
+                if (art.Type == ART_TYPE.WAVE_INDEX) {
+                    var fm = new WaveInfoForm(mFile, (int)art.Value);
+                    fm.ShowDialog();
+                    return;
+                }
+            }
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
-            if (ushort.MaxValue == mHeader.Key.Low) {
-                mHeader.Key.Low = (ushort)numKeyLow.Value;
-                mHeader.Key.High = (ushort)numKeyHigh.Value;
-                mHeader.Velocity.Low = (ushort)numVelocityLow.Value;
-                mHeader.Velocity.High = (ushort)numVelocityHigh.Value;
+            if (byte.MaxValue == mRegion.Header.KeyLo) {
+                mRegion.Header.KeyLo = (byte)numKeyLow.Value;
+                mRegion.Header.KeyHi = (byte)numKeyHigh.Value;
+                mRegion.Header.VelLo = (byte)numVelocityLow.Value;
+                mRegion.Header.VelHi = (byte)numVelocityHigh.Value;
             }
 
-            if (!chkLoop.Checked) {
-                mSampler.LoopCount = 0;
-            }
+            mRegion.Art.Update(ART_TYPE.OVERRIDE_KEY, (byte)numUnityNote.Value);
+            mRegion.Art.Update(ART_TYPE.PITCH_CONST, (float)Math.Pow(2.0, (byte)numFineTune.Value / 1200.0));
+            mRegion.Art.Update(ART_TYPE.GAIN_CONST, (float)(numVolume.Value / 100.0m));
 
-            mSampler.UnityNote = (ushort)numUnityNote.Value;
-            mSampler.FineTune = (short)numFineTune.Value;
-            mSampler.Gain = (double)numVolume.Value / 100.0;
-
-            mRegion.Header = mHeader;
-            mRegion.Sampler = mSampler;
-            mRegion.WaveLink = mWaveLink;
-
-            if (null != envelope1.Art && null != mRegion.Articulations) {
-                if (null == mRegion.Articulations.ART) {
-                    mRegion.Articulations.ART = new ART();
-                }
-
-                mArt.List.Clear();
-                envelope1.SetList(mArt.List);
-
-                mRegion.Articulations.ART.List.Clear();
-                foreach (var art in mArt.List) {
-                    mRegion.Articulations.ART.List.Add(art.Key, art.Value);
-                }
-            }
+            envelope1.SetList(mRegion.Art);
 
             Close();
         }
@@ -154,30 +130,18 @@ namespace InstrumentEditor {
             grbVolume.Top = grbUnityNote.Top;
             grbVolume.Left = grbFineTune.Left + grbFineTune.Width + 6;
 
-            if (null == mArt) {
-                envelope1.Visible = false;
+            envelope1.Top = grbVolume.Top + grbVolume.Height + 6;
+            envelope1.Left = grbUnityNote.Left;
 
-                chkLoop.Top = grbVolume.Top + grbVolume.Height + 6;
+            envelope1.Art = mRegion.Art;
 
-                btnAdd.Top = chkLoop.Top;
-                btnAdd.Left = grbWave.Right - btnAdd.Width;
+            chkLoop.Top = envelope1.Top + envelope1.Height + 6;
 
-                Width = grbWave.Left + grbWave.Width + 24;
-                Height = btnAdd.Top + btnAdd.Height + 48;
-            } else {
-                envelope1.Top = grbVolume.Top + grbVolume.Height + 6;
-                envelope1.Left = grbUnityNote.Left;
+            btnAdd.Top = chkLoop.Top;
+            btnAdd.Left = envelope1.Right - btnAdd.Width;
 
-                envelope1.Art = mArt;
-
-                chkLoop.Top = envelope1.Top + envelope1.Height + 6;
-
-                btnAdd.Top = chkLoop.Top;
-                btnAdd.Left = envelope1.Right - btnAdd.Width;
-
-                Width = envelope1.Left + envelope1.Width + 24;
-                Height = btnAdd.Top + btnAdd.Height + 48;
-            }
+            Width = envelope1.Left + envelope1.Width + 24;
+            Height = btnAdd.Top + btnAdd.Height + 48;
         }
 
         private void SetKeyLow() {
@@ -219,7 +183,7 @@ namespace InstrumentEditor {
         }
 
         private void DispRegionInfo() {
-            if (ushort.MaxValue == mHeader.Key.Low) {
+            if (byte.MaxValue == mRegion.Header.KeyLo) {
                 numKeyLow.Value = 63;
                 numKeyHigh.Value = 63;
                 numVelocityLow.Value = 0;
@@ -228,43 +192,55 @@ namespace InstrumentEditor {
 
                 btnAdd.Text = "追加";
             } else {
-                numKeyLow.Value = mHeader.Key.Low;
-                numKeyHigh.Value = mHeader.Key.High;
-                numVelocityLow.Value = mHeader.Velocity.Low;
-                numVelocityHigh.Value = mHeader.Velocity.High;
+                numKeyLow.Value = mRegion.Header.KeyLo;
+                numKeyHigh.Value = mRegion.Header.KeyHi;
+                numVelocityLow.Value = mRegion.Header.VelLo;
+                numVelocityHigh.Value = mRegion.Header.VelHi;
                 numKeyLow.Enabled = false;
                 numKeyHigh.Enabled = false;
                 numVelocityLow.Enabled = false;
                 numVelocityHigh.Enabled = false;
 
+                var waveIndex = int.MaxValue;
+                foreach (var art in mRegion.Art.Values) {
+                    if (art.Type == ART_TYPE.WAVE_INDEX) {
+                        waveIndex = (int)art.Value;
+                        break;
+                    }
+                }
+
                 var waveName = "";
-                if (mDLS.WavePool.List.ContainsKey((int)mWaveLink.TableIndex)) {
-                    var wave = mDLS.WavePool.List[(int)mWaveLink.TableIndex];
+                if (mFile.Wave.ContainsKey(waveIndex)) {
+                    var wave = mFile.Wave[waveIndex];
                     waveName = wave.Info.Name;
                     btnEditWave.Enabled = true;
                 } else {
                     btnEditWave.Enabled = false;
                 }
 
-                if (uint.MaxValue == mWaveLink.TableIndex) {
+                if (int.MaxValue == waveIndex) {
                     txtWave.Text = "";
                 } else {
                     txtWave.Text = string.Format(
                         "{0} {1}",
-                        mWaveLink.TableIndex.ToString("0000"),
+                        waveIndex.ToString("0000"),
                         waveName
                     );
                 }
 
-                if (0 < mSampler.LoopCount) {
-                    chkLoop.Checked = true;
-                } else {
-                    chkLoop.Checked = false;
+                foreach(var art in mRegion.Art.Values) {
+                    switch (art.Type) {
+                    case ART_TYPE.GAIN_CONST:
+                        numVolume.Value = (decimal)(art.Value * 100.0);
+                        break;
+                    case ART_TYPE.PITCH_CONST:
+                        numFineTune.Value = (decimal)(1200.0 / Math.Log(2.0, art.Value));
+                        break;
+                    case ART_TYPE.OVERRIDE_KEY:
+                        numUnityNote.Value = (int)art.Value;
+                        break;
+                    }
                 }
-
-                numUnityNote.Value = mSampler.UnityNote;
-                numFineTune.Value = mSampler.FineTune;
-                numVolume.Value = (decimal)(mSampler.Gain * 100.0);
 
                 btnAdd.Text = "反映";
             }
