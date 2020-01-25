@@ -345,11 +345,11 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var inst in mFile.Inst.Array) {
                     foreach (var rgn in inst.Region.Array) {
-                        foreach (var art in rgn.Art.Values) {
+                        foreach (var art in rgn.Art.Array) {
                             if (art.Type != ART_TYPE.WAVE_INDEX) {
                                 continue;
                             }
-                            if (count == (int)art.Value) {
+                            if (iWave == (int)art.Value) {
                                 use = true;
                                 break;
                             }
@@ -364,10 +364,13 @@ namespace InstrumentEditor {
                 }
 
                 lstWave.Items.Add(string.Format(
-                    "{0}|{1}|{2}|{3}",
+                    "{0}|{1}|{2}|{3}|{4}",
                     iWave.ToString("0000"),
                     (use ? "use" : "   "),
                     (0 < wave.Header.LoopEnable ? "loop" : "    "),
+                    Wave.NoteName[wave.Header.UnityNote % 12]
+                        + (wave.Header.UnityNote < 12 ? "" : "+")
+                        + (wave.Header.UnityNote / 12 - 1).ToString("00"),
                     name
                 ));
                 ++count;
@@ -451,7 +454,7 @@ namespace InstrumentEditor {
 
             // Articulations
             mClipboardPreset.Art.Clear();
-            foreach (var art in inst.Art.Values) {
+            foreach (var art in inst.Art.Array) {
                 mClipboardPreset.Art.Add(art);
             }
 
@@ -512,7 +515,7 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var ptrset in mFile.Preset.Values) {
                     foreach (var layer in ptrset.Layer.Array) {
-                        foreach (var art in layer.Art.Values) {
+                        foreach (var art in layer.Art.Array) {
                             if (art.Type != ART_TYPE.INST_INDEX) {
                                 continue;
                             }

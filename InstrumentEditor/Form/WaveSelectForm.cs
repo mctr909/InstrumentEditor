@@ -87,7 +87,7 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var inst in mFile.Inst.Array) {
                     foreach (var rgn in inst.Region.Array) {
-                        foreach(var art in rgn.Art.Values) {
+                        foreach(var art in rgn.Art.Array) {
                             if (art.Type != ART_TYPE.WAVE_INDEX) {
                                 continue;
                             }
@@ -109,7 +109,7 @@ namespace InstrumentEditor {
                 ++count;
             }
 
-            foreach (var art in mRegion.Art.Values) {
+            foreach (var art in mRegion.Art.Array) {
                 if (art.Type != ART_TYPE.WAVE_INDEX) {
                     continue;
                 }

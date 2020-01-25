@@ -45,7 +45,7 @@ namespace InstrumentEditor {
 
         private void btnSelectWave_Click(object sender, EventArgs e) {
             var waveIndex = 0;
-            foreach(var art in mRegion.Art.Values) {
+            foreach(var art in mRegion.Art.Array) {
                 if (art.Type == ART_TYPE.WAVE_INDEX) {
                     waveIndex = (int)art.Value;
                     break;
@@ -70,7 +70,7 @@ namespace InstrumentEditor {
         }
 
         private void btnEditWave_Click(object sender, EventArgs e) {
-            foreach(var art in mRegion.Art.Values) {
+            foreach(var art in mRegion.Art.Array) {
                 if (art.Type == ART_TYPE.WAVE_INDEX) {
                     var fm = new WaveInfoForm(mFile, (int)art.Value);
                     fm.ShowDialog();
@@ -202,7 +202,7 @@ namespace InstrumentEditor {
                 numVelocityHigh.Enabled = false;
 
                 var waveIndex = int.MaxValue;
-                foreach (var art in mRegion.Art.Values) {
+                foreach (var art in mRegion.Art.Array) {
                     if (art.Type == ART_TYPE.WAVE_INDEX) {
                         waveIndex = (int)art.Value;
                         break;
@@ -228,7 +228,7 @@ namespace InstrumentEditor {
                     );
                 }
 
-                foreach(var art in mRegion.Art.Values) {
+                foreach(var art in mRegion.Art.Array) {
                     switch (art.Type) {
                     case ART_TYPE.GAIN_CONST:
                         numVolume.Value = (decimal)(art.Value * 100.0);

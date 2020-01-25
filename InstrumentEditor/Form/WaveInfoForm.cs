@@ -36,10 +36,6 @@ namespace InstrumentEditor {
         private int mDetectNote;
         private int mDetectTune;
 
-        private readonly string[] NoteName = new string[] {
-            "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
-        };
-
         public WaveInfoForm(File file, int index) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
@@ -110,7 +106,7 @@ namespace InstrumentEditor {
                 if (note < 0) {
                     note += -(note / 12 - 1) * 12;
                 }
-                lblPitch.Text = string.Format("{0}{1}", NoteName[note], oct - 2);
+                lblPitch.Text = string.Format("{0}{1}", Wave.NoteName[note], oct - 2);
                 lblPitchCent.Text = string.Format("{0}cent", mDetectTune);
             }
 
@@ -208,7 +204,7 @@ namespace InstrumentEditor {
         private void numUnityNote_ValueChanged(object sender, EventArgs e) {
             var oct = (int)numUnityNote.Value / 12 - 2;
             var note = (int)numUnityNote.Value % 12;
-            lblUnityNote.Text = string.Format("{0}{1}", NoteName[note], oct);
+            lblUnityNote.Text = string.Format("{0}{1}", Wave.NoteName[note], oct);
             mFile.Wave[mWaveIndex].Header.UnityNote = (byte)numUnityNote.Value;
         }
 

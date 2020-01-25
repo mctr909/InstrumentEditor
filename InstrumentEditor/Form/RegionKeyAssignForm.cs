@@ -153,7 +153,7 @@ namespace InstrumentEditor {
                 );
 
                 var waveIndex = int.MaxValue;
-                foreach (var art in region.Art.Values) {
+                foreach (var art in region.Art.Array) {
                     if (art.Type == ART_TYPE.WAVE_INDEX) {
                         waveIndex = (int)art.Value;
                         break;

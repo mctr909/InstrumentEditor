@@ -537,7 +537,7 @@ namespace InstrumentEditor {
             eqReleace = 0;
 
             if (null != mLart) {
-                foreach (var art in mLart.Values) {
+                foreach (var art in mLart.Array) {
                     switch (art.Type) {
                     case ART_TYPE.EG_AMP_ATTACK:
                         ampAttack = art.Value;

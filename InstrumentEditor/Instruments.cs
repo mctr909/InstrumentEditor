@@ -167,12 +167,12 @@ namespace Instruments {
 
         public void DeleteInst(int[] indices) {
             //
-            var useList = new Dictionary<int, bool>();
+            var deleteList = new Dictionary<int, bool>();
             foreach (int selectedIndex in indices) {
                 var useFlag = false;
                 foreach (var preset in Preset.Values) {
                     foreach (var layer in preset.Layer.Array) {
-                        foreach (var art in layer.Art.Values) {
+                        foreach (var art in layer.Art.Array) {
                             if (art.Type != ART_TYPE.INST_INDEX) {
                                 continue;
                             }
@@ -189,21 +189,21 @@ namespace Instruments {
                         break;
                     }
                 }
-                useList.Add(selectedIndex, useFlag);
+                deleteList.Add(selectedIndex, useFlag);
             }
             // renumbering
             var count = 0;
             var renumberingList = new Dictionary<int, int>();
             for (var idx = 0; idx < Inst.Count; idx++) {
-                if (useList.ContainsKey(idx) && useList[idx] && idx != count) {
+                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
                     renumberingList.Add(idx, count);
                     ++count;
                 }
             }
             // delete inst
             var instList = new List<Inst>();
-            for (var idx = 0; idx < Wave.Count; idx++) {
-                if (useList[idx]) {
+            for (var idx = 0; idx < Inst.Count; idx++) {
+                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
                     instList.Add(Inst[idx]);
                 }
             }
@@ -213,7 +213,7 @@ namespace Instruments {
             foreach(var preset in Preset.Values) { 
                 for (var iLayer = 0; iLayer < preset.Layer.Count; iLayer++) {
                     var layer = preset.Layer[iLayer];
-                    foreach (var art in layer.Art.Values) {
+                    foreach (var art in layer.Art.Array) {
                         if (art.Type != ART_TYPE.INST_INDEX) {
                             continue;
                         }
@@ -228,12 +228,12 @@ namespace Instruments {
 
         public void DeleteWave(int[] indices) {
             //
-            var useList = new Dictionary<int, bool>();
+            var deleteList = new Dictionary<int, bool>();
             foreach (int selectedIndex in indices) {
                 var useFlag = false;
                 foreach (var inst in Inst.Array) {
                     foreach (var region in inst.Region.Array) {
-                        foreach (var art in region.Art.Values) {
+                        foreach (var art in region.Art.Array) {
                             if (art.Type != ART_TYPE.WAVE_INDEX) {
                                 continue;
                             }
@@ -250,13 +250,13 @@ namespace Instruments {
                         break;
                     }
                 }
-                useList.Add(selectedIndex, useFlag);
+                deleteList.Add(selectedIndex, useFlag);
             }
             // renumbering
             var count = 0;
             var renumberingList = new Dictionary<int, int>();
             for (var idx = 0; idx < Wave.Count; idx++) {
-                if (useList.ContainsKey(idx) && useList[idx] && idx != count) {
+                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
                     renumberingList.Add(idx, count);
                     ++count;
                 }
@@ -264,7 +264,7 @@ namespace Instruments {
             // delete wave
             var waveList = new List<Wave>();
             for (var idx = 0; idx < Wave.Count; idx++) {
-                if (useList[idx]) {
+                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
                     waveList.Add(Wave[idx]);
                 }
             }
@@ -275,11 +275,11 @@ namespace Instruments {
                 var inst = Inst[iInst];
                 for (var iRgn = 0; iRgn < inst.Region.Count; iRgn++) {
                     var rgn = inst.Region[iRgn];
-                    foreach (var art in rgn.Art.Values) {
-                        if (art.Type != ART_TYPE.WAVE_INDEX) {
+                    for (var iArt = 0; iArt < rgn.Art.Count; iArt++) {
+                        if (rgn.Art[iArt].Type != ART_TYPE.WAVE_INDEX) {
                             continue;
                         }
-                        var index = (int)art.Value;
+                        var index = (int)rgn.Art[iArt].Value;
                         if (renumberingList.ContainsKey(index)) {
                             rgn.Art.Update(ART_TYPE.WAVE_INDEX, renumberingList[index]);
                         }
@@ -371,6 +371,10 @@ namespace Instruments {
     }
 
     public class Wave : Chunk {
+        public static readonly string[] NoteName = new string[] {
+            "C ", "Db", "D ", "Eb", "E ", "F ", "Gb", "G ", "Ab", "A ", "Bb", "B "
+        };
+
         public WAVH Header;
         public FMT Format;
         public short[] Data = null;
@@ -987,14 +991,13 @@ namespace Instruments {
     }
 
     public class Lart {
-        private Dictionary<ART_TYPE, ART> List = new Dictionary<ART_TYPE, ART>();
+        private List<ART> List = new List<ART>();
 
         public Lart() { }
 
         public Lart(IntPtr ptr, int size) {
             for (int ofs = 0; ofs < size; ofs += Marshal.SizeOf<ART>()) {
-                var tmp = Marshal.PtrToStructure<ART>(ptr + ofs);
-                List.Add(tmp.Type, tmp);
+                List.Add(Marshal.PtrToStructure<ART>(ptr + ofs));
             }
         }
 
@@ -1006,28 +1009,37 @@ namespace Instruments {
             get { return List.Count; }
         }
 
-        public Dictionary<ART_TYPE, ART>.KeyCollection Keys {
-            get { return List.Keys; }
+        public ART[] Array {
+            get { return List.ToArray(); }
         }
 
-        public Dictionary<ART_TYPE, ART>.ValueCollection Values {
-            get { return List.Values; }
-        }
-
-        public ART this[ART_TYPE id] {
-            get { return List[id]; }
+        public ART this[int index] {
+            get { return List[index]; }
         }
 
         public void Add(ART art) {
-            List.Add(art.Type, art);
+            List.Add(art);
         }
 
         public void Update(ART_TYPE id, float value) {
-            List.Remove(id);
-            List.Add(id, new ART {
-                Type = id,
-                Value = value
-            });
+            var idx = -1;
+            for (var i = 0; i < List.Count; i++) {
+                if (List[i].Type == id) {
+                    idx = i;
+                    break;
+                }
+            }
+            if (idx < 0) {
+                List.Add(new ART {
+                    Type = id,
+                    Value = value
+                });
+            } else {
+                List[idx] = new ART {
+                    Type = id,
+                    Value = value
+                };
+            }
         }
 
         public void Write(BinaryWriter bw) {
@@ -1035,7 +1047,7 @@ namespace Instruments {
             var bwArt = new BinaryWriter(msArt);
             bwArt.Write("artc".ToCharArray());
             bwArt.Write(0xFFFFFFFF);
-            foreach (var art in List.Values) {
+            foreach (var art in List) {
                 bwArt.Write((ushort)art.Type);
                 bwArt.Write((ushort)0);
                 bwArt.Write(art.Value);
