@@ -94,7 +94,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(13, 4, 0, 4);
-            this.menuStrip1.Size = new System.Drawing.Size(849, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(1035, 42);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -215,14 +215,14 @@
             // 
             // lstPreset
             // 
-            this.lstPreset.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lstPreset.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lstPreset.FormattingEnabled = true;
-            this.lstPreset.ItemHeight = 27;
+            this.lstPreset.ItemHeight = 29;
             this.lstPreset.Location = new System.Drawing.Point(7, 62);
             this.lstPreset.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.lstPreset.Name = "lstPreset";
             this.lstPreset.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstPreset.Size = new System.Drawing.Size(255, 85);
+            this.lstPreset.Size = new System.Drawing.Size(255, 62);
             this.lstPreset.TabIndex = 3;
             this.lstPreset.DoubleClick += new System.EventHandler(this.lstPreset_DoubleClick);
             // 
@@ -356,7 +356,7 @@
             // txtInstSearch
             // 
             this.txtInstSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtInstSearch.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
+            this.txtInstSearch.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtInstSearch.Name = "txtInstSearch";
             this.txtInstSearch.Size = new System.Drawing.Size(401, 38);
             this.txtInstSearch.Leave += new System.EventHandler(this.txtInstSearch_Leave);
@@ -376,15 +376,15 @@
             // 
             // lstWave
             // 
-            this.lstWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lstWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lstWave.FormattingEnabled = true;
-            this.lstWave.ItemHeight = 27;
+            this.lstWave.ItemHeight = 29;
             this.lstWave.Location = new System.Drawing.Point(7, 62);
             this.lstWave.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.lstWave.Name = "lstWave";
             this.lstWave.ScrollAlwaysVisible = true;
             this.lstWave.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstWave.Size = new System.Drawing.Size(576, 409);
+            this.lstWave.Size = new System.Drawing.Size(576, 381);
             this.lstWave.TabIndex = 1;
             this.lstWave.DoubleClick += new System.EventHandler(this.lstWave_DoubleClick);
             // 
@@ -458,7 +458,7 @@
             // txtWaveSearch
             // 
             this.txtWaveSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtWaveSearch.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
+            this.txtWaveSearch.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtWaveSearch.Name = "txtWaveSearch";
             this.txtWaveSearch.Size = new System.Drawing.Size(401, 38);
             this.txtWaveSearch.Leave += new System.EventHandler(this.txtWaveSearch_Leave);
@@ -490,14 +490,14 @@
             // 
             // lstInst
             // 
-            this.lstInst.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lstInst.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lstInst.FormattingEnabled = true;
-            this.lstInst.ItemHeight = 27;
+            this.lstInst.ItemHeight = 29;
             this.lstInst.Location = new System.Drawing.Point(7, 6);
             this.lstInst.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.lstInst.Name = "lstInst";
             this.lstInst.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstInst.Size = new System.Drawing.Size(277, 112);
+            this.lstInst.Size = new System.Drawing.Size(277, 91);
             this.lstInst.TabIndex = 4;
             // 
             // BottomToolStripPanel
@@ -540,14 +540,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(849, 828);
+            this.ClientSize = new System.Drawing.Size(1035, 828);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.Name = "MainForm";
-            this.Text = "DLS editor";
+            this.Text = "Instrument Editor";
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

@@ -42,6 +42,7 @@ namespace InstrumentEditor {
 
             mFile = file;
             mWaveIndex = index;
+            mWaveHeader = mFile.Wave[index].Header;
         }
 
         private void WaveInfoForm_Load(object sender, EventArgs e) {
@@ -136,8 +137,10 @@ namespace InstrumentEditor {
         }
 
         private void btnUpdate_Click(object sender, EventArgs e) {
-            if (0 < mFile.Wave[mWaveIndex].Header.LoopEnable) {
-                mFile.Wave[mWaveIndex].Header = mWaveHeader;
+            if (0 < mWaveHeader.LoopEnable) {
+                mFile.Wave[mWaveIndex].Header.LoopEnable = mWaveHeader.LoopEnable;
+                mFile.Wave[mWaveIndex].Header.LoopBegin = mWaveHeader.LoopBegin;
+                mFile.Wave[mWaveIndex].Header.LoopLength = mWaveHeader.LoopLength;
                 btnUpdate.Enabled = false;
             }
         }
@@ -152,13 +155,16 @@ namespace InstrumentEditor {
         }
 
         private void btnLoopCreate_Click(object sender, EventArgs e) {
-            if (0 < mFile.Wave[mWaveIndex].Header.LoopEnable) {
+            if (0 < mWaveHeader.LoopEnable) {
                 var hd = mFile.Wave[mWaveIndex].Header;
                 hd.LoopEnable = 0;
                 hd.LoopBegin = 0;
                 hd.LoopLength = (uint)mWaveData.Length;
                 mWaveOut.mLoopBegin = 0;
                 mWaveOut.mLoopEnd = mWaveData.Length;
+                mWaveHeader.LoopEnable = 0;
+                mWaveHeader.LoopBegin = (uint)mWaveOut.mLoopBegin;
+                mWaveHeader.LoopLength = (uint)mWaveOut.mLoopEnd - (uint)mWaveOut.mLoopBegin;
                 mFile.Wave[mWaveIndex].Header = hd;
                 btnLoopCreate.Text = "ループ作成";
             }
@@ -169,6 +175,7 @@ namespace InstrumentEditor {
                 hd.LoopLength = 128;
                 mWaveOut.mLoopBegin = (int)hd.LoopBegin;
                 mWaveOut.mLoopEnd = (int)hd.LoopBegin + (int)hd.LoopLength;
+                mWaveHeader.LoopEnable = 1;
                 mFile.Wave[mWaveIndex].Header = hd;
                 btnLoopCreate.Text = "ループ削除";
             }
@@ -301,7 +308,7 @@ namespace InstrumentEditor {
             hsbTime.Height = 19;
 
             //
-            picWave.Height = 224;
+            picWave.Height = 168;
             numWaveScale.Top = 0;
             picSpectrum.Top = numWaveScale.Top + numWaveScale.Height + 4;
             picWave.Top = picSpectrum.Top + picSpectrum.Height + 4;
@@ -317,7 +324,7 @@ namespace InstrumentEditor {
             ;
 
             //
-            picLoop.Height = 224;
+            picLoop.Height = 256;
             numLoopScale.Top = 0;
             picLoop.Top = numLoopScale.Top + numLoopScale.Height + 4;
 
@@ -372,8 +379,6 @@ namespace InstrumentEditor {
             }
 
             if (0 < wave.Header.LoopEnable) {
-                mWaveHeader.LoopBegin = wave.Header.LoopBegin;
-                mWaveHeader.LoopLength = wave.Header.LoopLength;
                 btnLoopCreate.Text = "ループ削除";
             }
             else {

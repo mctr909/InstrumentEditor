@@ -522,7 +522,7 @@ namespace DLS {
 
             foreach (var dlsInst in Instruments.List) {
                 var pres = new Preset();
-                pres.Header.BankFlg = dlsInst.Key.BankFlg;
+                pres.Header.BankFlg = (byte)((dlsInst.Key.BankFlg & 0x80) == 0x80 ? 1 : 0);
                 pres.Header.BankMSB = dlsInst.Key.BankMSB;
                 pres.Header.BankLSB = dlsInst.Key.BankLSB;
                 pres.Header.ProgNum = dlsInst.Key.ProgNum;

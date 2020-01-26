@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
 
@@ -316,8 +317,10 @@ namespace InstrumentEditor {
         }
 
         private void DeleteWave() {
-            var idxs = new int[lstWave.SelectedIndices.Count];
-            lstWave.SelectedIndices.CopyTo(idxs, 0);
+            var idxs = new List<int>();
+            foreach (var item in lstWave.SelectedItems) {
+                idxs.Add(int.Parse(((string)item).Split('|')[0]));
+            }
             mFile.DeleteWave(idxs);
             DispWaveList();
         }
@@ -370,7 +373,7 @@ namespace InstrumentEditor {
                     (0 < wave.Header.LoopEnable ? "loop" : "    "),
                     Wave.NoteName[wave.Header.UnityNote % 12]
                         + (wave.Header.UnityNote < 12 ? "" : "+")
-                        + (wave.Header.UnityNote / 12 - 1).ToString("00"),
+                        + (wave.Header.UnityNote / 12 - 2).ToString("00"),
                     name
                 ));
                 ++count;

@@ -165,7 +165,7 @@ namespace Instruments {
             fs.Dispose();
         }
 
-        public void DeleteInst(int[] indices) {
+        public void DeleteInst(List<int> indices) {
             //
             var deleteList = new Dictionary<int, bool>();
             foreach (int selectedIndex in indices) {
@@ -226,7 +226,7 @@ namespace Instruments {
             }
         }
 
-        public void DeleteWave(int[] indices) {
+        public void DeleteWave(List<int> indices) {
             //
             var deleteList = new Dictionary<int, bool>();
             foreach (int selectedIndex in indices) {
@@ -833,6 +833,7 @@ namespace Instruments {
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
             switch (listType) {
             case "lyr ":
+                List.Add(new Layer(ptr, ptrTerm));
                 break;
             default:
                 break;

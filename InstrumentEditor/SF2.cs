@@ -465,11 +465,11 @@ namespace SF2 {
 
                 if (1 == (byte)(smpl.type & 1)) {
                     wi.Header.LoopBegin = smpl.loopstart - smpl.start;
-                    wi.Header.LoopLength = smpl.loopend - smpl.loopstart + 1;
+                    wi.Header.LoopLength = smpl.loopend - smpl.loopstart;
                     wi.Header.LoopEnable = 1;
                 } else {
                     wi.Header.LoopBegin = smpl.start;
-                    wi.Header.LoopLength = smpl.end - smpl.start + 1;
+                    wi.Header.LoopLength = smpl.end - smpl.start;
                     wi.Header.LoopEnable = 0;
                 }
 
