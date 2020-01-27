@@ -316,7 +316,7 @@ namespace Instruments {
             Wave.Clear();
             Wave.AddRange(waveList);
 
-            // update inst's layer art
+            // update inst's region art
             for (var iInst = 0; iInst < Inst.Count; iInst++) {
                 var inst = Inst[iInst];
                 for (var iRgn = 0; iRgn < inst.Region.Count; iRgn++) {
@@ -644,18 +644,10 @@ namespace Instruments {
                 bw.Write(arr);
             }
 
-            {
-                // wavh chunk
-                var size = Marshal.SizeOf<WAVH>();
-                bw.Write("wavh".ToCharArray());
-                bw.Write(size);
-                var ptr = Marshal.AllocHGlobal(size);
-                Marshal.StructureToPtr(Header, ptr, true);
-                var arr = new byte[size];
-                Marshal.Copy(ptr, arr, 0, size);
-                bw.Write(arr);
-                Marshal.FreeHGlobal(ptr);
-            }
+            // wavh chunk
+            bw.Write("wavh".ToCharArray());
+            bw.Write(Marshal.SizeOf<WAVH>());
+            Header.Write(bw);
 
             Info.Write(bw);
 
@@ -925,6 +917,10 @@ namespace Instruments {
             List.Add(layer);
         }
 
+        public void Update(int index, RANGE range) {
+            List[index].Header = range;
+        }
+
         public List<Layer> Find(RANGE range) {
             var ret = new List<Layer>();
             foreach (var layer in List) {
@@ -1164,6 +1160,47 @@ namespace Instruments {
         }
     }
 
+    public class Region : Chunk {
+        public RANGE Header;
+        public Lart Art = new Lart();
+
+        public Region() { }
+
+        public Region(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+
+        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
+            switch (chunkType) {
+            case "rgnh":
+                Header = Marshal.PtrToStructure<RANGE>(ptr);
+                break;
+            case "artc":
+                Art = new Lart(ptr, chunkSize);
+                break;
+            default:
+                break;
+            }
+        }
+
+        public void Write(MemoryStream ms) {
+            var msRgn = new MemoryStream();
+            var bwRgn = new BinaryWriter(msRgn);
+            bwRgn.Write("LIST".ToCharArray());
+            bwRgn.Write(0xFFFFFFFF);
+            bwRgn.Write("rgn ".ToCharArray());
+
+            // rgnh chunk
+            bwRgn.Write("rgnh".ToCharArray());
+            bwRgn.Write(Marshal.SizeOf<RANGE>());
+            Header.Write(bwRgn);
+
+            Art.Write(msRgn);
+
+            bwRgn.Seek(4, SeekOrigin.Begin);
+            bwRgn.Write((int)msRgn.Length - 8);
+            msRgn.WriteTo(ms);
+        }
+    }
+
     public class Lart {
         private List<ART> List = new List<ART>();
 
@@ -1227,47 +1264,6 @@ namespace Instruments {
             bwArt.Seek(4, SeekOrigin.Begin);
             bwArt.Write((int)msArt.Length - 8);
             msArt.WriteTo(ms);
-        }
-    }
-
-    public class Region : Chunk {
-        public RANGE Header;
-        public Lart Art = new Lart();
-
-        public Region() { }
-
-        public Region(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
-
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
-            case "rgnh":
-                Header = Marshal.PtrToStructure<RANGE>(ptr);
-                break;
-            case "artc":
-                Art = new Lart(ptr, chunkSize);
-                break;
-            default:
-                break;
-            }
-        }
-
-        public void Write(MemoryStream ms) {
-            var msRgn = new MemoryStream();
-            var bwRgn = new BinaryWriter(msRgn);
-            bwRgn.Write("LIST".ToCharArray());
-            bwRgn.Write(0xFFFFFFFF);
-            bwRgn.Write("rgn ".ToCharArray());
-
-            // rgnh chunk
-            bwRgn.Write("rgnh".ToCharArray());
-            bwRgn.Write(Marshal.SizeOf<RANGE>());
-            Header.Write(bwRgn);
-
-            Art.Write(msRgn);
-
-            bwRgn.Seek(4, SeekOrigin.Begin);
-            bwRgn.Write((int)msRgn.Length - 8);
-            msRgn.WriteTo(ms);
         }
     }
 }
