@@ -23,6 +23,11 @@ namespace Instruments {
         LPF_CUTOFF_CONST    = 0x0009,
         LPF_CUTOFF_VALIABLE = 0x000A,
 
+        COMP_THRESHOLD = 0x0010,
+        COMP_RATIO     = 0x0011,
+        COMP_ATTACK    = 0x0012,
+        COMP_RELEASE   = 0x0013,
+
         EG_AMP_ATTACK  = 0x0100,
         EG_AMP_HOLD    = 0x0101,
         EG_AMP_DECAY   = 0x0102,
@@ -37,6 +42,72 @@ namespace Instruments {
         EG_CUTOFF_TOP     = 0x0115,
         EG_CUTOFF_SUSTAIN = 0x0116,
         EG_CUTOFF_FALL    = 0x0117,
+
+        EG1_ATTACK  = 0x0120,
+        EG1_HOLD    = 0x0121,
+        EG1_DECAY   = 0x0122,
+        EG1_RELEASE = 0x0123,
+        EG1_RISE    = 0x0124,
+        EG1_TOP     = 0x0125,
+        EG1_SUSTAIN = 0x0126,
+        EG1_FALL    = 0x0127,
+
+        EG2_ATTACK  = 0x0130,
+        EG2_HOLD    = 0x0131,
+        EG2_DECAY   = 0x0132,
+        EG2_RELEASE = 0x0133,
+        EG2_RISE    = 0x0134,
+        EG2_TOP     = 0x0135,
+        EG2_SUSTAIN = 0x0136,
+        EG2_FALL    = 0x0137,
+
+        LFO1_WAVE_FORM    = 0x0140,
+        LFO1_PHASE        = 0x0141,
+        LFO1_AMP_CONST    = 0x0142,
+        LFO1_AMP_INPUT    = 0x0143,
+        LFO1_BEAT_MODE    = 0x0144,
+        LFO1_FREQ_CONST   = 0x0145,
+        LFO1_FREQ_INPUT   = 0x0146,
+        LFO1_OFFSET_CONST = 0x0147,
+        LFO1_OFFSET_INPUT = 0x0148,
+        LFO1_DUTY_CONST   = 0x0149,
+        LFO1_DUTY_INPUT   = 0x014A,
+
+        LFO2_WAVE_FORM    = 0x0150,
+        LFO2_PHASE        = 0x0151,
+        LFO2_AMP_CONST    = 0x0152,
+        LFO2_AMP_INPUT    = 0x0153,
+        LFO2_BEAT_MODE    = 0x0154,
+        LFO2_FREQ_CONST   = 0x0155,
+        LFO2_FREQ_INPUT   = 0x0156,
+        LFO2_OFFSET_CONST = 0x0157,
+        LFO2_OFFSET_INPUT = 0x0158,
+        LFO2_DUTY_CONST   = 0x0159,
+        LFO2_DUTY_INPUT   = 0x015A,
+
+        CH_LFO1_WAVE_FORM    = 0x0180,
+        CH_LFO1_PHASE        = 0x0181,
+        CH_LFO1_AMP_CONST    = 0x0182,
+        CH_LFO1_AMP_INPUT    = 0x0183,
+        CH_LFO1_BEAT_MODE    = 0x0184,
+        CH_LFO1_FREQ_CONST   = 0x0185,
+        CH_LFO1_FREQ_INPUT   = 0x0186,
+        CH_LFO1_OFFSET_CONST = 0x0187,
+        CH_LFO1_OFFSET_INPUT = 0x0188,
+        CH_LFO1_DUTY_CONST   = 0x0189,
+        CH_LFO1_DUTY_INPUT   = 0x018A,
+
+        CH_LFO2_WAVE_FORM    = 0x0190,
+        CH_LFO2_PHASE        = 0x0191,
+        CH_LFO2_AMP_CONST    = 0x0192,
+        CH_LFO2_AMP_INPUT    = 0x0193,
+        CH_LFO2_BEAT_MODE    = 0x0194,
+        CH_LFO2_FREQ_CONST   = 0x0195,
+        CH_LFO2_FREQ_INPUT   = 0x0196,
+        CH_LFO2_OFFSET_CONST = 0x0197,
+        CH_LFO2_OFFSET_INPUT = 0x0198,
+        CH_LFO2_DUTY_CONST   = 0x0199,
+        CH_LFO2_DUTY_INPUT   = 0x019A,
 
         INST_INDEX = 0xFFFE,
         WAVE_INDEX = 0xFFFF
@@ -60,6 +131,17 @@ namespace Instruments {
         public ushort Reserved;
         public double Gain;
         public double Pitch;
+
+        public void Write(BinaryWriter bw) {
+            bw.Write(SampleRate);
+            bw.Write(LoopBegin);
+            bw.Write(LoopLength);
+            bw.Write(LoopEnable);
+            bw.Write(UnityNote);
+            bw.Write(Reserved);
+            bw.Write(Gain);
+            bw.Write(Pitch);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -68,6 +150,13 @@ namespace Instruments {
         public byte BankMSB;
         public byte BankLSB;
         public byte ProgNum;
+
+        public void Write(BinaryWriter bw) {
+            bw.Write(BankFlg);
+            bw.Write(BankMSB);
+            bw.Write(BankLSB);
+            bw.Write(ProgNum);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -76,6 +165,13 @@ namespace Instruments {
         public byte KeyHi;
         public byte VelLo;
         public byte VelHi;
+
+        public void Write(BinaryWriter bw) {
+            bw.Write(KeyLo);
+            bw.Write(KeyHi);
+            bw.Write(VelLo);
+            bw.Write(VelHi);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
@@ -83,6 +179,12 @@ namespace Instruments {
         public ART_TYPE Type;
         public ushort   Reserved;
         public float    Value;
+
+        public void Write(BinaryWriter bw) {
+            bw.Write((uint)Type);
+            bw.Write(Reserved);
+            bw.Write(Value);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
@@ -108,9 +210,9 @@ namespace Instruments {
     #endregion
 
     public class File : Chunk {
-        public Lwav Wave = new Lwav();
-        public Lins Inst = new Lins();
-        public Lpre Preset = new Lpre();
+        public LWave Wave = new LWave();
+        public LInst Inst = new LInst();
+        public LPreset Preset = new LPreset();
         public Info Info = new Info();
 
         public File() { }
@@ -129,13 +231,13 @@ namespace Instruments {
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
             switch (listType) {
             case "lwav":
-                Wave = new Lwav(ptr, ptrTerm);
+                Wave = new LWave(ptr, ptrTerm);
                 break;
             case "lins":
-                Inst = new Lins(ptr, ptrTerm);
+                Inst = new LInst(ptr, ptrTerm);
                 break;
             case "lpre":
-                Preset = new Lpre(ptr, ptrTerm);
+                Preset = new LPreset(ptr, ptrTerm);
                 break;
             case "INFO":
                 Info = new Info(ptr, ptrTerm);
@@ -154,8 +256,8 @@ namespace Instruments {
             bw.Write("INST".ToCharArray());
 
             Wave.Write(fs);
-            Inst.Write(bw);
-            Preset.Write(bw);
+            Inst.Write(fs);
+            Preset.Write(fs);
             Info.Write(bw);
 
             fs.Seek(4, SeekOrigin.Begin);
@@ -165,72 +267,11 @@ namespace Instruments {
             fs.Dispose();
         }
 
-        public void DeleteInst(List<int> indices) {
-            //
-            var deleteList = new Dictionary<int, bool>();
-            foreach (int selectedIndex in indices) {
-                var useFlag = false;
-                foreach (var preset in Preset.Values) {
-                    foreach (var layer in preset.Layer.Array) {
-                        foreach (var art in layer.Art.Array) {
-                            if (art.Type != ART_TYPE.INST_INDEX) {
-                                continue;
-                            }
-                            if (selectedIndex == (int)art.Value) {
-                                useFlag = true;
-                                break;
-                            }
-                        }
-                        if (useFlag) {
-                            break;
-                        }
-                    }
-                    if (useFlag) {
-                        break;
-                    }
-                }
-                deleteList.Add(selectedIndex, useFlag);
-            }
-            // renumbering
-            var count = 0;
-            var renumberingList = new Dictionary<int, int>();
-            for (var idx = 0; idx < Inst.Count; idx++) {
-                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
-                    renumberingList.Add(idx, count);
-                    ++count;
-                }
-            }
-            // delete inst
-            var instList = new List<Inst>();
-            for (var idx = 0; idx < Inst.Count; idx++) {
-                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
-                    instList.Add(Inst[idx]);
-                }
-            }
-            Inst.Clear();
-            Inst.AddRange(instList);
-            //
-            foreach(var preset in Preset.Values) { 
-                for (var iLayer = 0; iLayer < preset.Layer.Count; iLayer++) {
-                    var layer = preset.Layer[iLayer];
-                    foreach (var art in layer.Art.Array) {
-                        if (art.Type != ART_TYPE.INST_INDEX) {
-                            continue;
-                        }
-                        var index = (int)art.Value;
-                        if (renumberingList.ContainsKey(index)) {
-                            layer.Art.Update(ART_TYPE.INST_INDEX, renumberingList[index]);
-                        }
-                    }
-                }
-            }
-        }
-
         public void DeleteWave(List<int> indices) {
-            //
+            // find deletable wave
             var deleteList = new Dictionary<int, bool>();
             foreach (int selectedIndex in indices) {
-                var useFlag = false;
+                var deletable = true;
                 foreach (var inst in Inst.Array) {
                     foreach (var region in inst.Region.Array) {
                         foreach (var art in region.Art.Array) {
@@ -238,39 +279,44 @@ namespace Instruments {
                                 continue;
                             }
                             if (selectedIndex == (int)art.Value) {
-                                useFlag = true;
+                                deletable = false;
                                 break;
                             }
                         }
-                        if (useFlag) {
+                        if (!deletable) {
                             break;
                         }
                     }
-                    if (useFlag) {
+                    if (!deletable) {
                         break;
                     }
                 }
-                deleteList.Add(selectedIndex, useFlag);
+                deleteList.Add(selectedIndex, deletable);
             }
+
             // renumbering
-            var count = 0;
+            var newIndex = 0;
             var renumberingList = new Dictionary<int, int>();
-            for (var idx = 0; idx < Wave.Count; idx++) {
-                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
-                    renumberingList.Add(idx, count);
-                    ++count;
+            for (var iWave = 0; iWave < Wave.Count; iWave++) {
+                if (deleteList.ContainsKey(iWave) && deleteList[iWave]) {
+                    continue;
                 }
+                renumberingList.Add(iWave, newIndex);
+                ++newIndex;
             }
+
             // delete wave
             var waveList = new List<Wave>();
-            for (var idx = 0; idx < Wave.Count; idx++) {
-                if (!deleteList.ContainsKey(idx) || deleteList[idx]) {
-                    waveList.Add(Wave[idx]);
+            for (var iWave = 0; iWave < Wave.Count; iWave++) {
+                if (deleteList.ContainsKey(iWave) && deleteList[iWave]) {
+                    continue;
                 }
+                waveList.Add(Wave[iWave]);
             }
             Wave.Clear();
             Wave.AddRange(waveList);
-            //
+
+            // update inst's layer art
             for (var iInst = 0; iInst < Inst.Count; iInst++) {
                 var inst = Inst[iInst];
                 for (var iRgn = 0; iRgn < inst.Region.Count; iRgn++) {
@@ -279,9 +325,75 @@ namespace Instruments {
                         if (rgn.Art[iArt].Type != ART_TYPE.WAVE_INDEX) {
                             continue;
                         }
-                        var index = (int)rgn.Art[iArt].Value;
-                        if (renumberingList.ContainsKey(index)) {
-                            rgn.Art.Update(ART_TYPE.WAVE_INDEX, renumberingList[index]);
+                        var iWave = (int)rgn.Art[iArt].Value;
+                        if (renumberingList.ContainsKey(iWave)) {
+                            rgn.Art.Update(ART_TYPE.WAVE_INDEX, renumberingList[iWave]);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void DeleteInst(List<int> indices) {
+            // find deletable inst
+            var deleteList = new Dictionary<int, bool>();
+            foreach (int selectedIndex in indices) {
+                var deletable = true;
+                foreach (var preset in Preset.Values) {
+                    foreach (var layer in preset.Layer.Array) {
+                        foreach (var art in layer.Art.Array) {
+                            if (art.Type != ART_TYPE.INST_INDEX) {
+                                continue;
+                            }
+                            if (selectedIndex == (int)art.Value) {
+                                deletable = false;
+                                break;
+                            }
+                        }
+                        if (!deletable) {
+                            break;
+                        }
+                    }
+                    if (!deletable) {
+                        break;
+                    }
+                }
+                deleteList.Add(selectedIndex, deletable);
+            }
+
+            // renumbering
+            var newIndex = 0;
+            var renumberingList = new Dictionary<int, int>();
+            for (var iInst = 0; iInst < Inst.Count; iInst++) {
+                if (deleteList.ContainsKey(iInst) && deleteList[iInst]) {
+                    continue;
+                }
+                renumberingList.Add(iInst, newIndex);
+                ++newIndex;
+            }
+
+            // delete inst
+            var newInstList = new List<Inst>();
+            for (var iInst = 0; iInst < Inst.Count; iInst++) {
+                if (deleteList.ContainsKey(iInst) && deleteList[iInst]) {
+                    continue;
+                }
+                newInstList.Add(Inst[iInst]);
+            }
+            Inst.Clear();
+            Inst.AddRange(newInstList);
+
+            // update preset's layer art
+            foreach (var preset in Preset.Values) {
+                for (var iLayer = 0; iLayer < preset.Layer.Count; iLayer++) {
+                    var layer = preset.Layer[iLayer];
+                    foreach (var art in layer.Art.Array) {
+                        if (art.Type != ART_TYPE.INST_INDEX) {
+                            continue;
+                        }
+                        var iInst = (int)art.Value;
+                        if (renumberingList.ContainsKey(iInst)) {
+                            layer.Art.Update(ART_TYPE.INST_INDEX, renumberingList[iInst]);
                         }
                     }
                 }
@@ -289,12 +401,12 @@ namespace Instruments {
         }
     }
 
-    public class Lwav : Chunk {
+    public class LWave : Chunk {
         private List<Wave> List = new List<Wave>();
 
-        public Lwav() { }
+        public LWave() { }
 
-        public Lwav(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public LWave(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
 
         public void Clear() {
             List.Clear();
@@ -336,37 +448,36 @@ namespace Instruments {
             }
         }
 
-        public void Write(FileStream fs) {
+        public void Write(Stream ms) {
             if (0 == List.Count) {
                 return;
             }
 
-            var bw = new BinaryWriter(fs);
-
             // wptr chunk
-            bw.Write("wptr".ToCharArray());
-            bw.Write(Marshal.SizeOf<WPTR>() * List.Count);
-            var pos = -8;
-            foreach (var wave in List) {
-                var data = wave.Write();
-                bw.Write((uint)(pos + data.Key.ofsHeader));
-                bw.Write((uint)(pos + data.Key.ofsData));
-                pos += data.Value.Length;
-            }
+            var msWptr = new MemoryStream();
+            var bwWptr = new BinaryWriter(msWptr);
+            bwWptr.Write("wptr".ToCharArray());
+            bwWptr.Write(Marshal.SizeOf<WPTR>() * List.Count);
 
             // lwav list
-            bw.Write("LIST".ToCharArray());
-            var wavePos = fs.Position;
-            bw.Write(0xFFFFFFFF);
-            bw.Write("lwav".ToCharArray());
+            var msLwav = new MemoryStream();
+            var bwLwav = new BinaryWriter(msLwav);
+            bwLwav.Write("LIST".ToCharArray());
+            bwLwav.Write(0xFFFFFFFF);
+            bwLwav.Write("lwav".ToCharArray());
+
             foreach (var wave in List) {
-                var data = wave.Write();
-                bw.Write(data.Value, 0, data.Value.Length);
+                var pos = msLwav.Position;
+                var ofs = wave.Write(msLwav);
+                bwWptr.Write((uint)(pos + ofs.ofsHeader));
+                bwWptr.Write((uint)(pos + ofs.ofsData));
             }
-            var waveTerm = fs.Position;
-            fs.Seek(wavePos, SeekOrigin.Begin);
-            bw.Write((uint)(waveTerm - wavePos - 4));
-            fs.Seek(waveTerm, SeekOrigin.Begin);
+
+            bwLwav.Seek(4, SeekOrigin.Begin);
+            bwLwav.Write((uint)(msLwav.Length - 8));
+
+            msWptr.WriteTo(ms);
+            msLwav.WriteTo(ms);
         }
     }
 
@@ -465,29 +576,19 @@ namespace Instruments {
             }
         }
 
-        public KeyValuePair<WPTR, byte[]> Write() {
+        public WPTR Write(MemoryStream ms) {
+            WPTR wptr;
             var msWave = new MemoryStream();
             var bwWave = new BinaryWriter(msWave);
-            WPTR wptr;
-
             bwWave.Write("LIST".ToCharArray());
             bwWave.Write(0xFFFFFFFF);
             bwWave.Write("wave".ToCharArray());
 
-            {
-                // wavh chunk
-                var size = Marshal.SizeOf<WAVH>();
-                bwWave.Write("wavh".ToCharArray());
-                bwWave.Write(size);
-
-                wptr.ofsHeader = (uint)msWave.Position;
-                var ptr = Marshal.AllocHGlobal(size);
-                Marshal.StructureToPtr(Header, ptr, true);
-                var arr = new byte[size];
-                Marshal.Copy(ptr, arr, 0, size);
-                bwWave.Write(arr);
-                Marshal.FreeHGlobal(ptr);
-            }
+            // wavh chunk
+            bwWave.Write("wavh".ToCharArray());
+            bwWave.Write(Marshal.SizeOf<WAVH>());
+            wptr.ofsHeader = (uint)msWave.Position;
+            Header.Write(bwWave);
 
             {
                 // data chunk
@@ -505,10 +606,11 @@ namespace Instruments {
 
             Info.Write(bwWave);
 
-            msWave.Seek(4, SeekOrigin.Begin);
+            bwWave.Seek(4, SeekOrigin.Begin);
             bwWave.Write((uint)msWave.Length - 8);
+            msWave.WriteTo(ms);
 
-            return new KeyValuePair<WPTR, byte[]>(wptr, msWave.ToArray());
+            return wptr;
         }
 
         public void ToFile(string filePath) {
@@ -566,12 +668,12 @@ namespace Instruments {
         }
     }
 
-    public class Lins : Chunk {
+    public class LInst : Chunk {
         private List<Inst> List = new List<Inst>();
 
-        public Lins() { }
+        public LInst() { }
 
-        public Lins(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public LInst(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
 
         public void Clear() {
             List.Clear();
@@ -609,7 +711,7 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
+        public void Write(Stream ms) {
             if (0 == List.Count) {
                 return;
             }
@@ -620,18 +722,17 @@ namespace Instruments {
             bwInst.Write(0xFFFFFFFF);
             bwInst.Write("lins".ToCharArray());
             foreach (var inst in List) {
-                var data = inst.Write();
-                bwInst.Write(data.Value, 0, data.Value.Length);
+                inst.Write(msInst);
             }
-            msInst.Seek(4, SeekOrigin.Begin);
+            bwInst.Seek(4, SeekOrigin.Begin);
             bwInst.Write((int)msInst.Length - 8);
-            bw.Write(msInst.ToArray());
+            msInst.WriteTo(ms);
         }
     }
 
     public class Inst : Chunk {
         public Lart Art = new Lart();
-        public Lrgn Region = new Lrgn();
+        public LRegion Region = new LRegion();
         public Info Info = new Info();
 
         public Inst() { }
@@ -651,7 +752,7 @@ namespace Instruments {
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
             switch (listType) {
             case "lrgn":
-                Region = new Lrgn(ptr, ptrTerm);
+                Region = new LRegion(ptr, ptrTerm);
                 break;
             case "INFO":
                 Info = new Info(ptr, ptrTerm);
@@ -661,30 +762,29 @@ namespace Instruments {
             }
         }
 
-        public KeyValuePair<uint, byte[]> Write() {
+        public void Write(MemoryStream ms) {
             var msInst = new MemoryStream();
             var bwInst = new BinaryWriter(msInst);
-
             bwInst.Write("LIST".ToCharArray());
             bwInst.Write(0xFFFFFFFF);
             bwInst.Write("inst".ToCharArray());
 
-            Art.Write(bwInst);
-            Region.Write(bwInst);
+            Art.Write(msInst);
+            Region.Write(msInst);
             Info.Write(bwInst);
 
-            msInst.Seek(4, SeekOrigin.Begin);
+            bwInst.Seek(4, SeekOrigin.Begin);
             bwInst.Write((uint)msInst.Length - 8);
-            return new KeyValuePair<uint, byte[]>(0, msInst.ToArray());
+            msInst.WriteTo(ms);
         }
     }
 
-    public class Lpre : Chunk {
+    public class LPreset : Chunk {
         private Dictionary<PREH, Preset> List = new Dictionary<PREH, Preset>();
 
-        public Lpre() { }
+        public LPreset() { }
 
-        public Lpre(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public LPreset(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
 
         public int Count {
             get { return List.Count; }
@@ -725,25 +825,25 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
+        public void Write(Stream ms) {
             var msPres = new MemoryStream();
             var bwPres = new BinaryWriter(msPres);
             bwPres.Write("LIST".ToCharArray());
             bwPres.Write(0xFFFFFFFF);
             bwPres.Write("lpre".ToCharArray());
             foreach (var pres in List.Values) {
-                pres.Write(bwPres);
+                pres.Write(msPres);
             }
             bwPres.Seek(4, SeekOrigin.Begin);
             bwPres.Write((int)msPres.Length - 8);
-            bw.Write(msPres.ToArray());
+            msPres.WriteTo(ms);
         }
     }
 
     public class Preset : Chunk {
         public PREH Header;
         public Lart Art = new Lart();
-        public Llyr Layer = new Llyr();
+        public LLayer Layer = new LLayer();
         public Info Info = new Info();
 
         public Preset() { }
@@ -766,7 +866,7 @@ namespace Instruments {
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
             switch (listType) {
             case "llyr":
-                Layer = new Llyr(ptr, ptrTerm);
+                Layer = new LLayer(ptr, ptrTerm);
                 break;
             case "INFO":
                 Info = new Info(ptr, ptrTerm);
@@ -776,7 +876,7 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
+        public void Write(MemoryStream ms) {
             var msInst = new MemoryStream();
             var bwInst = new BinaryWriter(msInst);
             bwInst.Write("LIST".ToCharArray());
@@ -784,31 +884,26 @@ namespace Instruments {
             bwInst.Write("pres".ToCharArray());
 
             // preh chunk
-            var size = Marshal.SizeOf<PREH>();
             bwInst.Write("preh".ToCharArray());
-            bwInst.Write(size);
-            var ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(Header, ptr, true);
-            var arr = new byte[size];
-            Marshal.Copy(ptr, arr, 0, size);
-            bwInst.Write(arr);
+            bwInst.Write(Marshal.SizeOf<PREH>());
+            Header.Write(bwInst);
 
-            Art.Write(bwInst);
-            Layer.Write(bwInst);
+            Art.Write(msInst);
+            Layer.Write(msInst);
             Info.Write(bwInst);
 
-            msInst.Seek(4, SeekOrigin.Begin);
+            bwInst.Seek(4, SeekOrigin.Begin);
             bwInst.Write((uint)msInst.Length - 8);
-            bw.Write(msInst.ToArray());
+            msInst.WriteTo(ms);
         }
     }
 
-    public class Llyr : Chunk {
+    public class LLayer : Chunk {
         private List<Layer> List = new List<Layer>();
 
-        public Llyr() { }
+        public LLayer() { }
 
-        public Llyr(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public LLayer(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
 
         public void Clear() {
             List.Clear();
@@ -830,6 +925,59 @@ namespace Instruments {
             List.Add(layer);
         }
 
+        public List<Layer> Find(RANGE range) {
+            var ret = new List<Layer>();
+            foreach (var layer in List) {
+                if (range.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= range.KeyHi &&
+                    range.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= range.VelHi) {
+                    ret.Add(layer);
+                }
+            }
+            return ret;
+        }
+
+        public List<Layer> Find(int noteNo, int velocity) {
+            var ret = new List<Layer>();
+            foreach (var layer in List) {
+                if (noteNo <= layer.Header.KeyHi && layer.Header.KeyLo <= noteNo &&
+                    velocity <= layer.Header.VelHi && layer.Header.VelLo <= velocity) {
+                    ret.Add(layer);
+                }
+            }
+            return ret;
+        }
+
+        public bool ContainsKey(RANGE range) {
+            foreach (var layer in List) {
+                if (range.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= range.KeyHi &&
+                    range.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= range.VelHi) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool ContainsKey(int noteNo, int velocity) {
+            foreach (var layer in List) {
+                if (noteNo <= layer.Header.KeyHi && layer.Header.KeyLo <= noteNo &&
+                    velocity <= layer.Header.VelHi && layer.Header.VelLo <= velocity) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void Remove(int index) {
+            var tmp = new List<Layer>();
+            for (var iLayer = 0; iLayer < List.Count; iLayer++) {
+                if (iLayer != index) {
+                    tmp.Add(List[iLayer]);
+                }
+            }
+            List.Clear();
+            List.AddRange(tmp);
+        }
+
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
             switch (listType) {
             case "lyr ":
@@ -840,18 +988,18 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
-            var msLyr = new MemoryStream();
-            var bwLyr = new BinaryWriter(msLyr);
-            bwLyr.Write("LIST".ToCharArray());
-            bwLyr.Write(0xFFFFFFFF);
-            bwLyr.Write("llyr".ToCharArray());
+        public void Write(MemoryStream ms) {
+            var msLlyr = new MemoryStream();
+            var bwLlyr = new BinaryWriter(msLlyr);
+            bwLlyr.Write("LIST".ToCharArray());
+            bwLlyr.Write(0xFFFFFFFF);
+            bwLlyr.Write("llyr".ToCharArray());
             foreach (var layer in List) {
-                layer.Write(bwLyr);
+                layer.Write(msLlyr);
             }
-            bwLyr.Seek(4, SeekOrigin.Begin);
-            bwLyr.Write((int)msLyr.Length - 8);
-            bw.Write(msLyr.ToArray());
+            bwLlyr.Seek(4, SeekOrigin.Begin);
+            bwLlyr.Write((int)msLlyr.Length - 8);
+            msLlyr.WriteTo(ms);
         }
     }
 
@@ -876,38 +1024,32 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
+        public void Write(MemoryStream ms) {
             var msLayer = new MemoryStream();
             var bwLayer = new BinaryWriter(msLayer);
-
             bwLayer.Write("LIST".ToCharArray());
             bwLayer.Write(0xFFFFFFFF);
             bwLayer.Write("lyr ".ToCharArray());
 
             // lyrh chunk
-            var size = Marshal.SizeOf<RANGE>();
             bwLayer.Write("lyrh".ToCharArray());
-            bwLayer.Write(size);
-            var ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(Header, ptr, true);
-            var arr = new byte[size];
-            Marshal.Copy(ptr, arr, 0, size);
-            bwLayer.Write(arr);
+            bwLayer.Write(Marshal.SizeOf<RANGE>());
+            Header.Write(bwLayer);
 
-            Art.Write(bwLayer);
+            Art.Write(msLayer);
 
             bwLayer.Seek(4, SeekOrigin.Begin);
             bwLayer.Write((uint)msLayer.Length - 8);
-            bw.Write(msLayer.ToArray());
+            msLayer.WriteTo(ms);
         }
     }
 
-    public class Lrgn : Chunk {
+    public class LRegion : Chunk {
         private List<Region> List = new List<Region>();
 
-        public Lrgn() { }
+        public LRegion() { }
 
-        public Lrgn(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public LRegion(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
 
         public void Clear() {
             List.Clear();
@@ -929,6 +1071,27 @@ namespace Instruments {
             List.Add(region);
         }
 
+        public List<Region> Find(RANGE range) {
+            var ret = new List<Region>();
+            foreach (var rng in List) {
+                if (range.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= range.KeyHi &&
+                    range.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= range.VelHi) {
+                    ret.Add(rng);
+                }
+            }
+            return ret;
+        }
+
+        public Region Find(int noteNo, int velocity) {
+            foreach (var rng in List) {
+                if (noteNo <= rng.Header.KeyHi && rng.Header.KeyLo <= noteNo &&
+                    velocity <= rng.Header.VelHi && rng.Header.VelLo <= velocity) {
+                    return rng;
+                }
+            }
+            return null;
+        }
+
         public Region FindFirst(RANGE range) {
             foreach (var rng in List) {
                 if (range.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= range.KeyHi &&
@@ -940,9 +1103,19 @@ namespace Instruments {
         }
 
         public bool ContainsKey(RANGE range) {
-            foreach(var rng in List) {
+            foreach (var rng in List) {
                 if (range.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= range.KeyHi &&
                     range.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= range.VelHi) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool ContainsKey(int noteNo, int velocity) {
+            foreach (var rng in List) {
+                if (noteNo <= rng.Header.KeyHi && rng.Header.KeyLo <= noteNo &&
+                    velocity <= rng.Header.VelHi && rng.Header.VelLo <= velocity) {
                     return true;
                 }
             }
@@ -972,22 +1145,22 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
+        public void Write(MemoryStream ms) {
             if (0 == List.Count) {
                 return;
             }
 
-            var msRgn = new MemoryStream();
-            var bwRgn = new BinaryWriter(msRgn);
-            bwRgn.Write("LIST".ToCharArray());
-            bwRgn.Write(0xFFFFFFFF);
-            bwRgn.Write("lrgn".ToCharArray());
+            var msLrgn = new MemoryStream();
+            var bwLrgn = new BinaryWriter(msLrgn);
+            bwLrgn.Write("LIST".ToCharArray());
+            bwLrgn.Write(0xFFFFFFFF);
+            bwLrgn.Write("lrgn".ToCharArray());
             foreach (var region in List) {
-                region.Write(bwRgn);
+                region.Write(msLrgn);
             }
-            bwRgn.Seek(4, SeekOrigin.Begin);
-            bwRgn.Write((int)msRgn.Length - 8);
-            bw.Write(msRgn.ToArray());
+            bwLrgn.Seek(4, SeekOrigin.Begin);
+            bwLrgn.Write((int)msLrgn.Length - 8);
+            msLrgn.WriteTo(ms);
         }
     }
 
@@ -1043,19 +1216,17 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
+        public void Write(MemoryStream ms) {
             var msArt = new MemoryStream();
             var bwArt = new BinaryWriter(msArt);
             bwArt.Write("artc".ToCharArray());
             bwArt.Write(0xFFFFFFFF);
             foreach (var art in List) {
-                bwArt.Write((ushort)art.Type);
-                bwArt.Write((ushort)0);
-                bwArt.Write(art.Value);
+                art.Write(bwArt);
             }
             bwArt.Seek(4, SeekOrigin.Begin);
             bwArt.Write((int)msArt.Length - 8);
-            bw.Write(msArt.ToArray());
+            msArt.WriteTo(ms);
         }
     }
 
@@ -1080,7 +1251,7 @@ namespace Instruments {
             }
         }
 
-        public void Write(BinaryWriter bw) {
+        public void Write(MemoryStream ms) {
             var msRgn = new MemoryStream();
             var bwRgn = new BinaryWriter(msRgn);
             bwRgn.Write("LIST".ToCharArray());
@@ -1088,20 +1259,15 @@ namespace Instruments {
             bwRgn.Write("rgn ".ToCharArray());
 
             // rgnh chunk
-            var rgnhSize = Marshal.SizeOf<RANGE>();
             bwRgn.Write("rgnh".ToCharArray());
-            bwRgn.Write(rgnhSize);
-            var ptr = Marshal.AllocHGlobal(rgnhSize);
-            Marshal.StructureToPtr(Header, ptr, true);
-            var arr = new byte[rgnhSize];
-            Marshal.Copy(ptr, arr, 0, rgnhSize);
-            bwRgn.Write(arr);
+            bwRgn.Write(Marshal.SizeOf<RANGE>());
+            Header.Write(bwRgn);
 
-            Art.Write(bwRgn);
+            Art.Write(msRgn);
 
             bwRgn.Seek(4, SeekOrigin.Begin);
             bwRgn.Write((int)msRgn.Length - 8);
-            bw.Write(msRgn.ToArray());
+            msRgn.WriteTo(ms);
         }
     }
 }
