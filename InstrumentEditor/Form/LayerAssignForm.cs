@@ -5,9 +5,9 @@ using System.Windows.Forms;
 using Instruments;
 
 namespace InstrumentEditor {
-    public partial class RegionKeyAssignForm : Form {
+    public partial class LayerAssignForm : Form {
         private File mFile;
-        private Inst mInst;
+        private Preset mPreset;
         private bool mOnRange;
         private const int KEY_WIDTH = 10;
 
@@ -15,15 +15,17 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionKeyAssignForm(File file, Inst inst) {
+        public LayerAssignForm(File file, Preset preset) {
             mFile = file;
-            mInst = inst;
+            mPreset = preset;
             InitializeComponent();
             SetTabSize();
             DispRegionInfo();
             timer1.Interval = 30;
             timer1.Enabled = true;
             timer1.Start();
+            tscLayer.Visible = false;
+            txtRegion.Visible = false;
         }
 
         private void InstInfoForm_SizeChanged(object sender, EventArgs e) {
@@ -97,6 +99,8 @@ namespace InstrumentEditor {
             tsbDeleteRange.Enabled = true;
             pnlRegion.Visible = false;
             lstRegion.Visible = true;
+            tscLayer.Visible = false;
+            txtRegion.Visible = false;
         }
 
         private void tsbRangeKey_Click(object sender, EventArgs e) {
@@ -106,6 +110,42 @@ namespace InstrumentEditor {
             tsbRangeKey.Checked = true;
             lstRegion.Visible = false;
             pnlRegion.Visible = true;
+            tscLayer.Visible = true;
+            txtRegion.Visible = true;
+        }
+
+        private void tscLayer_SelectedIndexChanged(object sender, EventArgs e) {
+            var bmp = new Bitmap(picRegion.Width, picRegion.Height);
+            var g = Graphics.FromImage(bmp);
+            var blueLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
+            var greenFill = new Pen(Color.FromArgb(64, 0, 255, 0), 1.0f).Brush;
+
+            var cols = ((string)tscLayer.SelectedItem).Split('|');
+            var keyLo = int.Parse(cols[0]);
+            var keyHi = int.Parse(cols[1]);
+            var velLo = int.Parse(cols[2]);
+            var velHi = int.Parse(cols[3]);
+
+            g.FillRectangle(
+                greenFill,
+                keyLo * KEY_WIDTH,
+                bmp.Height - (velHi + 1) * 4 - 1,
+                (keyHi - keyLo + 1) * KEY_WIDTH,
+                (velHi - velLo + 1) * 4
+            );
+            g.DrawRectangle(
+                blueLine,
+                keyLo * KEY_WIDTH,
+                bmp.Height - (velHi + 1) * 4,
+                (keyHi - keyLo + 1) * KEY_WIDTH,
+                (velHi - velLo + 1) * 4
+            );
+
+            if (null != picRegion.Image) {
+                picRegion.Image.Dispose();
+                picRegion.Image = null;
+            }
+            picRegion.Image = bmp;
         }
 
         private void lstRegion_DoubleClick(object sender, EventArgs e) {
@@ -125,35 +165,15 @@ namespace InstrumentEditor {
         }
 
         private void DispRegionInfo() {
-            Text = mInst.Info.Name.Trim();
-
-            var bmp = new Bitmap(picRegion.Width, picRegion.Height);
-            var g = Graphics.FromImage(bmp);
-            var blueLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
-            var greenFill = new Pen(Color.FromArgb(64, 0, 255, 0), 1.0f).Brush;
+            Text = mPreset.Info.Name.Trim();
 
             var idx = lstRegion.SelectedIndex;
             lstRegion.Items.Clear();
 
-            foreach (var region in mInst.Region.Array) {
-                var range = region.Header;
-                g.FillRectangle(
-                    greenFill,
-                    range.KeyLo * KEY_WIDTH,
-                    bmp.Height - (range.VelHi + 1) * 4 - 1,
-                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
-                    (range.VelHi - range.VelLo + 1) * 4
-                );
-                g.DrawRectangle(
-                    blueLine,
-                    range.KeyLo * KEY_WIDTH,
-                    bmp.Height - (range.VelHi + 1) * 4,
-                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
-                    (range.VelHi - range.VelLo + 1) * 4
-                );
-
+            foreach (var layer in mPreset.Layer.Array) {
+                var range = layer.Header;
                 var waveIndex = int.MaxValue;
-                foreach (var art in region.Art.Array) {
+                foreach (var art in layer.Art.Array) {
                     if (art.Type == ART_TYPE.WAVE_INDEX) {
                         waveIndex = (int)art.Value;
                         break;
@@ -166,12 +186,23 @@ namespace InstrumentEditor {
                     waveName = wave.Info.Name;
                 }
 
+                var instIndex = -1;
+                var instName = "";
+                foreach (var art in layer.Art.Array) {
+                    if (art.Type == ART_TYPE.INST_INDEX) {
+                        instIndex = (int)art.Value;
+                        instName = mFile.Inst[instIndex].Info.Name;
+                        break;
+                    }
+                }
+
                 var regionInfo = string.Format(
-                    "音程 {0} {1}    強弱 {2} {3}",
-                    region.Header.KeyLo.ToString("000"),
-                    region.Header.KeyHi.ToString("000"),
-                    region.Header.VelLo.ToString("000"),
-                    region.Header.VelHi.ToString("000")
+                    "音程 {0} {1}    強弱 {2} {3}    {4}",
+                    layer.Header.KeyLo.ToString("000"),
+                    layer.Header.KeyHi.ToString("000"),
+                    layer.Header.VelLo.ToString("000"),
+                    layer.Header.VelHi.ToString("000"),
+                    instName
                 );
                 if (int.MaxValue != waveIndex) {
                     regionInfo = string.Format(
@@ -182,13 +213,17 @@ namespace InstrumentEditor {
                     );
                 }
                 lstRegion.Items.Add(regionInfo);
+                tscLayer.Items.Add(string.Format("{0}|{1}|{2}|{3}|{4}|{5}",
+                    layer.Header.KeyLo.ToString("000"),
+                    layer.Header.KeyHi.ToString("000"),
+                    layer.Header.VelLo.ToString("000"),
+                    layer.Header.VelHi.ToString("000"),
+                    instIndex.ToString("0000"),
+                    instName
+                ));
             }
 
-            if (null != picRegion.Image) {
-                picRegion.Image.Dispose();
-                picRegion.Image = null;
-            }
-            picRegion.Image = bmp;
+            tscLayer.SelectedIndex = 0 < tscLayer.Items.Count ? 0 : -1;
 
             if (lstRegion.Items.Count <= idx) {
                 idx = lstRegion.Items.Count - 1;
@@ -197,22 +232,22 @@ namespace InstrumentEditor {
         }
 
         private void AddRegion() {
-            var region = new Instruments.Region();
-            region.Header.KeyLo = byte.MaxValue;
-            var fm = new RegionInfoForm(mFile, region);
-            fm.ShowDialog();
+            var layer = new Layer();
+            layer.Header.KeyLo = byte.MaxValue;
+            //FORM//var fm = new RegionInfoForm(mFile, layer);
+            //FORM//fm.ShowDialog();
 
-            if (byte.MaxValue != region.Header.KeyLo) {
-                mInst.Region.Add(region);
+            if (byte.MaxValue != layer.Header.KeyLo) {
+                mPreset.Layer.Add(layer);
                 DispRegionInfo();
             }
         }
 
-        private void EditRegion(RGNH range) {
-            if (mInst.Region.ContainsKey(range)) {
-                var region = mInst.Region.FindFirst(range);
-                var fm = new RegionInfoForm(mFile, region);
-                fm.ShowDialog();
+        private void EditRegion(LYRH range) {
+            if (mPreset.Layer.ContainsKey(range)) {
+                var region = mPreset.Layer.Find(range);
+                //FORM//var fm = new RegionInfoForm(mFile, region);
+                //FORM//fm.ShowDialog();
                 DispRegionInfo();
             } else {
                 AddRegion();
@@ -224,13 +259,13 @@ namespace InstrumentEditor {
 
             foreach (int idx in lstRegion.SelectedIndices) {
                 var cols = lstRegion.Items[idx].ToString().Split(' ');
-                var range = new RGNH {
+                var range = new LYRH {
                     KeyLo = byte.Parse(cols[1]),
                     KeyHi = byte.Parse(cols[2]),
                     VelLo = byte.Parse(cols[7]),
                     VelHi = byte.Parse(cols[8])
                 };
-                mInst.Region.Remove(range);
+                //FORM//mPreset.Layer.Remove(range);
             }
 
             DispRegionInfo();
@@ -264,25 +299,25 @@ namespace InstrumentEditor {
             return posRegion;
         }
 
-        private RGNH PosToRange() {
-            var range = new RGNH();
+        private LYRH PosToRange() {
+            var range = new LYRH();
             var posRegion = PosToRegion();
-            foreach (var rgn in mInst.Region.Array) {
-                if (rgn.Header.KeyLo <= posRegion.X && posRegion.X <= rgn.Header.KeyHi &&
-                    rgn.Header.VelLo <= posRegion.Y && posRegion.Y <= rgn.Header.VelHi) {
-                    range = rgn.Header;
+            foreach (var layer in mPreset.Layer.Array) {
+                if (layer.Header.KeyLo <= posRegion.X && posRegion.X <= layer.Header.KeyHi &&
+                    layer.Header.VelLo <= posRegion.Y && posRegion.Y <= layer.Header.VelHi) {
+                    range = layer.Header;
                     break;
                 }
             }
             return range;
         }
 
-        private RGNH ListToRange() {
+        private LYRH ListToRange() {
             if (lstRegion.SelectedIndex < 0) {
-                return new RGNH();
+                return new LYRH();
             }
             var cols = lstRegion.Items[lstRegion.SelectedIndex].ToString().Split(' ');
-            var region = new RGNH {
+            var region = new LYRH {
                 KeyLo = byte.Parse(cols[1]),
                 KeyHi = byte.Parse(cols[2]),
                 VelLo = byte.Parse(cols[7]),

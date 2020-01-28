@@ -169,6 +169,11 @@ namespace SF2 {
         public byte velLo;
         public byte velHi;
         public Dictionary<E_OPER, double> Art = new Dictionary<E_OPER, double>();
+
+        public PresetRange() {
+            keyHi = 127;
+            velHi = 127;
+        }
     }
 
     public class Inst {
@@ -746,10 +751,16 @@ namespace SF2 {
                         case E_OPER.KEY_RANGE:
                             range.keyLo = (byte)(gen.genAmount & 0x7F);
                             range.keyHi = (byte)((gen.genAmount >> 8) & 0x7F);
+                            if (range.keyLo == 0 && range.keyHi == 0) {
+                                range.keyHi = 127;
+                            }
                             break;
                         case E_OPER.VEL_RANGE:
                             range.velLo = (byte)(gen.genAmount & 0x7F);
                             range.velHi = (byte)((gen.genAmount >> 8) & 0x7F);
+                            if (range.velLo == 0 && range.velHi == 0) {
+                                range.velHi = 127;
+                            }
                             break;
                         case E_OPER.INSTRUMENT:
                             range.Art.Add(gen.genOper, gen.genAmount);
@@ -824,10 +835,16 @@ namespace SF2 {
                         case E_OPER.KEY_RANGE:
                             range.keyLo = (byte)(gen.genAmount & 0x7F);
                             range.keyHi = (byte)((gen.genAmount >> 8) & 0x7F);
+                            if (range.keyLo == 0 && range.keyHi == 0) {
+                                range.keyHi = 127;
+                            }
                             break;
                         case E_OPER.VEL_RANGE:
                             range.velLo = (byte)(gen.genAmount & 0x7F);
                             range.velHi = (byte)((gen.genAmount >> 8) & 0x7F);
+                            if (range.velLo == 0 && range.velHi == 0) {
+                                range.velHi = 127;
+                            }
                             break;
 
                         case E_OPER.SAMPLE_ID:

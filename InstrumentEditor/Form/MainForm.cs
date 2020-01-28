@@ -158,19 +158,11 @@ namespace InstrumentEditor {
         private void tsbList_Click(object sender, EventArgs e) {
             tsbList.Checked = true;
             tsbKey.Checked = false;
-            tsbEnvelope.Checked = false;
         }
 
         private void tsbKey_Click(object sender, EventArgs e) {
             tsbList.Checked = false;
             tsbKey.Checked = true;
-            tsbEnvelope.Checked = false;
-        }
-
-        private void tsbEnvelope_Click(object sender, EventArgs e) {
-            tsbList.Checked = false;
-            tsbKey.Checked = false;
-            tsbEnvelope.Checked = true;
         }
 
         private void txtInstSearch_Leave(object sender, EventArgs e) {
@@ -397,12 +389,8 @@ namespace InstrumentEditor {
                 fm.ShowDialog();
             }
             if (tsbKey.Checked) {
-                //FORM//var fm = new RegionKeyAssignForm(mFile, preset);
-                //FORM//fm.ShowDialog();
-            }
-            if (tsbEnvelope.Checked) {
-                //FORM//var fm = new EnvelopeForm(mFile, inst);
-                //FORM//fm.ShowDialog();
+                var fm = new LayerAssignForm(mFile, preset);
+                fm.ShowDialog();
             }
             DispPresetList();
         }

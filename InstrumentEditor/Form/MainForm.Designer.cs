@@ -54,7 +54,6 @@
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbList = new System.Windows.Forms.ToolStripButton();
             this.tsbKey = new System.Windows.Forms.ToolStripButton();
-            this.tsbEnvelope = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.txtInstSearch = new System.Windows.Forms.ToolStripTextBox();
@@ -238,14 +237,13 @@
             this.toolStripSeparator6,
             this.tsbList,
             this.tsbKey,
-            this.tsbEnvelope,
             this.toolStripSeparator3,
             this.toolStripLabel2,
             this.txtInstSearch});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStrip2.Size = new System.Drawing.Size(707, 38);
+            this.toolStrip2.Size = new System.Drawing.Size(746, 38);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -327,19 +325,8 @@
             this.tsbKey.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbKey.Name = "tsbKey";
             this.tsbKey.Size = new System.Drawing.Size(23, 35);
-            this.tsbKey.Text = "キーアサイン";
+            this.tsbKey.Text = "レイヤー設定";
             this.tsbKey.Click += new System.EventHandler(this.tsbKey_Click);
-            // 
-            // tsbEnvelope
-            // 
-            this.tsbEnvelope.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbEnvelope.Image = global::InstrumentEditor.Properties.Resources.envelope;
-            this.tsbEnvelope.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbEnvelope.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbEnvelope.Name = "tsbEnvelope";
-            this.tsbEnvelope.Size = new System.Drawing.Size(23, 35);
-            this.tsbEnvelope.Text = "エンベロープ";
-            this.tsbEnvelope.Click += new System.EventHandler(this.tsbEnvelope_Click);
             // 
             // toolStripSeparator3
             // 
@@ -611,7 +598,6 @@
         private System.Windows.Forms.ToolStripContentPanel ContentPanel;
         private System.Windows.Forms.ToolStripButton tsbList;
         private System.Windows.Forms.ToolStripButton tsbKey;
-        private System.Windows.Forms.ToolStripButton tsbEnvelope;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.TabPage tbpInstList;
         private System.Windows.Forms.ListBox lstInst;

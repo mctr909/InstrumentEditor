@@ -133,6 +133,8 @@ namespace Instruments {
         public double Pitch;
 
         public void Write(BinaryWriter bw) {
+            bw.Write("wavh".ToCharArray());
+            bw.Write(Marshal.SizeOf<WAVH>());
             bw.Write(SampleRate);
             bw.Write(LoopBegin);
             bw.Write(LoopLength);
@@ -152,6 +154,8 @@ namespace Instruments {
         public byte ProgNum;
 
         public void Write(BinaryWriter bw) {
+            bw.Write("preh".ToCharArray());
+            bw.Write(Marshal.SizeOf<PREH>());
             bw.Write(BankFlg);
             bw.Write(BankMSB);
             bw.Write(BankLSB);
@@ -160,13 +164,32 @@ namespace Instruments {
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct RANGE {
+    public struct LYRH {
         public byte KeyLo;
         public byte KeyHi;
         public byte VelLo;
         public byte VelHi;
 
         public void Write(BinaryWriter bw) {
+            bw.Write("lyrh".ToCharArray());
+            bw.Write(Marshal.SizeOf<LYRH>());
+            bw.Write(KeyLo);
+            bw.Write(KeyHi);
+            bw.Write(VelLo);
+            bw.Write(VelHi);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct RGNH {
+        public byte KeyLo;
+        public byte KeyHi;
+        public byte VelLo;
+        public byte VelHi;
+
+        public void Write(BinaryWriter bw) {
+            bw.Write("rgnh".ToCharArray());
+            bw.Write(Marshal.SizeOf<RGNH>());
             bw.Write(KeyLo);
             bw.Write(KeyHi);
             bw.Write(VelLo);
@@ -487,9 +510,10 @@ namespace Instruments {
         };
 
         public WAVH Header;
-        public FMT Format;
         public short[] Data = null;
         public Info Info = new Info();
+
+        private FMT mFormat;
 
         public Wave() { }
 
@@ -501,6 +525,8 @@ namespace Instruments {
             var riffSize = br.ReadUInt32();
             var riffType = br.ReadUInt32();
 
+            var arrData = new byte[0];
+
             while (fs.Position < fs.Length) {
                 var chunkType = Encoding.ASCII.GetString(br.ReadBytes(4));
                 var chunkSize = br.ReadUInt32();
@@ -509,11 +535,11 @@ namespace Instruments {
 
                 switch (chunkType) {
                 case "fmt ":
-                    Format = Marshal.PtrToStructure<FMT>(pChunkData);
+                    mFormat = Marshal.PtrToStructure<FMT>(pChunkData);
                     break;
                 case "data":
-                    Data = new short[chunkSize / 2];
-                    Marshal.Copy(pChunkData, Data, 0, Data.Length);
+                    arrData = new byte[chunkSize];
+                    Marshal.Copy(pChunkData, arrData, 0, (int)chunkSize);
                     break;
                 case "wavh":
                     Header = Marshal.PtrToStructure<WAVH>(pChunkData);
@@ -531,8 +557,50 @@ namespace Instruments {
                 Marshal.FreeHGlobal(pChunkData);
             }
 
+            var msData = new MemoryStream(arrData);
+            var brData = new BinaryReader(msData);
+
+            switch (mFormat.Bits) {
+            case 8:
+                Data = new short[msData.Length];
+                for (var i = 0; msData.Position < msData.Length; i++) {
+                    var data = brData.ReadByte() - 128;
+                    Data[i] = (short)(256 * data);
+                }
+                break;
+            case 16:
+                Data = new short[msData.Length / 2];
+                for (var i = 0; msData.Position < msData.Length; i++) {
+                    Data[i] = brData.ReadInt16();
+                }
+                break;
+            case 24:
+                Data = new short[msData.Length / 3];
+                for (var i = 0; msData.Position < msData.Length; i++) {
+                    brData.ReadByte();
+                    Data[i] = brData.ReadInt16();
+                }
+                break;
+            case 32:
+                Data = new short[msData.Length / 4];
+                if (mFormat.Tag == 3) {
+                    for (var i = 0; msData.Position < msData.Length; i++) {
+                        var data = brData.ReadSingle();
+                        if (1.0 < data) data = 1.0f;
+                        if (data < -1.0) data = -1.0f;
+                        Data[i] = (short)(32767 * data);
+                    }
+                } else {
+                    for (var i = 0; msData.Position < msData.Length; i++) {
+                        brData.ReadInt16();
+                        Data[i] = brData.ReadInt16();
+                    }
+                }
+                break;
+            }
+
             if (0 == Header.SampleRate) {
-                Header.SampleRate = Format.SampleRate;
+                Header.SampleRate = mFormat.SampleRate;
                 Header.Gain = 1.0;
                 Header.Pitch = 1.0;
             }
@@ -584,10 +652,8 @@ namespace Instruments {
             bwWave.Write(0xFFFFFFFF);
             bwWave.Write("wave".ToCharArray());
 
-            // wavh chunk
-            bwWave.Write("wavh".ToCharArray());
-            bwWave.Write(Marshal.SizeOf<WAVH>());
-            wptr.ofsHeader = (uint)msWave.Position;
+            wptr.ofsHeader = (uint)msWave.Position + 8;
+
             Header.Write(bwWave);
 
             {
@@ -644,11 +710,7 @@ namespace Instruments {
                 bw.Write(arr);
             }
 
-            // wavh chunk
-            bw.Write("wavh".ToCharArray());
-            bw.Write(Marshal.SizeOf<WAVH>());
             Header.Write(bw);
-
             Info.Write(bw);
 
             fs.Seek(4, SeekOrigin.Begin);
@@ -875,11 +937,7 @@ namespace Instruments {
             bwInst.Write(0xFFFFFFFF);
             bwInst.Write("pres".ToCharArray());
 
-            // preh chunk
-            bwInst.Write("preh".ToCharArray());
-            bwInst.Write(Marshal.SizeOf<PREH>());
             Header.Write(bwInst);
-
             Art.Write(msInst);
             Layer.Write(msInst);
             Info.Write(bwInst);
@@ -917,15 +975,15 @@ namespace Instruments {
             List.Add(layer);
         }
 
-        public void Update(int index, RANGE range) {
-            List[index].Header = range;
+        public void Update(int index, LYRH header) {
+            List[index].Header = header;
         }
 
-        public List<Layer> Find(RANGE range) {
+        public List<Layer> Find(LYRH header) {
             var ret = new List<Layer>();
             foreach (var layer in List) {
-                if (range.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= range.KeyHi &&
-                    range.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= range.VelHi) {
+                if (header.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= header.KeyHi &&
+                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi) {
                     ret.Add(layer);
                 }
             }
@@ -943,10 +1001,10 @@ namespace Instruments {
             return ret;
         }
 
-        public bool ContainsKey(RANGE range) {
+        public bool ContainsKey(LYRH header) {
             foreach (var layer in List) {
-                if (range.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= range.KeyHi &&
-                    range.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= range.VelHi) {
+                if (header.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= header.KeyHi &&
+                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi) {
                     return true;
                 }
             }
@@ -1000,7 +1058,7 @@ namespace Instruments {
     }
 
     public class Layer : Chunk {
-        public RANGE Header;
+        public LYRH Header;
         public Lart Art = new Lart();
 
         public Layer() { }
@@ -1010,7 +1068,7 @@ namespace Instruments {
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {
             case "lyrh":
-                Header = Marshal.PtrToStructure<RANGE>(ptr);
+                Header = Marshal.PtrToStructure<LYRH>(ptr);
                 break;
             case "artc":
                 Art = new Lart(ptr, chunkSize);
@@ -1027,11 +1085,7 @@ namespace Instruments {
             bwLayer.Write(0xFFFFFFFF);
             bwLayer.Write("lyr ".ToCharArray());
 
-            // lyrh chunk
-            bwLayer.Write("lyrh".ToCharArray());
-            bwLayer.Write(Marshal.SizeOf<RANGE>());
             Header.Write(bwLayer);
-
             Art.Write(msLayer);
 
             bwLayer.Seek(4, SeekOrigin.Begin);
@@ -1067,11 +1121,11 @@ namespace Instruments {
             List.Add(region);
         }
 
-        public List<Region> Find(RANGE range) {
+        public List<Region> Find(RGNH header) {
             var ret = new List<Region>();
             foreach (var rng in List) {
-                if (range.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= range.KeyHi &&
-                    range.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= range.VelHi) {
+                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
+                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                     ret.Add(rng);
                 }
             }
@@ -1088,20 +1142,20 @@ namespace Instruments {
             return null;
         }
 
-        public Region FindFirst(RANGE range) {
+        public Region FindFirst(RGNH header) {
             foreach (var rng in List) {
-                if (range.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= range.KeyHi &&
-                    range.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= range.VelHi) {
+                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
+                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                     return rng;
                 }
             }
             return null;
         }
 
-        public bool ContainsKey(RANGE range) {
+        public bool ContainsKey(RGNH header) {
             foreach (var rng in List) {
-                if (range.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= range.KeyHi &&
-                    range.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= range.VelHi) {
+                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
+                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                     return true;
                 }
             }
@@ -1118,11 +1172,11 @@ namespace Instruments {
             return false;
         }
 
-        public void Remove(RANGE range) {
+        public void Remove(RGNH header) {
             var tmpRegion = new List<Region>();
             foreach (var rng in List) {
-                if (range.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= range.KeyHi &&
-                    range.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= range.VelHi) {
+                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
+                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                 } else {
                     tmpRegion.Add(rng);
                 }
@@ -1161,7 +1215,7 @@ namespace Instruments {
     }
 
     public class Region : Chunk {
-        public RANGE Header;
+        public RGNH Header;
         public Lart Art = new Lart();
 
         public Region() { }
@@ -1171,7 +1225,7 @@ namespace Instruments {
         protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
             switch (chunkType) {
             case "rgnh":
-                Header = Marshal.PtrToStructure<RANGE>(ptr);
+                Header = Marshal.PtrToStructure<RGNH>(ptr);
                 break;
             case "artc":
                 Art = new Lart(ptr, chunkSize);
@@ -1188,11 +1242,7 @@ namespace Instruments {
             bwRgn.Write(0xFFFFFFFF);
             bwRgn.Write("rgn ".ToCharArray());
 
-            // rgnh chunk
-            bwRgn.Write("rgnh".ToCharArray());
-            bwRgn.Write(Marshal.SizeOf<RANGE>());
             Header.Write(bwRgn);
-
             Art.Write(msRgn);
 
             bwRgn.Seek(4, SeekOrigin.Begin);

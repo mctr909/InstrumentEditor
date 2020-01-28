@@ -55,6 +55,12 @@
     <Compile Include="Form\EnvelopeForm.Designer.cs">
       <DependentUpon>EnvelopeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\LayerAssignForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\LayerAssignForm.Designer.cs">
+      <DependentUpon>LayerAssignForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\RegionKeyAssignForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +123,9 @@
     </Compile>
     <EmbeddedResource Include="Form\EnvelopeForm.resx">
       <DependentUpon>EnvelopeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\LayerAssignForm.resx">
+      <DependentUpon>LayerAssignForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\RegionKeyAssignForm.resx">
       <DependentUpon>RegionKeyAssignForm.cs</DependentUpon>
