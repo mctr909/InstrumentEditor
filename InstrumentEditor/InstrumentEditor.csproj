@@ -49,11 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form\EnvelopeForm.cs">
+    <Compile Include="Dialog\InstSelectDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\EnvelopeForm.Designer.cs">
-      <DependentUpon>EnvelopeForm.cs</DependentUpon>
+    <Compile Include="Dialog\InstSelectDialog.Designer.cs">
+      <DependentUpon>InstSelectDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\LayerInfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\LayerInfoDialog.Designer.cs">
+      <DependentUpon>LayerInfoDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\LayerAssignForm.cs">
       <SubType>Form</SubType>
@@ -61,11 +67,11 @@
     <Compile Include="Form\LayerAssignForm.Designer.cs">
       <DependentUpon>LayerAssignForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\RegionKeyAssignForm.cs">
+    <Compile Include="Form\RegionAssignForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\RegionKeyAssignForm.Designer.cs">
-      <DependentUpon>RegionKeyAssignForm.cs</DependentUpon>
+    <Compile Include="Form\RegionAssignForm.Designer.cs">
+      <DependentUpon>RegionAssignForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Instruments.cs" />
     <Compile Include="Riff.cs" />
@@ -79,11 +85,11 @@
     <Compile Include="Form\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\AddPresetForm.cs">
+    <Compile Include="Dialog\AddPresetDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\AddPresetForm.Designer.cs">
-      <DependentUpon>AddPresetForm.cs</DependentUpon>
+    <Compile Include="Dialog\AddPresetDialog.Designer.cs">
+      <DependentUpon>AddPresetDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\RegionInfoForm.cs">
       <SubType>Form</SubType>
@@ -91,11 +97,11 @@
     <Compile Include="Form\RegionInfoForm.Designer.cs">
       <DependentUpon>RegionInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\PresetInfoForm.cs">
+    <Compile Include="Dialog\PresetInfoDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\PresetInfoForm.Designer.cs">
-      <DependentUpon>PresetInfoForm.cs</DependentUpon>
+    <Compile Include="Dialog\PresetInfoDialog.Designer.cs">
+      <DependentUpon>PresetInfoDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="SF2.cs" />
     <Compile Include="Spectrum.cs" />
@@ -115,29 +121,32 @@
     </Compile>
     <Compile Include="WaveOutLib.cs" />
     <Compile Include="WavePlayback.cs" />
-    <Compile Include="Form\WaveSelectForm.cs">
+    <Compile Include="Dialog\WaveSelectDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\WaveSelectForm.Designer.cs">
-      <DependentUpon>WaveSelectForm.cs</DependentUpon>
+    <Compile Include="Dialog\WaveSelectDialog.Designer.cs">
+      <DependentUpon>WaveSelectDialog.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form\EnvelopeForm.resx">
-      <DependentUpon>EnvelopeForm.cs</DependentUpon>
+    <EmbeddedResource Include="Dialog\InstSelectDialog.resx">
+      <DependentUpon>InstSelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\LayerInfoDialog.resx">
+      <DependentUpon>LayerInfoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\LayerAssignForm.resx">
       <DependentUpon>LayerAssignForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\RegionKeyAssignForm.resx">
-      <DependentUpon>RegionKeyAssignForm.cs</DependentUpon>
+    <EmbeddedResource Include="Form\RegionAssignForm.resx">
+      <DependentUpon>RegionAssignForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\PresetInfoForm.resx">
-      <DependentUpon>PresetInfoForm.cs</DependentUpon>
+    <EmbeddedResource Include="Dialog\PresetInfoDialog.resx">
+      <DependentUpon>PresetInfoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\AddPresetForm.resx">
-      <DependentUpon>AddPresetForm.cs</DependentUpon>
+    <EmbeddedResource Include="Dialog\AddPresetDialog.resx">
+      <DependentUpon>AddPresetDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\RegionInfoForm.resx">
       <DependentUpon>RegionInfoForm.cs</DependentUpon>
@@ -145,8 +154,8 @@
     <EmbeddedResource Include="Form\WaveInfoForm.resx">
       <DependentUpon>WaveInfoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\WaveSelectForm.resx">
-      <DependentUpon>WaveSelectForm.cs</DependentUpon>
+    <EmbeddedResource Include="Dialog\WaveSelectDialog.resx">
+      <DependentUpon>WaveSelectDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

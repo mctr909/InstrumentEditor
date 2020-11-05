@@ -5,22 +5,22 @@ using System.Windows.Forms;
 using Instruments;
 
 namespace InstrumentEditor {
-    public partial class RegionInfoForm : Form {
+    public partial class LayerInfoDialog : Form {
         private File mFile;
-        private Region mRegion;
+        private Layer mLayer;
 
         private readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionInfoForm(File file, Region region) {
+        public LayerInfoDialog(File file, Layer layer) {
             InitializeComponent();
 
             mFile = file;
-            mRegion = region;
+            mLayer = layer;
 
             SetPosition();
-            DispRegionInfo();
+            DispInfo();
         }
 
         private void numKeyLow_ValueChanged(object sender, EventArgs e) {
@@ -43,56 +43,36 @@ namespace InstrumentEditor {
             SetUnityNote();
         }
 
-        private void btnSelectWave_Click(object sender, EventArgs e) {
-            var waveIndex = 0;
-            foreach(var art in mRegion.Art.Array) {
-                if (art.Type == ART_TYPE.WAVE_INDEX) {
-                    waveIndex = (int)art.Value;
+        private void btnSelect_Click(object sender, EventArgs e) {
+            var instIndex = 0;
+            foreach(var art in mLayer.Art.Array) {
+                if (art.Type == ART_TYPE.INST_INDEX) {
+                    instIndex = (int)art.Value;
                     break;
                 }
             }
 
-            var fm = new WaveSelectDialog(mFile, mRegion);
+            var fm = new InstSelectDialog(mFile, mLayer);
+            fm.StartPosition = FormStartPosition.CenterParent;
             fm.ShowDialog();
 
-            if (mFile.Wave.ContainsKey(waveIndex)) {
-                var wave = mFile.Wave[waveIndex];
-                btnEditWave.Enabled = true;
-                txtWave.Text = string.Format(
+            if (instIndex < mFile.Inst.Count) {
+                var inst = mFile.Inst[instIndex];
+                txtInst.Text = string.Format(
                     "{0} {1}",
-                    waveIndex.ToString("0000"),
-                    wave.Info.Name
+                    instIndex.ToString("0000"),
+                    inst.Info.Name
                 );
             } else {
-                btnEditWave.Enabled = false;
-                txtWave.Text = "";
-            }
-        }
-
-        private void btnEditWave_Click(object sender, EventArgs e) {
-            foreach(var art in mRegion.Art.Array) {
-                if (art.Type == ART_TYPE.WAVE_INDEX) {
-                    var fm = new WaveInfoForm(mFile, (int)art.Value);
-                    fm.ShowDialog();
-                    return;
-                }
+                txtInst.Text = "";
             }
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
-            if (byte.MaxValue == mRegion.Header.KeyLo) {
-                mRegion.Header.KeyLo = (byte)numKeyLow.Value;
-                mRegion.Header.KeyHi = (byte)numKeyHigh.Value;
-                mRegion.Header.VelLo = (byte)numVelocityLow.Value;
-                mRegion.Header.VelHi = (byte)numVelocityHigh.Value;
-            }
-
-            mRegion.Art.Update(ART_TYPE.OVERRIDE_KEY, (byte)numUnityNote.Value);
-            mRegion.Art.Update(ART_TYPE.PITCH_CONST, (float)Math.Pow(2.0, (byte)numFineTune.Value / 1200.0));
-            mRegion.Art.Update(ART_TYPE.GAIN_CONST, (float)(numVolume.Value / 100.0m));
-
-            envelope1.SetList(mRegion.Art);
-
+            mLayer.Header.KeyLo = (byte)numKeyLow.Value;
+            mLayer.Header.KeyHi = (byte)numKeyHigh.Value;
+            mLayer.Header.VelLo = (byte)numVelocityLow.Value;
+            mLayer.Header.VelHi = (byte)numVelocityHigh.Value;
             Close();
         }
 
@@ -111,36 +91,27 @@ namespace InstrumentEditor {
 
             numVelocityLow.Top = numKeyLow.Top;
             numVelocityHigh.Top = numKeyHigh.Top;
-            grbVelocity.Left = grbKey.Left + grbKey.Width + 36;
+            grbVelocity.Left = grbKey.Right + 6;
             grbVelocity.Top = grbKey.Top;
             grbVelocity.Height = grbKey.Height;
 
-            txtWave.Top = 12;
-            btnSelectWave.Top = 12;
-            btnEditWave.Top = 12;
-            btnSelectWave.Left = txtWave.Left + txtWave.Width + 4;
-            btnEditWave.Left = btnSelectWave.Left + btnSelectWave.Width + 4;
-            grbWave.Top = grbVelocity.Top + grbVelocity.Height + 6;
-            grbWave.Width = grbKey.Width + grbVelocity.Width + 36;
-            grbWave.Height = txtWave.Top + txtWave.Height + 6;
+            txtInst.Top = 12;
+            btnSelect.Top = 12;
+            btnSelect.Left = txtInst.Left + txtInst.Width + 4;
+            grbInst.Top = grbVelocity.Top + grbVelocity.Height + 6;
+            grbInst.Width = grbKey.Width + grbVelocity.Width + 6;
+            grbInst.Height = txtInst.Top + txtInst.Height + 6;
 
-            grbUnityNote.Top = grbWave.Top + grbWave.Height + 6;
+            grbUnityNote.Top = grbInst.Top + grbInst.Height + 6;
             grbFineTune.Top = grbUnityNote.Top;
             grbFineTune.Left = grbUnityNote.Left + grbUnityNote.Width + 6;
             grbVolume.Top = grbUnityNote.Top;
             grbVolume.Left = grbFineTune.Left + grbFineTune.Width + 6;
 
-            envelope1.Top = grbVolume.Top + grbVolume.Height + 6;
-            envelope1.Left = grbUnityNote.Left;
+            btnAdd.Top = grbVolume.Bottom + 4;
+            btnAdd.Left = grbVolume.Right - btnAdd.Width;
 
-            envelope1.Art = mRegion.Art;
-
-            chkLoop.Top = envelope1.Top + envelope1.Height + 6;
-
-            btnAdd.Top = chkLoop.Top;
-            btnAdd.Left = envelope1.Right - btnAdd.Width;
-
-            Width = envelope1.Left + envelope1.Width + 24;
+            Width = btnAdd.Right + 24;
             Height = btnAdd.Top + btnAdd.Height + 48;
         }
 
@@ -182,53 +153,45 @@ namespace InstrumentEditor {
             lblUnityNote.Text = string.Format("{0}{1}", NoteName[note], oct);
         }
 
-        private void DispRegionInfo() {
-            if (byte.MaxValue == mRegion.Header.KeyLo) {
+        private void DispInfo() {
+            if (byte.MaxValue == mLayer.Header.KeyLo) {
                 numKeyLow.Value = 63;
                 numKeyHigh.Value = 63;
                 numVelocityLow.Value = 0;
                 numVelocityHigh.Value = 127;
-                btnEditWave.Enabled = false;
 
                 btnAdd.Text = "追加";
             } else {
-                numKeyLow.Value = mRegion.Header.KeyLo;
-                numKeyHigh.Value = mRegion.Header.KeyHi;
-                numVelocityLow.Value = mRegion.Header.VelLo;
-                numVelocityHigh.Value = mRegion.Header.VelHi;
-                numKeyLow.Enabled = false;
-                numKeyHigh.Enabled = false;
-                numVelocityLow.Enabled = false;
-                numVelocityHigh.Enabled = false;
+                numKeyLow.Value = mLayer.Header.KeyLo;
+                numKeyHigh.Value = mLayer.Header.KeyHi;
+                numVelocityLow.Value = mLayer.Header.VelLo;
+                numVelocityHigh.Value = mLayer.Header.VelHi;
 
-                var waveIndex = int.MaxValue;
-                foreach (var art in mRegion.Art.Array) {
-                    if (art.Type == ART_TYPE.WAVE_INDEX) {
-                        waveIndex = (int)art.Value;
+                var instIndex = int.MaxValue;
+                foreach (var art in mLayer.Art.Array) {
+                    if (art.Type == ART_TYPE.INST_INDEX) {
+                        instIndex = (int)art.Value;
                         break;
                     }
                 }
 
-                var waveName = "";
-                if (mFile.Wave.ContainsKey(waveIndex)) {
-                    var wave = mFile.Wave[waveIndex];
-                    waveName = wave.Info.Name;
-                    btnEditWave.Enabled = true;
-                } else {
-                    btnEditWave.Enabled = false;
+                var instName = "";
+                if (instIndex < mFile.Inst.Count) {
+                    var inst = mFile.Inst[instIndex];
+                    instName = inst.Info.Name;
                 }
 
-                if (int.MaxValue == waveIndex) {
-                    txtWave.Text = "";
+                if (int.MaxValue == instIndex) {
+                    txtInst.Text = "";
                 } else {
-                    txtWave.Text = string.Format(
+                    txtInst.Text = string.Format(
                         "{0} {1}",
-                        waveIndex.ToString("0000"),
-                        waveName
+                        instIndex.ToString("0000"),
+                        instName
                     );
                 }
 
-                foreach(var art in mRegion.Art.Array) {
+                foreach(var art in mLayer.Art.Array) {
                     switch (art.Type) {
                     case ART_TYPE.GAIN_CONST:
                         numVolume.Value = (decimal)(art.Value * 100.0);

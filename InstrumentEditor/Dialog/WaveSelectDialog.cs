@@ -4,22 +4,22 @@ using System.Windows.Forms;
 using Instruments;
 
 namespace InstrumentEditor {
-    public partial class WaveSelectForm : Form {
+    public partial class WaveSelectDialog : Form {
         private File mFile;
         private Region mRegion;
 
-        public WaveSelectForm(File file, Region region) {
+        public WaveSelectDialog(File file, Region region) {
             InitializeComponent();
             mFile = file;
             mRegion = region;
         }
 
-        private void WaveSelectForm_Load(object sender, EventArgs e) {
+        private void WaveSelectDialog_Load(object sender, EventArgs e) {
             DispWaveList("");
             SetSize();
         }
 
-        private void WaveSelectForm_SizeChanged(object sender, EventArgs e) {
+        private void WaveSelectDialog_SizeChanged(object sender, EventArgs e) {
             SetSize();
         }
 

@@ -1,5 +1,5 @@
 ﻿namespace InstrumentEditor {
-    partial class AddPresetForm
+    partial class AddPresetDialog
 	{
         /// <summary>
         /// Required designer variable.
@@ -48,22 +48,22 @@
             // 
             // txtInstName
             // 
-            this.txtInstName.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtInstName.Location = new System.Drawing.Point(10, 33);
-            this.txtInstName.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.txtInstName.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtInstName.Location = new System.Drawing.Point(4, 13);
             this.txtInstName.Name = "txtInstName";
-            this.txtInstName.Size = new System.Drawing.Size(783, 37);
+            this.txtInstName.Size = new System.Drawing.Size(261, 19);
             this.txtInstName.TabIndex = 0;
             // 
             // lstPrgNo
             // 
             this.lstPrgNo.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lstPrgNo.FormattingEnabled = true;
-            this.lstPrgNo.ItemHeight = 24;
-            this.lstPrgNo.Location = new System.Drawing.Point(10, 33);
-            this.lstPrgNo.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.lstPrgNo.ItemHeight = 12;
+            this.lstPrgNo.Items.AddRange(new object[] {
+            "000 * 0----+----1----+----2----+----3--"});
+            this.lstPrgNo.Location = new System.Drawing.Point(5, 16);
             this.lstPrgNo.Name = "lstPrgNo";
-            this.lstPrgNo.Size = new System.Drawing.Size(455, 364);
+            this.lstPrgNo.Size = new System.Drawing.Size(259, 184);
             this.lstPrgNo.TabIndex = 0;
             this.lstPrgNo.SelectedIndexChanged += new System.EventHandler(this.lstPrgNo_SelectedIndexChanged);
             // 
@@ -71,11 +71,12 @@
             // 
             this.lstBankMSB.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lstBankMSB.FormattingEnabled = true;
-            this.lstBankMSB.ItemHeight = 24;
-            this.lstBankMSB.Location = new System.Drawing.Point(10, 33);
-            this.lstBankMSB.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.lstBankMSB.ItemHeight = 12;
+            this.lstBankMSB.Items.AddRange(new object[] {
+            "999*"});
+            this.lstBankMSB.Location = new System.Drawing.Point(5, 16);
             this.lstBankMSB.Name = "lstBankMSB";
-            this.lstBankMSB.Size = new System.Drawing.Size(144, 364);
+            this.lstBankMSB.Size = new System.Drawing.Size(49, 184);
             this.lstBankMSB.TabIndex = 0;
             this.lstBankMSB.SelectedIndexChanged += new System.EventHandler(this.lstBankMSB_SelectedIndexChanged);
             // 
@@ -83,21 +84,20 @@
             // 
             this.lstBankLSB.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lstBankLSB.FormattingEnabled = true;
-            this.lstBankLSB.ItemHeight = 24;
-            this.lstBankLSB.Location = new System.Drawing.Point(10, 33);
-            this.lstBankLSB.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.lstBankLSB.ItemHeight = 12;
+            this.lstBankLSB.Items.AddRange(new object[] {
+            "999*"});
+            this.lstBankLSB.Location = new System.Drawing.Point(5, 17);
             this.lstBankLSB.Name = "lstBankLSB";
-            this.lstBankLSB.Size = new System.Drawing.Size(144, 364);
+            this.lstBankLSB.Size = new System.Drawing.Size(49, 184);
             this.lstBankLSB.TabIndex = 0;
-            this.lstBankLSB.SelectedIndexChanged += new System.EventHandler(this.lstBankLSB_SelectedIndexChanged);
             // 
             // btnAdd
             // 
             this.btnAdd.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnAdd.Location = new System.Drawing.Point(666, 630);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.btnAdd.Location = new System.Drawing.Point(324, 267);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(166, 48);
+            this.btnAdd.Size = new System.Drawing.Size(77, 24);
             this.btnAdd.TabIndex = 5;
             this.btnAdd.Text = "追加";
             this.btnAdd.UseVisualStyleBackColor = true;
@@ -106,11 +106,10 @@
             // rbDrum
             // 
             this.rbDrum.AutoSize = true;
-            this.rbDrum.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.rbDrum.Location = new System.Drawing.Point(173, 36);
-            this.rbDrum.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.rbDrum.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.rbDrum.Location = new System.Drawing.Point(59, 16);
             this.rbDrum.Name = "rbDrum";
-            this.rbDrum.Size = new System.Drawing.Size(118, 34);
+            this.rbDrum.Size = new System.Drawing.Size(53, 16);
             this.rbDrum.TabIndex = 1;
             this.rbDrum.TabStop = true;
             this.rbDrum.Text = "ドラム";
@@ -121,11 +120,10 @@
             // 
             this.rbNote.AutoSize = true;
             this.rbNote.Checked = true;
-            this.rbNote.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.rbNote.Location = new System.Drawing.Point(14, 36);
-            this.rbNote.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.rbNote.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.rbNote.Location = new System.Drawing.Point(6, 16);
             this.rbNote.Name = "rbNote";
-            this.rbNote.Size = new System.Drawing.Size(104, 34);
+            this.rbNote.Size = new System.Drawing.Size(47, 16);
             this.rbNote.TabIndex = 0;
             this.rbNote.TabStop = true;
             this.rbNote.Text = "音階";
@@ -137,22 +135,22 @@
             this.groupBox1.Controls.Add(this.rbNote);
             this.groupBox1.Controls.Add(this.rbDrum);
             this.groupBox1.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 15);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.groupBox1.Size = new System.Drawing.Size(305, 96);
+            this.groupBox1.Size = new System.Drawing.Size(115, 40);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "音色の種類";
+            this.groupBox1.Text = "プリセットの種類";
             // 
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox2.Controls.Add(this.lstPrgNo);
-            this.groupBox2.Location = new System.Drawing.Point(12, 211);
+            this.groupBox2.Location = new System.Drawing.Point(10, 57);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(476, 410);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.groupBox2.Size = new System.Drawing.Size(269, 205);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "プログラムナンバー";
@@ -161,40 +159,46 @@
             // 
             this.groupBox3.BackColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox3.Controls.Add(this.lstBankMSB);
-            this.groupBox3.Location = new System.Drawing.Point(494, 211);
+            this.groupBox3.Location = new System.Drawing.Point(281, 57);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(166, 410);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.groupBox3.Size = new System.Drawing.Size(59, 205);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "バンクMSB";
+            this.groupBox3.Text = "MSB";
             // 
             // groupBox4
             // 
             this.groupBox4.BackColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox4.Controls.Add(this.lstBankLSB);
-            this.groupBox4.Location = new System.Drawing.Point(666, 211);
+            this.groupBox4.Location = new System.Drawing.Point(342, 57);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(166, 410);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.groupBox4.Size = new System.Drawing.Size(59, 205);
             this.groupBox4.TabIndex = 4;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "バンクLSB";
+            this.groupBox4.Text = "LSB";
             // 
             // groupBox5
             // 
             this.groupBox5.BackColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox5.Controls.Add(this.txtInstName);
-            this.groupBox5.Location = new System.Drawing.Point(12, 121);
+            this.groupBox5.Location = new System.Drawing.Point(131, 12);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(820, 81);
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.groupBox5.Size = new System.Drawing.Size(270, 40);
             this.groupBox5.TabIndex = 1;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "音色名";
+            this.groupBox5.Text = "プリセット名";
             // 
-            // InstForm
+            // AddPresetDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(844, 693);
+            this.ClientSize = new System.Drawing.Size(409, 295);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -202,10 +206,9 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnAdd);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.Name = "InstForm";
-            this.Text = "音色追加";
-            this.Load += new System.EventHandler(this.InstAddForm_Load);
+            this.Name = "AddPresetDialog";
+            this.Text = "プリセット追加";
+            this.Load += new System.EventHandler(this.AddPresetDialog_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

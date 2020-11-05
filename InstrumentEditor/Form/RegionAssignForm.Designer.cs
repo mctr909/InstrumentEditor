@@ -1,5 +1,5 @@
 ﻿namespace InstrumentEditor {
-	partial class RegionKeyAssignForm {
+	partial class RegionAssignForm {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>

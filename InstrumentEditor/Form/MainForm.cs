@@ -155,16 +155,6 @@ namespace InstrumentEditor {
             PastePreset();
         }
 
-        private void tsbList_Click(object sender, EventArgs e) {
-            tsbList.Checked = true;
-            tsbKey.Checked = false;
-        }
-
-        private void tsbKey_Click(object sender, EventArgs e) {
-            tsbList.Checked = false;
-            tsbKey.Checked = true;
-        }
-
         private void txtInstSearch_Leave(object sender, EventArgs e) {
             DispPresetList();
         }
@@ -379,24 +369,63 @@ namespace InstrumentEditor {
         #endregion
 
         #region プリセット一覧
+        private void lstPreset_MouseUp(object sender, MouseEventArgs e) {
+            if (e.Button != MouseButtons.Right) {
+                return;
+            }
+            MultiSelectPreset();
+        }
+
         private void lstPreset_DoubleClick(object sender, EventArgs e) {
+            EditPreset();
+        }
+
+        private void lstPreset_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Space) {
+                MultiSelectPreset();
+                return;
+            }
+            if (e.KeyCode == Keys.Enter && e.Shift) {
+                EditPreset();
+                return;
+            }
+        }
+
+        private void EditPreset() {
             var preset = GetSelectedPreset();
             if (null == preset) {
                 return;
             }
-            if (tsbList.Checked) {
-                var fm = new PresetInfoForm(mFile, preset);
-                fm.ShowDialog();
-            }
-            if (tsbKey.Checked) {
-                var fm = new LayerAssignForm(mFile, preset);
-                fm.ShowDialog();
-            }
+            var fm = new LayerAssignForm(mFile, preset);
+            fm.StartPosition = FormStartPosition.CenterParent;
+            fm.ShowDialog();
             DispPresetList();
         }
 
+        private void MultiSelectPreset() {
+            var lst = GetSelectedPresets();
+            if (1 == lst.Count) {
+                var fm = new PresetInfoDialog(mFile, lst[0]);
+                fm.StartPosition = FormStartPosition.CenterParent;
+                fm.ShowDialog();
+                DispPresetList();
+                return;
+            }
+            if (1 < lst.Count) {
+                var preset = new Preset();
+                var fm = new PresetInfoDialog(mFile, preset);
+                fm.StartPosition = FormStartPosition.CenterParent;
+                fm.ShowDialog();
+                foreach (var p in lst) {
+                    p.Info.Category = preset.Info.Category;
+                }
+                DispPresetList();
+                return;
+            }
+        }
+
         private void AddPreset() {
-            var fm = new AddPresetForm(mFile);
+            var fm = new AddPresetDialog(mFile);
             fm.ShowDialog();
             DispInstList();
             DispPresetList();
@@ -461,7 +490,7 @@ namespace InstrumentEditor {
                 return;
             }
 
-            var fm = new AddPresetForm(mFile, mClipboardPreset);
+            var fm = new AddPresetDialog(mFile, mClipboardPreset);
             fm.ShowDialog();
 
             DispPresetList();
@@ -558,12 +587,45 @@ namespace InstrumentEditor {
             return locale;
         }
 
+        private List<PREH> GetLocales(ListBox.SelectedIndexCollection indeces) {
+            var list = new List<PREH>();
+
+            if (0 == lstPreset.Items.Count) {
+                return list;
+            }
+            if (indeces.Count < 0) {
+                return list;
+            }
+
+            foreach (int index in indeces) {
+                var cols = lstPreset.Items[index].ToString().Split('|');
+                var locale = new PREH();
+                locale.BankFlg = (byte)("Drum" == cols[0] ? 1 : 0);
+                locale.ProgNum = byte.Parse(cols[1]);
+                locale.BankMSB = byte.Parse(cols[2]);
+                locale.BankLSB = byte.Parse(cols[3]);
+                list.Add(locale);
+            }
+            return list;
+        }
+
         private Preset GetSelectedPreset() {
             var locale = GetLocale(lstPreset.SelectedIndex);
             if (!mFile.Preset.ContainsKey(locale)) {
                 return null;
             }
             return mFile.Preset[locale];
+        }
+
+        private List<Preset> GetSelectedPresets() {
+            var locales = GetLocales(lstPreset.SelectedIndices);
+            var presets = new List<Preset>();
+            foreach (var locale in locales) {
+                if (mFile.Preset.ContainsKey(locale)) {
+                    presets.Add(mFile.Preset[locale]);
+                }
+            }
+            return presets;
         }
     }
 }

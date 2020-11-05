@@ -1,5 +1,5 @@
 ﻿namespace InstrumentEditor {
-	partial class RegionInfoForm {
+	partial class LayerInfoDialog {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -31,10 +31,9 @@
             this.lblKeyLow = new System.Windows.Forms.Label();
             this.lblKeyHigh = new System.Windows.Forms.Label();
             this.grbVelocity = new System.Windows.Forms.GroupBox();
-            this.txtWave = new System.Windows.Forms.TextBox();
-            this.grbWave = new System.Windows.Forms.GroupBox();
-            this.btnSelectWave = new System.Windows.Forms.Button();
-            this.btnEditWave = new System.Windows.Forms.Button();
+            this.txtInst = new System.Windows.Forms.TextBox();
+            this.grbInst = new System.Windows.Forms.GroupBox();
+            this.btnSelect = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.grbFineTune = new System.Windows.Forms.GroupBox();
             this.numFineTune = new System.Windows.Forms.NumericUpDown();
@@ -43,15 +42,13 @@
             this.lblUnityNote = new System.Windows.Forms.Label();
             this.grbVolume = new System.Windows.Forms.GroupBox();
             this.numVolume = new System.Windows.Forms.NumericUpDown();
-            this.chkLoop = new System.Windows.Forms.CheckBox();
-            this.envelope1 = new InstrumentEditor.Envelope();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyLow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyHigh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVelocityHigh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVelocityLow)).BeginInit();
             this.grbKey.SuspendLayout();
             this.grbVelocity.SuspendLayout();
-            this.grbWave.SuspendLayout();
+            this.grbInst.SuspendLayout();
             this.grbFineTune.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numFineTune)).BeginInit();
             this.grbUnityNote.SuspendLayout();
@@ -166,61 +163,49 @@
             this.grbVelocity.TabStop = false;
             this.grbVelocity.Text = "強弱";
             // 
-            // txtWave
+            // txtInst
             // 
-            this.txtWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtWave.Location = new System.Drawing.Point(3, 15);
-            this.txtWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.txtWave.Name = "txtWave";
-            this.txtWave.ReadOnly = true;
-            this.txtWave.Size = new System.Drawing.Size(190, 19);
-            this.txtWave.TabIndex = 0;
+            this.txtInst.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtInst.Location = new System.Drawing.Point(3, 15);
+            this.txtInst.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.txtInst.Name = "txtInst";
+            this.txtInst.ReadOnly = true;
+            this.txtInst.Size = new System.Drawing.Size(190, 19);
+            this.txtInst.TabIndex = 0;
             // 
-            // grbWave
+            // grbInst
             // 
-            this.grbWave.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.grbWave.Controls.Add(this.btnSelectWave);
-            this.grbWave.Controls.Add(this.btnEditWave);
-            this.grbWave.Controls.Add(this.txtWave);
-            this.grbWave.Location = new System.Drawing.Point(6, 58);
-            this.grbWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbWave.Name = "grbWave";
-            this.grbWave.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbWave.Size = new System.Drawing.Size(261, 38);
-            this.grbWave.TabIndex = 2;
-            this.grbWave.TabStop = false;
-            this.grbWave.Text = "波形";
+            this.grbInst.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.grbInst.Controls.Add(this.btnSelect);
+            this.grbInst.Controls.Add(this.txtInst);
+            this.grbInst.Location = new System.Drawing.Point(6, 58);
+            this.grbInst.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbInst.Name = "grbInst";
+            this.grbInst.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbInst.Size = new System.Drawing.Size(261, 38);
+            this.grbInst.TabIndex = 2;
+            this.grbInst.TabStop = false;
+            this.grbInst.Text = "音色";
             // 
-            // btnSelectWave
+            // btnSelect
             // 
-            this.btnSelectWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnSelectWave.Location = new System.Drawing.Point(193, 13);
-            this.btnSelectWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.btnSelectWave.Name = "btnSelectWave";
-            this.btnSelectWave.Size = new System.Drawing.Size(42, 20);
-            this.btnSelectWave.TabIndex = 1;
-            this.btnSelectWave.Text = "選択";
-            this.btnSelectWave.UseVisualStyleBackColor = true;
-            this.btnSelectWave.Click += new System.EventHandler(this.btnSelectWave_Click);
-            // 
-            // btnEditWave
-            // 
-            this.btnEditWave.Location = new System.Drawing.Point(220, 13);
-            this.btnEditWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.btnEditWave.Name = "btnEditWave";
-            this.btnEditWave.Size = new System.Drawing.Size(42, 20);
-            this.btnEditWave.TabIndex = 2;
-            this.btnEditWave.Text = "編集";
-            this.btnEditWave.UseVisualStyleBackColor = true;
-            this.btnEditWave.Click += new System.EventHandler(this.btnEditWave_Click);
+            this.btnSelect.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnSelect.Location = new System.Drawing.Point(193, 13);
+            this.btnSelect.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(42, 20);
+            this.btnSelect.TabIndex = 1;
+            this.btnSelect.Text = "選択";
+            this.btnSelect.UseVisualStyleBackColor = true;
+            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
             // btnAdd
             // 
-            this.btnAdd.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnAdd.Location = new System.Drawing.Point(218, 350);
+            this.btnAdd.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnAdd.Location = new System.Drawing.Point(212, 140);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(55, 32);
+            this.btnAdd.Size = new System.Drawing.Size(55, 26);
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Text = "追加";
             this.btnAdd.UseVisualStyleBackColor = true;
@@ -326,46 +311,22 @@
             0,
             0});
             // 
-            // chkLoop
-            // 
-            this.chkLoop.AutoSize = true;
-            this.chkLoop.Location = new System.Drawing.Point(6, 350);
-            this.chkLoop.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.chkLoop.Name = "chkLoop";
-            this.chkLoop.Size = new System.Drawing.Size(77, 16);
-            this.chkLoop.TabIndex = 7;
-            this.chkLoop.Text = "ループ有効";
-            this.chkLoop.UseVisualStyleBackColor = true;
-            // 
-            // envelope1
-            // 
-            this.envelope1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.envelope1.Art = null;
-            this.envelope1.AutoSize = true;
-            this.envelope1.Location = new System.Drawing.Point(6, 139);
-            this.envelope1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.envelope1.Name = "envelope1";
-            this.envelope1.Size = new System.Drawing.Size(747, 335);
-            this.envelope1.TabIndex = 8;
-            // 
-            // RegionInfoForm
+            // LayerInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 388);
-            this.Controls.Add(this.envelope1);
-            this.Controls.Add(this.chkLoop);
+            this.ClientSize = new System.Drawing.Size(274, 177);
             this.Controls.Add(this.grbVolume);
             this.Controls.Add(this.grbFineTune);
             this.Controls.Add(this.grbUnityNote);
             this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.grbWave);
+            this.Controls.Add(this.grbInst);
             this.Controls.Add(this.grbVelocity);
             this.Controls.Add(this.grbKey);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.Name = "RegionInfoForm";
-            this.Text = "リージョン情報編集";
+            this.Name = "LayerInfoDialog";
+            this.Text = "レイヤー情報編集";
             ((System.ComponentModel.ISupportInitialize)(this.numKeyLow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyHigh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVelocityHigh)).EndInit();
@@ -373,8 +334,8 @@
             this.grbKey.ResumeLayout(false);
             this.grbKey.PerformLayout();
             this.grbVelocity.ResumeLayout(false);
-            this.grbWave.ResumeLayout(false);
-            this.grbWave.PerformLayout();
+            this.grbInst.ResumeLayout(false);
+            this.grbInst.PerformLayout();
             this.grbFineTune.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numFineTune)).EndInit();
             this.grbUnityNote.ResumeLayout(false);
@@ -383,7 +344,6 @@
             this.grbVolume.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numVolume)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
 		}
 
@@ -397,10 +357,9 @@
 		private System.Windows.Forms.GroupBox grbVelocity;
 		private System.Windows.Forms.Label lblKeyLow;
 		private System.Windows.Forms.Label lblKeyHigh;
-		private System.Windows.Forms.TextBox txtWave;
-		private System.Windows.Forms.GroupBox grbWave;
-		private System.Windows.Forms.Button btnSelectWave;
-		private System.Windows.Forms.Button btnEditWave;
+		private System.Windows.Forms.TextBox txtInst;
+		private System.Windows.Forms.GroupBox grbInst;
+		private System.Windows.Forms.Button btnSelect;
 		private System.Windows.Forms.Button btnAdd;
 		private System.Windows.Forms.GroupBox grbFineTune;
 		private System.Windows.Forms.NumericUpDown numFineTune;
@@ -409,7 +368,5 @@
 		private System.Windows.Forms.Label lblUnityNote;
 		private System.Windows.Forms.GroupBox grbVolume;
 		private System.Windows.Forms.NumericUpDown numVolume;
-		private System.Windows.Forms.CheckBox chkLoop;
-        private Envelope envelope1;
     }
 }

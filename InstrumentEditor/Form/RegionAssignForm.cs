@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Instruments;
 
 namespace InstrumentEditor {
-    public partial class RegionKeyAssignForm : Form {
+    public partial class RegionAssignForm : Form {
         private File mFile;
         private Inst mInst;
         private bool mOnRange;
@@ -15,7 +15,7 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionKeyAssignForm(File file, Inst inst) {
+        public RegionAssignForm(File file, Inst inst) {
             mFile = file;
             mInst = inst;
             InitializeComponent();

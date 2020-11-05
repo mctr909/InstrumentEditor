@@ -1,5 +1,5 @@
 ﻿namespace InstrumentEditor {
-	partial class WaveSelectForm {
+	partial class WaveSelectDialog {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
@@ -60,7 +60,7 @@
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
-            // WaveSelectForm
+            // WaveSelectDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -70,10 +70,10 @@
             this.Controls.Add(this.lstWave);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.Name = "WaveSelectForm";
-            this.Text = "WaveSelectForm";
-            this.Load += new System.EventHandler(this.WaveSelectForm_Load);
-            this.SizeChanged += new System.EventHandler(this.WaveSelectForm_SizeChanged);
+            this.Name = "WaveSelectDialog";
+            this.Text = "波形選択";
+            this.Load += new System.EventHandler(this.WaveSelectDialog_Load);
+            this.SizeChanged += new System.EventHandler(this.WaveSelectDialog_SizeChanged);
             this.ResumeLayout(false);
             this.PerformLayout();
 

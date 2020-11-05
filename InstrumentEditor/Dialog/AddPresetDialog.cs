@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Instruments;
+using System;
 using System.Windows.Forms;
 
-using Instruments;
-
 namespace InstrumentEditor {
-    public partial class AddPresetForm : Form {
+    public partial class AddPresetDialog : Form {
         private File mFile;
         private Preset mPreset;
 
@@ -139,20 +138,151 @@ namespace InstrumentEditor {
             "Gunshot"
         };
 
-        public AddPresetForm(File file) {
+        private readonly string[] GM2_DRUM_NAME = new string[] {
+            "Standard",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Room",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Power",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Electronic",
+            "Analog",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Jazz",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Brush",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Orchestra",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "SFX",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        };
+
+        public AddPresetDialog(File file) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
         }
 
-        public AddPresetForm(File file, Preset preset) {
+        public AddPresetDialog(File file, Preset preset) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mPreset = preset;
         }
 
-        private void InstAddForm_Load(object sender, EventArgs e) {
+        private void AddPresetDialog_Load(object sender, EventArgs e) {
             setProgramList();
             setBankMsbList();
             setBankLsbList();
@@ -171,10 +301,6 @@ namespace InstrumentEditor {
 
         private void lstBankMSB_SelectedIndexChanged(object sender, EventArgs e) {
             setBankLsbList();
-        }
-
-        private void lstBankLSB_SelectedIndexChanged(object sender, EventArgs e) {
-
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
@@ -220,19 +346,19 @@ namespace InstrumentEditor {
             }
 
             for (byte i = 0; i < 128; ++i) {
-                var strUse = "   ";
+                var strUse = " ";
                 foreach (var preset in mFile.Preset.Keys) {
                     if (rbDrum.Checked) {
                         if (1 == preset.BankFlg) {
                             if (i == preset.ProgNum) {
-                                strUse = "use";
+                                strUse = "*";
                                 break;
                             }
                         }
                     } else {
                         if (0 == preset.BankFlg) {
                             if (i == preset.ProgNum) {
-                                strUse = "use";
+                                strUse = "*";
                                 break;
                             }
                         }
@@ -240,12 +366,11 @@ namespace InstrumentEditor {
                 }
 
                 if (rbDrum.Checked) {
-                    lstPrgNo.Items.Add(string.Format("{0} {1}", i.ToString("000"), strUse));
+                    lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM2_DRUM_NAME[i]));
                 } else {
                     lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM_INST_NAME[i]));
                 }
             }
-
             if (null != mPreset) {
                 lstPrgNo.SelectedIndex = mPreset.Header.ProgNum;
             }
@@ -260,14 +385,14 @@ namespace InstrumentEditor {
             lstBankMSB.Items.Clear();
 
             for (byte i = 0; i < 128; ++i) {
-                var strUse = "   ";
+                var strUse = " ";
                 foreach (var preset in mFile.Preset.Keys) {
                     if (rbDrum.Checked) {
                         if (1 == preset.BankFlg) {
                             if (prgIndex == preset.ProgNum &&
                                 i == preset.BankMSB
                             ) {
-                                strUse = "use";
+                                strUse = "*";
                                 break;
                             }
                         }
@@ -276,13 +401,13 @@ namespace InstrumentEditor {
                             if (prgIndex == preset.ProgNum &&
                                 i == preset.BankMSB
                             ) {
-                                strUse = "use";
+                                strUse = "*";
                                 break;
                             }
                         }
                     }
                 }
-                lstBankMSB.Items.Add(string.Format("{0} {1}", i.ToString("000"), strUse));
+                lstBankMSB.Items.Add(string.Format("{0}{1}", i.ToString("000"), strUse));
             }
 
             if (null != mPreset) {
@@ -303,7 +428,7 @@ namespace InstrumentEditor {
             lstBankLSB.Items.Clear();
 
             for (byte i = 0; i < 128; ++i) {
-                var strUse = "   ";
+                var strUse = " ";
                 foreach (var preset in mFile.Preset.Keys) {
                     if (rbDrum.Checked) {
                         if (1 == preset.BankFlg) {
@@ -311,7 +436,7 @@ namespace InstrumentEditor {
                                 msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
                             ) {
-                                strUse = "use";
+                                strUse = "*";
                                 break;
                             }
                         }
@@ -321,13 +446,13 @@ namespace InstrumentEditor {
                                 msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
                             ) {
-                                strUse = "use";
+                                strUse = "*";
                                 break;
                             }
                         }
                     }
                 }
-                lstBankLSB.Items.Add(string.Format("{0} {1}", i.ToString("000"), strUse));
+                lstBankLSB.Items.Add(string.Format("{0}{1}", i.ToString("000"), strUse));
             }
 
             if (null != mPreset) {
