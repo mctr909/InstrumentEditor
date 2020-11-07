@@ -521,7 +521,7 @@ namespace SF2 {
                         inst.Art.Add(globalArt);
                         break;
                     case E_OPER.FINETUNE:
-                        globalArt.Type = ART_TYPE.PITCH_CONST;
+                        globalArt.Type = ART_TYPE.FINE_TUNE;
                         inst.Art.Add(globalArt);
                         break;
                     case E_OPER.OVERRIDING_ROOTKEY:
@@ -582,7 +582,7 @@ namespace SF2 {
                             rgn.Art.Add(layerArt);
                             break;
                         case E_OPER.FINETUNE:
-                            layerArt.Type = ART_TYPE.PITCH_CONST;
+                            layerArt.Type = ART_TYPE.FINE_TUNE;
                             rgn.Art.Add(layerArt);
                             break;
                         case E_OPER.OVERRIDING_ROOTKEY:
@@ -648,7 +648,7 @@ namespace SF2 {
                         preset.Art.Add(globalArt);
                         break;
                     case E_OPER.FINETUNE:
-                        globalArt.Type = ART_TYPE.PITCH_CONST;
+                        globalArt.Type = ART_TYPE.FINE_TUNE;
                         preset.Art.Add(globalArt);
                         break;
                     case E_OPER.INSTRUMENT:
@@ -683,7 +683,7 @@ namespace SF2 {
                             layer.Art.Add(layerArt);
                             break;
                         case E_OPER.FINETUNE:
-                            layerArt.Type = ART_TYPE.PITCH_CONST;
+                            layerArt.Type = ART_TYPE.FINE_TUNE;
                             layer.Art.Add(layerArt);
                             break;
                         case E_OPER.INSTRUMENT:

@@ -589,7 +589,7 @@ namespace DLS {
                             pres.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.PITCH:
-                            art.Type = ART_TYPE.PITCH_CONST;
+                            art.Type = ART_TYPE.FINE_TUNE;
                             pres.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.FILTER_Q:
@@ -701,7 +701,7 @@ namespace DLS {
                                 rgn.Art.Add(art);
                                 break;
                             case Connection.DST_TYPE.PITCH:
-                                art.Type = ART_TYPE.PITCH_CONST;
+                                art.Type = ART_TYPE.FINE_TUNE;
                                 rgn.Art.Add(art);
                                 break;
                             case Connection.DST_TYPE.FILTER_Q:

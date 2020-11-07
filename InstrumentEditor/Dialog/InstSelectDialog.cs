@@ -23,22 +23,9 @@ namespace InstrumentEditor {
             SetSize();
         }
 
-        private void lstInst_DoubleClick(object sender, EventArgs e) {
-            if (0 == lstInst.Items.Count) {
-                return;
-            }
-            var cols = lstInst.SelectedItem.ToString().Split('|');
-            var idx = int.Parse(cols[0]);
-            //FORM//var fm = new WaveInfoForm(mFile, idx);
-            var index = lstInst.SelectedIndex;
-            //FORM//fm.ShowDialog();
-            DispList(txtSearch.Text);
-            lstInst.SelectedIndex = index;
-        }
-
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstInst.SelectedIndex) {
-                var cols = lstInst.SelectedItem.ToString().Split('|');
+                var cols = lstInst.SelectedItem.ToString().Split('\t');
                 mLayer.Art.Update(ART_TYPE.INST_INDEX, uint.Parse(cols[0]));
             }
             Close();

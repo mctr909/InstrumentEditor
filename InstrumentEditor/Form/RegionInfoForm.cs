@@ -88,7 +88,7 @@ namespace InstrumentEditor {
             }
 
             mRegion.Art.Update(ART_TYPE.OVERRIDE_KEY, (byte)numUnityNote.Value);
-            mRegion.Art.Update(ART_TYPE.PITCH_CONST, (float)Math.Pow(2.0, (byte)numFineTune.Value / 1200.0));
+            mRegion.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, (byte)numFineTune.Value / 1200.0));
             mRegion.Art.Update(ART_TYPE.GAIN_CONST, (float)(numVolume.Value / 100.0m));
 
             envelope1.SetList(mRegion.Art);
@@ -233,7 +233,7 @@ namespace InstrumentEditor {
                     case ART_TYPE.GAIN_CONST:
                         numVolume.Value = (decimal)(art.Value * 100.0);
                         break;
-                    case ART_TYPE.PITCH_CONST:
+                    case ART_TYPE.FINE_TUNE:
                         numFineTune.Value = (decimal)(1200.0 / Math.Log(2.0, art.Value));
                         break;
                     case ART_TYPE.OVERRIDE_KEY:

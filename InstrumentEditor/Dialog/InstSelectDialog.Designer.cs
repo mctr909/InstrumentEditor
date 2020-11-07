@@ -32,20 +32,19 @@
             // 
             this.lstInst.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lstInst.FormattingEnabled = true;
-            this.lstInst.ItemHeight = 14;
-            this.lstInst.Location = new System.Drawing.Point(6, 6);
-            this.lstInst.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.lstInst.ItemHeight = 29;
+            this.lstInst.Location = new System.Drawing.Point(13, 12);
+            this.lstInst.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.lstInst.Name = "lstInst";
-            this.lstInst.Size = new System.Drawing.Size(353, 452);
+            this.lstInst.Size = new System.Drawing.Size(760, 874);
             this.lstInst.TabIndex = 0;
-            this.lstInst.DoubleClick += new System.EventHandler(this.lstInst_DoubleClick);
             // 
             // btnSelect
             // 
-            this.btnSelect.Location = new System.Drawing.Point(314, 469);
-            this.btnSelect.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.btnSelect.Location = new System.Drawing.Point(680, 938);
+            this.btnSelect.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(45, 18);
+            this.btnSelect.Size = new System.Drawing.Size(98, 36);
             this.btnSelect.TabIndex = 3;
             this.btnSelect.Text = "選択";
             this.btnSelect.UseVisualStyleBackColor = true;
@@ -53,23 +52,23 @@
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(6, 469);
-            this.txtSearch.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.txtSearch.Location = new System.Drawing.Point(13, 938);
+            this.txtSearch.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(48, 19);
+            this.txtSearch.Size = new System.Drawing.Size(99, 31);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
             // 
             // InstSelectDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 498);
+            this.ClientSize = new System.Drawing.Size(800, 996);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnSelect);
             this.Controls.Add(this.lstInst);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.Name = "InstSelectDialog";
             this.Text = "音色選択";
             this.Load += new System.EventHandler(this.InstSelectDialog_Load);

@@ -39,10 +39,6 @@ namespace InstrumentEditor {
             SetVelocityHigh();
         }
 
-        private void numUnityNote_ValueChanged(object sender, EventArgs e) {
-            SetUnityNote();
-        }
-
         private void btnSelect_Click(object sender, EventArgs e) {
             var instIndex = 0;
             foreach(var art in mLayer.Art.Array) {
@@ -73,6 +69,23 @@ namespace InstrumentEditor {
             mLayer.Header.KeyHi = (byte)numKeyHigh.Value;
             mLayer.Header.VelLo = (byte)numVelocityLow.Value;
             mLayer.Header.VelHi = (byte)numVelocityHigh.Value;
+            if (0 == numTranspose.Value) {
+                mLayer.Art.Delete(ART_TYPE.COASE_TUNE);
+            } else {
+                mLayer.Art.Update(ART_TYPE.COASE_TUNE, (int)numTranspose.Value);
+            }
+            var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
+            if (0 == fineTune) {
+                mLayer.Art.Delete(ART_TYPE.FINE_TUNE);
+            } else {
+                mLayer.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, fineTune));
+            }
+            var gain = (int)(20 * numVolume.Value) / 400.0;
+            if (0 == gain) {
+                mLayer.Art.Delete(ART_TYPE.GAIN_CONST);
+            } else {
+                mLayer.Art.Update(ART_TYPE.GAIN_CONST, (float)Math.Pow(10.0, gain));
+            }
             Close();
         }
 
@@ -98,15 +111,15 @@ namespace InstrumentEditor {
             txtInst.Top = 12;
             btnSelect.Top = 12;
             btnSelect.Left = txtInst.Left + txtInst.Width + 4;
-            grbInst.Top = grbVelocity.Top + grbVelocity.Height + 6;
-            grbInst.Width = grbKey.Width + grbVelocity.Width + 6;
-            grbInst.Height = txtInst.Top + txtInst.Height + 6;
+            grbInst.Top = grbVelocity.Top + grbVelocity.Height + 4;
+            grbInst.Width = grbKey.Width + grbVelocity.Width + 4;
+            grbInst.Height = txtInst.Top + txtInst.Height + 4;
 
-            grbUnityNote.Top = grbInst.Top + grbInst.Height + 6;
+            grbUnityNote.Top = grbInst.Top + grbInst.Height + 4;
             grbFineTune.Top = grbUnityNote.Top;
-            grbFineTune.Left = grbUnityNote.Left + grbUnityNote.Width + 6;
+            grbFineTune.Left = grbUnityNote.Left + grbUnityNote.Width + 4;
             grbVolume.Top = grbUnityNote.Top;
-            grbVolume.Left = grbFineTune.Left + grbFineTune.Width + 6;
+            grbVolume.Left = grbFineTune.Left + grbFineTune.Width + 4;
 
             btnAdd.Top = grbVolume.Bottom + 4;
             btnAdd.Left = grbVolume.Right - btnAdd.Width;
@@ -145,12 +158,6 @@ namespace InstrumentEditor {
             if (numVelocityHigh.Value < numVelocityLow.Value) {
                 numVelocityLow.Value = numVelocityHigh.Value;
             }
-        }
-
-        private void SetUnityNote() {
-            var oct = (int)numUnityNote.Value / 12 - 2;
-            var note = (int)numUnityNote.Value % 12;
-            lblUnityNote.Text = string.Format("{0}{1}", NoteName[note], oct);
         }
 
         private void DispInfo() {
@@ -194,13 +201,13 @@ namespace InstrumentEditor {
                 foreach(var art in mLayer.Art.Array) {
                     switch (art.Type) {
                     case ART_TYPE.GAIN_CONST:
-                        numVolume.Value = (decimal)(art.Value * 100.0);
+                        numVolume.Value = (decimal)(20.0 * Math.Log10(art.Value));
                         break;
-                    case ART_TYPE.PITCH_CONST:
-                        numFineTune.Value = (decimal)(1200.0 / Math.Log(2.0, art.Value));
+                    case ART_TYPE.FINE_TUNE:
+                        numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
                         break;
-                    case ART_TYPE.OVERRIDE_KEY:
-                        numUnityNote.Value = (int)art.Value;
+                    case ART_TYPE.COASE_TUNE:
+                        numTranspose.Value = (int)art.Value;
                         break;
                     }
                 }

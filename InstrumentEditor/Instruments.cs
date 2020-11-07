@@ -13,10 +13,10 @@ namespace Instruments {
         GAIN_VALIABLE  = 0x0001,
         PAN_CONST      = 0x0002,
         PAN_VALIABLE   = 0x0003,
-        PITCH_CONST    = 0x0004,
-        PITCH_VALIABLE = 0x0005,
+        PITCH_VALIABLE = 0x0004,
 
-        COASE_TUNE   = 0x0006,
+        COASE_TUNE   = 0x0005,
+        FINE_TUNE    = 0x0006,
         OVERRIDE_KEY = 0x0007,
 
         LPF_RESONANCE       = 0x0008,
@@ -755,6 +755,10 @@ namespace Instruments {
             }
         }
 
+        public void Remove(int index) {
+            List.RemoveAt(index);
+        }
+
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
             switch (listType) {
             case "inst":
@@ -1303,6 +1307,18 @@ namespace Instruments {
             }
         }
 
+        public void Delete(ART_TYPE id) {
+            int idx = -1;
+            for (var i = 0; i < List.Count; i++) {
+                if (List[i].Type == id) {
+                    idx = i;
+                    break;
+                }
+            }
+            if (0 <= idx) {
+                List.RemoveAt(idx);
+            }
+        }
         public void Write(MemoryStream ms) {
             var msArt = new MemoryStream();
             var bwArt = new BinaryWriter(msArt);
