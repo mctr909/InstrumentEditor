@@ -199,7 +199,7 @@ namespace InstrumentEditor {
         private void AddRegion() {
             var region = new Instruments.Region();
             region.Header.KeyLo = byte.MaxValue;
-            var fm = new RegionInfoForm(mFile, region);
+            var fm = new RegionInfoDialog(mFile, region);
             fm.ShowDialog();
 
             if (byte.MaxValue != region.Header.KeyLo) {
@@ -211,7 +211,7 @@ namespace InstrumentEditor {
         private void EditRegion(RGNH range) {
             if (mInst.Region.ContainsKey(range)) {
                 var region = mInst.Region.FindFirst(range);
-                var fm = new RegionInfoForm(mFile, region);
+                var fm = new RegionInfoDialog(mFile, region);
                 fm.ShowDialog();
                 DispRegionInfo();
             } else {

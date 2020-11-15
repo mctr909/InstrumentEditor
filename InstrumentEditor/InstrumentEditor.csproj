@@ -97,11 +97,11 @@
     <Compile Include="Dialog\AddPresetDialog.Designer.cs">
       <DependentUpon>AddPresetDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\RegionInfoForm.cs">
+    <Compile Include="Dialog\RegionInfoDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\RegionInfoForm.Designer.cs">
-      <DependentUpon>RegionInfoForm.cs</DependentUpon>
+    <Compile Include="Dialog\RegionInfoDialog.Designer.cs">
+      <DependentUpon>RegionInfoDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialog\PresetInfoDialog.cs">
       <SubType>Form</SubType>
@@ -157,8 +157,8 @@
     <EmbeddedResource Include="Dialog\AddPresetDialog.resx">
       <DependentUpon>AddPresetDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\RegionInfoForm.resx">
-      <DependentUpon>RegionInfoForm.cs</DependentUpon>
+    <EmbeddedResource Include="Dialog\RegionInfoDialog.resx">
+      <DependentUpon>RegionInfoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\WaveInfoForm.resx">
       <DependentUpon>WaveInfoForm.cs</DependentUpon>

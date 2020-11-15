@@ -376,7 +376,7 @@ namespace InstrumentEditor {
                 lstWave.Items.Add(string.Format(
                     "{0}|{1}|{2}|{3}|{4}",
                     iWave.ToString("0000"),
-                    (use ? "use" : "   "),
+                    (use ? "*" : " "),
                     (0 < wave.Header.LoopEnable ? "loop" : "    "),
                     Wave.NoteName[wave.Header.UnityNote % 12]
                         + (wave.Header.UnityNote < 12 ? "" : "+")
@@ -501,7 +501,7 @@ namespace InstrumentEditor {
                     preset.Header.ProgNum.ToString("000"),
                     preset.Header.BankMSB.ToString("000"),
                     preset.Header.BankLSB.ToString("000"),
-                    preset.Info.Category.PadRight(10, ' ').Substring(0, 10),
+                    preset.Info.Category.PadRight(16, ' ').Substring(0, 16),
                     preset.Info.Name
                 ));
             }
@@ -710,8 +710,8 @@ namespace InstrumentEditor {
                 lstInst.Items.Add(string.Format(
                     "{0}|{1}|{2}|{3}",
                     iInst.ToString("0000"),
-                    use ? "use" : "   ",
-                    inst.Info.Category.PadRight(10, ' ').Substring(0, 10),
+                    use ? "*" : " ",
+                    inst.Info.Category.PadRight(16, ' ').Substring(0, 16),
                     inst.Info.Name
                 ));
             }

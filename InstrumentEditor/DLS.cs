@@ -542,6 +542,7 @@ namespace DLS {
 
                 var inst = new Inst();
                 inst.Info.Name = dlsInst.Value.Info.Name;
+                inst.Info.Category = dlsInst.Value.Info.Category;
                 inst.Info.CreationDate = now;
                 inst.Info.SourceForm = Path.GetFileName(mFilePath);
 
@@ -599,11 +600,11 @@ namespace DLS {
                             break;
 
                         case Connection.DST_TYPE.GAIN:
-                            art.Type = ART_TYPE.GAIN_CONST;
+                            art.Type = ART_TYPE.GAIN;
                             inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.PAN:
-                            art.Type = ART_TYPE.PAN_CONST;
+                            art.Type = ART_TYPE.PAN;
                             inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.PITCH:
@@ -615,7 +616,7 @@ namespace DLS {
                             inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.FILTER_CUTOFF:
-                            art.Type = ART_TYPE.LPF_CUTOFF_CONST;
+                            art.Type = ART_TYPE.LPF_CUTOFF;
                             inst.Art.Add(art);
                             break;
                         }
@@ -634,7 +635,7 @@ namespace DLS {
                         Value = dlsRegion.Value.WaveLink.TableIndex
                     });
                     rgn.Art.Add(new Instruments.ART {
-                        Type = ART_TYPE.OVERRIDE_KEY,
+                        Type = ART_TYPE.UNITY_KEY,
                         Value = dlsRegion.Value.Sampler.UnityNote
                     });
                     rgn.Art.Add(new Instruments.ART {
@@ -642,7 +643,7 @@ namespace DLS {
                         Value = (float)Math.Pow(2.0, dlsRegion.Value.Sampler.FineTune / 1200.0)
                     });
                     rgn.Art.Add(new Instruments.ART {
-                        Type = ART_TYPE.GAIN_CONST,
+                        Type = ART_TYPE.GAIN,
                         Value = (float)dlsRegion.Value.Sampler.Gain
                     });
 
@@ -700,11 +701,11 @@ namespace DLS {
                                 break;
 
                             case Connection.DST_TYPE.GAIN:
-                                art.Type = ART_TYPE.GAIN_CONST;
+                                art.Type = ART_TYPE.GAIN;
                                 rgn.Art.Add(art);
                                 break;
                             case Connection.DST_TYPE.PAN:
-                                art.Type = ART_TYPE.PAN_CONST;
+                                art.Type = ART_TYPE.PAN;
                                 rgn.Art.Add(art);
                                 break;
                             case Connection.DST_TYPE.PITCH:
@@ -716,7 +717,7 @@ namespace DLS {
                                 rgn.Art.Add(art);
                                 break;
                             case Connection.DST_TYPE.FILTER_CUTOFF:
-                                art.Type = ART_TYPE.LPF_CUTOFF_CONST;
+                                art.Type = ART_TYPE.LPF_CUTOFF;
                                 rgn.Art.Add(art);
                                 break;
                             }
@@ -840,6 +841,46 @@ namespace DLS {
                         ampR.Value = srcArt.Value;
                         ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampR);
                         break;
+                    case ART_TYPE.EG_CUTOFF_ATTACK:
+                        var fcA = new Connection();
+                        fcA.Source = Connection.SRC_TYPE.NONE;
+                        fcA.Control = Connection.SRC_TYPE.NONE;
+                        fcA.Destination = Connection.DST_TYPE.EG1_ATTACK_TIME;
+                        fcA.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcA);
+                        break;
+                    case ART_TYPE.EG_CUTOFF_HOLD:
+                        var fcH = new Connection();
+                        fcH.Source = Connection.SRC_TYPE.NONE;
+                        fcH.Control = Connection.SRC_TYPE.NONE;
+                        fcH.Destination = Connection.DST_TYPE.EG1_HOLD_TIME;
+                        fcH.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcH);
+                        break;
+                    case ART_TYPE.EG_CUTOFF_DECAY:
+                        var fcD = new Connection();
+                        fcD.Source = Connection.SRC_TYPE.NONE;
+                        fcD.Control = Connection.SRC_TYPE.NONE;
+                        fcD.Destination = Connection.DST_TYPE.EG1_DECAY_TIME;
+                        fcD.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcD);
+                        break;
+                    case ART_TYPE.EG_CUTOFF_SUSTAIN:
+                        var fcS = new Connection();
+                        fcS.Source = Connection.SRC_TYPE.NONE;
+                        fcS.Control = Connection.SRC_TYPE.NONE;
+                        fcS.Destination = Connection.DST_TYPE.EG1_SUSTAIN_LEVEL;
+                        fcS.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcS);
+                        break;
+                    case ART_TYPE.EG_CUTOFF_RELEASE:
+                        var fcR = new Connection();
+                        fcR.Source = Connection.SRC_TYPE.NONE;
+                        fcR.Control = Connection.SRC_TYPE.NONE;
+                        fcR.Destination = Connection.DST_TYPE.EG1_RELEASE_TIME;
+                        fcR.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcR);
+                        break;
                     }
                 }
 
@@ -861,15 +902,16 @@ namespace DLS {
                             rgn.WaveLink.Channel = 1;
                             rgn.WaveLink.TableIndex = (uint)srcArt.Value;
                             break;
-                        case ART_TYPE.GAIN_CONST:
+                        case ART_TYPE.GAIN:
                             rgn.Sampler.Gain = srcArt.Value;
                             break;
-                        case ART_TYPE.OVERRIDE_KEY:
+                        case ART_TYPE.UNITY_KEY:
                             rgn.Sampler.UnityNote = (ushort)srcArt.Value;
                             break;
                         case ART_TYPE.FINE_TUNE:
                             rgn.Sampler.FineTune = (short)(Math.Log(srcArt.Value, 2.0) * 1200);
                             break;
+
                         case ART_TYPE.EG_AMP_ATTACK:
                             var ampA = new Connection();
                             ampA.Source = Connection.SRC_TYPE.NONE;
@@ -910,15 +952,52 @@ namespace DLS {
                             ampR.Value = srcArt.Value;
                             rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampR);
                             break;
+                        case ART_TYPE.EG_CUTOFF_ATTACK:
+                            var fcA = new Connection();
+                            fcA.Source = Connection.SRC_TYPE.NONE;
+                            fcA.Control = Connection.SRC_TYPE.NONE;
+                            fcA.Destination = Connection.DST_TYPE.EG1_ATTACK_TIME;
+                            fcA.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcA);
+                            break;
+                        case ART_TYPE.EG_CUTOFF_HOLD:
+                            var fcH = new Connection();
+                            fcH.Source = Connection.SRC_TYPE.NONE;
+                            fcH.Control = Connection.SRC_TYPE.NONE;
+                            fcH.Destination = Connection.DST_TYPE.EG1_HOLD_TIME;
+                            fcH.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcH);
+                            break;
+                        case ART_TYPE.EG_CUTOFF_DECAY:
+                            var fcD = new Connection();
+                            fcD.Source = Connection.SRC_TYPE.NONE;
+                            fcD.Control = Connection.SRC_TYPE.NONE;
+                            fcD.Destination = Connection.DST_TYPE.EG1_DECAY_TIME;
+                            fcD.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcD);
+                            break;
+                        case ART_TYPE.EG_CUTOFF_SUSTAIN:
+                            var fcS = new Connection();
+                            fcS.Source = Connection.SRC_TYPE.NONE;
+                            fcS.Control = Connection.SRC_TYPE.NONE;
+                            fcS.Destination = Connection.DST_TYPE.EG1_SUSTAIN_LEVEL;
+                            fcS.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcS);
+                            break;
+                        case ART_TYPE.EG_CUTOFF_RELEASE:
+                            var fcR = new Connection();
+                            fcR.Source = Connection.SRC_TYPE.NONE;
+                            fcR.Control = Connection.SRC_TYPE.NONE;
+                            fcR.Destination = Connection.DST_TYPE.EG1_RELEASE_TIME;
+                            fcR.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcR);
+                            break;
                         }
                     }
 
                     ins.Regions.List.Add(rgn.Header, rgn);
                 }
 
-                if(saveFile.Instruments.List.ContainsKey(ins.Header.Locale)) {
-                    continue;
-                }
                 saveFile.Instruments.List.Add(ins.Header.Locale, ins);
             }
 

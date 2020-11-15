@@ -74,9 +74,9 @@ namespace InstrumentEditor {
             }
             var gain = (int)(20 * numVolume.Value) / 400.0;
             if (0 == gain) {
-                mLayer.Art.Delete(ART_TYPE.GAIN_CONST);
+                mLayer.Art.Delete(ART_TYPE.GAIN);
             } else {
-                mLayer.Art.Update(ART_TYPE.GAIN_CONST, (float)Math.Pow(10.0, gain));
+                mLayer.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
             }
             Close();
         }
@@ -185,7 +185,7 @@ namespace InstrumentEditor {
 
                 foreach(var art in mLayer.Art.Array) {
                     switch (art.Type) {
-                    case ART_TYPE.GAIN_CONST:
+                    case ART_TYPE.GAIN:
                         numVolume.Value = (decimal)(20.0 * Math.Log10(art.Value));
                         break;
                     case ART_TYPE.FINE_TUNE:

@@ -509,11 +509,11 @@ namespace SF2 {
                     };
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        globalArt.Type = ART_TYPE.GAIN_CONST;
+                        globalArt.Type = ART_TYPE.GAIN;
                         inst.Art.Add(globalArt);
                         break;
                     case E_OPER.PAN:
-                        globalArt.Type = ART_TYPE.PAN_CONST;
+                        globalArt.Type = ART_TYPE.PAN;
                         inst.Art.Add(globalArt);
                         break;
                     case E_OPER.COARSE_TUNE:
@@ -525,7 +525,7 @@ namespace SF2 {
                         inst.Art.Add(globalArt);
                         break;
                     case E_OPER.OVERRIDING_ROOTKEY:
-                        globalArt.Type = ART_TYPE.OVERRIDE_KEY;
+                        globalArt.Type = ART_TYPE.UNITY_KEY;
                         inst.Art.Add(globalArt);
                         break;
 
@@ -570,11 +570,11 @@ namespace SF2 {
                         };
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
-                            layerArt.Type = ART_TYPE.GAIN_CONST;
+                            layerArt.Type = ART_TYPE.GAIN;
                             rgn.Art.Add(layerArt);
                             break;
                         case E_OPER.PAN:
-                            layerArt.Type = ART_TYPE.PAN_CONST;
+                            layerArt.Type = ART_TYPE.PAN;
                             rgn.Art.Add(layerArt);
                             break;
                         case E_OPER.COARSE_TUNE:
@@ -586,7 +586,7 @@ namespace SF2 {
                             rgn.Art.Add(layerArt);
                             break;
                         case E_OPER.OVERRIDING_ROOTKEY:
-                            layerArt.Type = ART_TYPE.OVERRIDE_KEY;
+                            layerArt.Type = ART_TYPE.UNITY_KEY;
                             rgn.Art.Add(layerArt);
                             break;
 
@@ -636,11 +636,11 @@ namespace SF2 {
                     };
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        globalArt.Type = ART_TYPE.GAIN_CONST;
+                        globalArt.Type = ART_TYPE.GAIN;
                         preset.Art.Add(globalArt);
                         break;
                     case E_OPER.PAN:
-                        globalArt.Type = ART_TYPE.PAN_CONST;
+                        globalArt.Type = ART_TYPE.PAN;
                         preset.Art.Add(globalArt);
                         break;
                     case E_OPER.COARSE_TUNE:
@@ -669,11 +669,11 @@ namespace SF2 {
                         };
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
-                            layerArt.Type = ART_TYPE.GAIN_CONST;
+                            layerArt.Type = ART_TYPE.GAIN;
                             layer.Art.Add(layerArt);
                             break;
                         case E_OPER.PAN:
-                            layerArt.Type = ART_TYPE.PAN_CONST;
+                            layerArt.Type = ART_TYPE.PAN;
                             layer.Art.Add(layerArt);
                             break;
                         case E_OPER.COARSE_TUNE:

@@ -1,28 +1,28 @@
 ﻿namespace InstrumentEditor {
-	partial class RegionInfoForm {
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.IContainer components = null;
+    partial class RegionInfoDialog {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing) {
-			if (disposing && (components != null)) {
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing) {
+            if (disposing && (components != null)) {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent() {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent() {
             this.numKeyLow = new System.Windows.Forms.NumericUpDown();
             this.numKeyHigh = new System.Windows.Forms.NumericUpDown();
             this.numVelocityHigh = new System.Windows.Forms.NumericUpDown();
@@ -234,14 +234,14 @@
             this.grbFineTune.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbFineTune.Name = "grbFineTune";
             this.grbFineTune.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.grbFineTune.Size = new System.Drawing.Size(163, 74);
+            this.grbFineTune.Size = new System.Drawing.Size(163, 70);
             this.grbFineTune.TabIndex = 4;
             this.grbFineTune.TabStop = false;
             this.grbFineTune.Text = "ピッチ(cent)";
             // 
             // numFineTune
             // 
-            this.numFineTune.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numFineTune.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.numFineTune.Location = new System.Drawing.Point(7, 24);
             this.numFineTune.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numFineTune.Maximum = new decimal(new int[] {
@@ -255,7 +255,7 @@
             0,
             -2147483648});
             this.numFineTune.Name = "numFineTune";
-            this.numFineTune.Size = new System.Drawing.Size(119, 36);
+            this.numFineTune.Size = new System.Drawing.Size(119, 31);
             this.numFineTune.TabIndex = 0;
             // 
             // grbUnityNote
@@ -267,14 +267,14 @@
             this.grbUnityNote.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbUnityNote.Name = "grbUnityNote";
             this.grbUnityNote.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.grbUnityNote.Size = new System.Drawing.Size(223, 74);
+            this.grbUnityNote.Size = new System.Drawing.Size(223, 70);
             this.grbUnityNote.TabIndex = 3;
             this.grbUnityNote.TabStop = false;
             this.grbUnityNote.Text = "基準音";
             // 
             // numUnityNote
             // 
-            this.numUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.numUnityNote.Location = new System.Drawing.Point(7, 24);
             this.numUnityNote.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numUnityNote.Maximum = new decimal(new int[] {
@@ -283,18 +283,18 @@
             0,
             0});
             this.numUnityNote.Name = "numUnityNote";
-            this.numUnityNote.Size = new System.Drawing.Size(119, 36);
+            this.numUnityNote.Size = new System.Drawing.Size(119, 31);
             this.numUnityNote.TabIndex = 0;
             this.numUnityNote.ValueChanged += new System.EventHandler(this.numUnityNote_ValueChanged);
             // 
             // lblUnityNote
             // 
             this.lblUnityNote.AutoSize = true;
-            this.lblUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblUnityNote.Location = new System.Drawing.Point(132, 28);
             this.lblUnityNote.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblUnityNote.Name = "lblUnityNote";
-            this.lblUnityNote.Size = new System.Drawing.Size(83, 29);
+            this.lblUnityNote.Size = new System.Drawing.Size(67, 24);
             this.lblUnityNote.TabIndex = 11;
             this.lblUnityNote.Text = "label1";
             // 
@@ -306,25 +306,35 @@
             this.grbVolume.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbVolume.Name = "grbVolume";
             this.grbVolume.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.grbVolume.Size = new System.Drawing.Size(163, 74);
+            this.grbVolume.Size = new System.Drawing.Size(163, 70);
             this.grbVolume.TabIndex = 5;
             this.grbVolume.TabStop = false;
-            this.grbVolume.Text = "音量(%)";
+            this.grbVolume.Text = "音量(db)";
             // 
             // numVolume
             // 
             this.numVolume.DecimalPlaces = 1;
-            this.numVolume.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numVolume.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.numVolume.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numVolume.Location = new System.Drawing.Point(7, 24);
             this.numVolume.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.numVolume.Name = "numVolume";
-            this.numVolume.Size = new System.Drawing.Size(119, 36);
-            this.numVolume.TabIndex = 0;
-            this.numVolume.Value = new decimal(new int[] {
-            100,
+            this.numVolume.Maximum = new decimal(new int[] {
+            48,
             0,
             0,
             0});
+            this.numVolume.Minimum = new decimal(new int[] {
+            48,
+            0,
+            0,
+            -2147483648});
+            this.numVolume.Name = "numVolume";
+            this.numVolume.Size = new System.Drawing.Size(119, 31);
+            this.numVolume.TabIndex = 0;
             // 
             // chkLoop
             // 
@@ -385,31 +395,31 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-		}
+        }
 
-		#endregion
+        #endregion
 
-		private System.Windows.Forms.NumericUpDown numKeyLow;
-		private System.Windows.Forms.NumericUpDown numKeyHigh;
-		private System.Windows.Forms.NumericUpDown numVelocityHigh;
-		private System.Windows.Forms.NumericUpDown numVelocityLow;
-		private System.Windows.Forms.GroupBox grbKey;
-		private System.Windows.Forms.GroupBox grbVelocity;
-		private System.Windows.Forms.Label lblKeyLow;
-		private System.Windows.Forms.Label lblKeyHigh;
-		private System.Windows.Forms.TextBox txtWave;
-		private System.Windows.Forms.GroupBox grbWave;
-		private System.Windows.Forms.Button btnSelectWave;
-		private System.Windows.Forms.Button btnEditWave;
-		private System.Windows.Forms.Button btnAdd;
-		private System.Windows.Forms.GroupBox grbFineTune;
-		private System.Windows.Forms.NumericUpDown numFineTune;
-		private System.Windows.Forms.GroupBox grbUnityNote;
-		private System.Windows.Forms.NumericUpDown numUnityNote;
-		private System.Windows.Forms.Label lblUnityNote;
-		private System.Windows.Forms.GroupBox grbVolume;
-		private System.Windows.Forms.NumericUpDown numVolume;
-		private System.Windows.Forms.CheckBox chkLoop;
+        private System.Windows.Forms.NumericUpDown numKeyLow;
+        private System.Windows.Forms.NumericUpDown numKeyHigh;
+        private System.Windows.Forms.NumericUpDown numVelocityHigh;
+        private System.Windows.Forms.NumericUpDown numVelocityLow;
+        private System.Windows.Forms.GroupBox grbKey;
+        private System.Windows.Forms.GroupBox grbVelocity;
+        private System.Windows.Forms.Label lblKeyLow;
+        private System.Windows.Forms.Label lblKeyHigh;
+        private System.Windows.Forms.TextBox txtWave;
+        private System.Windows.Forms.GroupBox grbWave;
+        private System.Windows.Forms.Button btnSelectWave;
+        private System.Windows.Forms.Button btnEditWave;
+        private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.GroupBox grbFineTune;
+        private System.Windows.Forms.NumericUpDown numFineTune;
+        private System.Windows.Forms.GroupBox grbUnityNote;
+        private System.Windows.Forms.NumericUpDown numUnityNote;
+        private System.Windows.Forms.Label lblUnityNote;
+        private System.Windows.Forms.GroupBox grbVolume;
+        private System.Windows.Forms.NumericUpDown numVolume;
+        private System.Windows.Forms.CheckBox chkLoop;
         private Envelope envelope1;
     }
 }

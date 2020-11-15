@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Instruments;
 
 namespace InstrumentEditor {
-    public partial class RegionInfoForm : Form {
+    public partial class RegionInfoDialog : Form {
         private File mFile;
         private Region mRegion;
 
@@ -13,7 +12,7 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionInfoForm(File file, Region region) {
+        public RegionInfoDialog(File file, Region region) {
             InitializeComponent();
 
             mFile = file;
@@ -87,9 +86,23 @@ namespace InstrumentEditor {
                 mRegion.Header.VelHi = (byte)numVelocityHigh.Value;
             }
 
-            mRegion.Art.Update(ART_TYPE.OVERRIDE_KEY, (byte)numUnityNote.Value);
-            mRegion.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, (byte)numFineTune.Value / 1200.0));
-            mRegion.Art.Update(ART_TYPE.GAIN_CONST, (float)(numVolume.Value / 100.0m));
+            if (0 == numUnityNote.Value) {
+                mRegion.Art.Delete(ART_TYPE.UNITY_KEY);
+            } else {
+                mRegion.Art.Update(ART_TYPE.UNITY_KEY, (int)numUnityNote.Value);
+            }
+            var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
+            if (0 == fineTune) {
+                mRegion.Art.Delete(ART_TYPE.FINE_TUNE);
+            } else {
+                mRegion.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, fineTune));
+            }
+            var gain = (int)(20 * numVolume.Value) / 400.0;
+            if (0 == gain) {
+                mRegion.Art.Delete(ART_TYPE.GAIN);
+            } else {
+                mRegion.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
+            }
 
             envelope1.SetList(mRegion.Art);
 
@@ -230,13 +243,17 @@ namespace InstrumentEditor {
 
                 foreach(var art in mRegion.Art.Array) {
                     switch (art.Type) {
-                    case ART_TYPE.GAIN_CONST:
-                        numVolume.Value = (decimal)(art.Value * 100.0);
+                    case ART_TYPE.GAIN:
+                        numVolume.Value = (decimal)(20.0 * Math.Log10(art.Value));
                         break;
                     case ART_TYPE.FINE_TUNE:
-                        numFineTune.Value = (decimal)(1200.0 / Math.Log(2.0, art.Value));
+                        if (1.0 == art.Value) {
+                            numFineTune.Value = 0;
+                        } else {
+                            numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
+                        }
                         break;
-                    case ART_TYPE.OVERRIDE_KEY:
+                    case ART_TYPE.UNITY_KEY:
                         numUnityNote.Value = (int)art.Value;
                         break;
                     }
