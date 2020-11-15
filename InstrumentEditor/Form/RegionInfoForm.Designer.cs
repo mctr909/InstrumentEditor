@@ -62,57 +62,57 @@
             // 
             // numKeyLow
             // 
-            this.numKeyLow.Location = new System.Drawing.Point(3, 15);
-            this.numKeyLow.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.numKeyLow.Location = new System.Drawing.Point(7, 30);
+            this.numKeyLow.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numKeyLow.Maximum = new decimal(new int[] {
             127,
             0,
             0,
             0});
             this.numKeyLow.Name = "numKeyLow";
-            this.numKeyLow.Size = new System.Drawing.Size(55, 19);
+            this.numKeyLow.Size = new System.Drawing.Size(119, 31);
             this.numKeyLow.TabIndex = 0;
             this.numKeyLow.ValueChanged += new System.EventHandler(this.numKeyLow_ValueChanged);
             // 
             // numKeyHigh
             // 
-            this.numKeyHigh.Location = new System.Drawing.Point(61, 15);
-            this.numKeyHigh.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.numKeyHigh.Location = new System.Drawing.Point(132, 30);
+            this.numKeyHigh.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numKeyHigh.Maximum = new decimal(new int[] {
             127,
             0,
             0,
             0});
             this.numKeyHigh.Name = "numKeyHigh";
-            this.numKeyHigh.Size = new System.Drawing.Size(55, 19);
+            this.numKeyHigh.Size = new System.Drawing.Size(119, 31);
             this.numKeyHigh.TabIndex = 1;
             this.numKeyHigh.ValueChanged += new System.EventHandler(this.numKeyHigh_ValueChanged);
             // 
             // numVelocityHigh
             // 
-            this.numVelocityHigh.Location = new System.Drawing.Point(61, 15);
-            this.numVelocityHigh.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.numVelocityHigh.Location = new System.Drawing.Point(132, 30);
+            this.numVelocityHigh.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numVelocityHigh.Maximum = new decimal(new int[] {
             127,
             0,
             0,
             0});
             this.numVelocityHigh.Name = "numVelocityHigh";
-            this.numVelocityHigh.Size = new System.Drawing.Size(55, 19);
+            this.numVelocityHigh.Size = new System.Drawing.Size(119, 31);
             this.numVelocityHigh.TabIndex = 1;
             this.numVelocityHigh.ValueChanged += new System.EventHandler(this.numVelocityHigh_ValueChanged);
             // 
             // numVelocityLow
             // 
-            this.numVelocityLow.Location = new System.Drawing.Point(3, 15);
-            this.numVelocityLow.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.numVelocityLow.Location = new System.Drawing.Point(7, 30);
+            this.numVelocityLow.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numVelocityLow.Maximum = new decimal(new int[] {
             127,
             0,
             0,
             0});
             this.numVelocityLow.Name = "numVelocityLow";
-            this.numVelocityLow.Size = new System.Drawing.Size(55, 19);
+            this.numVelocityLow.Size = new System.Drawing.Size(119, 31);
             this.numVelocityLow.TabIndex = 0;
             this.numVelocityLow.ValueChanged += new System.EventHandler(this.numVelocityLow_ValueChanged);
             // 
@@ -123,11 +123,11 @@
             this.grbKey.Controls.Add(this.lblKeyHigh);
             this.grbKey.Controls.Add(this.numKeyLow);
             this.grbKey.Controls.Add(this.numKeyHigh);
-            this.grbKey.Location = new System.Drawing.Point(6, 6);
-            this.grbKey.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbKey.Location = new System.Drawing.Point(13, 12);
+            this.grbKey.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbKey.Name = "grbKey";
-            this.grbKey.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbKey.Size = new System.Drawing.Size(129, 48);
+            this.grbKey.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.grbKey.Size = new System.Drawing.Size(280, 96);
             this.grbKey.TabIndex = 0;
             this.grbKey.TabStop = false;
             this.grbKey.Text = "音程";
@@ -135,20 +135,20 @@
             // lblKeyLow
             // 
             this.lblKeyLow.AutoSize = true;
-            this.lblKeyLow.Location = new System.Drawing.Point(3, 32);
-            this.lblKeyLow.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.lblKeyLow.Location = new System.Drawing.Point(7, 64);
+            this.lblKeyLow.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblKeyLow.Name = "lblKeyLow";
-            this.lblKeyLow.Size = new System.Drawing.Size(41, 12);
+            this.lblKeyLow.Size = new System.Drawing.Size(80, 24);
             this.lblKeyLow.TabIndex = 6;
             this.lblKeyLow.Text = "Bb-2 5";
             // 
             // lblKeyHigh
             // 
             this.lblKeyHigh.AutoSize = true;
-            this.lblKeyHigh.Location = new System.Drawing.Point(59, 32);
-            this.lblKeyHigh.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.lblKeyHigh.Location = new System.Drawing.Point(128, 64);
+            this.lblKeyHigh.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblKeyHigh.Name = "lblKeyHigh";
-            this.lblKeyHigh.Size = new System.Drawing.Size(41, 12);
+            this.lblKeyHigh.Size = new System.Drawing.Size(80, 24);
             this.lblKeyHigh.TabIndex = 7;
             this.lblKeyHigh.Text = "Bb-2 5";
             // 
@@ -157,11 +157,11 @@
             this.grbVelocity.BackColor = System.Drawing.SystemColors.ControlLight;
             this.grbVelocity.Controls.Add(this.numVelocityLow);
             this.grbVelocity.Controls.Add(this.numVelocityHigh);
-            this.grbVelocity.Location = new System.Drawing.Point(138, 6);
-            this.grbVelocity.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbVelocity.Location = new System.Drawing.Point(299, 12);
+            this.grbVelocity.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbVelocity.Name = "grbVelocity";
-            this.grbVelocity.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbVelocity.Size = new System.Drawing.Size(129, 48);
+            this.grbVelocity.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.grbVelocity.Size = new System.Drawing.Size(280, 96);
             this.grbVelocity.TabIndex = 1;
             this.grbVelocity.TabStop = false;
             this.grbVelocity.Text = "強弱";
@@ -169,11 +169,11 @@
             // txtWave
             // 
             this.txtWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtWave.Location = new System.Drawing.Point(3, 15);
-            this.txtWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.txtWave.Location = new System.Drawing.Point(7, 30);
+            this.txtWave.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.txtWave.Name = "txtWave";
             this.txtWave.ReadOnly = true;
-            this.txtWave.Size = new System.Drawing.Size(190, 19);
+            this.txtWave.Size = new System.Drawing.Size(407, 31);
             this.txtWave.TabIndex = 0;
             // 
             // grbWave
@@ -182,11 +182,11 @@
             this.grbWave.Controls.Add(this.btnSelectWave);
             this.grbWave.Controls.Add(this.btnEditWave);
             this.grbWave.Controls.Add(this.txtWave);
-            this.grbWave.Location = new System.Drawing.Point(6, 58);
-            this.grbWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbWave.Location = new System.Drawing.Point(13, 116);
+            this.grbWave.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbWave.Name = "grbWave";
-            this.grbWave.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbWave.Size = new System.Drawing.Size(261, 38);
+            this.grbWave.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.grbWave.Size = new System.Drawing.Size(566, 76);
             this.grbWave.TabIndex = 2;
             this.grbWave.TabStop = false;
             this.grbWave.Text = "波形";
@@ -194,10 +194,10 @@
             // btnSelectWave
             // 
             this.btnSelectWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnSelectWave.Location = new System.Drawing.Point(193, 13);
-            this.btnSelectWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.btnSelectWave.Location = new System.Drawing.Point(418, 26);
+            this.btnSelectWave.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.btnSelectWave.Name = "btnSelectWave";
-            this.btnSelectWave.Size = new System.Drawing.Size(42, 20);
+            this.btnSelectWave.Size = new System.Drawing.Size(91, 40);
             this.btnSelectWave.TabIndex = 1;
             this.btnSelectWave.Text = "選択";
             this.btnSelectWave.UseVisualStyleBackColor = true;
@@ -205,10 +205,10 @@
             // 
             // btnEditWave
             // 
-            this.btnEditWave.Location = new System.Drawing.Point(220, 13);
-            this.btnEditWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.btnEditWave.Location = new System.Drawing.Point(477, 26);
+            this.btnEditWave.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.btnEditWave.Name = "btnEditWave";
-            this.btnEditWave.Size = new System.Drawing.Size(42, 20);
+            this.btnEditWave.Size = new System.Drawing.Size(91, 40);
             this.btnEditWave.TabIndex = 2;
             this.btnEditWave.Text = "編集";
             this.btnEditWave.UseVisualStyleBackColor = true;
@@ -217,10 +217,10 @@
             // btnAdd
             // 
             this.btnAdd.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnAdd.Location = new System.Drawing.Point(218, 350);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.btnAdd.Location = new System.Drawing.Point(472, 700);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(55, 32);
+            this.btnAdd.Size = new System.Drawing.Size(119, 64);
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Text = "追加";
             this.btnAdd.UseVisualStyleBackColor = true;
@@ -230,11 +230,11 @@
             // 
             this.grbFineTune.BackColor = System.Drawing.SystemColors.ControlLight;
             this.grbFineTune.Controls.Add(this.numFineTune);
-            this.grbFineTune.Location = new System.Drawing.Point(112, 99);
-            this.grbFineTune.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbFineTune.Location = new System.Drawing.Point(243, 198);
+            this.grbFineTune.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbFineTune.Name = "grbFineTune";
-            this.grbFineTune.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbFineTune.Size = new System.Drawing.Size(75, 37);
+            this.grbFineTune.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.grbFineTune.Size = new System.Drawing.Size(163, 74);
             this.grbFineTune.TabIndex = 4;
             this.grbFineTune.TabStop = false;
             this.grbFineTune.Text = "ピッチ(cent)";
@@ -242,8 +242,8 @@
             // numFineTune
             // 
             this.numFineTune.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.numFineTune.Location = new System.Drawing.Point(3, 12);
-            this.numFineTune.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.numFineTune.Location = new System.Drawing.Point(7, 24);
+            this.numFineTune.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numFineTune.Maximum = new decimal(new int[] {
             1200,
             0,
@@ -255,7 +255,7 @@
             0,
             -2147483648});
             this.numFineTune.Name = "numFineTune";
-            this.numFineTune.Size = new System.Drawing.Size(55, 22);
+            this.numFineTune.Size = new System.Drawing.Size(119, 36);
             this.numFineTune.TabIndex = 0;
             // 
             // grbUnityNote
@@ -263,11 +263,11 @@
             this.grbUnityNote.BackColor = System.Drawing.SystemColors.ControlLight;
             this.grbUnityNote.Controls.Add(this.numUnityNote);
             this.grbUnityNote.Controls.Add(this.lblUnityNote);
-            this.grbUnityNote.Location = new System.Drawing.Point(6, 99);
-            this.grbUnityNote.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbUnityNote.Location = new System.Drawing.Point(13, 198);
+            this.grbUnityNote.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbUnityNote.Name = "grbUnityNote";
-            this.grbUnityNote.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbUnityNote.Size = new System.Drawing.Size(103, 37);
+            this.grbUnityNote.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.grbUnityNote.Size = new System.Drawing.Size(223, 74);
             this.grbUnityNote.TabIndex = 3;
             this.grbUnityNote.TabStop = false;
             this.grbUnityNote.Text = "基準音";
@@ -275,15 +275,15 @@
             // numUnityNote
             // 
             this.numUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.numUnityNote.Location = new System.Drawing.Point(3, 12);
-            this.numUnityNote.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.numUnityNote.Location = new System.Drawing.Point(7, 24);
+            this.numUnityNote.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numUnityNote.Maximum = new decimal(new int[] {
             127,
             0,
             0,
             0});
             this.numUnityNote.Name = "numUnityNote";
-            this.numUnityNote.Size = new System.Drawing.Size(55, 22);
+            this.numUnityNote.Size = new System.Drawing.Size(119, 36);
             this.numUnityNote.TabIndex = 0;
             this.numUnityNote.ValueChanged += new System.EventHandler(this.numUnityNote_ValueChanged);
             // 
@@ -291,10 +291,10 @@
             // 
             this.lblUnityNote.AutoSize = true;
             this.lblUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblUnityNote.Location = new System.Drawing.Point(61, 14);
-            this.lblUnityNote.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.lblUnityNote.Location = new System.Drawing.Point(132, 28);
+            this.lblUnityNote.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblUnityNote.Name = "lblUnityNote";
-            this.lblUnityNote.Size = new System.Drawing.Size(43, 15);
+            this.lblUnityNote.Size = new System.Drawing.Size(83, 29);
             this.lblUnityNote.TabIndex = 11;
             this.lblUnityNote.Text = "label1";
             // 
@@ -302,11 +302,11 @@
             // 
             this.grbVolume.BackColor = System.Drawing.SystemColors.ControlLight;
             this.grbVolume.Controls.Add(this.numVolume);
-            this.grbVolume.Location = new System.Drawing.Point(192, 99);
-            this.grbVolume.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.grbVolume.Location = new System.Drawing.Point(416, 198);
+            this.grbVolume.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.grbVolume.Name = "grbVolume";
-            this.grbVolume.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-            this.grbVolume.Size = new System.Drawing.Size(75, 37);
+            this.grbVolume.Padding = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.grbVolume.Size = new System.Drawing.Size(163, 74);
             this.grbVolume.TabIndex = 5;
             this.grbVolume.TabStop = false;
             this.grbVolume.Text = "音量(%)";
@@ -315,10 +315,10 @@
             // 
             this.numVolume.DecimalPlaces = 1;
             this.numVolume.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.numVolume.Location = new System.Drawing.Point(3, 12);
-            this.numVolume.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.numVolume.Location = new System.Drawing.Point(7, 24);
+            this.numVolume.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.numVolume.Name = "numVolume";
-            this.numVolume.Size = new System.Drawing.Size(55, 22);
+            this.numVolume.Size = new System.Drawing.Size(119, 36);
             this.numVolume.TabIndex = 0;
             this.numVolume.Value = new decimal(new int[] {
             100,
@@ -329,10 +329,10 @@
             // chkLoop
             // 
             this.chkLoop.AutoSize = true;
-            this.chkLoop.Location = new System.Drawing.Point(6, 350);
-            this.chkLoop.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.chkLoop.Location = new System.Drawing.Point(13, 700);
+            this.chkLoop.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.chkLoop.Name = "chkLoop";
-            this.chkLoop.Size = new System.Drawing.Size(77, 16);
+            this.chkLoop.Size = new System.Drawing.Size(148, 28);
             this.chkLoop.TabIndex = 7;
             this.chkLoop.Text = "ループ有効";
             this.chkLoop.UseVisualStyleBackColor = true;
@@ -342,17 +342,17 @@
             this.envelope1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             this.envelope1.Art = null;
             this.envelope1.AutoSize = true;
-            this.envelope1.Location = new System.Drawing.Point(6, 139);
-            this.envelope1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.envelope1.Location = new System.Drawing.Point(13, 278);
+            this.envelope1.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.envelope1.Name = "envelope1";
-            this.envelope1.Size = new System.Drawing.Size(747, 335);
+            this.envelope1.Size = new System.Drawing.Size(1281, 386);
             this.envelope1.TabIndex = 8;
             // 
             // RegionInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 388);
+            this.ClientSize = new System.Drawing.Size(657, 776);
             this.Controls.Add(this.envelope1);
             this.Controls.Add(this.chkLoop);
             this.Controls.Add(this.grbVolume);
@@ -363,7 +363,7 @@
             this.Controls.Add(this.grbVelocity);
             this.Controls.Add(this.grbKey);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.Name = "RegionInfoForm";
             this.Text = "リージョン情報編集";
             ((System.ComponentModel.ISupportInitialize)(this.numKeyLow)).EndInit();

@@ -61,6 +61,12 @@
     <Compile Include="Dialog\LayerInfoDialog.Designer.cs">
       <DependentUpon>LayerInfoDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\InstInfoDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\InstInfoDialog.Designer.cs">
+      <DependentUpon>InstInfoDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\LayerAssignForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\LayerInfoDialog.resx">
       <DependentUpon>LayerInfoDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\InstInfoDialog.resx">
+      <DependentUpon>InstInfoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\LayerAssignForm.resx">
       <DependentUpon>LayerAssignForm.cs</DependentUpon>

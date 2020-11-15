@@ -359,7 +359,7 @@ namespace Instruments {
             }
         }
 
-        public void DeleteInst(List<int> indices) {
+        public bool DeleteInst(List<int> indices) {
             // find deletable inst
             var deleteList = new Dictionary<int, bool>();
             foreach (int selectedIndex in indices) {
@@ -376,6 +376,10 @@ namespace Instruments {
                     }
                 }
                 deleteList.Add(selectedIndex, deletable);
+            }
+
+            if(0 == deleteList.Count) {
+                return false;
             }
 
             // renumbering
@@ -410,6 +414,8 @@ namespace Instruments {
                     }
                 }
             }
+
+            return true;
         }
     }
 

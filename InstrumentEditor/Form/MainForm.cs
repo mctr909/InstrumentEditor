@@ -193,27 +193,27 @@ namespace InstrumentEditor {
 
         #region ツールストリップ[音色]
         private void tsbAddInst_Click(object sender, EventArgs e) {
-
+            AddInst();
         }
 
         private void tsbDeleteInst_Click(object sender, EventArgs e) {
-
+            DeleteInst();
         }
 
         private void tsbCopyInst_Click(object sender, EventArgs e) {
-
+            CopyInst();
         }
 
         private void tsbPasteInst_Click(object sender, EventArgs e) {
-
+            PasteInst();
         }
 
         private void txtSearchInst_Leave(object sender, EventArgs e) {
-
+            DispInstList();
         }
 
         private void txtSearchInst_TextChanged(object sender, EventArgs e) {
-
+            DispInstList();
         }
         #endregion
 
@@ -623,8 +623,8 @@ namespace InstrumentEditor {
         }
 
         private void AddInst() {
-            //var fm = new RegionAssignForm(mFile);
-            //fm.ShowDialog();
+            var fm = new InstInfoDialog(mFile);
+            fm.ShowDialog();
             DispInstList();
             DispPresetList();
         }
@@ -633,18 +633,21 @@ namespace InstrumentEditor {
             if (0 == lstInst.Items.Count) {
                 return;
             }
+
             var index = lstInst.SelectedIndex;
-            var indices = lstInst.SelectedIndices;
-            foreach (int idx in indices) {
-                mFile.Inst.Remove(GetInstLocale(idx));
+            var idxs = new List<int>();
+            foreach (var item in lstInst.SelectedItems) {
+                idxs.Add(int.Parse(((string)item).Split('|')[0]));
             }
-            DispInstList();
-            DispPresetList();
-            DispWaveList();
-            if (index < lstInst.Items.Count) {
-                lstInst.SelectedIndex = index;
-            } else {
-                lstInst.SelectedIndex = lstInst.Items.Count - 1;
+            if (mFile.DeleteInst(idxs)) {
+                DispInstList();
+                DispPresetList();
+                DispWaveList();
+                if (index < lstInst.Items.Count) {
+                    lstInst.SelectedIndex = index;
+                } else {
+                    lstInst.SelectedIndex = lstInst.Items.Count - 1;
+                }
             }
         }
 
@@ -682,8 +685,8 @@ namespace InstrumentEditor {
             if (null == mClipboardInst) {
                 return;
             }
-            //form//var fm = new AddPresetDialog(mFile, mClipboardInst);
-            //form//fm.ShowDialog();
+            var fm = new InstInfoDialog(mFile, mClipboardInst);
+            fm.ShowDialog();
             DispInstList();
         }
 
@@ -692,10 +695,15 @@ namespace InstrumentEditor {
 
             lstInst.Items.Clear();
             for (var iInst = 0; iInst < mFile.Inst.Count; iInst++) {
+                if (!string.IsNullOrEmpty(txtSearchInst.Text)
+                    && mFile.Inst[iInst].Info.Name.IndexOf(txtSearchInst.Text, StringComparison.InvariantCultureIgnoreCase) < 0
+                ) {
+                    continue;
+                }
                 var inst = mFile.Inst[iInst];
                 var use = false;
-                foreach (var ptrset in mFile.Preset.Values) {
-                    foreach (var layer in ptrset.Layer.Array) {
+                foreach (var preset in mFile.Preset.Values) {
+                    foreach (var layer in preset.Layer.Array) {
                         if (iInst == layer.Header.InstIndex) {
                             use = true;
                             break;
@@ -733,17 +741,15 @@ namespace InstrumentEditor {
         private void MultiSelectInst() {
             var lst = GetSelectedInsts();
             if (1 == lst.Count) {
-                //form//var fm = new PresetInfoDialog(mFile, lst[0]);
-                //form//fm.StartPosition = FormStartPosition.CenterParent;
-                //form//fm.ShowDialog();
+                var fm = new InstInfoDialog(mFile, lst[0]);
+                fm.ShowDialog();
                 DispInstList();
                 return;
             }
             if (1 < lst.Count) {
                 var inst = new Instruments.Inst();
-                //form//var fm = new PresetInfoDialog(mFile, preset);
-                //form//fm.StartPosition = FormStartPosition.CenterParent;
-                //form//fm.ShowDialog();
+                var fm = new InstInfoDialog(mFile, inst);
+                fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info.Category = inst.Info.Category;
                 }
@@ -753,7 +759,7 @@ namespace InstrumentEditor {
         }
 
         private int GetInstLocale(int index) {
-            if (0 == lstPreset.Items.Count) {
+            if (0 == lstInst.Items.Count) {
                 return -1;
             }
             if (index < 0) {
@@ -790,7 +796,7 @@ namespace InstrumentEditor {
             var locales = GetInstLocales(lstInst.SelectedIndices);
             var insts = new List<Instruments.Inst>();
             foreach (var locale in locales) {
-                if (locale < mFile.Preset.Count) {
+                if (locale < mFile.Inst.Count) {
                     insts.Add(mFile.Inst[locale]);
                 }
             }
