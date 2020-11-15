@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Instruments;
+using Riff;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-
-using Riff;
-using Instruments;
 
 namespace DLS {
     #region struct
@@ -255,7 +254,7 @@ namespace DLS {
 
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct WaveLoop {
-        public uint Size;
+        private uint Size;
         public uint Type;
         public uint Start;
         public uint Length;
@@ -349,7 +348,7 @@ namespace DLS {
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CK_WSMP {
-        public uint Size;
+        private uint Size;
         public ushort UnityNote;
         public short FineTune;
         public int GainInt;
@@ -366,7 +365,7 @@ namespace DLS {
         }
 
         public void Write(BinaryWriter bw) {
-            bw.Write(Size);
+            bw.Write(20 + 16 * LoopCount);
             bw.Write(UnityNote);
             bw.Write(FineTune);
             bw.Write(GainInt);
@@ -513,7 +512,7 @@ namespace DLS {
                 Marshal.FreeHGlobal(ptr);
 
                 waveInfo.Info.Name = wave.Info.Name;
-                waveInfo.Info.Category = wave.Info.Keywords;
+                waveInfo.Info.Category = wave.Info.Category;
                 waveInfo.Info.CreationDate = now;
                 waveInfo.Info.SourceForm = Path.GetFileName(mFilePath);
 
@@ -522,10 +521,29 @@ namespace DLS {
 
             foreach (var dlsInst in Instruments.List) {
                 var pres = new Preset();
-                pres.Header.BankFlg = (byte)((dlsInst.Key.BankFlg & 0x80) == 0x80 ? 1 : 0);
+                pres.Header.IsDrum = 0 < (dlsInst.Key.BankFlg & 0x80);
                 pres.Header.BankMSB = dlsInst.Key.BankMSB;
                 pres.Header.BankLSB = dlsInst.Key.BankLSB;
                 pres.Header.ProgNum = dlsInst.Key.ProgNum;
+
+                var lyr = new Layer();
+                lyr.Header.KeyLo = 0;
+                lyr.Header.KeyHi = 127;
+                lyr.Header.VelLo = 0;
+                lyr.Header.VelHi = 127;
+                lyr.Header.InstIndex = instFile.Inst.Count;
+
+                pres.Layer.Add(lyr);
+                pres.Info.Name = dlsInst.Value.Info.Name;
+                pres.Info.Category = dlsInst.Value.Info.Category;
+                pres.Info.CreationDate = now;
+                pres.Info.SourceForm = Path.GetFileName(mFilePath);
+                instFile.Preset.Add(pres.Header, pres);
+
+                var inst = new Inst();
+                inst.Info.Name = dlsInst.Value.Info.Name;
+                inst.Info.CreationDate = now;
+                inst.Info.SourceForm = Path.GetFileName(mFilePath);
 
                 if (null != dlsInst.Value.Articulations && null != dlsInst.Value.Articulations.ART) {
                     foreach (var instArt in dlsInst.Value.Articulations.ART.List.Values) {
@@ -540,92 +558,69 @@ namespace DLS {
                         switch (instArt.Destination) {
                         case Connection.DST_TYPE.EG1_ATTACK_TIME:
                             art.Type = ART_TYPE.EG_AMP_ATTACK;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG1_HOLD_TIME:
                             art.Type = ART_TYPE.EG_AMP_HOLD;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG1_DECAY_TIME:
                             art.Type = ART_TYPE.EG_AMP_DECAY;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG1_SUSTAIN_LEVEL:
                             art.Type = ART_TYPE.EG_AMP_SUSTAIN;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG1_RELEASE_TIME:
                             art.Type = ART_TYPE.EG_AMP_RELEASE;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
 
                         case Connection.DST_TYPE.EG2_ATTACK_TIME:
                             art.Type = ART_TYPE.EG_CUTOFF_ATTACK;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG2_HOLD_TIME:
                             art.Type = ART_TYPE.EG_CUTOFF_HOLD;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG2_DECAY_TIME:
                             art.Type = ART_TYPE.EG_CUTOFF_DECAY;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG2_SUSTAIN_LEVEL:
                             art.Type = ART_TYPE.EG_CUTOFF_SUSTAIN;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.EG2_RELEASE_TIME:
                             art.Type = ART_TYPE.EG_CUTOFF_RELEASE;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
 
                         case Connection.DST_TYPE.GAIN:
                             art.Type = ART_TYPE.GAIN_CONST;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.PAN:
                             art.Type = ART_TYPE.PAN_CONST;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.PITCH:
                             art.Type = ART_TYPE.FINE_TUNE;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.FILTER_Q:
                             art.Type = ART_TYPE.LPF_RESONANCE;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         case Connection.DST_TYPE.FILTER_CUTOFF:
                             art.Type = ART_TYPE.LPF_CUTOFF_CONST;
-                            pres.Art.Add(art);
+                            inst.Art.Add(art);
                             break;
                         }
                     }
                 }
-
-                var lyr = new Layer();
-                lyr.Header.KeyLo = 0;
-                lyr.Header.KeyHi = 127;
-                lyr.Header.VelLo = 0;
-                lyr.Header.VelHi = 127;
-
-                lyr.Art.Add(new Instruments.ART {
-                    Type = ART_TYPE.INST_INDEX,
-                    Value = instFile.Inst.Count
-                });
-
-                pres.Layer.Add(lyr);
-                pres.Info.Name = dlsInst.Value.Info.Name;
-                pres.Info.Category = dlsInst.Value.Info.Keywords;
-                pres.Info.CreationDate = now;
-                pres.Info.SourceForm = Path.GetFileName(mFilePath);
-                instFile.Preset.Add(pres.Header, pres);
-
-                var inst = new Inst();
-                inst.Info.Name = dlsInst.Value.Info.Name;
-                inst.Info.CreationDate = now;
-                inst.Info.SourceForm = Path.GetFileName(mFilePath);
 
                 foreach (var dlsRegion in dlsInst.Value.Regions.List) {
                     var rgn = new Region();
@@ -637,6 +632,18 @@ namespace DLS {
                     rgn.Art.Add(new Instruments.ART {
                         Type = ART_TYPE.WAVE_INDEX,
                         Value = dlsRegion.Value.WaveLink.TableIndex
+                    });
+                    rgn.Art.Add(new Instruments.ART {
+                        Type = ART_TYPE.OVERRIDE_KEY,
+                        Value = dlsRegion.Value.Sampler.UnityNote
+                    });
+                    rgn.Art.Add(new Instruments.ART {
+                        Type = ART_TYPE.FINE_TUNE,
+                        Value = (float)Math.Pow(2.0, dlsRegion.Value.Sampler.FineTune / 1200.0)
+                    });
+                    rgn.Art.Add(new Instruments.ART {
+                        Type = ART_TYPE.GAIN_CONST,
+                        Value = (float)dlsRegion.Value.Sampler.Gain
                     });
 
                     if (null != dlsRegion.Value.Articulations && null != dlsRegion.Value.Articulations.ART) {
@@ -721,6 +728,201 @@ namespace DLS {
             }
 
             return instFile;
+        }
+
+        public static void SaveFromIns(string filePath, Instruments.File insFile) {
+            var saveFile = new File();
+
+            // WAVE
+            saveFile.WavePool = new WVPL();
+            saveFile.WavePool.List = new Dictionary<int, WAVE>();
+            foreach (var wav in insFile.Wave.Array) {
+                var wavh = new WAVE();
+                wavh.Format = new CK_FMT();
+                wavh.Format.Tag = 1;
+                wavh.Format.Bits = 16;
+                wavh.Format.Channels = 1;
+                wavh.Format.SampleRate = wav.Header.SampleRate;
+                wavh.Format.BlockAlign = (ushort)(wavh.Format.Bits * wavh.Format.Channels / 8);
+                wavh.Format.BytesPerSec = wavh.Format.SampleRate * wavh.Format.BlockAlign;
+
+                wavh.Sampler = new CK_WSMP();
+                wavh.Sampler.Gain = wav.Header.Gain;
+                wavh.Sampler.FineTune = (short)(Math.Log(wav.Header.Pitch, 2.0) * 1200);
+                wavh.Sampler.UnityNote = wav.Header.UnityNote;
+                if (0 != wav.Header.LoopEnable) {
+                    wavh.Sampler.LoopCount = 1;
+                    var loop = new WaveLoop();
+                    loop.Type = 1;
+                    loop.Start = wav.Header.LoopBegin;
+                    loop.Length = wav.Header.LoopLength;
+                    wavh.Loops = new Dictionary<int, WaveLoop>();
+                    wavh.Loops.Add(0, loop);
+                }
+
+                wavh.Info = new Info();
+                wavh.Info.Name = wav.Info.Name;
+
+                wavh.Data = new byte[wav.Data.Length * 2];
+                var pData = Marshal.AllocHGlobal(wavh.Data.Length);
+                Marshal.Copy(wav.Data, 0, pData, wav.Data.Length);
+                Marshal.Copy(pData, wavh.Data, 0, wavh.Data.Length);
+                Marshal.FreeHGlobal(pData);
+
+                saveFile.WavePool.List.Add(saveFile.WavePool.List.Count, wavh);
+            }
+
+            // Inst
+            saveFile.Instruments = new LINS();
+            saveFile.Instruments.List = new SortedDictionary<MidiLocale, INS>(new LINS.Sort());
+            foreach (var srcPre in insFile.Preset.Values) {
+                if (1 != srcPre.Layer.Array.Length) {
+                    continue;
+                }
+
+                var srcIns = insFile.Inst[srcPre.Layer.Array[0].Header.InstIndex];
+
+                var ins = new INS();
+                ins.Header = new CK_INSH();
+                ins.Header.Locale = new MidiLocale();
+                ins.Header.Locale.BankFlg = (byte)(srcPre.Header.IsDrum ? 0x80 : 0x00);
+                ins.Header.Locale.BankMSB = srcPre.Header.BankMSB;
+                ins.Header.Locale.BankLSB = srcPre.Header.BankLSB;
+                ins.Header.Locale.ProgNum = srcPre.Header.ProgNum;
+                ins.Header.Regions = (uint)srcIns.Region.Count;
+
+                ins.Info = new Info();
+                ins.Info.Name = srcPre.Info.Name;
+                ins.Info.Category = srcPre.Info.Category;
+
+                ins.Articulations = new LART();
+                ins.Articulations.ART = new ART();
+                ins.Articulations.ART.List = new Dictionary<int, Connection>();
+                foreach (var srcArt in srcIns.Art.Array) {
+                    switch (srcArt.Type) {
+                    case ART_TYPE.EG_AMP_ATTACK:
+                        var ampA = new Connection();
+                        ampA.Source = Connection.SRC_TYPE.NONE;
+                        ampA.Control = Connection.SRC_TYPE.NONE;
+                        ampA.Destination = Connection.DST_TYPE.EG1_ATTACK_TIME;
+                        ampA.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampA);
+                        break;
+                    case ART_TYPE.EG_AMP_HOLD:
+                        var ampH = new Connection();
+                        ampH.Source = Connection.SRC_TYPE.NONE;
+                        ampH.Control = Connection.SRC_TYPE.NONE;
+                        ampH.Destination = Connection.DST_TYPE.EG1_HOLD_TIME;
+                        ampH.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampH);
+                        break;
+                    case ART_TYPE.EG_AMP_DECAY:
+                        var ampD = new Connection();
+                        ampD.Source = Connection.SRC_TYPE.NONE;
+                        ampD.Control = Connection.SRC_TYPE.NONE;
+                        ampD.Destination = Connection.DST_TYPE.EG1_DECAY_TIME;
+                        ampD.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampD);
+                        break;
+                    case ART_TYPE.EG_AMP_SUSTAIN:
+                        var ampS = new Connection();
+                        ampS.Source = Connection.SRC_TYPE.NONE;
+                        ampS.Control = Connection.SRC_TYPE.NONE;
+                        ampS.Destination = Connection.DST_TYPE.EG1_SUSTAIN_LEVEL;
+                        ampS.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampS);
+                        break;
+                    case ART_TYPE.EG_AMP_RELEASE:
+                        var ampR = new Connection();
+                        ampR.Source = Connection.SRC_TYPE.NONE;
+                        ampR.Control = Connection.SRC_TYPE.NONE;
+                        ampR.Destination = Connection.DST_TYPE.EG1_RELEASE_TIME;
+                        ampR.Value = srcArt.Value;
+                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampR);
+                        break;
+                    }
+                }
+
+                ins.Regions = new LRGN();
+                ins.Regions.List = new SortedDictionary<CK_RGNH, RGN>(new LRGN.Sort());
+                foreach(var srcRgn in srcIns.Region.Array) {
+                    var rgn = new RGN();
+                    rgn.Header.Key.Hi = srcRgn.Header.KeyHi;
+                    rgn.Header.Key.Lo = srcRgn.Header.KeyLo;
+                    rgn.Header.Vel.Hi = srcRgn.Header.VelHi;
+                    rgn.Header.Vel.Lo = srcRgn.Header.VelLo;
+
+                    rgn.Articulations = new LART();
+                    rgn.Articulations.ART = new ART();
+                    rgn.Articulations.ART.List = new Dictionary<int, Connection>();
+                    foreach (var srcArt in srcRgn.Art.Array) {
+                        switch(srcArt.Type) {
+                        case ART_TYPE.WAVE_INDEX:
+                            rgn.WaveLink.Channel = 1;
+                            rgn.WaveLink.TableIndex = (uint)srcArt.Value;
+                            break;
+                        case ART_TYPE.GAIN_CONST:
+                            rgn.Sampler.Gain = srcArt.Value;
+                            break;
+                        case ART_TYPE.OVERRIDE_KEY:
+                            rgn.Sampler.UnityNote = (ushort)srcArt.Value;
+                            break;
+                        case ART_TYPE.FINE_TUNE:
+                            rgn.Sampler.FineTune = (short)(Math.Log(srcArt.Value, 2.0) * 1200);
+                            break;
+                        case ART_TYPE.EG_AMP_ATTACK:
+                            var ampA = new Connection();
+                            ampA.Source = Connection.SRC_TYPE.NONE;
+                            ampA.Control = Connection.SRC_TYPE.NONE;
+                            ampA.Destination = Connection.DST_TYPE.EG1_ATTACK_TIME;
+                            ampA.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampA);
+                            break;
+                        case ART_TYPE.EG_AMP_HOLD:
+                            var ampH = new Connection();
+                            ampH.Source = Connection.SRC_TYPE.NONE;
+                            ampH.Control = Connection.SRC_TYPE.NONE;
+                            ampH.Destination = Connection.DST_TYPE.EG1_HOLD_TIME;
+                            ampH.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampH);
+                            break;
+                        case ART_TYPE.EG_AMP_DECAY:
+                            var ampD = new Connection();
+                            ampD.Source = Connection.SRC_TYPE.NONE;
+                            ampD.Control = Connection.SRC_TYPE.NONE;
+                            ampD.Destination = Connection.DST_TYPE.EG1_DECAY_TIME;
+                            ampD.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampD);
+                            break;
+                        case ART_TYPE.EG_AMP_SUSTAIN:
+                            var ampS = new Connection();
+                            ampS.Source = Connection.SRC_TYPE.NONE;
+                            ampS.Control = Connection.SRC_TYPE.NONE;
+                            ampS.Destination = Connection.DST_TYPE.EG1_SUSTAIN_LEVEL;
+                            ampS.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampS);
+                            break;
+                        case ART_TYPE.EG_AMP_RELEASE:
+                            var ampR = new Connection();
+                            ampR.Source = Connection.SRC_TYPE.NONE;
+                            ampR.Control = Connection.SRC_TYPE.NONE;
+                            ampR.Destination = Connection.DST_TYPE.EG1_RELEASE_TIME;
+                            ampR.Value = srcArt.Value;
+                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampR);
+                            break;
+                        }
+                    }
+
+                    ins.Regions.List.Add(rgn.Header, rgn);
+                }
+
+                if(saveFile.Instruments.List.ContainsKey(ins.Header.Locale)) {
+                    continue;
+                }
+                saveFile.Instruments.List.Add(ins.Header.Locale, ins);
+            }
+
+            saveFile.Save(filePath);
         }
     }
 
@@ -837,9 +1039,23 @@ namespace DLS {
         public sealed class Sort : IComparer<CK_RGNH> {
             // IComparerの実装
             public int Compare(CK_RGNH x, CK_RGNH y) {
-                var xKey = (x.Key.Lo << 24) | (x.Key.Hi << 16) | (x.Vel.Lo << 8) | x.Vel.Hi;
-                var yKey = (y.Key.Lo << 24) | (y.Key.Hi << 16) | (y.Vel.Lo << 8) | y.Vel.Hi;
-                return xKey - yKey;
+                var keyH = x.Key.Hi <= y.Key.Lo;
+                var keyL = y.Key.Hi <= x.Key.Lo;
+                var velH = x.Vel.Hi <= y.Vel.Lo;
+                var velL = y.Vel.Hi <= x.Vel.Lo;
+                var key = keyH || keyL;
+                var vel = velH || velL;
+                if (key || vel) {
+                    if (keyH) {
+                        return 1;
+                    }
+                    if (velH) {
+                        return 1;
+                    }
+                    return -1;
+                } else {
+                    return 0;
+                }
             }
         }
 

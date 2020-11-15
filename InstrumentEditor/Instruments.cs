@@ -148,7 +148,7 @@ namespace Instruments {
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct PREH {
-        public byte BankFlg;
+        public bool IsDrum;
         public byte BankMSB;
         public byte BankLSB;
         public byte ProgNum;
@@ -156,7 +156,7 @@ namespace Instruments {
         public void Write(BinaryWriter bw) {
             bw.Write("preh".ToCharArray());
             bw.Write(Marshal.SizeOf<PREH>());
-            bw.Write(BankFlg);
+            bw.Write(IsDrum);
             bw.Write(BankMSB);
             bw.Write(BankLSB);
             bw.Write(ProgNum);
@@ -169,6 +169,7 @@ namespace Instruments {
         public byte KeyHi;
         public byte VelLo;
         public byte VelHi;
+        public int InstIndex;
 
         public void Write(BinaryWriter bw) {
             bw.Write("lyrh".ToCharArray());
@@ -177,6 +178,7 @@ namespace Instruments {
             bw.Write(KeyHi);
             bw.Write(VelLo);
             bw.Write(VelHi);
+            bw.Write(InstIndex);
         }
     }
 
@@ -364,16 +366,8 @@ namespace Instruments {
                 var deletable = true;
                 foreach (var preset in Preset.Values) {
                     foreach (var layer in preset.Layer.Array) {
-                        foreach (var art in layer.Art.Array) {
-                            if (art.Type != ART_TYPE.INST_INDEX) {
-                                continue;
-                            }
-                            if (selectedIndex == (int)art.Value) {
-                                deletable = false;
-                                break;
-                            }
-                        }
-                        if (!deletable) {
+                        if (selectedIndex == layer.Header.InstIndex) {
+                            deletable = false;
                             break;
                         }
                     }
@@ -410,14 +404,9 @@ namespace Instruments {
             foreach (var preset in Preset.Values) {
                 for (var iLayer = 0; iLayer < preset.Layer.Count; iLayer++) {
                     var layer = preset.Layer[iLayer];
-                    foreach (var art in layer.Art.Array) {
-                        if (art.Type != ART_TYPE.INST_INDEX) {
-                            continue;
-                        }
-                        var iInst = (int)art.Value;
-                        if (renumberingList.ContainsKey(iInst)) {
-                            layer.Art.Update(ART_TYPE.INST_INDEX, renumberingList[iInst]);
-                        }
+                    var iInst = layer.Header.InstIndex;
+                    if (renumberingList.ContainsKey(iInst)) {
+                        layer.Header.InstIndex = renumberingList[iInst];
                     }
                 }
             }
@@ -987,7 +976,8 @@ namespace Instruments {
             var ret = new List<Layer>();
             foreach (var layer in List) {
                 if (header.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi) {
+                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi &&
+                    header.InstIndex == layer.Header.InstIndex) {
                     ret.Add(layer);
                 }
             }
@@ -1008,7 +998,8 @@ namespace Instruments {
         public bool ContainsKey(LYRH header) {
             foreach (var layer in List) {
                 if (header.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi) {
+                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi &&
+                    header.InstIndex == layer.Header.InstIndex) {
                     return true;
                 }
             }

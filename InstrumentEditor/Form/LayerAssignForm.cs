@@ -143,15 +143,7 @@ namespace InstrumentEditor {
             tscLayer.Items.Clear();
 
             foreach (var layer in mPreset.Layer.Array) {
-                var range = layer.Header;
-                var instIndex = int.MaxValue;
-                foreach (var art in layer.Art.Array) {
-                    if (art.Type == ART_TYPE.INST_INDEX) {
-                        instIndex = (int)art.Value;
-                        break;
-                    }
-                }
-
+                var instIndex = layer.Header.InstIndex;
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
                     var inst = mFile.Inst[instIndex];
@@ -159,21 +151,15 @@ namespace InstrumentEditor {
                 }
 
                 var regionInfo = string.Format(
-                    "音程 {0} {1}    強弱 {2} {3}    {4}",
+                    "{0}-{1}|{2}-{3}|{4}|{5}",
                     layer.Header.KeyLo.ToString("000"),
                     layer.Header.KeyHi.ToString("000"),
                     layer.Header.VelLo.ToString("000"),
                     layer.Header.VelHi.ToString("000"),
+                    instIndex.ToString("0000"),
                     instName
                 );
-                if (int.MaxValue != instIndex) {
-                    regionInfo = string.Format(
-                        "{0}    波形 {1} {2}",
-                        regionInfo,
-                        instIndex.ToString("0000"),
-                        instName
-                    );
-                }
+
                 lstLayer.Items.Add(regionInfo);
                 tscLayer.Items.Add(string.Format("{0}|{1}|{2}|{3}|{4}|{5}",
                     layer.Header.KeyLo.ToString("000"),
@@ -231,7 +217,6 @@ namespace InstrumentEditor {
             var layer = new Layer();
             layer.Header.KeyLo = byte.MaxValue;
             var fm = new LayerInfoDialog(mFile, layer);
-            fm.StartPosition = FormStartPosition.CenterParent;
             fm.ShowDialog();
             if (byte.MaxValue != layer.Header.KeyLo) {
                 mPreset.Layer.Add(layer);
@@ -242,7 +227,6 @@ namespace InstrumentEditor {
         private void EditLayer(LYRH range) {
             if (mPreset.Layer.ContainsKey(range)) {
                 var fm = new LayerInfoDialog(mFile, mPreset.Layer.Find(range)[0]);
-                fm.StartPosition = FormStartPosition.CenterParent;
                 fm.ShowDialog();
                 DispLayerInfo();
                 DispLayerRanges();
@@ -253,24 +237,25 @@ namespace InstrumentEditor {
 
         private void DeleteLayer() {
             var index = lstLayer.SelectedIndex;
-
             foreach (int idx in lstLayer.SelectedIndices) {
-                var cols = lstLayer.Items[idx].ToString().Split(' ');
+                var cols = lstLayer.Items[idx].ToString().Split('|');
+                var key = cols[0].Split('-');
+                var vel = cols[1].Split('-');
                 var select = new LYRH {
-                    KeyLo = byte.Parse(cols[1]),
-                    KeyHi = byte.Parse(cols[2]),
-                    VelLo = byte.Parse(cols[7]),
-                    VelHi = byte.Parse(cols[8])
+                    KeyLo = byte.Parse(key[0]),
+                    KeyHi = byte.Parse(key[1]),
+                    VelLo = byte.Parse(vel[0]),
+                    VelHi = byte.Parse(vel[1]),
+                    InstIndex = int.Parse(cols[2])
                 };
-                var layerH = mPreset.Layer[idx].Header;
-                if (select.KeyLo <= layerH.KeyLo && layerH.KeyHi <= select.KeyHi &&
-                    select.VelLo <= layerH.VelLo && layerH.VelHi <= select.VelHi) {
+                var layer = mPreset.Layer[idx].Header;
+                if (select.KeyLo <= layer.KeyLo && layer.KeyHi <= select.KeyHi &&
+                    select.VelLo <= layer.VelLo && layer.VelHi <= select.VelHi &&
+                    select.InstIndex == layer.InstIndex) {
                     mPreset.Layer.Remove(idx);
                 }
             }
-
             DispLayerInfo();
-
             if (index < lstLayer.Items.Count) {
                 lstLayer.SelectedIndex = index;
             } else {
@@ -317,12 +302,15 @@ namespace InstrumentEditor {
             if (lstLayer.SelectedIndex < 0) {
                 return new LYRH();
             }
-            var cols = lstLayer.Items[lstLayer.SelectedIndex].ToString().Split(' ');
+            var cols = lstLayer.Items[lstLayer.SelectedIndex].ToString().Split('|');
+            var key = cols[0].Split('-');
+            var vel = cols[1].Split('-');
             var region = new LYRH {
-                KeyLo = byte.Parse(cols[1]),
-                KeyHi = byte.Parse(cols[2]),
-                VelLo = byte.Parse(cols[7]),
-                VelHi = byte.Parse(cols[8])
+                KeyLo = byte.Parse(key[0]),
+                KeyHi = byte.Parse(key[1]),
+                VelLo = byte.Parse(vel[0]),
+                VelHi = byte.Parse(vel[1]),
+                InstIndex = int.Parse(cols[2])
             };
             return region;
         }

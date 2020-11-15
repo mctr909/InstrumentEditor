@@ -78,7 +78,7 @@ namespace InstrumentEditor {
 
         private void 名前を付けて保存ToolStripMenuItem_Click(object sender, EventArgs e) {
             saveFileDialog1.FileName = "";
-            saveFileDialog1.Filter = "INSファイル(*.ins)|*.ins";
+            saveFileDialog1.Filter = "INSファイル(*.ins)|*.ins|DLSファイル(*.ins)|*.dls";
             saveFileDialog1.CheckPathExists = true;
             saveFileDialog1.ShowDialog();
             var filePath = saveFileDialog1.FileName;
@@ -89,6 +89,9 @@ namespace InstrumentEditor {
             switch (Path.GetExtension(filePath)) {
             case ".ins":
                 mFile.Save(filePath);
+                break;
+            case ".dls":
+                DLS.File.SaveFromIns(filePath, mFile);
                 break;
             }
 
@@ -422,7 +425,6 @@ namespace InstrumentEditor {
         private void AddPreset() {
             var fm = new AddPresetDialog(mFile);
             fm.ShowDialog();
-            DispInstList();
             DispPresetList();
         }
 
@@ -430,17 +432,12 @@ namespace InstrumentEditor {
             if (0 == lstPreset.Items.Count) {
                 return;
             }
-
             var index = lstPreset.SelectedIndex;
             var indices = lstPreset.SelectedIndices;
             foreach (int idx in indices) {
                 mFile.Preset.Remove(GetPresetLocale(idx));
             }
-
-            DispInstList();
             DispPresetList();
-            DispWaveList();
-
             if (index < lstPreset.Items.Count) {
                 lstPreset.SelectedIndex = index;
             } else {
@@ -449,44 +446,37 @@ namespace InstrumentEditor {
         }
 
         private void CopyPreset() {
-            var inst = GetSelectedPreset();
-            if (null == inst) {
+            var preset = GetSelectedPreset();
+            if (null == preset) {
                 return;
             }
-
             mClipboardPreset = new Instruments.Preset();
-            mClipboardPreset.Header = inst.Header;
-
+            mClipboardPreset.Header = preset.Header;
             // Layer
             mClipboardPreset.Layer.Clear();
-            foreach (var layer in inst.Layer.Array) {
+            foreach (var layer in preset.Layer.Array) {
                 mClipboardPreset.Layer.Add(new Layer {
                     Header = layer.Header,
                     Art = layer.Art
                 });
             }
-
             // Articulations
             mClipboardPreset.Art.Clear();
-            foreach (var art in inst.Art.Array) {
+            foreach (var art in preset.Art.Array) {
                 mClipboardPreset.Art.Add(art);
             }
-
             // Info
             mClipboardPreset.Info = new Riff.Info();
-            mClipboardPreset.Info.Name = inst.Info.Name;
-            mClipboardPreset.Info.Category = inst.Info.Category;
-            mClipboardPreset.Info.Comments = inst.Info.Comments;
+            mClipboardPreset.Info.Name = preset.Info.Name;
+            mClipboardPreset.Info.Category = preset.Info.Category;
         }
 
         private void PastePreset() {
             if (null == mClipboardPreset) {
                 return;
             }
-
             var fm = new AddPresetDialog(mFile, mClipboardPreset);
             fm.ShowDialog();
-
             DispPresetList();
         }
  
@@ -496,31 +486,8 @@ namespace InstrumentEditor {
                 return;
             }
             var fm = new LayerAssignForm(mFile, preset);
-            fm.StartPosition = FormStartPosition.CenterParent;
             fm.ShowDialog();
             DispPresetList();
-        }
-
-        private void MultiSelectPreset() {
-            var lst = GetSelectedPresets();
-            if (1 == lst.Count) {
-                var fm = new PresetInfoDialog(mFile, lst[0]);
-                fm.StartPosition = FormStartPosition.CenterParent;
-                fm.ShowDialog();
-                DispPresetList();
-                return;
-            }
-            if (1 < lst.Count) {
-                var preset = new Instruments.Preset();
-                var fm = new PresetInfoDialog(mFile, preset);
-                fm.StartPosition = FormStartPosition.CenterParent;
-                fm.ShowDialog();
-                foreach (var p in lst) {
-                    p.Info.Category = preset.Info.Category;
-                }
-                DispPresetList();
-                return;
-            }
         }
 
         private void DispPresetList() {
@@ -536,7 +503,7 @@ namespace InstrumentEditor {
 
                 lstPreset.Items.Add(string.Format(
                     "{0}|{1}|{2}|{3}|{4}|{5}",
-                    (preset.Header.BankFlg & 1) == 1 ? "Drum" : "Note",
+                    preset.Header.IsDrum ? "Drum" : "Note",
                     preset.Header.ProgNum.ToString("000"),
                     preset.Header.BankMSB.ToString("000"),
                     preset.Header.BankLSB.ToString("000"),
@@ -551,6 +518,26 @@ namespace InstrumentEditor {
             lstPreset.SelectedIndex = idx;
         }
 
+        private void MultiSelectPreset() {
+            var lst = GetSelectedPresets();
+            if (1 == lst.Count) {
+                var fm = new PresetInfoDialog(mFile, lst[0]);
+                fm.ShowDialog();
+                DispPresetList();
+                return;
+            }
+            if (1 < lst.Count) {
+                var preset = new Instruments.Preset();
+                var fm = new PresetInfoDialog(mFile, preset);
+                fm.ShowDialog();
+                foreach (var p in lst) {
+                    p.Info.Category = preset.Info.Category;
+                }
+                DispPresetList();
+                return;
+            }
+        }
+
         private PREH GetPresetLocale(int index) {
             if (0 == lstPreset.Items.Count) {
                 return new PREH();
@@ -562,7 +549,7 @@ namespace InstrumentEditor {
             var cols = lstPreset.Items[index].ToString().Split('|');
 
             var locale = new PREH();
-            locale.BankFlg = (byte)("Drum" == cols[0] ? 1 : 0);
+            locale.IsDrum = "Drum" == cols[0];
             locale.ProgNum = byte.Parse(cols[1]);
             locale.BankMSB = byte.Parse(cols[2]);
             locale.BankLSB = byte.Parse(cols[3]);
@@ -583,7 +570,7 @@ namespace InstrumentEditor {
             foreach (int index in indeces) {
                 var cols = lstPreset.Items[index].ToString().Split('|');
                 var locale = new PREH();
-                locale.BankFlg = (byte)("Drum" == cols[0] ? 1 : 0);
+                locale.IsDrum = "Drum" == cols[0];
                 locale.ProgNum = byte.Parse(cols[1]);
                 locale.BankMSB = byte.Parse(cols[2]);
                 locale.BankLSB = byte.Parse(cols[3]);
@@ -617,19 +604,87 @@ namespace InstrumentEditor {
             if (e.Button != MouseButtons.Right) {
                 return;
             }
+            MultiSelectInst();
         }
 
         private void lstInst_DoubleClick(object sender, EventArgs e) {
-
+            EditInst();
         }
 
         private void lstInst_KeyUp(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Space) {
+                MultiSelectInst();
                 return;
             }
             if (e.KeyCode == Keys.Enter && e.Shift) {
+                EditInst();
                 return;
             }
+        }
+
+        private void AddInst() {
+            //var fm = new RegionAssignForm(mFile);
+            //fm.ShowDialog();
+            DispInstList();
+            DispPresetList();
+        }
+
+        private void DeleteInst() {
+            if (0 == lstInst.Items.Count) {
+                return;
+            }
+            var index = lstInst.SelectedIndex;
+            var indices = lstInst.SelectedIndices;
+            foreach (int idx in indices) {
+                mFile.Inst.Remove(GetInstLocale(idx));
+            }
+            DispInstList();
+            DispPresetList();
+            DispWaveList();
+            if (index < lstInst.Items.Count) {
+                lstInst.SelectedIndex = index;
+            } else {
+                lstInst.SelectedIndex = lstInst.Items.Count - 1;
+            }
+        }
+
+        private void CopyInst() {
+            var inst = GetSelectedInst();
+            if (null == inst) {
+                return;
+            }
+
+            mClipboardInst = new Instruments.Inst();
+
+            // Region
+            mClipboardInst.Region.Clear();
+            foreach (var layer in inst.Region.Array) {
+                mClipboardInst.Region.Add(new Region {
+                    Header = layer.Header,
+                    Art = layer.Art
+                });
+            }
+
+            // Articulations
+            mClipboardInst.Art.Clear();
+            foreach (var art in inst.Art.Array) {
+                mClipboardInst.Art.Add(art);
+            }
+
+            // Info
+            mClipboardInst.Info = new Riff.Info();
+            mClipboardInst.Info.Name = inst.Info.Name;
+            mClipboardInst.Info.Category = inst.Info.Category;
+            mClipboardInst.Info.Comments = inst.Info.Comments;
+        }
+
+        private void PasteInst() {
+            if (null == mClipboardInst) {
+                return;
+            }
+            //form//var fm = new AddPresetDialog(mFile, mClipboardInst);
+            //form//fm.ShowDialog();
+            DispInstList();
         }
 
         private void DispInstList() {
@@ -641,16 +696,8 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var ptrset in mFile.Preset.Values) {
                     foreach (var layer in ptrset.Layer.Array) {
-                        foreach (var art in layer.Art.Array) {
-                            if (art.Type != ART_TYPE.INST_INDEX) {
-                                continue;
-                            }
-                            if (iInst == (int)art.Value) {
-                                use = true;
-                                break;
-                            }
-                        }
-                        if(use) {
+                        if (iInst == layer.Header.InstIndex) {
+                            use = true;
                             break;
                         }
                     }
@@ -672,7 +719,83 @@ namespace InstrumentEditor {
             }
             lstInst.SelectedIndex = idx;
         }
-        #endregion
 
+        private void EditInst() {
+            var inst = GetSelectedInst();
+            if (null == inst) {
+                return;
+            }
+            var fm = new RegionAssignForm(mFile, inst);
+            fm.ShowDialog();
+            DispInstList();
+        }
+
+        private void MultiSelectInst() {
+            var lst = GetSelectedInsts();
+            if (1 == lst.Count) {
+                //form//var fm = new PresetInfoDialog(mFile, lst[0]);
+                //form//fm.StartPosition = FormStartPosition.CenterParent;
+                //form//fm.ShowDialog();
+                DispInstList();
+                return;
+            }
+            if (1 < lst.Count) {
+                var inst = new Instruments.Inst();
+                //form//var fm = new PresetInfoDialog(mFile, preset);
+                //form//fm.StartPosition = FormStartPosition.CenterParent;
+                //form//fm.ShowDialog();
+                foreach (var p in lst) {
+                    p.Info.Category = inst.Info.Category;
+                }
+                DispInstList();
+                return;
+            }
+        }
+
+        private int GetInstLocale(int index) {
+            if (0 == lstPreset.Items.Count) {
+                return -1;
+            }
+            if (index < 0) {
+                return -1;
+            }
+            var cols = lstInst.Items[index].ToString().Split('|');
+            return int.Parse(cols[0]);
+        }
+
+        private List<int> GetInstLocales(ListBox.SelectedIndexCollection indeces) {
+            var list = new List<int>();
+            if (0 == lstInst.Items.Count) {
+                return list;
+            }
+            if (indeces.Count < 0) {
+                return list;
+            }
+            foreach (int index in indeces) {
+                var cols = lstInst.Items[index].ToString().Split('|');
+                list.Add(int.Parse(cols[0]));
+            }
+            return list;
+        }
+
+        private Instruments.Inst GetSelectedInst() {
+            var locale = GetInstLocale(lstInst.SelectedIndex);
+            if (mFile.Inst.Count <= locale) {
+                return null;
+            }
+            return mFile.Inst[locale];
+        }
+
+        private List<Instruments.Inst> GetSelectedInsts() {
+            var locales = GetInstLocales(lstInst.SelectedIndices);
+            var insts = new List<Instruments.Inst>();
+            foreach (var locale in locales) {
+                if (locale < mFile.Preset.Count) {
+                    insts.Add(mFile.Inst[locale]);
+                }
+            }
+            return insts;
+        }
+        #endregion
     }
 }

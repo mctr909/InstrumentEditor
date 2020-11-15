@@ -92,7 +92,6 @@
             // menuStrip1
             // 
             this.menuStrip1.Font = new System.Drawing.Font("Meiryo UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ファイルFToolStripMenuItem,
@@ -114,47 +113,47 @@
             this.上書き保存ToolStripMenuItem,
             this.名前を付けて保存ToolStripMenuItem});
             this.ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
-            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(136, 34);
+            this.ファイルFToolStripMenuItem.Size = new System.Drawing.Size(128, 34);
             this.ファイルFToolStripMenuItem.Text = "ファイル(F)";
             // 
             // 新規作成NToolStripMenuItem
             // 
             this.新規作成NToolStripMenuItem.Name = "新規作成NToolStripMenuItem";
             this.新規作成NToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.新規作成NToolStripMenuItem.Size = new System.Drawing.Size(384, 44);
+            this.新規作成NToolStripMenuItem.Size = new System.Drawing.Size(349, 38);
             this.新規作成NToolStripMenuItem.Text = "新規作成(N)";
             this.新規作成NToolStripMenuItem.Click += new System.EventHandler(this.新規作成NToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(381, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(346, 6);
             // 
             // 開くOToolStripMenuItem
             // 
             this.開くOToolStripMenuItem.Name = "開くOToolStripMenuItem";
             this.開くOToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.開くOToolStripMenuItem.Size = new System.Drawing.Size(384, 44);
+            this.開くOToolStripMenuItem.Size = new System.Drawing.Size(349, 38);
             this.開くOToolStripMenuItem.Text = "開く(O)";
             this.開くOToolStripMenuItem.Click += new System.EventHandler(this.開くOToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(381, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(346, 6);
             // 
             // 上書き保存ToolStripMenuItem
             // 
             this.上書き保存ToolStripMenuItem.Name = "上書き保存ToolStripMenuItem";
             this.上書き保存ToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.上書き保存ToolStripMenuItem.Size = new System.Drawing.Size(384, 44);
+            this.上書き保存ToolStripMenuItem.Size = new System.Drawing.Size(349, 38);
             this.上書き保存ToolStripMenuItem.Text = "上書き保存(S)";
             this.上書き保存ToolStripMenuItem.Click += new System.EventHandler(this.上書き保存ToolStripMenuItem_Click);
             // 
             // 名前を付けて保存ToolStripMenuItem
             // 
             this.名前を付けて保存ToolStripMenuItem.Name = "名前を付けて保存ToolStripMenuItem";
-            this.名前を付けて保存ToolStripMenuItem.Size = new System.Drawing.Size(384, 44);
+            this.名前を付けて保存ToolStripMenuItem.Size = new System.Drawing.Size(349, 38);
             this.名前を付けて保存ToolStripMenuItem.Text = "名前を付けて保存(A)";
             this.名前を付けて保存ToolStripMenuItem.Click += new System.EventHandler(this.名前を付けて保存ToolStripMenuItem_Click);
             // 
@@ -166,14 +165,14 @@
             this.コピーCToolStripMenuItem,
             this.貼り付けPToolStripMenuItem});
             this.編集EToolStripMenuItem.Name = "編集EToolStripMenuItem";
-            this.編集EToolStripMenuItem.Size = new System.Drawing.Size(118, 34);
+            this.編集EToolStripMenuItem.Size = new System.Drawing.Size(110, 34);
             this.編集EToolStripMenuItem.Text = "編集(E)";
             // 
             // 追加AToolStripMenuItem
             // 
             this.追加AToolStripMenuItem.Name = "追加AToolStripMenuItem";
             this.追加AToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Space)));
-            this.追加AToolStripMenuItem.Size = new System.Drawing.Size(374, 44);
+            this.追加AToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
             this.追加AToolStripMenuItem.Text = "追加(A)";
             this.追加AToolStripMenuItem.Click += new System.EventHandler(this.追加AToolStripMenuItem_Click);
             // 
@@ -181,7 +180,7 @@
             // 
             this.削除DToolStripMenuItem.Name = "削除DToolStripMenuItem";
             this.削除DToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.削除DToolStripMenuItem.Size = new System.Drawing.Size(374, 44);
+            this.削除DToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
             this.削除DToolStripMenuItem.Text = "削除(D)";
             this.削除DToolStripMenuItem.Click += new System.EventHandler(this.削除DToolStripMenuItem_Click);
             // 
@@ -189,7 +188,7 @@
             // 
             this.コピーCToolStripMenuItem.Name = "コピーCToolStripMenuItem";
             this.コピーCToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.コピーCToolStripMenuItem.Size = new System.Drawing.Size(374, 44);
+            this.コピーCToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
             this.コピーCToolStripMenuItem.Text = "コピー(C)";
             this.コピーCToolStripMenuItem.Click += new System.EventHandler(this.コピーCToolStripMenuItem_Click);
             // 
@@ -197,7 +196,7 @@
             // 
             this.貼り付けPToolStripMenuItem.Name = "貼り付けPToolStripMenuItem";
             this.貼り付けPToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.貼り付けPToolStripMenuItem.Size = new System.Drawing.Size(374, 44);
+            this.貼り付けPToolStripMenuItem.Size = new System.Drawing.Size(339, 38);
             this.貼り付けPToolStripMenuItem.Text = "貼り付け(P)";
             this.貼り付けPToolStripMenuItem.Click += new System.EventHandler(this.貼り付けPToolStripMenuItem_Click);
             // 
@@ -249,7 +248,7 @@
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
-            this.toolStrip2.Size = new System.Drawing.Size(645, 41);
+            this.toolStrip2.Size = new System.Drawing.Size(634, 38);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -308,7 +307,7 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 41);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripLabel2
             // 
@@ -322,7 +321,7 @@
             this.txtSearchPreset.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSearchPreset.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtSearchPreset.Name = "txtSearchPreset";
-            this.txtSearchPreset.Size = new System.Drawing.Size(401, 41);
+            this.txtSearchPreset.Size = new System.Drawing.Size(401, 38);
             this.txtSearchPreset.Leave += new System.EventHandler(this.txtSearchPreset_Leave);
             this.txtSearchPreset.TextChanged += new System.EventHandler(this.txtSearchPreset_TextChanged);
             // 
@@ -367,7 +366,7 @@
             this.toolStrip3.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
-            this.toolStrip3.Size = new System.Drawing.Size(622, 41);
+            this.toolStrip3.Size = new System.Drawing.Size(611, 38);
             this.toolStrip3.TabIndex = 0;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -410,7 +409,7 @@
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 41);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripLabel1
             // 
@@ -424,7 +423,7 @@
             this.txtSearchWave.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSearchWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtSearchWave.Name = "txtSearchWave";
-            this.txtSearchWave.Size = new System.Drawing.Size(401, 41);
+            this.txtSearchWave.Size = new System.Drawing.Size(401, 38);
             this.txtSearchWave.Leave += new System.EventHandler(this.txtSearchWave_Leave);
             this.txtSearchWave.TextChanged += new System.EventHandler(this.txtSearchWave_TextChanged);
             // 
@@ -466,7 +465,7 @@
             this.txtSearchInst});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(751, 41);
+            this.toolStrip1.Size = new System.Drawing.Size(751, 38);
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -479,7 +478,7 @@
             this.tsbAddInst.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddInst.Name = "tsbAddInst";
             this.tsbAddInst.Size = new System.Drawing.Size(23, 35);
-            this.tsbAddInst.Text = "toolStripButton1";
+            this.tsbAddInst.Text = "音色追加";
             this.tsbAddInst.Click += new System.EventHandler(this.tsbAddInst_Click);
             // 
             // tsbDeleteInst
@@ -491,7 +490,7 @@
             this.tsbDeleteInst.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteInst.Name = "tsbDeleteInst";
             this.tsbDeleteInst.Size = new System.Drawing.Size(23, 35);
-            this.tsbDeleteInst.Text = "toolStripButton2";
+            this.tsbDeleteInst.Text = "音色削除";
             this.tsbDeleteInst.Click += new System.EventHandler(this.tsbDeleteInst_Click);
             // 
             // tsbCopyInst
@@ -503,7 +502,7 @@
             this.tsbCopyInst.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCopyInst.Name = "tsbCopyInst";
             this.tsbCopyInst.Size = new System.Drawing.Size(23, 35);
-            this.tsbCopyInst.Text = "toolStripButton3";
+            this.tsbCopyInst.Text = "音色コピー";
             this.tsbCopyInst.Click += new System.EventHandler(this.tsbCopyInst_Click);
             // 
             // tsbPasteInst
@@ -515,13 +514,13 @@
             this.tsbPasteInst.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbPasteInst.Name = "tsbPasteInst";
             this.tsbPasteInst.Size = new System.Drawing.Size(23, 35);
-            this.tsbPasteInst.Text = "toolStripButton4";
+            this.tsbPasteInst.Text = "音色貼り付け";
             this.tsbPasteInst.Click += new System.EventHandler(this.tsbPasteInst_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 41);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 38);
             // 
             // toolStripLabel3
             // 
@@ -535,7 +534,7 @@
             this.txtSearchInst.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSearchInst.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F);
             this.txtSearchInst.Name = "txtSearchInst";
-            this.txtSearchInst.Size = new System.Drawing.Size(200, 41);
+            this.txtSearchInst.Size = new System.Drawing.Size(200, 38);
             this.txtSearchInst.Leave += new System.EventHandler(this.txtSearchInst_Leave);
             this.txtSearchInst.TextChanged += new System.EventHandler(this.txtSearchInst_TextChanged);
             // 

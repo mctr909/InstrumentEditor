@@ -10,6 +10,7 @@ namespace InstrumentEditor {
 
         public InstSelectDialog(File file, Layer layer) {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mLayer = layer;
         }
@@ -25,8 +26,8 @@ namespace InstrumentEditor {
 
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstInst.SelectedIndex) {
-                var cols = lstInst.SelectedItem.ToString().Split('\t');
-                mLayer.Art.Update(ART_TYPE.INST_INDEX, uint.Parse(cols[0]));
+                var cols = lstInst.SelectedItem.ToString().Split('|');
+                mLayer.Header.InstIndex = int.Parse(cols[0]);
             }
             Close();
         }
@@ -75,7 +76,7 @@ namespace InstrumentEditor {
                 foreach (var ins in mFile.Inst.Array) {
                     foreach (var rgn in ins.Region.Array) {
                         foreach(var art in rgn.Art.Array) {
-                            if (art.Type != ART_TYPE.INST_INDEX) {
+                            if (art.Type != ART_TYPE.WAVE_INDEX) {
                                 continue;
                             }
                             if (count == (int)art.Value) {
@@ -87,7 +88,7 @@ namespace InstrumentEditor {
                 }
 
                 lstInst.Items.Add(string.Format(
-                    "{0}\t{1}\t{2}",
+                    "{0}|{1}|{2}",
                     iInst.ToString("0000"),
                     use ? "*" : " ",
                     name
@@ -96,7 +97,7 @@ namespace InstrumentEditor {
             }
 
             foreach (var art in mLayer.Art.Array) {
-                if (art.Type != ART_TYPE.INST_INDEX) {
+                if (art.Type != ART_TYPE.WAVE_INDEX) {
                     continue;
                 }
                 if (art.Value < lstInst.Items.Count) {

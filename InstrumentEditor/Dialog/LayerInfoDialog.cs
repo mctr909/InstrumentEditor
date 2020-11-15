@@ -15,6 +15,7 @@ namespace InstrumentEditor {
 
         public LayerInfoDialog(File file, Layer layer) {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterParent;
 
             mFile = file;
             mLayer = layer;
@@ -40,18 +41,9 @@ namespace InstrumentEditor {
         }
 
         private void btnSelect_Click(object sender, EventArgs e) {
-            var instIndex = 0;
-            foreach(var art in mLayer.Art.Array) {
-                if (art.Type == ART_TYPE.INST_INDEX) {
-                    instIndex = (int)art.Value;
-                    break;
-                }
-            }
-
             var fm = new InstSelectDialog(mFile, mLayer);
-            fm.StartPosition = FormStartPosition.CenterParent;
             fm.ShowDialog();
-
+            var instIndex = mLayer.Header.InstIndex;
             if (instIndex < mFile.Inst.Count) {
                 var inst = mFile.Inst[instIndex];
                 txtInst.Text = string.Format(
@@ -174,14 +166,7 @@ namespace InstrumentEditor {
                 numVelocityLow.Value = mLayer.Header.VelLo;
                 numVelocityHigh.Value = mLayer.Header.VelHi;
 
-                var instIndex = int.MaxValue;
-                foreach (var art in mLayer.Art.Array) {
-                    if (art.Type == ART_TYPE.INST_INDEX) {
-                        instIndex = (int)art.Value;
-                        break;
-                    }
-                }
-
+                var instIndex = mLayer.Header.InstIndex;
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
                     var inst = mFile.Inst[instIndex];

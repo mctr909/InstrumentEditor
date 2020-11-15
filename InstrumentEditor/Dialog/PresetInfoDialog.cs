@@ -10,6 +10,7 @@ namespace InstrumentEditor {
 
         public PresetInfoDialog(File file, Preset preset) {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mPreset = preset;
             DispInfo();

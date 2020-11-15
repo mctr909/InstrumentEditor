@@ -286,12 +286,20 @@ namespace InstrumentEditor {
             setProgramList();
             setBankMsbList();
             setBankLsbList();
+            if (null != mPreset && null != mPreset.Info) {
+                cmbCategory.SelectedText = mPreset.Info.Category;
+            }
+            setCategoryList();
         }
 
         private void rbDrum_CheckedChanged(object sender, EventArgs e) {
             setProgramList();
             setBankMsbList();
             setBankLsbList();
+        }
+
+        private void cmbCategory_Leave(object sender, EventArgs e) {
+            setCategoryList();
         }
 
         private void lstPrgNo_SelectedIndexChanged(object sender, EventArgs e) {
@@ -308,28 +316,23 @@ namespace InstrumentEditor {
                 ProgNum = (byte)lstPrgNo.SelectedIndex,
                 BankMSB = (byte)lstBankMSB.SelectedIndex,
                 BankLSB = (byte)lstBankLSB.SelectedIndex,
-                BankFlg = (byte)(rbDrum.Checked ? 1 : 0)
+                IsDrum = rbDrum.Checked
             };
-
             if (mFile.Preset.ContainsKey(id)) {
                 MessageBox.Show("既に同じ識別子の音色が存在します。");
                 return;
             }
-
             var preset = new Preset();
             preset.Header = id;
             preset.Info.Name = txtInstName.Text;
-            preset.Info.CreationDate = DateTime.Now.ToString("YYYY/MM/DD HH:mm");
-
+            preset.Info.Category = cmbCategory.Text;
             if (null != mPreset) {
                 mPreset.Header = id;
                 mPreset.Info.Name = preset.Info.Name;
-                mPreset.Info.CreationDate = preset.Info.CreationDate;
+                mPreset.Info.Category = preset.Info.Category;
                 preset = mPreset;
             }
-
             mFile.Preset.Add(id, preset);
-
             Close();
         }
 
@@ -337,7 +340,7 @@ namespace InstrumentEditor {
             lstPrgNo.Items.Clear();
 
             if (null != mPreset) {
-                rbDrum.Checked = (mPreset.Header.BankFlg & 1) == 1;
+                rbDrum.Checked = mPreset.Header.IsDrum;
                 rbDrum.Enabled = false;
                 rbNote.Enabled = false;
                 if (null != mPreset.Info) {
@@ -349,14 +352,14 @@ namespace InstrumentEditor {
                 var strUse = " ";
                 foreach (var preset in mFile.Preset.Keys) {
                     if (rbDrum.Checked) {
-                        if (1 == preset.BankFlg) {
+                        if (preset.IsDrum) {
                             if (i == preset.ProgNum) {
                                 strUse = "*";
                                 break;
                             }
                         }
                     } else {
-                        if (0 == preset.BankFlg) {
+                        if (!preset.IsDrum) {
                             if (i == preset.ProgNum) {
                                 strUse = "*";
                                 break;
@@ -388,7 +391,7 @@ namespace InstrumentEditor {
                 var strUse = " ";
                 foreach (var preset in mFile.Preset.Keys) {
                     if (rbDrum.Checked) {
-                        if (1 == preset.BankFlg) {
+                        if (preset.IsDrum) {
                             if (prgIndex == preset.ProgNum &&
                                 i == preset.BankMSB
                             ) {
@@ -397,7 +400,7 @@ namespace InstrumentEditor {
                             }
                         }
                     } else {
-                        if (0 == preset.BankFlg) {
+                        if (!preset.IsDrum) {
                             if (prgIndex == preset.ProgNum &&
                                 i == preset.BankMSB
                             ) {
@@ -431,7 +434,7 @@ namespace InstrumentEditor {
                 var strUse = " ";
                 foreach (var preset in mFile.Preset.Keys) {
                     if (rbDrum.Checked) {
-                        if (1 == preset.BankFlg) {
+                        if (preset.IsDrum) {
                             if (prgIndex == preset.ProgNum &&
                                 msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
@@ -441,7 +444,7 @@ namespace InstrumentEditor {
                             }
                         }
                     } else {
-                        if (0 == preset.BankFlg) {
+                        if (!preset.IsDrum) {
                             if (prgIndex == preset.ProgNum &&
                                 msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
@@ -458,6 +461,22 @@ namespace InstrumentEditor {
             if (null != mPreset) {
                 lstBankLSB.SelectedIndex = mPreset.Header.BankLSB;
             }
+        }
+
+        private void setCategoryList() {
+            var tmpCategory = cmbCategory.SelectedText;
+            cmbCategory.Items.Clear();
+            if (!string.IsNullOrWhiteSpace(tmpCategory)) {
+                cmbCategory.Items.Add(tmpCategory);
+            }
+            foreach (var preset in mFile.Preset.Values) {
+                if (null != preset.Info && "" != preset.Info.Category) {
+                    if (!cmbCategory.Items.Contains(preset.Info.Category.Trim())) {
+                        cmbCategory.Items.Add(preset.Info.Category.Trim());
+                    }
+                }
+            }
+            cmbCategory.SelectedText = tmpCategory;
         }
     }
 }

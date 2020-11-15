@@ -621,7 +621,7 @@ namespace SF2 {
 
             foreach (var sf2Pres in mPdta.PresetList) {
                 var preset = new Instruments.Preset();
-                preset.Header.BankFlg = sf2Pres.Key.bankFlg;
+                preset.Header.IsDrum = 0 < sf2Pres.Key.bankFlg;
                 preset.Header.BankMSB = sf2Pres.Key.bankMSB;
                 preset.Header.BankLSB = sf2Pres.Key.bankLSB;
                 preset.Header.ProgNum = sf2Pres.Key.progNum;
@@ -652,8 +652,6 @@ namespace SF2 {
                         preset.Art.Add(globalArt);
                         break;
                     case E_OPER.INSTRUMENT:
-                        globalArt.Type = ART_TYPE.INST_INDEX;
-                        preset.Art.Add(globalArt);
                         break;
                     }
                 }
@@ -687,12 +685,10 @@ namespace SF2 {
                             layer.Art.Add(layerArt);
                             break;
                         case E_OPER.INSTRUMENT:
-                            layerArt.Type = ART_TYPE.INST_INDEX;
-                            layer.Art.Add(layerArt);
+                            layer.Header.InstIndex = (int)art.Value;
                             break;
                         }
                     }
-
                     preset.Layer.Add(layer);
                 }
                 instFile.Preset.Add(preset.Header, preset);
