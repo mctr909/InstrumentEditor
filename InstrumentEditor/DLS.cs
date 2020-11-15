@@ -1118,10 +1118,10 @@ namespace DLS {
         public sealed class Sort : IComparer<CK_RGNH> {
             // IComparerの実装
             public int Compare(CK_RGNH x, CK_RGNH y) {
-                var keyH = x.Key.Hi <= y.Key.Lo;
-                var keyL = y.Key.Hi <= x.Key.Lo;
-                var velH = x.Vel.Hi <= y.Vel.Lo;
-                var velL = y.Vel.Hi <= x.Vel.Lo;
+                var keyH = x.Key.Hi < y.Key.Lo;
+                var keyL = y.Key.Hi < x.Key.Lo;
+                var velH = x.Vel.Hi < y.Vel.Lo;
+                var velL = y.Vel.Hi < x.Vel.Lo;
                 var key = keyH || keyL;
                 var vel = velH || velL;
                 if (key || vel) {

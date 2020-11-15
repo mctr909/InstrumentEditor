@@ -1018,7 +1018,30 @@ namespace Instruments {
     }
 
     public class LRegion : Chunk {
-        private List<Region> List = new List<Region>();
+        public sealed class Sort : IComparer<RGNH> {
+            // IComparer‚ÌŽÀ‘•
+            public int Compare(RGNH x, RGNH y) {
+                var keyH = x.KeyHi < y.KeyLo;
+                var keyL = y.KeyHi < x.KeyLo;
+                var velH = x.VelHi < y.VelLo;
+                var velL = y.VelHi < x.VelLo;
+                var key = keyH || keyL;
+                var vel = velH || velL;
+                if (key || vel) {
+                    if (keyH) {
+                        return 1;
+                    }
+                    if (velH) {
+                        return 1;
+                    }
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+
+        private SortedList<RGNH, Region> List = new SortedList<RGNH, Region>(new Sort());
 
         public LRegion() { }
 
@@ -1032,21 +1055,25 @@ namespace Instruments {
             get { return List.Count; }
         }
 
-        public Region[] Array {
-            get { return List.ToArray(); }
+        public IList<Region> Array {
+            get { return List.Values; }
         }
 
         public Region this[int index] {
-            get { return List[index]; }
+            get { return List.Values[index]; }
         }
 
-        public void Add(Region region) {
-            List.Add(region);
+        public bool Add(Region region) {
+            if (List.ContainsKey(region.Header)) {
+                return false;
+            }
+            List.Add(region.Header, region);
+            return true;
         }
 
         public List<Region> Find(RGNH header) {
             var ret = new List<Region>();
-            foreach (var rng in List) {
+            foreach (var rng in List.Values) {
                 if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
                     header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                     ret.Add(rng);
@@ -1056,7 +1083,7 @@ namespace Instruments {
         }
 
         public Region Find(int noteNo, int velocity) {
-            foreach (var rng in List) {
+            foreach (var rng in List.Values) {
                 if (noteNo <= rng.Header.KeyHi && rng.Header.KeyLo <= noteNo &&
                     velocity <= rng.Header.VelHi && rng.Header.VelLo <= velocity) {
                     return rng;
@@ -1066,7 +1093,7 @@ namespace Instruments {
         }
 
         public Region FindFirst(RGNH header) {
-            foreach (var rng in List) {
+            foreach (var rng in List.Values) {
                 if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
                     header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                     return rng;
@@ -1076,7 +1103,7 @@ namespace Instruments {
         }
 
         public bool ContainsKey(RGNH header) {
-            foreach (var rng in List) {
+            foreach (var rng in List.Values) {
                 if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
                     header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                     return true;
@@ -1086,7 +1113,7 @@ namespace Instruments {
         }
 
         public bool ContainsKey(int noteNo, int velocity) {
-            foreach (var rng in List) {
+            foreach (var rng in List.Values) {
                 if (noteNo <= rng.Header.KeyHi && rng.Header.KeyLo <= noteNo &&
                     velocity <= rng.Header.VelHi && rng.Header.VelLo <= velocity) {
                     return true;
@@ -1097,7 +1124,7 @@ namespace Instruments {
 
         public void Remove(RGNH header) {
             var tmpRegion = new List<Region>();
-            foreach (var rng in List) {
+            foreach (var rng in List.Values) {
                 if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
                     header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
                 } else {
@@ -1105,13 +1132,16 @@ namespace Instruments {
                 }
             }
             List.Clear();
-            List.AddRange(tmpRegion);
+            foreach (var rgn in tmpRegion) {
+                List.Add(rgn.Header, rgn);
+            }
         }
 
         protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
             switch (listType) {
             case "rgn ":
-                List.Add(new Region(ptr, ptrTerm));
+                var rgn = new Region(ptr, ptrTerm);
+                List.Add(rgn.Header, rgn);
                 break;
             default:
                 break;
@@ -1128,7 +1158,7 @@ namespace Instruments {
             bwLrgn.Write("LIST".ToCharArray());
             bwLrgn.Write(0xFFFFFFFF);
             bwLrgn.Write("lrgn".ToCharArray());
-            foreach (var region in List) {
+            foreach (var region in List.Values) {
                 region.Write(msLrgn);
             }
             bwLrgn.Seek(4, SeekOrigin.Begin);
