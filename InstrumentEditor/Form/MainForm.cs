@@ -34,7 +34,7 @@ namespace InstrumentEditor {
 
         private void 開くOToolStripMenuItem_Click(object sender, EventArgs e) {
             openFileDialog1.FileName = "";
-            openFileDialog1.Filter = "SF2ファイル(*.sf2)|*.sf2|DLSファイル(*.dls)|*.dls|INSファイル(*.ins)|*.ins";
+            openFileDialog1.Filter = "SF2ファイル(*.sf2)|*.sf2|DLSファイル(*.dls)|*.dls";
             openFileDialog1.CheckFileExists = true;
             openFileDialog1.ShowDialog();
             var filePath = openFileDialog1.FileName;
@@ -48,9 +48,6 @@ namespace InstrumentEditor {
                 break;
             case ".dls":
                 mFile = new DLS.File(filePath).ToIns();
-                break;
-            case ".ins":
-                mFile = new Instruments.File(filePath);
                 break;
             }
 
@@ -78,7 +75,7 @@ namespace InstrumentEditor {
 
         private void 名前を付けて保存ToolStripMenuItem_Click(object sender, EventArgs e) {
             saveFileDialog1.FileName = "";
-            saveFileDialog1.Filter = "INSファイル(*.ins)|*.ins|DLSファイル(*.ins)|*.dls";
+            saveFileDialog1.Filter = "DLSファイル(*.ins)|*.dls";
             saveFileDialog1.CheckPathExists = true;
             saveFileDialog1.ShowDialog();
             var filePath = saveFileDialog1.FileName;
@@ -87,9 +84,6 @@ namespace InstrumentEditor {
             }
 
             switch (Path.GetExtension(filePath)) {
-            case ".ins":
-                mFile.Save(filePath);
-                break;
             case ".dls":
                 DLS.File.SaveFromIns(filePath, mFile);
                 break;

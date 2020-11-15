@@ -46,9 +46,12 @@ namespace InstrumentEditor {
                 mInst.Info.Name = txtInstName.Text;
                 mInst.Info.Category = cmbCategory.Text;
                 mFile.Inst.Add(mInst);
+                mInst.Art = new Lart();
+                envelope1.SetList(mInst.Art);
             } else {
                 mInst.Info.Name = txtInstName.Text;
                 mInst.Info.Category = cmbCategory.Text;
+                envelope1.SetList(mInst.Art);
             }
             Close();
         }
