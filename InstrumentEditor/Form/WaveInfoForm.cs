@@ -36,6 +36,10 @@ namespace InstrumentEditor {
         private int mDetectNote;
         private int mDetectTune;
 
+        private readonly string[] NoteName = new string[] {
+            "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
+        };
+
         public WaveInfoForm(Pack file, int index) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
@@ -107,7 +111,7 @@ namespace InstrumentEditor {
                 if (note < 0) {
                     note += -(note / 12 - 1) * 12;
                 }
-                lblPitch.Text = string.Format("{0}{1}", Wave.NoteName[note], oct - 2);
+                lblPitch.Text = string.Format("{0}{1}", NoteName[note], oct - 2);
                 lblPitchCent.Text = string.Format("{0}cent", mDetectTune);
             }
 
@@ -211,7 +215,7 @@ namespace InstrumentEditor {
         private void numUnityNote_ValueChanged(object sender, EventArgs e) {
             var oct = (int)numUnityNote.Value / 12 - 2;
             var note = (int)numUnityNote.Value % 12;
-            lblUnityNote.Text = string.Format("{0}{1}", Wave.NoteName[note], oct);
+            lblUnityNote.Text = string.Format("{0}{1}", NoteName[note], oct);
             mFile.Wave[mWaveIndex].Header.UnityNote = (byte)numUnityNote.Value;
         }
 
@@ -303,12 +307,12 @@ namespace InstrumentEditor {
 
         private void SetPosition() {
             //
-            picSpectrum.Height = 144;
+            picSpectrum.Height = 192;
             //
             hsbTime.Height = 19;
 
             //
-            picWave.Height = 168;
+            picWave.Height = 128;
             numWaveScale.Top = 0;
             picSpectrum.Top = numWaveScale.Top + numWaveScale.Height + 4;
             picWave.Top = picSpectrum.Top + picSpectrum.Height + 4;
@@ -360,7 +364,7 @@ namespace InstrumentEditor {
             mSpecTimeDiv = 1.0f / (float)delta / packSize;
             mSpecData = new byte[(int)(mWaveData.Length * mSpecTimeDiv)][];
 
-            var sp = new Spectrum(wave.Header.SampleRate, 27.5, 18, 144);
+            var sp = new Spectrum(wave.Header.SampleRate, 27.5, 24, 192);
             var time = 0.0;
             for (var s = 0; s < mSpecData.Length; ++s) {
                 for (var i = 0; i < packSize && time < mWaveData.Length; ++i) {

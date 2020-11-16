@@ -9,7 +9,8 @@ namespace InstrumentEditor {
         private Pack mFile;
         private Preset mPreset;
         private bool mOnRange;
-        private const int KEY_WIDTH = 10;
+        private const int KEY_WIDTH = 8;
+        private const int VEL_HEIGHT = 4;
 
         private readonly string[] NOTE_NAME = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
@@ -19,6 +20,7 @@ namespace InstrumentEditor {
             mFile = file;
             mPreset = preset;
             InitializeComponent();
+            DrawBackground();
             SetTabSize();
             DispLayerInfo();
             timer1.Interval = 30;
@@ -26,6 +28,7 @@ namespace InstrumentEditor {
             timer1.Start();
             tscLayer.Visible = false;
             txtLayer.Visible = false;
+            StartPosition = FormStartPosition.CenterParent;
         }
 
         private void InstInfoForm_SizeChanged(object sender, EventArgs e) {
@@ -121,8 +124,8 @@ namespace InstrumentEditor {
             var width = Width - offsetX;
             var height = Height - offsetY;
 
-            picLayer.Width = picLayer.BackgroundImage.Width;
-            picLayer.Height = picLayer.BackgroundImage.Height;
+            picLayer.Width = picLayer.Width;
+            picLayer.Height = picLayer.Height;
 
             pnlLayer.Left = 0;
             pnlLayer.Top = toolStrip1.Height + 4;
@@ -194,16 +197,16 @@ namespace InstrumentEditor {
             g.FillRectangle(
                 greenFill,
                 keyLo * KEY_WIDTH,
-                bmp.Height - (velHi + 1) * 4 - 1,
+                bmp.Height - (velHi + 1) * VEL_HEIGHT - 1,
                 (keyHi - keyLo + 1) * KEY_WIDTH,
-                (velHi - velLo + 1) * 4
+                (velHi - velLo + 1) * VEL_HEIGHT
             );
             g.DrawRectangle(
                 blueLine,
                 keyLo * KEY_WIDTH,
-                bmp.Height - (velHi + 1) * 4,
+                bmp.Height - (velHi + 1) * VEL_HEIGHT,
                 (keyHi - keyLo + 1) * KEY_WIDTH,
-                (velHi - velLo + 1) * 4
+                (velHi - velLo + 1) * VEL_HEIGHT
             );
 
             if (null != picLayer.Image) {
@@ -280,7 +283,7 @@ namespace InstrumentEditor {
 
             pos.Y = picLayer.Height - pos.Y - 1;
             pos.X = pos.X / KEY_WIDTH;
-            pos.Y = (int)(pos.Y / 4.0);
+            pos.Y = pos.Y / VEL_HEIGHT;
 
             return pos;
         }
@@ -313,6 +316,38 @@ namespace InstrumentEditor {
                 InstIndex = int.Parse(cols[2])
             };
             return region;
+        }
+
+        private void DrawBackground() {
+            var bmp = new Bitmap(KEY_WIDTH * 128, VEL_HEIGHT * 128);
+            var g = Graphics.FromImage(bmp);
+            for (int k = 0; k < 128; k++) {
+                switch (k % 12) {
+                case 0:
+                    g.DrawLine(Pens.Black, k * KEY_WIDTH, 0, k * KEY_WIDTH, VEL_HEIGHT * 128);
+                    break;
+                case 5:
+                    g.DrawLine(Pens.LightSlateGray, k * KEY_WIDTH, 0, k * KEY_WIDTH, VEL_HEIGHT * 128);
+                    break;
+                case 2:
+                case 4:
+                case 7:
+                case 9:
+                case 11:
+                    break;
+                default:
+                    g.FillRectangle(Brushes.Gray, k * KEY_WIDTH, 0, KEY_WIDTH, VEL_HEIGHT * 128);
+                    break;
+                }
+            }
+            for (int v = 0; v < 128; v += 16) {
+                g.DrawLine(Pens.Black, 0, v * VEL_HEIGHT, KEY_WIDTH * 128, v * VEL_HEIGHT);
+            }
+            picLayer.BackgroundImage = bmp;
+            picLayer.Width = bmp.Width;
+            picLayer.Height = bmp.Height;
+            Width = bmp.Width + 24;
+            Height = bmp.Height + toolStrip1.Height + 48;
         }
     }
 }

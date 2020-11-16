@@ -67,7 +67,6 @@
             // 
             // picRegion
             // 
-            this.picRegion.BackgroundImage = global::InstrumentEditor.Properties.Resources.region;
             this.picRegion.InitialImage = null;
             this.picRegion.Location = new System.Drawing.Point(0, 0);
             this.picRegion.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
@@ -94,7 +93,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(9, 9);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(381, 38);
+            this.toolStrip1.Size = new System.Drawing.Size(319, 31);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -105,7 +104,7 @@
             this.tsbAddRange.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbAddRange.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddRange.Name = "tsbAddRange";
-            this.tsbAddRange.Size = new System.Drawing.Size(23, 35);
+            this.tsbAddRange.Size = new System.Drawing.Size(23, 28);
             this.tsbAddRange.Text = "追加";
             this.tsbAddRange.Click += new System.EventHandler(this.tsbAddRange_Click);
             // 
@@ -116,14 +115,14 @@
             this.tsbDeleteRange.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbDeleteRange.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteRange.Name = "tsbDeleteRange";
-            this.tsbDeleteRange.Size = new System.Drawing.Size(23, 35);
+            this.tsbDeleteRange.Size = new System.Drawing.Size(23, 28);
             this.tsbDeleteRange.Text = "削除";
             this.tsbDeleteRange.Click += new System.EventHandler(this.tsbDeleteRange_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 38);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
             // 
             // tsbRangeList
             // 
@@ -134,7 +133,7 @@
             this.tsbRangeList.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbRangeList.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRangeList.Name = "tsbRangeList";
-            this.tsbRangeList.Size = new System.Drawing.Size(23, 35);
+            this.tsbRangeList.Size = new System.Drawing.Size(23, 28);
             this.tsbRangeList.Text = "リスト表示";
             this.tsbRangeList.Click += new System.EventHandler(this.tsbRangeList_Click);
             // 
@@ -145,27 +144,27 @@
             this.tsbRangeKey.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbRangeKey.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRangeKey.Name = "tsbRangeKey";
-            this.tsbRangeKey.Size = new System.Drawing.Size(23, 35);
+            this.tsbRangeKey.Size = new System.Drawing.Size(23, 28);
             this.tsbRangeKey.Text = "グラフィック表示";
             this.tsbRangeKey.Click += new System.EventHandler(this.tsbRangeKey_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 38);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 31);
             // 
             // txtRegion
             // 
             this.txtRegion.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtRegion.Name = "txtRegion";
             this.txtRegion.ReadOnly = true;
-            this.txtRegion.Size = new System.Drawing.Size(200, 38);
+            this.txtRegion.Size = new System.Drawing.Size(200, 31);
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // InstKeyAssignForm
+            // RegionAssignForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -174,7 +173,7 @@
             this.Controls.Add(this.lstRegion);
             this.Controls.Add(this.toolStrip1);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.Name = "InstKeyAssignForm";
+            this.Name = "RegionAssignForm";
             this.Text = "InstInfoForm";
             this.SizeChanged += new System.EventHandler(this.InstInfoForm_SizeChanged);
             this.pnlRegion.ResumeLayout(false);

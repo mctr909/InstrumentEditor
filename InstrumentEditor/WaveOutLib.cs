@@ -93,7 +93,7 @@ unsafe public class WaveOutLib : IDisposable {
     public int Channels { get; }
     public int BufferSize { get; }
 
-    public WaveOutLib(int sampleRate = 44100, int channels = 2, int bufferSize = 4096, int bufferCount = 4) {
+    public WaveOutLib(int sampleRate = 44100, int channels = 2, int bufferSize = 1024, int bufferCount = 16) {
         SampleRate = sampleRate;
         Channels = channels;
         BufferSize = bufferSize;

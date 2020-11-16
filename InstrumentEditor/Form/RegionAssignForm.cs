@@ -9,7 +9,8 @@ namespace InstrumentEditor {
         private Pack mFile;
         private Inst mInst;
         private bool mOnRange;
-        private const int KEY_WIDTH = 10;
+        private const int KEY_WIDTH = 8;
+        private const int VEL_HEIGHT = 4;
 
         private readonly string[] NOTE_NAME = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
@@ -19,11 +20,13 @@ namespace InstrumentEditor {
             mFile = file;
             mInst = inst;
             InitializeComponent();
+            DrawBackground();
             SetTabSize();
             DispRegionInfo();
             timer1.Interval = 30;
             timer1.Enabled = true;
             timer1.Start();
+            StartPosition = FormStartPosition.CenterParent;
         }
 
         private void InstInfoForm_SizeChanged(object sender, EventArgs e) {
@@ -67,8 +70,8 @@ namespace InstrumentEditor {
             var width = Width - offsetX;
             var height = Height - offsetY;
 
-            picRegion.Width = picRegion.BackgroundImage.Width;
-            picRegion.Height = picRegion.BackgroundImage.Height;
+            picRegion.Width = picRegion.Width;
+            picRegion.Height = picRegion.Height;
 
             pnlRegion.Left = 0;
             pnlRegion.Top = toolStrip1.Height + 4;
@@ -129,7 +132,7 @@ namespace InstrumentEditor {
 
             var bmp = new Bitmap(picRegion.Width, picRegion.Height);
             var g = Graphics.FromImage(bmp);
-            var blueLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
+            var redLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
             var greenFill = new Pen(Color.FromArgb(64, 0, 255, 0), 1.0f).Brush;
 
             var idx = lstRegion.SelectedIndex;
@@ -140,16 +143,16 @@ namespace InstrumentEditor {
                 g.FillRectangle(
                     greenFill,
                     range.KeyLo * KEY_WIDTH,
-                    bmp.Height - (range.VelHi + 1) * 4 - 1,
+                    bmp.Height - (range.VelHi + 1) * VEL_HEIGHT - 1,
                     (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
-                    (range.VelHi - range.VelLo + 1) * 4
+                    (range.VelHi - range.VelLo + 1) * VEL_HEIGHT
                 );
                 g.DrawRectangle(
-                    blueLine,
+                    redLine,
                     range.KeyLo * KEY_WIDTH,
-                    bmp.Height - (range.VelHi + 1) * 4,
+                    bmp.Height - (range.VelHi + 1) * VEL_HEIGHT,
                     (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
-                    (range.VelHi - range.VelLo + 1) * 4
+                    (range.VelHi - range.VelLo + 1) * VEL_HEIGHT
                 );
 
                 var waveIndex = int.MaxValue;
@@ -259,7 +262,7 @@ namespace InstrumentEditor {
 
             posRegion.Y = picRegion.Height - posRegion.Y - 1;
             posRegion.X = posRegion.X / KEY_WIDTH;
-            posRegion.Y = (int)(posRegion.Y / 4.0);
+            posRegion.Y = posRegion.Y / VEL_HEIGHT;
 
             return posRegion;
         }
@@ -289,6 +292,38 @@ namespace InstrumentEditor {
                 VelHi = byte.Parse(cols[8])
             };
             return region;
+        }
+
+        private void DrawBackground() {
+            var bmp = new Bitmap(KEY_WIDTH * 128, VEL_HEIGHT * 128);
+            var g = Graphics.FromImage(bmp);
+            for (int k = 0; k < 128; k++) {
+                switch (k % 12) {
+                case 0:
+                    g.DrawLine(Pens.Black, k * KEY_WIDTH, 0, k * KEY_WIDTH, VEL_HEIGHT * 128);
+                    break;
+                case 5:
+                    g.DrawLine(Pens.LightSlateGray, k * KEY_WIDTH, 0, k * KEY_WIDTH, VEL_HEIGHT * 128);
+                    break;
+                case 2:
+                case 4:
+                case 7:
+                case 9:
+                case 11:
+                    break;
+                default:
+                    g.FillRectangle(Brushes.Gray, k * KEY_WIDTH, 0, KEY_WIDTH, VEL_HEIGHT * 128);
+                    break;
+                }
+            }
+            for (int v = 0; v < 128; v += 16) {
+                g.DrawLine(Pens.Black, 0, v * VEL_HEIGHT, KEY_WIDTH * 128, v * VEL_HEIGHT);
+            }
+            picRegion.BackgroundImage = bmp;
+            picRegion.Width = bmp.Width;
+            picRegion.Height = bmp.Height;
+            Width = bmp.Width + 24;
+            Height = bmp.Height + toolStrip1.Height + 48;
         }
         #endregion
     }

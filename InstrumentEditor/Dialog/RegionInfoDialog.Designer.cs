@@ -355,10 +355,10 @@
             this.envelope1.Location = new System.Drawing.Point(13, 278);
             this.envelope1.Margin = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.envelope1.Name = "envelope1";
-            this.envelope1.Size = new System.Drawing.Size(1281, 386);
+            this.envelope1.Size = new System.Drawing.Size(662, 386);
             this.envelope1.TabIndex = 8;
             // 
-            // RegionInfoForm
+            // RegionInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -374,7 +374,7 @@
             this.Controls.Add(this.grbKey);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
-            this.Name = "RegionInfoForm";
+            this.Name = "RegionInfoDialog";
             this.Text = "リージョン情報編集";
             ((System.ComponentModel.ISupportInitialize)(this.numKeyLow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyHigh)).EndInit();

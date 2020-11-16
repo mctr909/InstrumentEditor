@@ -11,7 +11,6 @@ namespace InstrumentEditor {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
-            setPos();
         }
 
         public InstInfoDialog(Pack file, Inst inst) {
@@ -25,7 +24,6 @@ namespace InstrumentEditor {
             txtInstName.Text = mInst.Info.Name;
             envelope1.Art = mInst.Art;
             btnAdd.Text = "反映";
-            setPos();
         }
 
         private void InstInfoDialog_Load(object sender, EventArgs e) {
@@ -33,6 +31,7 @@ namespace InstrumentEditor {
                 cmbCategory.SelectedText = mInst.Info.Category;
             }
             setCategoryList();
+            setPos();
         }
 
         private void cmbCategory_Leave(object sender, EventArgs e) {

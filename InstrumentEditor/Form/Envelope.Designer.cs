@@ -92,50 +92,50 @@
             // lblAttack
             // 
             this.lblAttack.AutoSize = true;
-            this.lblAttack.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblAttack.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblAttack.Location = new System.Drawing.Point(596, 51);
             this.lblAttack.Name = "lblAttack";
-            this.lblAttack.Size = new System.Drawing.Size(103, 30);
+            this.lblAttack.Size = new System.Drawing.Size(82, 24);
             this.lblAttack.TabIndex = 10;
             this.lblAttack.Text = "label1";
             // 
             // lblHold
             // 
             this.lblHold.AutoSize = true;
-            this.lblHold.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblHold.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblHold.Location = new System.Drawing.Point(596, 82);
             this.lblHold.Name = "lblHold";
-            this.lblHold.Size = new System.Drawing.Size(103, 30);
+            this.lblHold.Size = new System.Drawing.Size(82, 24);
             this.lblHold.TabIndex = 11;
             this.lblHold.Text = "label2";
             // 
             // lblDecay
             // 
             this.lblDecay.AutoSize = true;
-            this.lblDecay.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblDecay.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblDecay.Location = new System.Drawing.Point(596, 120);
             this.lblDecay.Name = "lblDecay";
-            this.lblDecay.Size = new System.Drawing.Size(103, 30);
+            this.lblDecay.Size = new System.Drawing.Size(82, 24);
             this.lblDecay.TabIndex = 12;
             this.lblDecay.Text = "label3";
             // 
             // lblSustain
             // 
             this.lblSustain.AutoSize = true;
-            this.lblSustain.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblSustain.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblSustain.Location = new System.Drawing.Point(596, 158);
             this.lblSustain.Name = "lblSustain";
-            this.lblSustain.Size = new System.Drawing.Size(103, 30);
+            this.lblSustain.Size = new System.Drawing.Size(82, 24);
             this.lblSustain.TabIndex = 13;
             this.lblSustain.Text = "label4";
             // 
             // lblReleace
             // 
             this.lblReleace.AutoSize = true;
-            this.lblReleace.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblReleace.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblReleace.Location = new System.Drawing.Point(596, 196);
             this.lblReleace.Name = "lblReleace";
-            this.lblReleace.Size = new System.Drawing.Size(103, 30);
+            this.lblReleace.Size = new System.Drawing.Size(82, 24);
             this.lblReleace.TabIndex = 14;
             this.lblReleace.Text = "label5";
             // 
@@ -269,7 +269,6 @@
             this.trbAmpReleace.AutoSize = false;
             this.trbAmpReleace.Location = new System.Drawing.Point(70, 298);
             this.trbAmpReleace.Maximum = 2500;
-            this.trbAmpReleace.Minimum = 1;
             this.trbAmpReleace.Name = "trbAmpReleace";
             this.trbAmpReleace.Size = new System.Drawing.Size(478, 61);
             this.trbAmpReleace.TabIndex = 49;
@@ -296,7 +295,6 @@
             this.trbAmpDecay.AutoSize = false;
             this.trbAmpDecay.Location = new System.Drawing.Point(70, 164);
             this.trbAmpDecay.Maximum = 2500;
-            this.trbAmpDecay.Minimum = 1;
             this.trbAmpDecay.Name = "trbAmpDecay";
             this.trbAmpDecay.Size = new System.Drawing.Size(478, 61);
             this.trbAmpDecay.TabIndex = 47;
@@ -310,7 +308,6 @@
             this.trbAmpHold.AutoSize = false;
             this.trbAmpHold.Location = new System.Drawing.Point(70, 97);
             this.trbAmpHold.Maximum = 2500;
-            this.trbAmpHold.Minimum = 1;
             this.trbAmpHold.Name = "trbAmpHold";
             this.trbAmpHold.Size = new System.Drawing.Size(478, 61);
             this.trbAmpHold.TabIndex = 46;
@@ -324,7 +321,6 @@
             this.trbAmpAttack.AutoSize = false;
             this.trbAmpAttack.Location = new System.Drawing.Point(70, 30);
             this.trbAmpAttack.Maximum = 2500;
-            this.trbAmpAttack.Minimum = 1;
             this.trbAmpAttack.Name = "trbAmpAttack";
             this.trbAmpAttack.Size = new System.Drawing.Size(478, 61);
             this.trbAmpAttack.TabIndex = 45;
@@ -368,7 +364,6 @@
             this.trbEqReleace.AutoSize = false;
             this.trbEqReleace.Location = new System.Drawing.Point(70, 298);
             this.trbEqReleace.Maximum = 2500;
-            this.trbEqReleace.Minimum = 1;
             this.trbEqReleace.Name = "trbEqReleace";
             this.trbEqReleace.Size = new System.Drawing.Size(478, 61);
             this.trbEqReleace.TabIndex = 44;
@@ -395,7 +390,6 @@
             this.trbEqDecay.AutoSize = false;
             this.trbEqDecay.Location = new System.Drawing.Point(70, 164);
             this.trbEqDecay.Maximum = 2500;
-            this.trbEqDecay.Minimum = 1;
             this.trbEqDecay.Name = "trbEqDecay";
             this.trbEqDecay.Size = new System.Drawing.Size(478, 61);
             this.trbEqDecay.TabIndex = 42;
@@ -409,7 +403,6 @@
             this.trbEqHold.AutoSize = false;
             this.trbEqHold.Location = new System.Drawing.Point(70, 97);
             this.trbEqHold.Maximum = 2500;
-            this.trbEqHold.Minimum = 1;
             this.trbEqHold.Name = "trbEqHold";
             this.trbEqHold.Size = new System.Drawing.Size(478, 61);
             this.trbEqHold.TabIndex = 41;
@@ -423,7 +416,6 @@
             this.trbEqAttack.AutoSize = false;
             this.trbEqAttack.Location = new System.Drawing.Point(70, 30);
             this.trbEqAttack.Maximum = 2500;
-            this.trbEqAttack.Minimum = 1;
             this.trbEqAttack.Name = "trbEqAttack";
             this.trbEqAttack.Size = new System.Drawing.Size(478, 61);
             this.trbEqAttack.TabIndex = 40;
@@ -445,10 +437,10 @@
             // lblEqAttack
             // 
             this.lblEqAttack.AutoSize = true;
-            this.lblEqAttack.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblEqAttack.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblEqAttack.Location = new System.Drawing.Point(613, 44);
             this.lblEqAttack.Name = "lblEqAttack";
-            this.lblEqAttack.Size = new System.Drawing.Size(103, 30);
+            this.lblEqAttack.Size = new System.Drawing.Size(82, 24);
             this.lblEqAttack.TabIndex = 30;
             this.lblEqAttack.Text = "label1";
             // 
@@ -474,10 +466,10 @@
             // lblEqHold
             // 
             this.lblEqHold.AutoSize = true;
-            this.lblEqHold.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblEqHold.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblEqHold.Location = new System.Drawing.Point(613, 75);
             this.lblEqHold.Name = "lblEqHold";
-            this.lblEqHold.Size = new System.Drawing.Size(103, 30);
+            this.lblEqHold.Size = new System.Drawing.Size(82, 24);
             this.lblEqHold.TabIndex = 31;
             this.lblEqHold.Text = "label2";
             // 
@@ -503,10 +495,10 @@
             // lblEqDecay
             // 
             this.lblEqDecay.AutoSize = true;
-            this.lblEqDecay.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblEqDecay.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblEqDecay.Location = new System.Drawing.Point(613, 113);
             this.lblEqDecay.Name = "lblEqDecay";
-            this.lblEqDecay.Size = new System.Drawing.Size(103, 30);
+            this.lblEqDecay.Size = new System.Drawing.Size(82, 24);
             this.lblEqDecay.TabIndex = 32;
             this.lblEqDecay.Text = "label3";
             // 
@@ -532,10 +524,10 @@
             // lblEqSustain
             // 
             this.lblEqSustain.AutoSize = true;
-            this.lblEqSustain.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblEqSustain.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblEqSustain.Location = new System.Drawing.Point(613, 151);
             this.lblEqSustain.Name = "lblEqSustain";
-            this.lblEqSustain.Size = new System.Drawing.Size(103, 30);
+            this.lblEqSustain.Size = new System.Drawing.Size(82, 24);
             this.lblEqSustain.TabIndex = 33;
             this.lblEqSustain.Text = "label4";
             // 
@@ -561,10 +553,10 @@
             // lblEqReleace
             // 
             this.lblEqReleace.AutoSize = true;
-            this.lblEqReleace.Font = new System.Drawing.Font("ＭＳ ゴシック", 11F);
+            this.lblEqReleace.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F);
             this.lblEqReleace.Location = new System.Drawing.Point(613, 189);
             this.lblEqReleace.Name = "lblEqReleace";
-            this.lblEqReleace.Size = new System.Drawing.Size(103, 30);
+            this.lblEqReleace.Size = new System.Drawing.Size(82, 24);
             this.lblEqReleace.TabIndex = 34;
             this.lblEqReleace.Text = "label5";
             // 
@@ -585,7 +577,7 @@
             this.Controls.Add(this.grpEq);
             this.Controls.Add(this.grpAmp);
             this.Name = "Envelope";
-            this.Size = new System.Drawing.Size(1785, 1057);
+            this.Size = new System.Drawing.Size(976, 1057);
             ((System.ComponentModel.ISupportInitialize)(this.picReleace)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSustain)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picDecay)).EndInit();

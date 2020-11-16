@@ -10,6 +10,7 @@ namespace InstrumentEditor {
 
         public WaveSelectDialog(Pack file, Region region) {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mRegion = region;
         }
@@ -27,7 +28,7 @@ namespace InstrumentEditor {
             if (0 == lstWave.Items.Count) {
                 return;
             }
-            var cols = lstWave.SelectedItem.ToString().Split('|');
+            var cols = lstWave.SelectedItem.ToString().Split('\t');
             var idx = int.Parse(cols[0]);
             var fm = new WaveInfoForm(mFile, idx);
             var index = lstWave.SelectedIndex;
@@ -38,7 +39,7 @@ namespace InstrumentEditor {
 
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstWave.SelectedIndex) {
-                var cols = lstWave.SelectedItem.ToString().Split('|');
+                var cols = lstWave.SelectedItem.ToString().Split('\t');
                 mRegion.Art.Update(ART_TYPE.WAVE_INDEX, uint.Parse(cols[0]));
             }
             Close();

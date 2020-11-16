@@ -16,7 +16,7 @@ namespace InstrumentEditor {
 
         public WavePlayback() {
             mWave = new short[1];
-            mFft = new FFT(16384, SampleRate);
+            mFft = new FFT(8192, SampleRate);
             Stop();
         }
 
@@ -47,7 +47,7 @@ namespace InstrumentEditor {
                 mFft.Re[mFftIndex] = wave;
                 mFft.Im[mFftIndex] = 0.0;
                 ++mFftIndex;
-                if (16384 <= mFftIndex) {
+                if (mFft.Re.Length <= mFftIndex) {
                     mFftIndex = 0;
                     mPitch = mFft.Pitch();
                 }

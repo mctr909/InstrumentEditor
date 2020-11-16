@@ -11,6 +11,10 @@ namespace InstrumentEditor {
         private Preset mClipboardPreset;
         private Inst mClipboardInst;
 
+        private readonly string[] NoteName = new string[] {
+            "C ", "Db", "D ", "Eb", "E ", "F ", "Gb", "G ", "Ab", "A ", "Bb", "B "
+        };
+
         public MainForm() {
             InitializeComponent();
             SetTabSize();
@@ -376,7 +380,7 @@ namespace InstrumentEditor {
                     iWave.ToString("0000"),
                     (use ? "*" : " "),
                     (0 < wave.Header.LoopEnable ? "loop" : "    "),
-                    Wave.NoteName[wave.Header.UnityNote % 12]
+                    NoteName[wave.Header.UnityNote % 12]
                         + (wave.Header.UnityNote < 12 ? "" : "+")
                         + (wave.Header.UnityNote / 12 - 2).ToString("00"),
                     name

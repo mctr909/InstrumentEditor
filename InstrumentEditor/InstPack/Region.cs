@@ -13,12 +13,12 @@ namespace InstPack {
                 var vel = velH || velL;
                 if (key || vel) {
                     if (keyH) {
-                        return 1;
+                        return -1;
                     }
                     if (velH) {
-                        return 1;
+                        return -1;
                     }
-                    return -1;
+                    return 1;
                 } else {
                     return 0;
                 }

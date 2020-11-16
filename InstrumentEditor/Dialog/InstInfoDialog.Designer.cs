@@ -48,7 +48,7 @@
             // btnAdd
             // 
             this.btnAdd.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnAdd.Location = new System.Drawing.Point(704, 915);
+            this.btnAdd.Location = new System.Drawing.Point(856, 855);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(128, 48);
@@ -98,14 +98,14 @@
             this.envelope1.Art = null;
             this.envelope1.Location = new System.Drawing.Point(11, 179);
             this.envelope1.Name = "envelope1";
-            this.envelope1.Size = new System.Drawing.Size(1734, 696);
+            this.envelope1.Size = new System.Drawing.Size(973, 667);
             this.envelope1.TabIndex = 7;
             // 
             // InstInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1787, 1144);
+            this.ClientSize = new System.Drawing.Size(996, 916);
             this.Controls.Add(this.envelope1);
             this.Controls.Add(this.grbCategory);
             this.Controls.Add(this.groupBox5);

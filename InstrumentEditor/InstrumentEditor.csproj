@@ -207,9 +207,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Image\region.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Image\copy.png" />
   </ItemGroup>
   <ItemGroup>

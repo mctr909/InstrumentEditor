@@ -43,10 +43,6 @@ namespace InstPack {
     }
 
     public class Wave {
-        public static readonly string[] NoteName = new string[] {
-            "C ", "Db", "D ", "Eb", "E ", "F ", "Gb", "G ", "Ab", "A ", "Bb", "B "
-        };
-
         public WAVH Header;
         public short[] Data = null;
         public Info Info = new Info();

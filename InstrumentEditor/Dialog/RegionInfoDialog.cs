@@ -14,6 +14,7 @@ namespace InstrumentEditor {
 
         public RegionInfoDialog(Pack file, Region region) {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterParent;
 
             mFile = file;
             mRegion = region;

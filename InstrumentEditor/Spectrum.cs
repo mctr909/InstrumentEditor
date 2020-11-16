@@ -40,8 +40,8 @@ public class Spectrum {
         for (uint bankNo = 0; bankNo < banks; ++bankNo) {
             mBanks[bankNo] = new BANK();
             var width = 2.0 - 9.0 * bankNo / banks;
-            if (width < 0.5) {
-                width = 0.5;
+            if (width < 0.25) {
+                width = 0.25;
             }
 
             var omega = Math.Pow(2.0, (double)bankNo / octDiv) * baseFreq * mFreqToOmega;

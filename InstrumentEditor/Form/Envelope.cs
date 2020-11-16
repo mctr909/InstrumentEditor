@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 using InstPack;
 
 namespace InstrumentEditor {
     public partial class Envelope : UserControl {
         private Lart mLart;
-        private static int TrackBarWidth = 600;
+        private static int TimeGamma = 1000;
+        private static int TrackBarWidth = 320;
 
         public Envelope() {
             InitializeComponent();
@@ -56,35 +56,35 @@ namespace InstrumentEditor {
             trbAmpReleace.Height = picReleace.Height;
 
 
-            chkAmpAttack.Left = trbAmpAttack.Right + 4;
+            chkAmpAttack.Left = trbAmpAttack.Right;
             chkAmpAttack.Top = trbAmpAttack.Top + (trbAmpAttack.Height - chkAmpAttack.Height) / 2;
 
-            chkAmpHold.Left = trbAmpHold.Right + 4;
+            chkAmpHold.Left = trbAmpHold.Right;
             chkAmpHold.Top = trbAmpHold.Top + (trbAmpHold.Height - chkAmpHold.Height) / 2;
 
-            chkAmpDecay.Left = trbAmpDecay.Right + 4;
+            chkAmpDecay.Left = trbAmpDecay.Right;
             chkAmpDecay.Top = trbAmpDecay.Top + (trbAmpDecay.Height - chkAmpDecay.Height) / 2;
 
-            chkAmpSustain.Left = trbAmpSustain.Right + 4;
+            chkAmpSustain.Left = trbAmpSustain.Right;
             chkAmpSustain.Top = trbAmpSustain.Top + (trbAmpSustain.Height - chkAmpSustain.Height) / 2;
 
-            chkAmpReleace.Left = trbAmpReleace.Right + 4;
+            chkAmpReleace.Left = trbAmpReleace.Right;
             chkAmpReleace.Top = trbAmpReleace.Top + (trbAmpReleace.Height - chkAmpReleace.Height) / 2;
 
 
-            lblAttack.Left = chkAmpAttack.Right + 4;
+            lblAttack.Left = chkAmpAttack.Right;
             lblAttack.Top = trbAmpAttack.Top + (trbAmpAttack.Height - lblAttack.Height) / 2;
 
-            lblHold.Left = chkAmpHold.Right + 4;
+            lblHold.Left = chkAmpHold.Right;
             lblHold.Top = trbAmpHold.Top + (trbAmpHold.Height - lblHold.Height) / 2;
 
-            lblDecay.Left = chkAmpDecay.Right + 4;
+            lblDecay.Left = chkAmpDecay.Right;
             lblDecay.Top = trbAmpDecay.Top + (trbAmpDecay.Height - lblDecay.Height) / 2;
 
-            lblSustain.Left = chkAmpSustain.Right + 4;
+            lblSustain.Left = chkAmpSustain.Right;
             lblSustain.Top = trbAmpSustain.Top + (trbAmpSustain.Height - lblSustain.Height) / 2;
 
-            lblReleace.Left = chkAmpReleace.Right + 4;
+            lblReleace.Left = chkAmpReleace.Right;
             lblReleace.Top = trbAmpReleace.Top + (trbAmpReleace.Height - lblReleace.Height) / 2;
 
 
@@ -138,35 +138,35 @@ namespace InstrumentEditor {
             trbEqReleace.Height = picEqReleace.Height;
 
 
-            chkEqAttack.Left = trbEqAttack.Right + 4;
+            chkEqAttack.Left = trbEqAttack.Right;
             chkEqAttack.Top = trbEqAttack.Top + (trbEqAttack.Height - chkEqAttack.Height) / 2;
 
-            chkEqHold.Left = trbEqHold.Right + 4;
+            chkEqHold.Left = trbEqHold.Right;
             chkEqHold.Top = trbEqHold.Top + (trbEqHold.Height - chkEqHold.Height) / 2;
 
-            chkEqDecay.Left = trbEqDecay.Right + 4;
+            chkEqDecay.Left = trbEqDecay.Right;
             chkEqDecay.Top = trbEqDecay.Top + (trbEqDecay.Height - chkEqDecay.Height) / 2;
 
-            chkEqSustain.Left = trbEqSustain.Right + 4;
+            chkEqSustain.Left = trbEqSustain.Right;
             chkEqSustain.Top = trbEqSustain.Top + (trbEqSustain.Height - chkEqSustain.Height) / 2;
 
-            chkEqReleace.Left = trbEqReleace.Right + 4;
+            chkEqReleace.Left = trbEqReleace.Right;
             chkEqReleace.Top = trbEqReleace.Top + (trbEqReleace.Height - chkEqReleace.Height) / 2;
 
 
-            lblEqAttack.Left = chkEqAttack.Right + 4;
+            lblEqAttack.Left = chkEqAttack.Right;
             lblEqAttack.Top = trbEqAttack.Top + (trbEqAttack.Height - lblEqAttack.Height) / 2;
 
-            lblEqHold.Left = chkEqHold.Right + 4;
+            lblEqHold.Left = chkEqHold.Right;
             lblEqHold.Top = trbEqHold.Top + (trbEqHold.Height - lblEqHold.Height) / 2;
 
-            lblEqDecay.Left = chkEqDecay.Right + 4;
+            lblEqDecay.Left = chkEqDecay.Right;
             lblEqDecay.Top = trbEqDecay.Top + (trbEqDecay.Height - lblEqDecay.Height) / 2;
 
-            lblEqSustain.Left = chkEqSustain.Right + 4;
+            lblEqSustain.Left = chkEqSustain.Right;
             lblEqSustain.Top = trbEqSustain.Top + (trbEqSustain.Height - lblEqSustain.Height) / 2;
 
-            lblEqReleace.Left = chkEqReleace.Right + 4;
+            lblEqReleace.Left = chkEqReleace.Right;
             lblEqReleace.Top = trbEqReleace.Top + (trbEqReleace.Height - lblEqReleace.Height) / 2;
 
 
@@ -232,17 +232,17 @@ namespace InstrumentEditor {
 
         #region AMP
         private double ampAttack {
-            get { return trbToValue(trbAmpAttack.Value); }
+            get { return trbToValue(trbAmpAttack); }
             set { setValue(trbAmpAttack, chkAmpAttack, lblAttack, value); }
         }
 
         private double ampHold {
-            get { return trbToValue(trbAmpHold.Value); }
+            get { return trbToValue(trbAmpHold); }
             set { setValue(trbAmpHold, chkAmpHold, lblHold, value); }
         }
 
         private double ampDecay {
-            get { return trbToValue(trbAmpDecay.Value); }
+            get { return trbToValue(trbAmpDecay); }
             set { setValue(trbAmpDecay, chkAmpDecay, lblDecay, value); }
         }
 
@@ -256,20 +256,20 @@ namespace InstrumentEditor {
         }
 
         private double ampReleace {
-            get { return trbToValue(trbAmpReleace.Value); }
+            get { return trbToValue(trbAmpReleace); }
             set { setValue(trbAmpReleace, chkAmpReleace, lblReleace, value); }
         }
 
         private void trbAmpAttack_ValueChanged(object sender, EventArgs e) {
-            lblAttack.Text = trbToText(trbAmpAttack.Value);
+            lblAttack.Text = trbToText(trbAmpAttack);
         }
 
         private void trbAmpHold_ValueChanged(object sender, EventArgs e) {
-            lblHold.Text = trbToText(trbAmpHold.Value);
+            lblHold.Text = trbToText(trbAmpHold);
         }
 
         private void trbAmpDecay_ValueChanged(object sender, EventArgs e) {
-            lblDecay.Text = trbToText(trbAmpDecay.Value);
+            lblDecay.Text = trbToText(trbAmpDecay);
         }
 
         private void trbAmpSustain_ValueChanged(object sender, EventArgs e) {
@@ -277,13 +277,13 @@ namespace InstrumentEditor {
         }
 
         private void trbAmpReleace_ValueChanged(object sender, EventArgs e) {
-            lblReleace.Text = trbToText(trbAmpReleace.Value);
+            lblReleace.Text = trbToText(trbAmpReleace);
         }
 
         private void chkAttack_CheckedChanged(object sender, EventArgs e) {
             if (chkAmpAttack.Checked) {
                 trbAmpAttack.Enabled = true;
-                lblAttack.Text = trbToText(trbAmpAttack.Value);
+                lblAttack.Text = trbToText(trbAmpAttack);
             }
             else {
                 trbAmpAttack.Enabled = false;
@@ -294,7 +294,7 @@ namespace InstrumentEditor {
         private void chkHold_CheckedChanged(object sender, EventArgs e) {
             if (chkAmpHold.Checked) {
                 trbAmpHold.Enabled = true;
-                lblHold.Text = trbToText(trbAmpHold.Value);
+                lblHold.Text = trbToText(trbAmpHold);
             }
             else {
                 trbAmpHold.Enabled = false;
@@ -305,7 +305,7 @@ namespace InstrumentEditor {
         private void chkDecay_CheckedChanged(object sender, EventArgs e) {
             if (chkAmpDecay.Checked) {
                 trbAmpDecay.Enabled = true;
-                lblDecay.Text = trbToText(trbAmpDecay.Value);
+                lblDecay.Text = trbToText(trbAmpDecay);
             }
             else {
                 trbAmpDecay.Enabled = false;
@@ -327,7 +327,7 @@ namespace InstrumentEditor {
         private void chkReleace_CheckedChanged(object sender, EventArgs e) {
             if (chkAmpReleace.Checked) {
                 trbAmpReleace.Enabled = true;
-                lblReleace.Text = trbToText(trbAmpReleace.Value);
+                lblReleace.Text = trbToText(trbAmpReleace);
             }
             else {
                 trbAmpReleace.Enabled = false;
@@ -338,17 +338,17 @@ namespace InstrumentEditor {
 
         #region EQ
         private double eqAttack {
-            get { return trbToValue(trbEqAttack.Value); }
+            get { return trbToValue(trbEqAttack); }
             set { setValue(trbEqAttack, chkEqAttack, lblEqAttack, value); }
         }
 
         private double eqHold {
-            get { return trbToValue(trbEqHold.Value); }
+            get { return trbToValue(trbEqHold); }
             set { setValue(trbEqHold, chkEqHold, lblEqHold, value); }
         }
 
         private double eqDecay {
-            get { return trbToValue(trbEqDecay.Value); }
+            get { return trbToValue(trbEqDecay); }
             set { setValue(trbEqDecay, chkEqDecay, lblEqDecay, value); }
         }
 
@@ -362,20 +362,20 @@ namespace InstrumentEditor {
         }
 
         private double eqReleace {
-            get { return trbToValue(trbEqReleace.Value); }
+            get { return trbToValue(trbEqReleace); }
             set { setValue(trbEqReleace, chkEqReleace, lblEqReleace, value); }
         }
 
         private void trbEqAttack_ValueChanged(object sender, EventArgs e) {
-            lblEqAttack.Text = trbToText(trbEqAttack.Value);
+            lblEqAttack.Text = trbToText(trbEqAttack);
         }
 
         private void trbEqHold_ValueChanged(object sender, EventArgs e) {
-            lblEqHold.Text = trbToText(trbEqHold.Value);
+            lblEqHold.Text = trbToText(trbEqHold);
         }
 
         private void trbEqDecay_ValueChanged(object sender, EventArgs e) {
-            lblEqDecay.Text = trbToText(trbEqDecay.Value);
+            lblEqDecay.Text = trbToText(trbEqDecay);
         }
 
         private void trbEqSustain_ValueChanged(object sender, EventArgs e) {
@@ -383,13 +383,13 @@ namespace InstrumentEditor {
         }
 
         private void trbEqReleace_ValueChanged(object sender, EventArgs e) {
-            lblEqReleace.Text = trbToText(trbEqReleace.Value);
+            lblEqReleace.Text = trbToText(trbEqReleace);
         }
 
         private void chkEqAttack_CheckedChanged(object sender, EventArgs e) {
             if (chkEqAttack.Checked) {
                 trbEqAttack.Enabled = true;
-                lblEqAttack.Text = trbToText(trbEqAttack.Value);
+                lblEqAttack.Text = trbToText(trbEqAttack);
             }
             else {
                 trbEqAttack.Enabled = false;
@@ -400,7 +400,7 @@ namespace InstrumentEditor {
         private void chkEqHold_CheckedChanged(object sender, EventArgs e) {
             if (chkEqHold.Checked) {
                 trbEqHold.Enabled = true;
-                lblEqHold.Text = trbToText(trbEqHold.Value);
+                lblEqHold.Text = trbToText(trbEqHold);
             }
             else {
                 trbEqHold.Enabled = false;
@@ -411,7 +411,7 @@ namespace InstrumentEditor {
         private void chkEqDecay_CheckedChanged(object sender, EventArgs e) {
             if (chkEqDecay.Checked) {
                 trbEqDecay.Enabled = true;
-                lblEqDecay.Text = trbToText(trbEqDecay.Value);
+                lblEqDecay.Text = trbToText(trbEqDecay);
             }
             else {
                 trbEqDecay.Enabled = false;
@@ -433,7 +433,7 @@ namespace InstrumentEditor {
         private void chkEqReleace_CheckedChanged(object sender, EventArgs e) {
             if (chkEqReleace.Checked) {
                 trbEqReleace.Enabled = true;
-                lblEqReleace.Text = trbToText(trbEqReleace.Value);
+                lblEqReleace.Text = trbToText(trbEqReleace);
             }
             else {
                 trbEqReleace.Enabled = false;
@@ -442,8 +442,8 @@ namespace InstrumentEditor {
         }
         #endregion
 
-        private string trbToText(int value) {
-            var v = trbToValue(value);
+        private string trbToText(TrackBar trb) {
+            var v = trbToValue(trb);
 
             if (v < 1.0) {
                 return string.Format("{0}ms", (int)(1000 * v));
@@ -456,29 +456,29 @@ namespace InstrumentEditor {
             }
         }
 
-        private double trbToValue(int value) {
-            return 40 * Math.Pow(64, value / 2500.0) / 64 - 0.626;
+        private double trbToValue(TrackBar trb) {
+            return (Math.Pow(TimeGamma, (double)trb.Value / trb.Maximum) - 1.0) / (TimeGamma - 1.0) * 40.0;
         }
 
-        private int valueToHsb(double hsb) {
-            return (int)(Math.Log((hsb * 1000 + 626) * 64 / 40000, 64) * 2500 + 1);
+        private int valueToTrb(double hsb, TrackBar trb) {
+            return (int)(Math.Log(hsb / 40.0 * (TimeGamma - 1) + 1.0, TimeGamma) * trb.Maximum);
         }
 
-        private void setValue(TrackBar tkb, CheckBox chk, Label lbl, double value) {
+        private void setValue(TrackBar trb, CheckBox chk, Label lbl, double value) {
             if (value <= 0) {
-                tkb.Value = 1;
-                tkb.Enabled = false;
+                trb.Value = 1;
+                trb.Enabled = false;
                 chk.Checked = false;
                 lbl.Text = "----";
             }
             else if (39 < value) {
-                tkb.Value = valueToHsb(39);
-                tkb.Enabled = true;
+                trb.Value = valueToTrb(39, trb);
+                trb.Enabled = true;
                 chk.Checked = true;
             }
             else {
-                tkb.Value = valueToHsb(value);
-                tkb.Enabled = true;
+                trb.Value = valueToTrb(value, trb);
+                trb.Enabled = true;
                 chk.Checked = true;
             }
         }

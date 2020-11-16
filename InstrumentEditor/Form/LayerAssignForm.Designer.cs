@@ -70,7 +70,6 @@
             // 
             // picLayer
             // 
-            this.picLayer.BackgroundImage = global::InstrumentEditor.Properties.Resources.region;
             this.picLayer.InitialImage = null;
             this.picLayer.Location = new System.Drawing.Point(0, 0);
             this.picLayer.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
@@ -99,7 +98,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(9, 8);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(525, 40);
+            this.toolStrip1.Size = new System.Drawing.Size(420, 40);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -110,7 +109,7 @@
             this.tsbAddRange.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbAddRange.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddRange.Name = "tsbAddRange";
-            this.tsbAddRange.Size = new System.Drawing.Size(46, 44);
+            this.tsbAddRange.Size = new System.Drawing.Size(23, 37);
             this.tsbAddRange.Text = "追加";
             this.tsbAddRange.Click += new System.EventHandler(this.tsbAddLayer_Click);
             // 
@@ -121,14 +120,14 @@
             this.tsbDeleteRange.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbDeleteRange.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteRange.Name = "tsbDeleteRange";
-            this.tsbDeleteRange.Size = new System.Drawing.Size(46, 44);
+            this.tsbDeleteRange.Size = new System.Drawing.Size(23, 37);
             this.tsbDeleteRange.Text = "削除";
             this.tsbDeleteRange.Click += new System.EventHandler(this.tsbDeleteLayer_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 50);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 40);
             // 
             // tsbRangeList
             // 
@@ -139,7 +138,7 @@
             this.tsbRangeList.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbRangeList.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRangeList.Name = "tsbRangeList";
-            this.tsbRangeList.Size = new System.Drawing.Size(46, 44);
+            this.tsbRangeList.Size = new System.Drawing.Size(23, 37);
             this.tsbRangeList.Text = "リスト表示";
             this.tsbRangeList.Click += new System.EventHandler(this.tsbLayerList_Click);
             // 
@@ -150,33 +149,33 @@
             this.tsbRangeKey.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbRangeKey.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRangeKey.Name = "tsbRangeKey";
-            this.tsbRangeKey.Size = new System.Drawing.Size(46, 44);
+            this.tsbRangeKey.Size = new System.Drawing.Size(23, 37);
             this.tsbRangeKey.Text = "グラフィック表示";
             this.tsbRangeKey.Click += new System.EventHandler(this.tsbRangeKey_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 50);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 40);
             // 
             // tscLayer
             // 
             this.tscLayer.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tscLayer.Name = "tscLayer";
-            this.tscLayer.Size = new System.Drawing.Size(141, 50);
+            this.tscLayer.Size = new System.Drawing.Size(141, 40);
             this.tscLayer.SelectedIndexChanged += new System.EventHandler(this.tscLayer_SelectedIndexChanged);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 50);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 40);
             // 
             // txtLayer
             // 
             this.txtLayer.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtLayer.Name = "txtLayer";
             this.txtLayer.ReadOnly = true;
-            this.txtLayer.Size = new System.Drawing.Size(150, 50);
+            this.txtLayer.Size = new System.Drawing.Size(150, 40);
             // 
             // timer1
             // 
