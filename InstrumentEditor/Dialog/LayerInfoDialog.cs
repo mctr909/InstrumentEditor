@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class LayerInfoDialog : Form {
-        private File mFile;
+        private Pack mFile;
         private Layer mLayer;
 
         private readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public LayerInfoDialog(File file, Layer layer) {
+        public LayerInfoDialog(Pack file, Layer layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 
@@ -183,7 +183,7 @@ namespace InstrumentEditor {
                     );
                 }
 
-                foreach(var art in mLayer.Art.Array) {
+                foreach(var art in mLayer.Art.ToArray()) {
                     switch (art.Type) {
                     case ART_TYPE.GAIN:
                         numVolume.Value = (decimal)(20.0 * Math.Log10(art.Value));

@@ -1,10 +1,10 @@
-﻿using Instruments;
+﻿using InstPack;
 using System;
 using System.Windows.Forms;
 
 namespace InstrumentEditor {
     public partial class AddPresetDialog : Form {
-        private File mFile;
+        private Pack mFile;
         private Preset mPreset;
 
         private readonly string[] GM_INST_NAME = new string[] {
@@ -269,13 +269,13 @@ namespace InstrumentEditor {
             ""
         };
 
-        public AddPresetDialog(File file) {
+        public AddPresetDialog(Pack file) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
         }
 
-        public AddPresetDialog(File file, Preset preset) {
+        public AddPresetDialog(Pack file, Preset preset) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;

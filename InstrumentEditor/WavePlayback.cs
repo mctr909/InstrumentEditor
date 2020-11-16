@@ -1,4 +1,4 @@
-﻿using Instruments;
+﻿using InstPack;
 
 namespace InstrumentEditor {
     unsafe public class WavePlayback : WaveOutLib {

@@ -1,20 +1,20 @@
-﻿using Instruments;
+﻿using InstPack;
 using System;
 using System.Windows.Forms;
 
 namespace InstrumentEditor {
     public partial class InstInfoDialog : Form {
-        private File mFile;
+        private Pack mFile;
         private Inst mInst;
 
-        public InstInfoDialog(File file) {
+        public InstInfoDialog(Pack file) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             setPos();
         }
 
-        public InstInfoDialog(File file, Inst inst) {
+        public InstInfoDialog(Pack file, Inst inst) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -62,7 +62,7 @@ namespace InstrumentEditor {
             if (!string.IsNullOrWhiteSpace(tmpCategory)) {
                 cmbCategory.Items.Add(tmpCategory);
             }
-            foreach (var inst in mFile.Inst.Array) {
+            foreach (var inst in mFile.Inst.ToArray()) {
                 if (null != inst.Info && "" != inst.Info.Category) {
                     if (!cmbCategory.Items.Contains(inst.Info.Category.Trim())) {
                         cmbCategory.Items.Add(inst.Info.Category.Trim());

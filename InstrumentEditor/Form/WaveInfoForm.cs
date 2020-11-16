@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     unsafe public partial class WaveInfoForm : Form {
@@ -14,7 +14,7 @@ namespace InstrumentEditor {
 
         private WavePlayback mWaveOut;
 
-        private File mFile;
+        private Pack mFile;
         private WAVH mWaveHeader;
         private int mWaveIndex;
 
@@ -36,7 +36,7 @@ namespace InstrumentEditor {
         private int mDetectNote;
         private int mDetectTune;
 
-        public WaveInfoForm(File file, int index) {
+        public WaveInfoForm(Pack file, int index) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 

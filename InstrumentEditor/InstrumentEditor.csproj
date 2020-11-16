@@ -67,6 +67,12 @@
     <Compile Include="Dialog\InstInfoDialog.Designer.cs">
       <DependentUpon>InstInfoDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLS\Art.cs" />
+    <Compile Include="DLS\Enum.cs" />
+    <Compile Include="DLS\Inst.cs" />
+    <Compile Include="DLS\Region.cs" />
+    <Compile Include="DLS\Struct.cs" />
+    <Compile Include="DLS\Wave.cs" />
     <Compile Include="Form\LayerAssignForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,9 +85,17 @@
     <Compile Include="Form\RegionAssignForm.Designer.cs">
       <DependentUpon>RegionAssignForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Instruments.cs" />
+    <Compile Include="InstPack\Art.cs" />
+    <Compile Include="InstPack\Enum.cs" />
+    <Compile Include="InstPack\Inst.cs" />
+    <Compile Include="InstPack\InstPack.cs" />
+    <Compile Include="InstPack\Layer.cs" />
+    <Compile Include="InstPack\Preset.cs" />
+    <Compile Include="InstPack\Region.cs" />
+    <Compile Include="InstPack\Struct.cs" />
+    <Compile Include="InstPack\Wave.cs" />
     <Compile Include="Riff.cs" />
-    <Compile Include="DLS.cs" />
+    <Compile Include="DLS\DLS.cs" />
     <Compile Include="DoubleBufferBitmap.cs" />
     <Compile Include="DoubleBufferGraphic.cs" />
     <Compile Include="FFT.cs" />

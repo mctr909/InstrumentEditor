@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 
 using Riff;
-using Instruments;
+using InstPack;
 
 namespace SF2 {
     #region enum
@@ -458,9 +458,9 @@ namespace SF2 {
             sw.Dispose();
         }
 
-        public Instruments.File ToIns() {
+        public InstPack.Pack ToIns() {
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-            var instFile = new Instruments.File();
+            var instFile = new InstPack.Pack();
 
             for (var idx = 0; idx < mPdta.SampleList.Count - 1; idx++) {
                 var smpl = mPdta.SampleList[idx];
@@ -497,7 +497,7 @@ namespace SF2 {
             }
 
             foreach (var sf2Inst in mPdta.InstList) {
-                var inst = new Instruments.Inst();
+                var inst = new InstPack.Inst();
 
                 inst.Info.Name = sf2Inst.Name.Replace("\0", "");
                 inst.Info.CreationDate = now;
@@ -505,7 +505,7 @@ namespace SF2 {
 
                 foreach (var art in sf2Inst.GlobalArt) {
                     var globalArt = new ART {
-                        Value = (float)art.Value
+                        Value = art.Value
                     };
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
@@ -566,7 +566,7 @@ namespace SF2 {
 
                     foreach (var art in sf2InstRng.Art) {
                         var layerArt = new ART {
-                            Value = (float)art.Value
+                            Value = art.Value
                         };
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
@@ -620,7 +620,7 @@ namespace SF2 {
             }
 
             foreach (var sf2Pres in mPdta.PresetList) {
-                var preset = new Instruments.Preset();
+                var preset = new InstPack.Preset();
                 preset.Header.IsDrum = 0 < sf2Pres.Key.bankFlg;
                 preset.Header.BankMSB = sf2Pres.Key.bankMSB;
                 preset.Header.BankLSB = sf2Pres.Key.bankLSB;
@@ -632,7 +632,7 @@ namespace SF2 {
 
                 foreach (var art in sf2Pres.Value.GlobalArt) {
                     var globalArt = new ART {
-                        Value = (float)art.Value
+                        Value = art.Value
                     };
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
@@ -665,7 +665,7 @@ namespace SF2 {
 
                     foreach(var art in sf2PresRng.Art) {
                         var layerArt = new ART {
-                            Value = (float)art.Value
+                            Value = art.Value
                         };
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:

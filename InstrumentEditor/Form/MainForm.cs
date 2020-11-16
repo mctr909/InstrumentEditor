@@ -1,17 +1,15 @@
-﻿using System;
+﻿using InstPack;
+using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System.IO;
-
-using Instruments;
-using SF2;
+using System.Windows.Forms;
 
 namespace InstrumentEditor {
     public partial class MainForm : Form {
         private string mFilePath;
-        private Instruments.File mFile = new Instruments.File();
-        private Instruments.Preset mClipboardPreset;
-        private Instruments.Inst mClipboardInst;
+        private Pack mPack = new Pack();
+        private Preset mClipboardPreset;
+        private Inst mClipboardInst;
 
         public MainForm() {
             InitializeComponent();
@@ -24,7 +22,7 @@ namespace InstrumentEditor {
 
         #region メニューバー[ファイル]
         private void 新規作成NToolStripMenuItem_Click(object sender, EventArgs e) {
-            mFile = new Instruments.File();
+            mPack = new InstPack.Pack();
             DispPresetList();
             DispInstList();
             DispWaveList();
@@ -44,10 +42,10 @@ namespace InstrumentEditor {
 
             switch(Path.GetExtension(filePath)) {
             case ".sf2":
-                mFile = new SF2.File(filePath).ToIns();
+                mPack = new SF2.File(filePath).ToIns();
                 break;
             case ".dls":
-                mFile = new DLS.File(filePath).ToIns();
+                mPack = new DLS.File(filePath).ToPack();
                 break;
             }
 
@@ -70,7 +68,6 @@ namespace InstrumentEditor {
             if (string.IsNullOrWhiteSpace(mFilePath) || !System.IO.File.Exists(mFilePath)) {
                 名前を付けて保存ToolStripMenuItem_Click(sender, e);
             }
-            mFile.Save(mFilePath);
         }
 
         private void 名前を付けて保存ToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -85,7 +82,7 @@ namespace InstrumentEditor {
 
             switch (Path.GetExtension(filePath)) {
             case ".dls":
-                DLS.File.SaveFromIns(filePath, mFile);
+                DLS.File.SaveFromPack(filePath, mPack);
                 break;
             }
 
@@ -279,7 +276,7 @@ namespace InstrumentEditor {
 
             var cols = lstWave.SelectedItem.ToString().Split('|');
             var idx = int.Parse(cols[0]);
-            var fm = new WaveInfoForm(mFile, idx);
+            var fm = new WaveInfoForm(mPack, idx);
             var index = lstWave.SelectedIndex;
             fm.ShowDialog();
             DispWaveList();
@@ -296,7 +293,7 @@ namespace InstrumentEditor {
             var indices = lstWave.SelectedIndices;
             foreach (var idx in indices) {
                 var cols = lstWave.Items[(int)idx].ToString().Split('|');
-                var wave = mFile.Wave[int.Parse(cols[0])];
+                var wave = mPack.Wave[int.Parse(cols[0])];
                 if (null == wave.Info || string.IsNullOrWhiteSpace(wave.Info.Name)) {
                     wave.ToFile(Path.Combine(folderPath, string.Format("Wave{0}.wav", idx)));
                 }
@@ -314,10 +311,10 @@ namespace InstrumentEditor {
             var filePaths = openFileDialog1.FileNames;
 
             foreach (var filePath in filePaths) {
-                if (!System.IO.File.Exists(filePath)) {
+                if (!File.Exists(filePath)) {
                     continue;
                 }
-                mFile.Wave.Add(new Wave(filePath));
+                mPack.Wave.Add(new Wave(filePath));
             }
 
             DispWaveList();
@@ -328,8 +325,9 @@ namespace InstrumentEditor {
             foreach (var item in lstWave.SelectedItems) {
                 idxs.Add(int.Parse(((string)item).Split('|')[0]));
             }
-            mFile.DeleteWave(idxs);
-            DispWaveList();
+            if (mPack.DeleteWave(idxs)) {
+                DispWaveList();
+            }
         }
 
         private void DispWaveList() {
@@ -337,8 +335,8 @@ namespace InstrumentEditor {
 
             lstWave.Items.Clear();
             int count = 0;
-            for (var iWave = 0; iWave < mFile.Wave.Count; iWave++) {
-                var wave = mFile.Wave[iWave];
+            for (var iWave = 0; iWave < mPack.Wave.Count; iWave++) {
+                var wave = mPack.Wave[iWave];
                 var name = "";
                 if (null == wave.Info || string.IsNullOrWhiteSpace(wave.Info.Name)) {
                     name = string.Format("Wave[{0}]", count);
@@ -353,9 +351,9 @@ namespace InstrumentEditor {
                 }
 
                 var use = false;
-                foreach (var inst in mFile.Inst.Array) {
+                foreach (var inst in mPack.Inst.ToArray()) {
                     foreach (var rgn in inst.Region.Array) {
-                        foreach (var art in rgn.Art.Array) {
+                        foreach (var art in rgn.Art.ToArray()) {
                             if (art.Type != ART_TYPE.WAVE_INDEX) {
                                 continue;
                             }
@@ -417,7 +415,7 @@ namespace InstrumentEditor {
         }
 
         private void AddPreset() {
-            var fm = new AddPresetDialog(mFile);
+            var fm = new AddPresetDialog(mPack);
             fm.ShowDialog();
             DispPresetList();
         }
@@ -429,7 +427,7 @@ namespace InstrumentEditor {
             var index = lstPreset.SelectedIndex;
             var indices = lstPreset.SelectedIndices;
             foreach (int idx in indices) {
-                mFile.Preset.Remove(GetPresetLocale(idx));
+                mPack.Preset.Remove(GetPresetLocale(idx));
             }
             DispPresetList();
             if (index < lstPreset.Items.Count) {
@@ -444,11 +442,11 @@ namespace InstrumentEditor {
             if (null == preset) {
                 return;
             }
-            mClipboardPreset = new Instruments.Preset();
+            mClipboardPreset = new Preset();
             mClipboardPreset.Header = preset.Header;
             // Layer
             mClipboardPreset.Layer.Clear();
-            foreach (var layer in preset.Layer.Array) {
+            foreach (var layer in preset.Layer.ToArray()) {
                 mClipboardPreset.Layer.Add(new Layer {
                     Header = layer.Header,
                     Art = layer.Art
@@ -456,7 +454,7 @@ namespace InstrumentEditor {
             }
             // Articulations
             mClipboardPreset.Art.Clear();
-            foreach (var art in preset.Art.Array) {
+            foreach (var art in preset.Art.ToArray()) {
                 mClipboardPreset.Art.Add(art);
             }
             // Info
@@ -469,7 +467,7 @@ namespace InstrumentEditor {
             if (null == mClipboardPreset) {
                 return;
             }
-            var fm = new AddPresetDialog(mFile, mClipboardPreset);
+            var fm = new AddPresetDialog(mPack, mClipboardPreset);
             fm.ShowDialog();
             DispPresetList();
         }
@@ -479,7 +477,7 @@ namespace InstrumentEditor {
             if (null == preset) {
                 return;
             }
-            var fm = new LayerAssignForm(mFile, preset);
+            var fm = new LayerAssignForm(mPack, preset);
             fm.ShowDialog();
             DispPresetList();
         }
@@ -488,7 +486,7 @@ namespace InstrumentEditor {
             var idx = lstPreset.SelectedIndex;
 
             lstPreset.Items.Clear();
-            foreach (var preset in mFile.Preset.Values) {
+            foreach (var preset in mPack.Preset.Values) {
                 if (!string.IsNullOrEmpty(txtSearchPreset.Text)
                     && preset.Info.Name.IndexOf(txtSearchPreset.Text, StringComparison.InvariantCultureIgnoreCase) < 0
                 ) {
@@ -515,14 +513,14 @@ namespace InstrumentEditor {
         private void MultiSelectPreset() {
             var lst = GetSelectedPresets();
             if (1 == lst.Count) {
-                var fm = new PresetInfoDialog(mFile, lst[0]);
+                var fm = new PresetInfoDialog(mPack, lst[0]);
                 fm.ShowDialog();
                 DispPresetList();
                 return;
             }
             if (1 < lst.Count) {
-                var preset = new Instruments.Preset();
-                var fm = new PresetInfoDialog(mFile, preset);
+                var preset = new Preset();
+                var fm = new PresetInfoDialog(mPack, preset);
                 fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info.Category = preset.Info.Category;
@@ -573,20 +571,20 @@ namespace InstrumentEditor {
             return list;
         }
 
-        private Instruments.Preset GetSelectedPreset() {
+        private Preset GetSelectedPreset() {
             var locale = GetPresetLocale(lstPreset.SelectedIndex);
-            if (!mFile.Preset.ContainsKey(locale)) {
+            if (!mPack.Preset.ContainsKey(locale)) {
                 return null;
             }
-            return mFile.Preset[locale];
+            return mPack.Preset[locale];
         }
 
-        private List<Instruments.Preset> GetSelectedPresets() {
+        private List<Preset> GetSelectedPresets() {
             var locales = GetPresetLocales(lstPreset.SelectedIndices);
-            var presets = new List<Instruments.Preset>();
+            var presets = new List<Preset>();
             foreach (var locale in locales) {
-                if (mFile.Preset.ContainsKey(locale)) {
-                    presets.Add(mFile.Preset[locale]);
+                if (mPack.Preset.ContainsKey(locale)) {
+                    presets.Add(mPack.Preset[locale]);
                 }
             }
             return presets;
@@ -617,7 +615,7 @@ namespace InstrumentEditor {
         }
 
         private void AddInst() {
-            var fm = new InstInfoDialog(mFile);
+            var fm = new InstInfoDialog(mPack);
             fm.ShowDialog();
             DispInstList();
             DispPresetList();
@@ -633,7 +631,7 @@ namespace InstrumentEditor {
             foreach (var item in lstInst.SelectedItems) {
                 idxs.Add(int.Parse(((string)item).Split('|')[0]));
             }
-            if (mFile.DeleteInst(idxs)) {
+            if (mPack.DeleteInst(idxs)) {
                 DispInstList();
                 DispPresetList();
                 DispWaveList();
@@ -651,7 +649,7 @@ namespace InstrumentEditor {
                 return;
             }
 
-            mClipboardInst = new Instruments.Inst();
+            mClipboardInst = new Inst();
 
             // Region
             mClipboardInst.Region.Clear();
@@ -664,7 +662,7 @@ namespace InstrumentEditor {
 
             // Articulations
             mClipboardInst.Art.Clear();
-            foreach (var art in inst.Art.Array) {
+            foreach (var art in inst.Art.ToArray()) {
                 mClipboardInst.Art.Add(art);
             }
 
@@ -679,7 +677,7 @@ namespace InstrumentEditor {
             if (null == mClipboardInst) {
                 return;
             }
-            var fm = new InstInfoDialog(mFile, mClipboardInst);
+            var fm = new InstInfoDialog(mPack, mClipboardInst);
             fm.ShowDialog();
             DispInstList();
         }
@@ -688,16 +686,16 @@ namespace InstrumentEditor {
             var idx = lstInst.SelectedIndex;
 
             lstInst.Items.Clear();
-            for (var iInst = 0; iInst < mFile.Inst.Count; iInst++) {
+            for (var iInst = 0; iInst < mPack.Inst.Count; iInst++) {
                 if (!string.IsNullOrEmpty(txtSearchInst.Text)
-                    && mFile.Inst[iInst].Info.Name.IndexOf(txtSearchInst.Text, StringComparison.InvariantCultureIgnoreCase) < 0
+                    && mPack.Inst[iInst].Info.Name.IndexOf(txtSearchInst.Text, StringComparison.InvariantCultureIgnoreCase) < 0
                 ) {
                     continue;
                 }
-                var inst = mFile.Inst[iInst];
+                var inst = mPack.Inst[iInst];
                 var use = false;
-                foreach (var preset in mFile.Preset.Values) {
-                    foreach (var layer in preset.Layer.Array) {
+                foreach (var preset in mPack.Preset.Values) {
+                    foreach (var layer in preset.Layer.ToArray()) {
                         if (iInst == layer.Header.InstIndex) {
                             use = true;
                             break;
@@ -727,7 +725,7 @@ namespace InstrumentEditor {
             if (null == inst) {
                 return;
             }
-            var fm = new RegionAssignForm(mFile, inst);
+            var fm = new RegionAssignForm(mPack, inst);
             fm.ShowDialog();
             DispInstList();
         }
@@ -735,14 +733,14 @@ namespace InstrumentEditor {
         private void MultiSelectInst() {
             var lst = GetSelectedInsts();
             if (1 == lst.Count) {
-                var fm = new InstInfoDialog(mFile, lst[0]);
+                var fm = new InstInfoDialog(mPack, lst[0]);
                 fm.ShowDialog();
                 DispInstList();
                 return;
             }
             if (1 < lst.Count) {
-                var inst = new Instruments.Inst();
-                var fm = new InstInfoDialog(mFile, inst);
+                var inst = new Inst();
+                var fm = new InstInfoDialog(mPack, inst);
                 fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info.Category = inst.Info.Category;
@@ -778,20 +776,20 @@ namespace InstrumentEditor {
             return list;
         }
 
-        private Instruments.Inst GetSelectedInst() {
+        private Inst GetSelectedInst() {
             var locale = GetInstLocale(lstInst.SelectedIndex);
-            if (mFile.Inst.Count <= locale) {
+            if (mPack.Inst.Count <= locale) {
                 return null;
             }
-            return mFile.Inst[locale];
+            return mPack.Inst[locale];
         }
 
-        private List<Instruments.Inst> GetSelectedInsts() {
+        private List<Inst> GetSelectedInsts() {
             var locales = GetInstLocales(lstInst.SelectedIndices);
-            var insts = new List<Instruments.Inst>();
+            var insts = new List<Inst>();
             foreach (var locale in locales) {
-                if (locale < mFile.Inst.Count) {
-                    insts.Add(mFile.Inst[locale]);
+                if (locale < mPack.Inst.Count) {
+                    insts.Add(mPack.Inst[locale]);
                 }
             }
             return insts;

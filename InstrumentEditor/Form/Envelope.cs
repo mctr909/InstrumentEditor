@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class Envelope : UserControl {
@@ -537,7 +537,7 @@ namespace InstrumentEditor {
             eqReleace = 0;
 
             if (null != mLart) {
-                foreach (var art in mLart.Array) {
+                foreach (var art in mLart.ToArray()) {
                     switch (art.Type) {
                     case ART_TYPE.EG_AMP_ATTACK:
                         ampAttack = art.Value;

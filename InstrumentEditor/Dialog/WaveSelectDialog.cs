@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class WaveSelectDialog : Form {
-        private File mFile;
+        private Pack mFile;
         private Region mRegion;
 
-        public WaveSelectDialog(File file, Region region) {
+        public WaveSelectDialog(Pack file, Region region) {
             InitializeComponent();
             mFile = file;
             mRegion = region;
@@ -85,9 +85,9 @@ namespace InstrumentEditor {
                 }
 
                 var use = false;
-                foreach (var inst in mFile.Inst.Array) {
+                foreach (var inst in mFile.Inst.ToArray()) {
                     foreach (var rgn in inst.Region.Array) {
-                        foreach(var art in rgn.Art.Array) {
+                        foreach(var art in rgn.Art.ToArray()) {
                             if (art.Type != ART_TYPE.WAVE_INDEX) {
                                 continue;
                             }
@@ -109,7 +109,7 @@ namespace InstrumentEditor {
                 ++count;
             }
 
-            foreach (var art in mRegion.Art.Array) {
+            foreach (var art in mRegion.Art.ToArray()) {
                 if (art.Type != ART_TYPE.WAVE_INDEX) {
                     continue;
                 }

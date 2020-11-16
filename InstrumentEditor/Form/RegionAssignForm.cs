@@ -2,11 +2,11 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class RegionAssignForm : Form {
-        private File mFile;
+        private Pack mFile;
         private Inst mInst;
         private bool mOnRange;
         private const int KEY_WIDTH = 10;
@@ -15,7 +15,7 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionAssignForm(File file, Inst inst) {
+        public RegionAssignForm(Pack file, Inst inst) {
             mFile = file;
             mInst = inst;
             InitializeComponent();
@@ -153,7 +153,7 @@ namespace InstrumentEditor {
                 );
 
                 var waveIndex = int.MaxValue;
-                foreach (var art in region.Art.Array) {
+                foreach (var art in region.Art.ToArray()) {
                     if (art.Type == ART_TYPE.WAVE_INDEX) {
                         waveIndex = (int)art.Value;
                         break;
@@ -197,7 +197,7 @@ namespace InstrumentEditor {
         }
 
         private void AddRegion() {
-            var region = new Instruments.Region();
+            var region = new InstPack.Region();
             region.Header.KeyLo = byte.MaxValue;
             var fm = new RegionInfoDialog(mFile, region);
             fm.ShowDialog();

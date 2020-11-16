@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class InstSelectDialog : Form {
-        private File mFile;
+        private Pack mFile;
         private Layer mLayer;
 
-        public InstSelectDialog(File file, Layer layer) {
+        public InstSelectDialog(Pack file, Layer layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -73,9 +73,9 @@ namespace InstrumentEditor {
                 }
 
                 var use = false;
-                foreach (var ins in mFile.Inst.Array) {
+                foreach (var ins in mFile.Inst.ToArray()) {
                     foreach (var rgn in ins.Region.Array) {
-                        foreach(var art in rgn.Art.Array) {
+                        foreach(var art in rgn.Art.ToArray()) {
                             if (art.Type != ART_TYPE.WAVE_INDEX) {
                                 continue;
                             }
@@ -96,7 +96,7 @@ namespace InstrumentEditor {
                 ++count;
             }
 
-            foreach (var art in mLayer.Art.Array) {
+            foreach (var art in mLayer.Art.ToArray()) {
                 if (art.Type != ART_TYPE.WAVE_INDEX) {
                     continue;
                 }

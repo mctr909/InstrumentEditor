@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
 	public partial class PresetInfoDialog : Form {
-        private File mFile;
+        private Pack mFile;
         private Preset mPreset;
 
-        public PresetInfoDialog(File file, Preset preset) {
+        public PresetInfoDialog(Pack file, Preset preset) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;

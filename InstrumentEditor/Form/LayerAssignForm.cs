@@ -2,11 +2,11 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class LayerAssignForm : Form {
-        private File mFile;
+        private Pack mFile;
         private Preset mPreset;
         private bool mOnRange;
         private const int KEY_WIDTH = 10;
@@ -15,7 +15,7 @@ namespace InstrumentEditor {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public LayerAssignForm(File file, Preset preset) {
+        public LayerAssignForm(Pack file, Preset preset) {
             mFile = file;
             mPreset = preset;
             InitializeComponent();
@@ -142,7 +142,7 @@ namespace InstrumentEditor {
             lstLayer.Items.Clear();
             tscLayer.Items.Clear();
 
-            foreach (var layer in mPreset.Layer.Array) {
+            foreach (var layer in mPreset.Layer.ToArray()) {
                 var instIndex = layer.Header.InstIndex;
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
@@ -288,7 +288,7 @@ namespace InstrumentEditor {
         private LYRH PosToRange() {
             var range = new LYRH();
             var pos = LayerPos();
-            foreach (var layer in mPreset.Layer.Array) {
+            foreach (var layer in mPreset.Layer.ToArray()) {
                 if (layer.Header.KeyLo <= pos.X && pos.X <= layer.Header.KeyHi &&
                     layer.Header.VelLo <= pos.Y && pos.Y <= layer.Header.VelHi) {
                     range = layer.Header;

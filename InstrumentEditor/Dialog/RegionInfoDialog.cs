@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using Instruments;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class RegionInfoDialog : Form {
-        private File mFile;
+        private Pack mFile;
         private Region mRegion;
 
         private readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionInfoDialog(File file, Region region) {
+        public RegionInfoDialog(Pack file, Region region) {
             InitializeComponent();
 
             mFile = file;
@@ -44,7 +44,7 @@ namespace InstrumentEditor {
 
         private void btnSelectWave_Click(object sender, EventArgs e) {
             var waveIndex = 0;
-            foreach(var art in mRegion.Art.Array) {
+            foreach(var art in mRegion.Art.ToArray()) {
                 if (art.Type == ART_TYPE.WAVE_INDEX) {
                     waveIndex = (int)art.Value;
                     break;
@@ -69,7 +69,7 @@ namespace InstrumentEditor {
         }
 
         private void btnEditWave_Click(object sender, EventArgs e) {
-            foreach(var art in mRegion.Art.Array) {
+            foreach(var art in mRegion.Art.ToArray()) {
                 if (art.Type == ART_TYPE.WAVE_INDEX) {
                     var fm = new WaveInfoForm(mFile, (int)art.Value);
                     fm.ShowDialog();
@@ -215,7 +215,7 @@ namespace InstrumentEditor {
                 numVelocityHigh.Enabled = false;
 
                 var waveIndex = int.MaxValue;
-                foreach (var art in mRegion.Art.Array) {
+                foreach (var art in mRegion.Art.ToArray()) {
                     if (art.Type == ART_TYPE.WAVE_INDEX) {
                         waveIndex = (int)art.Value;
                         break;
@@ -241,7 +241,7 @@ namespace InstrumentEditor {
                     );
                 }
 
-                foreach(var art in mRegion.Art.Array) {
+                foreach(var art in mRegion.Art.ToArray()) {
                     switch (art.Type) {
                     case ART_TYPE.GAIN:
                         numVolume.Value = (decimal)(20.0 * Math.Log10(art.Value));
