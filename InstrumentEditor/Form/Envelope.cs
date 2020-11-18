@@ -6,8 +6,10 @@ using InstPack;
 namespace InstrumentEditor {
     public partial class Envelope : UserControl {
         private Lart mLart;
+        private static int TimeDiv = 500;
+        private static int TimeTick = 50;
         private static int TimeGamma = 1000;
-        private static int TrackBarWidth = 320;
+        private static int TrackBarWidth = 200;
 
         public Envelope() {
             InitializeComponent();
@@ -29,17 +31,23 @@ namespace InstrumentEditor {
             picSustain.Top = picDecay.Top + picDecay.Height;
             picReleace.Top = picSustain.Top + picSustain.Height;
 
-
+            trbAmpAttack.Maximum = TimeDiv;
+            trbAmpAttack.TickFrequency = TimeTick;
+            trbAmpAttack.LargeChange = 1;
             trbAmpAttack.Left = picAttack.Right + 4;
             trbAmpAttack.Top = picAttack.Top - 4;
             trbAmpAttack.Width = TrackBarWidth;
             trbAmpAttack.Height = picAttack.Height;
 
+            trbAmpHold.Maximum = TimeDiv;
+            trbAmpHold.TickFrequency = TimeTick;
             trbAmpHold.Left = picHold.Right + 4;
             trbAmpHold.Top = picHold.Top - 4;
             trbAmpHold.Width = TrackBarWidth;
             trbAmpHold.Height = picHold.Height;
 
+            trbAmpDecay.Maximum = TimeDiv;
+            trbAmpDecay.TickFrequency = TimeTick;
             trbAmpDecay.Left = picDecay.Right + 4;
             trbAmpDecay.Top = picDecay.Top - 4;
             trbAmpDecay.Width = TrackBarWidth;
@@ -50,6 +58,8 @@ namespace InstrumentEditor {
             trbAmpSustain.Width = TrackBarWidth;
             trbAmpSustain.Height = picSustain.Height;
 
+            trbAmpReleace.Maximum = TimeDiv;
+            trbAmpReleace.TickFrequency = TimeTick;
             trbAmpReleace.Left = picReleace.Right + 4;
             trbAmpReleace.Top = picReleace.Top - 4;
             trbAmpReleace.Width = TrackBarWidth;
@@ -111,17 +121,22 @@ namespace InstrumentEditor {
             picEqSustain.Top = picEqDecay.Top + picEqDecay.Height;
             picEqReleace.Top = picEqSustain.Top + picEqSustain.Height;
 
-
+            trbEqAttack.Maximum = TimeDiv;
+            trbEqAttack.TickFrequency = TimeTick;
             trbEqAttack.Left = picEqAttack.Right + 4;
             trbEqAttack.Top = picEqAttack.Top - 4;
             trbEqAttack.Width = TrackBarWidth;
             trbEqAttack.Height = picEqAttack.Height;
 
+            trbEqHold.Maximum = TimeDiv;
+            trbEqHold.TickFrequency = TimeTick;
             trbEqHold.Left = picEqHold.Right + 4;
             trbEqHold.Top = picEqHold.Top - 4;
             trbEqHold.Width = TrackBarWidth;
             trbEqHold.Height = picEqHold.Height;
 
+            trbEqDecay.Maximum = TimeDiv;
+            trbEqDecay.TickFrequency = TimeTick;
             trbEqDecay.Left = picEqDecay.Right + 4;
             trbEqDecay.Top = picEqDecay.Top - 4;
             trbEqDecay.Width = TrackBarWidth;
@@ -132,6 +147,8 @@ namespace InstrumentEditor {
             trbEqSustain.Width = TrackBarWidth;
             trbEqSustain.Height = picEqSustain.Height;
 
+            trbEqReleace.Maximum = TimeDiv;
+            trbEqReleace.TickFrequency = TimeTick;
             trbEqReleace.Left = picEqReleace.Right + 4;
             trbEqReleace.Top = picEqReleace.Top - 4;
             trbEqReleace.Width = TrackBarWidth;

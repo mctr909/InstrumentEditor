@@ -208,8 +208,9 @@ namespace InstrumentEditor {
         }
 
         private void numVolume_ValueChanged(object sender, EventArgs e) {
-            mFile.Wave[mWaveIndex].Header.Gain = (double)numVolume.Value / 100.0;
-            mWaveOut.mVolume = mFile.Wave[mWaveIndex].Header.Gain;
+            var db = Math.Pow(10.0, (int)(20 * numVolume.Value) / 400.0);
+            mFile.Wave[mWaveIndex].Header.Gain = db;
+            mWaveOut.mVolume = db;
         }
 
         private void numUnityNote_ValueChanged(object sender, EventArgs e) {
@@ -389,7 +390,7 @@ namespace InstrumentEditor {
                 btnLoopCreate.Text = "ループ作成";
             }
 
-            numVolume.Value = (decimal)((int)(wave.Header.Gain * 1000) / 10.0);
+            numVolume.Value = (decimal)(20.0 * Math.Log10(wave.Header.Gain));
             numUnityNote.Value = wave.Header.UnityNote;
             if (1.0 == wave.Header.Pitch) {
                 numFineTune.Value = 0;
