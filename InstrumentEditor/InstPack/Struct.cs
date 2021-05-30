@@ -44,14 +44,6 @@ namespace InstPack {
         public byte ProgNum;
     }
 
-    public struct LYRH {
-        public byte KeyLo;
-        public byte KeyHi;
-        public byte VelLo;
-        public byte VelHi;
-        public int InstIndex;
-    }
-
     public struct RGNH {
         public byte KeyLo;
         public byte KeyHi;

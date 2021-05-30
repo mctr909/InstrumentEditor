@@ -28,17 +28,18 @@ namespace InstPack {
             List.Add(layer);
         }
 
-        public void Update(int index, LYRH header) {
-            List[index].Header = header;
+        public void Update(int index, Layer layer) {
+            List[index].Header = layer.Header;
+            List[index].InstIndex = layer.InstIndex;
         }
 
-        public List<Layer> Find(LYRH header) {
+        public List<Layer> Find(Layer layer) {
             var ret = new List<Layer>();
-            foreach (var layer in List) {
-                if (header.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi &&
-                    header.InstIndex == layer.Header.InstIndex) {
-                    ret.Add(layer);
+            foreach (var lyr in List) {
+                if (layer.Header.KeyLo <= lyr.Header.KeyHi && lyr.Header.KeyLo <= layer.Header.KeyHi &&
+                    layer.Header.VelLo <= lyr.Header.VelHi && lyr.Header.VelLo <= layer.Header.VelHi &&
+                    layer.InstIndex == lyr.InstIndex) {
+                    ret.Add(lyr);
                 }
             }
             return ret;
@@ -55,11 +56,11 @@ namespace InstPack {
             return ret;
         }
 
-        public bool ContainsKey(LYRH header) {
-            foreach (var layer in List) {
-                if (header.KeyLo <= layer.Header.KeyHi && layer.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= layer.Header.VelHi && layer.Header.VelLo <= header.VelHi &&
-                    header.InstIndex == layer.Header.InstIndex) {
+        public bool ContainsKey(Layer layer) {
+            foreach (var lyr in List) {
+                if (layer.Header.KeyLo <= lyr.Header.KeyHi && lyr.Header.KeyLo <= layer.Header.KeyHi &&
+                    layer.Header.VelLo <= lyr.Header.VelHi && lyr.Header.VelLo <= layer.Header.VelHi &&
+                    layer.InstIndex == lyr.InstIndex) {
                     return true;
                 }
             }
@@ -89,7 +90,8 @@ namespace InstPack {
     }
 
     public class Layer : Chunk {
-        public LYRH Header;
+        public RGNH Header;
+        public int InstIndex;
         public Lart Art = new Lart();
 
         public Layer() { }

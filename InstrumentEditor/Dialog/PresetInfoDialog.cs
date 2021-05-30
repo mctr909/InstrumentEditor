@@ -33,7 +33,7 @@ namespace InstrumentEditor {
                 mPreset.Info = new Riff.Info();
             }
             mPreset.Info.Name = txtName.Text.Trim();
-            Text = string.Format("プリセット[{0}]", mPreset.Info.Name);
+            Text = string.Format("プリセット");
         }
 
         private void cmbCategory_Leave(object sender, EventArgs e) {
@@ -63,7 +63,7 @@ namespace InstrumentEditor {
             txtName.Text = mPreset.Info.Name.Trim();
             cmbCategory.Text = mPreset.Info.Category.Trim();
             setCategoryList();
-            Text = string.Format("プリセット[{0}]", mPreset.Info.Name.Trim());
+            Text = string.Format("プリセット");
         }
 
         private void setCategoryList() {

@@ -685,7 +685,7 @@ namespace SF2 {
                             layer.Art.Add(layerArt);
                             break;
                         case E_OPER.INSTRUMENT:
-                            layer.Header.InstIndex = (int)art.Value;
+                            layer.InstIndex = (int)art.Value;
                             break;
                         }
                     }

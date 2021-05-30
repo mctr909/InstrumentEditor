@@ -11,6 +11,7 @@ namespace InstrumentEditor {
         private bool mOnRange;
         private const int KEY_WIDTH = 8;
         private const int VEL_HEIGHT = 4;
+
         public LayerAssignForm(Pack file, Preset preset) {
             mFile = file;
             mPreset = preset;
@@ -109,7 +110,7 @@ namespace InstrumentEditor {
             tscLayer.Items.Clear();
 
             foreach (var layer in mPreset.Layer.ToArray()) {
-                var instIndex = layer.Header.InstIndex;
+                var instIndex = layer.InstIndex;
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
                     var inst = mFile.Inst[instIndex];
@@ -174,9 +175,9 @@ namespace InstrumentEditor {
             }
         }
 
-        private void EditLayer(LYRH range) {
-            if (mPreset.Layer.ContainsKey(range)) {
-                var fm = new LayerInfoDialog(mFile, mPreset.Layer.Find(range)[0]);
+        private void EditLayer(Layer layer) {
+            if (mPreset.Layer.ContainsKey(layer)) {
+                var fm = new LayerInfoDialog(mFile, mPreset.Layer.Find(layer)[0]);
                 fm.ShowDialog();
                 DispLayerInfo();
                 DispLayerRanges();
@@ -212,13 +213,14 @@ namespace InstrumentEditor {
             return pos;
         }
 
-        private LYRH PosToRange() {
-            var range = new LYRH();
+        private Layer PosToRange() {
+            var range = new Layer();
             var pos = LayerPos();
             foreach (var layer in mPreset.Layer.ToArray()) {
                 if (layer.Header.KeyLo <= pos.X && pos.X <= layer.Header.KeyHi &&
                     layer.Header.VelLo <= pos.Y && pos.Y <= layer.Header.VelHi) {
-                    range = layer.Header;
+                    range.Header = layer.Header;
+                    range.InstIndex = layer.InstIndex;
                     break;
                 }
             }

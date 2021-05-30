@@ -27,7 +27,7 @@ namespace InstrumentEditor {
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstInst.SelectedIndex) {
                 var cols = lstInst.SelectedItem.ToString().Split('|');
-                mLayer.Header.InstIndex = int.Parse(cols[0]);
+                mLayer.InstIndex = int.Parse(cols[0]);
             }
             Close();
         }

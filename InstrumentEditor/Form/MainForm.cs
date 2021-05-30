@@ -696,7 +696,7 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var preset in mPack.Preset.Values) {
                     foreach (var layer in preset.Layer.ToArray()) {
-                        if (iInst == layer.Header.InstIndex) {
+                        if (iInst == layer.InstIndex) {
                             use = true;
                             break;
                         }

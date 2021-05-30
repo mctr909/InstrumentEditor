@@ -39,7 +39,7 @@ namespace InstrumentEditor {
         private void btnSelect_Click(object sender, EventArgs e) {
             var fm = new InstSelectDialog(mFile, mLayer);
             fm.ShowDialog();
-            var instIndex = mLayer.Header.InstIndex;
+            var instIndex = mLayer.InstIndex;
             if (instIndex < mFile.Inst.Count) {
                 var inst = mFile.Inst[instIndex];
                 txtInst.Text = string.Format(
@@ -162,7 +162,7 @@ namespace InstrumentEditor {
                 numVelocityLow.Value = mLayer.Header.VelLo;
                 numVelocityHigh.Value = mLayer.Header.VelHi;
 
-                var instIndex = mLayer.Header.InstIndex;
+                var instIndex = mLayer.InstIndex;
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
                     var inst = mFile.Inst[instIndex];

@@ -130,7 +130,7 @@ namespace DLS {
                 lyr.Header.KeyHi = 127;
                 lyr.Header.VelLo = 0;
                 lyr.Header.VelHi = 127;
-                lyr.Header.InstIndex = pack.Inst.Count;
+                lyr.InstIndex = pack.Inst.Count;
 
                 pres.Layer.Add(lyr);
                 pres.Info.Name = dlsInst.Value.Info.Name;
@@ -380,7 +380,7 @@ namespace DLS {
                     continue;
                 }
 
-                var srcIns = pack.Inst[srcPre.Layer[0].Header.InstIndex];
+                var srcIns = pack.Inst[srcPre.Layer[0].InstIndex];
 
                 var ins = new INS();
                 ins.Header = new CK_INSH();

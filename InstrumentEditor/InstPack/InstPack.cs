@@ -86,7 +86,7 @@ namespace InstPack {
                 var deletable = true;
                 foreach (var preset in Preset.Values) {
                     foreach (var layer in preset.Layer.ToArray()) {
-                        if (selectedIndex == layer.Header.InstIndex) {
+                        if (selectedIndex == layer.InstIndex) {
                             deletable = false;
                             break;
                         }
@@ -128,9 +128,9 @@ namespace InstPack {
             foreach (var preset in Preset.Values) {
                 for (var iLayer = 0; iLayer < preset.Layer.Count; iLayer++) {
                     var layer = preset.Layer[iLayer];
-                    var iInst = layer.Header.InstIndex;
+                    var iInst = layer.InstIndex;
                     if (renumberingList.ContainsKey(iInst)) {
-                        layer.Header.InstIndex = renumberingList[iInst];
+                        layer.InstIndex = renumberingList[iInst];
                     }
                 }
             }
