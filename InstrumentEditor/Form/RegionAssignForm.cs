@@ -1,8 +1,7 @@
-﻿using System;
+﻿using InstPack;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-
-using InstPack;
 
 namespace InstrumentEditor {
     public partial class RegionAssignForm : Form {
@@ -23,6 +22,7 @@ namespace InstrumentEditor {
             DrawBackground();
             SetTabSize();
             DispRegionInfo();
+            pnlRegion.Visible = true;
             timer1.Interval = 30;
             timer1.Enabled = true;
             timer1.Start();
@@ -77,11 +77,6 @@ namespace InstrumentEditor {
             pnlRegion.Top = toolStrip1.Height + 4;
             pnlRegion.Width = width;
             pnlRegion.Height = height;
-
-            lstRegion.Left = 0;
-            lstRegion.Top = toolStrip1.Height + 4;
-            lstRegion.Width = width;
-            lstRegion.Height = height;
         }
 
         #region 音程/強弱割り当て
@@ -91,28 +86,6 @@ namespace InstrumentEditor {
 
         private void tsbDeleteRange_Click(object sender, EventArgs e) {
             DeleteRegion();
-        }
-
-        private void tsbRangeList_Click(object sender, EventArgs e) {
-            tsbRangeKey.Checked = false;
-            tsbRangeList.Checked = true;
-            tsbAddRange.Enabled = true;
-            tsbDeleteRange.Enabled = true;
-            pnlRegion.Visible = false;
-            lstRegion.Visible = true;
-        }
-
-        private void tsbRangeKey_Click(object sender, EventArgs e) {
-            tsbAddRange.Enabled = false;
-            tsbDeleteRange.Enabled = false;
-            tsbRangeList.Checked = false;
-            tsbRangeKey.Checked = true;
-            lstRegion.Visible = false;
-            pnlRegion.Visible = true;
-        }
-
-        private void lstRegion_DoubleClick(object sender, EventArgs e) {
-            EditRegion(ListToRange());
         }
 
         private void picRegion_DoubleClick(object sender, EventArgs e) {
@@ -135,9 +108,6 @@ namespace InstrumentEditor {
             var redLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
             var greenFill = new Pen(Color.FromArgb(64, 0, 255, 0), 1.0f).Brush;
 
-            var idx = lstRegion.SelectedIndex;
-            lstRegion.Items.Clear();
-
             foreach (var region in mInst.Region.Array) {
                 var range = region.Header;
                 g.FillRectangle(
@@ -154,37 +124,6 @@ namespace InstrumentEditor {
                     (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
                     (range.VelHi - range.VelLo + 1) * VEL_HEIGHT
                 );
-
-                var waveIndex = int.MaxValue;
-                foreach (var art in region.Art.ToArray()) {
-                    if (art.Type == ART_TYPE.WAVE_INDEX) {
-                        waveIndex = (int)art.Value;
-                        break;
-                    }
-                }
-
-                var waveName = "";
-                if (mFile.Wave.ContainsKey(waveIndex)) {
-                    var wave = mFile.Wave[waveIndex];
-                    waveName = wave.Info.Name;
-                }
-
-                var regionInfo = string.Format(
-                    "音程 {0} {1}    強弱 {2} {3}",
-                    region.Header.KeyLo.ToString("000"),
-                    region.Header.KeyHi.ToString("000"),
-                    region.Header.VelLo.ToString("000"),
-                    region.Header.VelHi.ToString("000")
-                );
-                if (int.MaxValue != waveIndex) {
-                    regionInfo = string.Format(
-                        "{0}    波形 {1} {2}",
-                        regionInfo,
-                        waveIndex.ToString("0000"),
-                        waveName
-                    );
-                }
-                lstRegion.Items.Add(regionInfo);
             }
 
             if (null != picRegion.Image) {
@@ -192,11 +131,6 @@ namespace InstrumentEditor {
                 picRegion.Image = null;
             }
             picRegion.Image = bmp;
-
-            if (lstRegion.Items.Count <= idx) {
-                idx = lstRegion.Items.Count - 1;
-            }
-            lstRegion.SelectedIndex = idx;
         }
 
         private void AddRegion() {
@@ -223,26 +157,9 @@ namespace InstrumentEditor {
         }
 
         private void DeleteRegion() {
-            var index = lstRegion.SelectedIndex;
-
-            foreach (int idx in lstRegion.SelectedIndices) {
-                var cols = lstRegion.Items[idx].ToString().Split(' ');
-                var range = new RGNH {
-                    KeyLo = byte.Parse(cols[1]),
-                    KeyHi = byte.Parse(cols[2]),
-                    VelLo = byte.Parse(cols[7]),
-                    VelHi = byte.Parse(cols[8])
-                };
-                mInst.Region.Remove(range);
-            }
+            //mInst.Region.Remove(range);
 
             DispRegionInfo();
-
-            if (index < lstRegion.Items.Count) {
-                lstRegion.SelectedIndex = index;
-            } else {
-                lstRegion.SelectedIndex = lstRegion.Items.Count - 1;
-            }
         }
 
         private Point PosToRegion() {
@@ -278,20 +195,6 @@ namespace InstrumentEditor {
                 }
             }
             return range;
-        }
-
-        private RGNH ListToRange() {
-            if (lstRegion.SelectedIndex < 0) {
-                return new RGNH();
-            }
-            var cols = lstRegion.Items[lstRegion.SelectedIndex].ToString().Split(' ');
-            var region = new RGNH {
-                KeyLo = byte.Parse(cols[1]),
-                KeyHi = byte.Parse(cols[2]),
-                VelLo = byte.Parse(cols[7]),
-                VelHi = byte.Parse(cols[8])
-            };
-            return region;
         }
 
         private void DrawBackground() {

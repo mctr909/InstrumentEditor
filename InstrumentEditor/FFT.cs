@@ -3,24 +3,47 @@
 public class FFT {
     public double[] Re;
     public double[] Im;
+    private double[] Window;
+    private double[][] WR;
+    private double[][] WI;
     private int SampleRate;
 
     public FFT(int length, int sampleRate) {
         Re = new double[length];
         Im = new double[length];
         SampleRate = sampleRate;
+        Window = new double[length];
+        for (int i = 0; i < length; ++i) {
+            Window[i] = 0.6 - 0.4 * Math.Cos(2.0 * Math.PI * i / length);
+        }
+
+        {
+            WR = new double[(int)Math.Log(length, 2)][];
+            WI = new double[(int)Math.Log(length, 2)][];
+            int i, k;
+            int m, mh;
+            double theta = -2.0 * Math.PI / length;
+            for (m = length, mh = m >> 1, k = 0; 1 <= (mh = m >> 1); m = mh, k++) {
+                WI[k] = new double[mh];
+                WR[k] = new double[mh];
+                for (i = 0; i < mh; ++i) {
+                    WR[k][i] = Math.Cos(theta * i);
+                    WI[k][i] = Math.Sin(theta * i);
+                }
+                theta *= 2;
+            }
+        }
     }
 
     public void Execute() {
         int N = Re.Length;
-        int m, mh, i, j, k;
+        int m, mh, i, j, k, w;
         double wr, wi, xr, xi;
-        double theta = -2.0 * Math.PI / N;
 
-        for (m = N; 1 <= (mh = m >> 1); m = mh) {
+        for (m = N, w=0; 1 <= (mh = m >> 1); m = mh, w++) {
             for (i = 0; i < mh; ++i) {
-                wr = Math.Cos(theta * i);
-                wi = Math.Sin(theta * i);
+                wr = WR[w][i];
+                wi = WI[w][i];
                 for (j = i; j < N; j += m) {
                     k = j + mh;
                     xr = Re[j] - Re[k];
@@ -31,7 +54,6 @@ public class FFT {
                     Im[k] = wr * xi + wi * xr;
                 }
             }
-            theta *= 2;
         }
 
         i = 0;
@@ -56,14 +78,13 @@ public class FFT {
 
     public void IExecute() {
         int N = Re.Length;
-        int m, mh, i, j, k;
+        int m, mh, i, j, k, w;
         double wr, wi, xr, xi;
-        double theta = 2.0 * Math.PI / N;
 
-        for (m = N; 1 <= (mh = m >> 1); m = mh) {
+        for (m = N, w = 0; 1 <= (mh = m >> 1); m = mh, w++) {
             for (i = 0; i < mh; ++i) {
-                wr = Math.Cos(theta * i);
-                wi = Math.Sin(theta * i);
+                wr = WR[w][i];
+                wi = -WI[w][i];
                 for (j = i; j < N; j += m) {
                     k = j + mh;
                     xr = Re[j] - Re[k];
@@ -74,7 +95,6 @@ public class FFT {
                     Im[k] = wr * xi + wi * xr;
                 }
             }
-            theta *= 2;
         }
 
         i = 0;
@@ -93,14 +113,13 @@ public class FFT {
 
     public void Power() {
         int N = Re.Length;
-        int m, mh, i, j, k;
+        int m, mh, i, j, k, w;
         double wr, wi, xr, xi;
-        double theta = -2.0 * Math.PI / N;
 
-        for (m = N; 1 <= (mh = m >> 1); m = mh) {
+        for (m = N, w=0; 1 <= (mh = m >> 1); m = mh, w++) {
             for (i = 0; i < mh; ++i) {
-                wr = Math.Cos(theta * i);
-                wi = Math.Sin(theta * i);
+                wr = WR[w][i];
+                wi = WI[w][i];
                 for (j = i; j < N; j += m) {
                     k = j + mh;
                     xr = Re[j] - Re[k];
@@ -111,7 +130,6 @@ public class FFT {
                     Im[k] = wr * xi + wi * xr;
                 }
             }
-            theta *= 2;
         }
 
         i = 0;
@@ -136,15 +154,14 @@ public class FFT {
 
     public void Nsdf() {
         int N = Re.Length;
-        int m, mh, i, j, k;
+        int m, mh, i, j, k, w;
         double wr, wi, xr, xi;
 
         //
-        double theta = -2.0 * Math.PI / N;
-        for (m = N; 1 <= (mh = m >> 1); m = mh) {
+        for (m = N, w = 0; 1 <= (mh = m >> 1); m = mh, w++) {
             for (i = 0; i < mh; ++i) {
-                wr = Math.Cos(theta * i);
-                wi = Math.Sin(theta * i);
+                wr = WR[w][i];
+                wi = WI[w][i];
                 for (j = i; j < N; j += m) {
                     k = j + mh;
                     xr = Re[j] - Re[k];
@@ -155,7 +172,6 @@ public class FFT {
                     Im[k] = wr * xi + wi * xr;
                 }
             }
-            theta *= 2;
         }
 
         i = 0;
@@ -178,11 +194,10 @@ public class FFT {
         Im[j] = 0.0;
 
         //
-        theta = 2.0 * Math.PI / N;
-        for (m = N; 1 <= (mh = m >> 1); m = mh) {
+        for (m = N, w = 0; 1 <= (mh = m >> 1); m = mh, w++) {
             for (i = 0; i < mh; ++i) {
-                wr = Math.Cos(theta * i);
-                wi = Math.Sin(theta * i);
+                wr = WR[w][i];
+                wi = -WI[w][i];
                 for (j = i; j < N; j += m) {
                     k = j + mh;
                     xr = Re[j] - Re[k];
@@ -193,7 +208,6 @@ public class FFT {
                     Im[k] = wr * xi + wi * xr;
                 }
             }
-            theta *= 2;
         }
 
         if (Re[0] < 0.0001) {
@@ -220,18 +234,19 @@ public class FFT {
         var N = Re.Length;
 
         for (int i = 0; i < N; ++i) {
-            Re[i] *= 0.6 - 0.4 * Math.Cos(2.0 * Math.PI * i / N);
+            Re[i] *= Window[i];
         }
 
         Nsdf();
 
+        const double threshold = 0.9;
         var clipLength = 0;
         var clipCount = 0;
         var clipIndexSum = 0;
         var clipIndexBegin = 1.0;
         var clipIndexEnd = 1.0;
         for (var i = (N >> 2) - 1; 0 <= i; --i) {
-            if (0.8 < Re[i] * (1.0 + (double)i / N)) {
+            if (threshold < Re[i] * (1.0 + (double)i / N)) {
                 ++clipLength;
                 clipIndexSum += i;
             }

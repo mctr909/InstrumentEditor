@@ -26,8 +26,9 @@ namespace InstrumentEditor {
             timer1.Interval = 30;
             timer1.Enabled = true;
             timer1.Start();
-            tscLayer.Visible = false;
-            txtLayer.Visible = false;
+            tscLayer.Visible = true;
+            txtLayer.Visible = true;
+            pnlLayer.Visible = true;
             StartPosition = FormStartPosition.CenterParent;
         }
 
@@ -58,34 +59,8 @@ namespace InstrumentEditor {
             DeleteLayer();
         }
 
-        private void tsbLayerList_Click(object sender, EventArgs e) {
-            tsbRangeKey.Checked = false;
-            tsbRangeList.Checked = true;
-            tsbAddRange.Enabled = true;
-            tsbDeleteRange.Enabled = true;
-            pnlLayer.Visible = false;
-            lstLayer.Visible = true;
-            tscLayer.Visible = false;
-            txtLayer.Visible = false;
-        }
-
-        private void tsbRangeKey_Click(object sender, EventArgs e) {
-            tsbAddRange.Enabled = false;
-            tsbDeleteRange.Enabled = false;
-            tsbRangeList.Checked = false;
-            tsbRangeKey.Checked = true;
-            lstLayer.Visible = false;
-            pnlLayer.Visible = true;
-            tscLayer.Visible = true;
-            txtLayer.Visible = true;
-        }
-
         private void tscLayer_SelectedIndexChanged(object sender, EventArgs e) {
             DispLayerRanges();
-        }
-
-        private void lstLayer_DoubleClick(object sender, EventArgs e) {
-            EditLayer(ListToRange());
         }
 
         private void picLayer_DoubleClick(object sender, EventArgs e) {
@@ -131,18 +106,11 @@ namespace InstrumentEditor {
             pnlLayer.Top = toolStrip1.Height + 4;
             pnlLayer.Width = width;
             pnlLayer.Height = height;
-
-            lstLayer.Left = 0;
-            lstLayer.Top = toolStrip1.Height + 4;
-            lstLayer.Width = width;
-            lstLayer.Height = height;
         }
 
         private void DispLayerInfo() {
             Text = string.Format("レイヤー[{0}]", mPreset.Info.Name.Trim());
 
-            var idx = lstLayer.SelectedIndex;
-            lstLayer.Items.Clear();
             tscLayer.Items.Clear();
 
             foreach (var layer in mPreset.Layer.ToArray()) {
@@ -153,17 +121,6 @@ namespace InstrumentEditor {
                     instName = inst.Info.Name;
                 }
 
-                var regionInfo = string.Format(
-                    "{0}-{1}|{2}-{3}|{4}|{5}",
-                    layer.Header.KeyLo.ToString("000"),
-                    layer.Header.KeyHi.ToString("000"),
-                    layer.Header.VelLo.ToString("000"),
-                    layer.Header.VelHi.ToString("000"),
-                    instIndex.ToString("0000"),
-                    instName
-                );
-
-                lstLayer.Items.Add(regionInfo);
                 tscLayer.Items.Add(string.Format("{0}|{1}|{2}|{3}|{4}|{5}",
                     layer.Header.KeyLo.ToString("000"),
                     layer.Header.KeyHi.ToString("000"),
@@ -175,11 +132,6 @@ namespace InstrumentEditor {
             }
 
             tscLayer.SelectedIndex = 0 < tscLayer.Items.Count ? 0 : -1;
-
-            if (lstLayer.Items.Count <= idx) {
-                idx = lstLayer.Items.Count - 1;
-            }
-            lstLayer.SelectedIndex = idx;
         }
 
         private void DispLayerRanges() {
@@ -239,31 +191,8 @@ namespace InstrumentEditor {
         }
 
         private void DeleteLayer() {
-            var index = lstLayer.SelectedIndex;
-            foreach (int idx in lstLayer.SelectedIndices) {
-                var cols = lstLayer.Items[idx].ToString().Split('|');
-                var key = cols[0].Split('-');
-                var vel = cols[1].Split('-');
-                var select = new LYRH {
-                    KeyLo = byte.Parse(key[0]),
-                    KeyHi = byte.Parse(key[1]),
-                    VelLo = byte.Parse(vel[0]),
-                    VelHi = byte.Parse(vel[1]),
-                    InstIndex = int.Parse(cols[2])
-                };
-                var layer = mPreset.Layer[idx].Header;
-                if (select.KeyLo <= layer.KeyLo && layer.KeyHi <= select.KeyHi &&
-                    select.VelLo <= layer.VelLo && layer.VelHi <= select.VelHi &&
-                    select.InstIndex == layer.InstIndex) {
-                    mPreset.Layer.Remove(idx);
-                }
-            }
+            //mPreset.Layer.Remove(idx);
             DispLayerInfo();
-            if (index < lstLayer.Items.Count) {
-                lstLayer.SelectedIndex = index;
-            } else {
-                lstLayer.SelectedIndex = lstLayer.Items.Count - 1;
-            }
         }
 
         private Point LayerPos() {
@@ -299,23 +228,6 @@ namespace InstrumentEditor {
                 }
             }
             return range;
-        }
-
-        private LYRH ListToRange() {
-            if (lstLayer.SelectedIndex < 0) {
-                return new LYRH();
-            }
-            var cols = lstLayer.Items[lstLayer.SelectedIndex].ToString().Split('|');
-            var key = cols[0].Split('-');
-            var vel = cols[1].Split('-');
-            var region = new LYRH {
-                KeyLo = byte.Parse(key[0]),
-                KeyHi = byte.Parse(key[1]),
-                VelLo = byte.Parse(vel[0]),
-                VelHi = byte.Parse(vel[1]),
-                InstIndex = int.Parse(cols[2])
-            };
-            return region;
         }
 
         private void DrawBackground() {
