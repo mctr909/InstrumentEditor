@@ -11,10 +11,6 @@ namespace InstrumentEditor {
         private const int KEY_WIDTH = 8;
         private const int VEL_HEIGHT = 4;
 
-        private readonly string[] NOTE_NAME = new string[] {
-            "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
-        };
-
         public RegionAssignForm(Pack file, Inst inst) {
             mFile = file;
             mInst = inst;
@@ -41,7 +37,7 @@ namespace InstrumentEditor {
                     "強弱:{0} 音程:{1}({2}{3})",
                     posRegion.Y.ToString("000"),
                     posRegion.X.ToString("000"),
-                    NOTE_NAME[posRegion.X % 12],
+                    Const.NoteName[posRegion.X % 12],
                     (posRegion.X / 12 - 2)
                 );
             }

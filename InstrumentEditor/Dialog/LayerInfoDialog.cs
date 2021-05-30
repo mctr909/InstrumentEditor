@@ -9,10 +9,6 @@ namespace InstrumentEditor {
         private Pack mFile;
         private Layer mLayer;
 
-        private readonly string[] NoteName = new string[] {
-            "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
-        };
-
         public LayerInfoDialog(Pack file, Layer layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
@@ -123,7 +119,7 @@ namespace InstrumentEditor {
         private void SetKeyLow() {
             var oct = (int)numKeyLow.Value / 12 - 2;
             var note = (int)numKeyLow.Value % 12;
-            lblKeyLow.Text = string.Format("{0}{1}", NoteName[note], oct);
+            lblKeyLow.Text = string.Format("{0}{1}", Const.NoteName[note], oct);
 
             if (numKeyHigh.Value < numKeyLow.Value) {
                 numKeyHigh.Value = numKeyLow.Value;
@@ -133,7 +129,7 @@ namespace InstrumentEditor {
         private void SetKeyHigh() {
             var oct = (int)numKeyHigh.Value / 12 - 2;
             var note = (int)numKeyHigh.Value % 12;
-            lblKeyHigh.Text = string.Format("{0}{1}", NoteName[note], oct);
+            lblKeyHigh.Text = string.Format("{0}{1}", Const.NoteName[note], oct);
 
             if (numKeyHigh.Value < numKeyLow.Value) {
                 numKeyLow.Value = numKeyHigh.Value;

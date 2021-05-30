@@ -11,10 +11,6 @@ namespace InstrumentEditor {
         private Preset mClipboardPreset;
         private Inst mClipboardInst;
 
-        private readonly string[] NoteName = new string[] {
-            "C ", "Db", "D ", "Eb", "E ", "F ", "Gb", "G ", "Ab", "A ", "Bb", "B "
-        };
-
         public MainForm() {
             InitializeComponent();
             SetTabSize();
@@ -375,14 +371,14 @@ namespace InstrumentEditor {
                     }
                 }
 
-                lstWave.Items.Add(string.Format(
-                    "{0}|{1}|{2}|{3}|{4}",
+                lstWave.Items.Add(string.Format("{0}|{1}|{2}|{3}|{4}|{5}",
                     iWave.ToString("0000"),
-                    (use ? "*" : " "),
+                    (use ? "use" : "   "),
                     (0 < wave.Header.LoopEnable ? "loop" : "    "),
-                    NoteName[wave.Header.UnityNote % 12]
+                    Const.NoteName[wave.Header.UnityNote % 12]
                         + (wave.Header.UnityNote < 12 ? "" : "+")
                         + (wave.Header.UnityNote / 12 - 2).ToString("00"),
+                    wave.Info.Category.PadRight(16, ' ').Substring(0, 16),
                     name
                 ));
                 ++count;
@@ -712,7 +708,7 @@ namespace InstrumentEditor {
                 lstInst.Items.Add(string.Format(
                     "{0}|{1}|{2}|{3}",
                     iInst.ToString("0000"),
-                    use ? "*" : " ",
+                    use ? "use" : "   ",
                     inst.Info.Category.PadRight(16, ' ').Substring(0, 16),
                     inst.Info.Name
                 ));

@@ -11,11 +11,6 @@ namespace InstrumentEditor {
         private bool mOnRange;
         private const int KEY_WIDTH = 8;
         private const int VEL_HEIGHT = 4;
-
-        private readonly string[] NOTE_NAME = new string[] {
-            "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
-        };
-
         public LayerAssignForm(Pack file, Preset preset) {
             mFile = file;
             mPreset = preset;
@@ -44,7 +39,7 @@ namespace InstrumentEditor {
                     "強弱:{0} 音程:{1}({2}{3})",
                     pos.Y.ToString("000"),
                     pos.X.ToString("000"),
-                    NOTE_NAME[pos.X % 12],
+                    Const.NoteName[pos.X % 12],
                     (pos.X / 12 - 2)
                 );
             }
