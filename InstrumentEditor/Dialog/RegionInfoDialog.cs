@@ -61,7 +61,7 @@ namespace InstrumentEditor {
                 txtWave.Text = string.Format(
                     "{0} {1}",
                     waveIndex.ToString("0000"),
-                    wave.Info.Name
+                    wave.InfoName
                 );
             } else {
                 btnEditWave.Enabled = false;
@@ -226,7 +226,7 @@ namespace InstrumentEditor {
                 var waveName = "";
                 if (mFile.Wave.ContainsKey(waveIndex)) {
                     var wave = mFile.Wave[waveIndex];
-                    waveName = wave.Info.Name;
+                    waveName = wave.InfoName;
                     btnEditWave.Enabled = true;
                 } else {
                     btnEditWave.Enabled = false;

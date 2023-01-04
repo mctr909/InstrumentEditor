@@ -294,11 +294,11 @@ namespace InstrumentEditor {
             foreach (var idx in indices) {
                 var cols = lstWave.Items[(int)idx].ToString().Split('|');
                 var wave = mPack.Wave[int.Parse(cols[0])];
-                if (null == wave.Info || string.IsNullOrWhiteSpace(wave.Info.Name)) {
+                if (string.IsNullOrWhiteSpace(wave.InfoName)) {
                     wave.ToFile(Path.Combine(folderPath, string.Format("Wave{0}.wav", idx)));
                 }
                 else {
-                    wave.ToFile(Path.Combine(folderPath, wave.Info.Name + ".wav"));
+                    wave.ToFile(Path.Combine(folderPath, wave.InfoName + ".wav"));
                 }
             }
         }
@@ -338,10 +338,10 @@ namespace InstrumentEditor {
             for (var iWave = 0; iWave < mPack.Wave.Count; iWave++) {
                 var wave = mPack.Wave[iWave];
                 var name = "";
-                if (null == wave.Info || string.IsNullOrWhiteSpace(wave.Info.Name)) {
+                if (string.IsNullOrWhiteSpace(wave.InfoName)) {
                     name = string.Format("Wave[{0}]", count);
                 } else {
-                    name = wave.Info.Name;
+                    name = wave.InfoName;
                 }
 
                 if (!string.IsNullOrEmpty(txtSearchWave.Text)
@@ -378,7 +378,7 @@ namespace InstrumentEditor {
                     Const.NoteName[wave.Header.UnityNote % 12]
                         + (wave.Header.UnityNote < 12 ? "" : "+")
                         + (wave.Header.UnityNote / 12 - 2).ToString("00"),
-                    wave.Info.Category.PadRight(16, ' ').Substring(0, 16),
+                    wave.InfoCat.PadRight(16, ' ').Substring(0, 16),
                     name
                 ));
                 ++count;
@@ -458,9 +458,8 @@ namespace InstrumentEditor {
                 mClipboardPreset.Art.Add(art);
             }
             // Info
-            mClipboardPreset.Info = new Riff.Info();
-            mClipboardPreset.Info.Name = preset.Info.Name;
-            mClipboardPreset.Info.Category = preset.Info.Category;
+            mClipboardPreset.InfoName = preset.InfoName;
+            mClipboardPreset.InfoCat = preset.InfoCat;
         }
 
         private void PastePreset() {
@@ -488,7 +487,7 @@ namespace InstrumentEditor {
             lstPreset.Items.Clear();
             foreach (var preset in mPack.Preset.Values) {
                 if (!string.IsNullOrEmpty(txtSearchPreset.Text)
-                    && preset.Info.Name.IndexOf(txtSearchPreset.Text, StringComparison.InvariantCultureIgnoreCase) < 0
+                    && preset.InfoName.IndexOf(txtSearchPreset.Text, StringComparison.InvariantCultureIgnoreCase) < 0
                 ) {
                     continue;
                 }
@@ -499,8 +498,8 @@ namespace InstrumentEditor {
                     preset.Header.ProgNum.ToString("000"),
                     preset.Header.BankMSB.ToString("000"),
                     preset.Header.BankLSB.ToString("000"),
-                    preset.Info.Category.PadRight(16, ' ').Substring(0, 16),
-                    preset.Info.Name
+                    preset.InfoCat.PadRight(16, ' ').Substring(0, 16),
+                    preset.InfoName
                 ));
             }
 
@@ -523,7 +522,7 @@ namespace InstrumentEditor {
                 var fm = new PresetInfoDialog(mPack, preset);
                 fm.ShowDialog();
                 foreach (var p in lst) {
-                    p.Info.Category = preset.Info.Category;
+                    p.InfoCat = preset.InfoCat;
                 }
                 DispPresetList();
                 return;
@@ -667,10 +666,9 @@ namespace InstrumentEditor {
             }
 
             // Info
-            mClipboardInst.Info = new Riff.Info();
-            mClipboardInst.Info.Name = inst.Info.Name;
-            mClipboardInst.Info.Category = inst.Info.Category;
-            mClipboardInst.Info.Comments = inst.Info.Comments;
+            mClipboardInst.InfoName = inst.InfoName;
+            mClipboardInst.InfoCat = inst.InfoCat;
+            mClipboardInst.InfoComments = inst.InfoComments;
         }
 
         private void PasteInst() {
@@ -688,7 +686,7 @@ namespace InstrumentEditor {
             lstInst.Items.Clear();
             for (var iInst = 0; iInst < mPack.Inst.Count; iInst++) {
                 if (!string.IsNullOrEmpty(txtSearchInst.Text)
-                    && mPack.Inst[iInst].Info.Name.IndexOf(txtSearchInst.Text, StringComparison.InvariantCultureIgnoreCase) < 0
+                    && mPack.Inst[iInst].InfoName.IndexOf(txtSearchInst.Text, StringComparison.InvariantCultureIgnoreCase) < 0
                 ) {
                     continue;
                 }
@@ -709,8 +707,8 @@ namespace InstrumentEditor {
                     "{0}|{1}|{2}|{3}",
                     iInst.ToString("0000"),
                     use ? "use" : "   ",
-                    inst.Info.Category.PadRight(16, ' ').Substring(0, 16),
-                    inst.Info.Name
+                    inst.InfoCat.PadRight(16, ' ').Substring(0, 16),
+                    inst.InfoName
                 ));
             }
 
@@ -743,7 +741,7 @@ namespace InstrumentEditor {
                 var fm = new InstInfoDialog(mPack, inst);
                 fm.ShowDialog();
                 foreach (var p in lst) {
-                    p.Info.Category = inst.Info.Category;
+                    p.InfoCat = inst.InfoCat;
                 }
                 DispInstList();
                 return;

@@ -3,8 +3,6 @@ using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
 
-using Riff;
-
 namespace InstPack {
     public class LWave {
         private List<Wave> List = new List<Wave>();
@@ -45,7 +43,10 @@ namespace InstPack {
     public class Wave {
         public WAVH Header;
         public short[] Data = null;
-        public Info Info = new Info();
+        public string InfoName = "";
+        public string InfoCat = "";
+        public string InfoDateTime = "";
+        public string InfoSrc = "";
 
         private FMT mFormat;
 
@@ -77,13 +78,6 @@ namespace InstPack {
                     break;
                 case "wavh":
                     Header = Marshal.PtrToStructure<WAVH>(pChunkData);
-                    break;
-                case "LIST":
-                    switch (Marshal.PtrToStringAnsi(pChunkData, 4)) {
-                    case "INFO":
-                        Info = new Info(pChunkData + 4, pChunkData + (int)chunkSize);
-                        break;
-                    }
                     break;
                 default:
                     break;
@@ -139,12 +133,8 @@ namespace InstPack {
                 Header.Pitch = 1.0;
             }
 
-            if (null == Info) {
-                Info = new Info {
-                    Name = Path.GetFileNameWithoutExtension(filePath)
-                };
-            } else if (string.IsNullOrWhiteSpace(Info.Name)) {
-                Info.Name = Path.GetFileNameWithoutExtension(filePath);
+            if (string.IsNullOrWhiteSpace(InfoName)) {
+                InfoName = Path.GetFileNameWithoutExtension(filePath);
             }
 
             br.Dispose();
@@ -184,7 +174,7 @@ namespace InstPack {
             }
 
             Header.Write(bw);
-            Info.Write(bw);
+            //Info.Write(bw);
 
             fs.Seek(4, SeekOrigin.Begin);
             bw.Write((uint)(fs.Length - 8));

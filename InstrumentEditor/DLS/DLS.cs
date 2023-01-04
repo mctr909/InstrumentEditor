@@ -1,28 +1,29 @@
-﻿using InstPack;
-using Riff;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
+using InstPack;
+
 namespace DLS {
-    public class File : Chunk {
+    public class File : Riff {
         private string mFilePath;
         private CK_VERS mVersion;
         private uint mMSYN = 1;
 
         public LINS Instruments = new LINS();
         public WVPL WavePool = new WVPL();
-        public Info Info = new Info();
+        public Dictionary<string, string> Info = new Dictionary<string, string>();
 
         public File() { }
 
-        public File(string filePath) : base(filePath) {
+        public File(string filePath) : base() {
             mFilePath = filePath;
+            load(filePath);
         }
 
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "colh":
                 break;
             case "vers":
@@ -34,25 +35,19 @@ namespace DLS {
                 break;
             case "dlid":
                 break;
+            case "lins":
+                Instruments = new LINS(ptr, size);
+                break;
+            case "wvpl":
+                WavePool = new WVPL(ptr, size);
+                break;
             default:
-                throw new Exception(string.Format("Unknown ChunkType [{0}]", chunkType));
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
             }
         }
 
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
-            switch (listType) {
-            case "lins":
-                Instruments = new LINS(ptr, ptrTerm);
-                break;
-            case "wvpl":
-                WavePool = new WVPL(ptr, ptrTerm);
-                break;
-            case "INFO":
-                Info = new Info(ptr, ptrTerm);
-                break;
-            default:
-                throw new Exception(string.Format("Unknown ListType [{0}]", listType));
-            }
+        protected override void LoadInfo(IntPtr ptr, string value, string type) {
+            Info.Add(type, value);
         }
 
         public void Save(string filePath) {
@@ -72,7 +67,7 @@ namespace DLS {
 
             Instruments.Write(bw);
             WavePool.Write(bw);
-            Info.Write(bw);
+            //Info.Write(bw);
 
             var fs = new FileStream(filePath, FileMode.Create);
             var bw2 = new BinaryWriter(fs);
@@ -110,10 +105,10 @@ namespace DLS {
                 Marshal.Copy(ptr, waveInfo.Data, 0, waveInfo.Data.Length);
                 Marshal.FreeHGlobal(ptr);
 
-                waveInfo.Info.Name = wave.Info.Name;
-                waveInfo.Info.Category = wave.Info.Category;
-                waveInfo.Info.CreationDate = now;
-                waveInfo.Info.SourceForm = Path.GetFileName(mFilePath);
+                waveInfo.InfoName = wave.InfoName;
+                waveInfo.InfoCat = wave.InfoCat;
+                waveInfo.InfoDateTime = now;
+                waveInfo.InfoSrc = Path.GetFileName(mFilePath);
 
                 pack.Wave.Add(waveInfo);
             }
@@ -133,17 +128,17 @@ namespace DLS {
                 lyr.InstIndex = pack.Inst.Count;
 
                 pres.Layer.Add(lyr);
-                pres.Info.Name = dlsInst.Value.Info.Name;
-                pres.Info.Category = dlsInst.Value.Info.Category;
-                pres.Info.CreationDate = now;
-                pres.Info.SourceForm = Path.GetFileName(mFilePath);
+                pres.InfoName = dlsInst.Value.InfoName;
+                pres.InfoCat = dlsInst.Value.InfoCat;
+                pres.InfoDateTime = now;
+                pres.InfoSrc = Path.GetFileName(mFilePath);
                 pack.Preset.Add(pres.Header, pres);
 
                 var inst = new Inst();
-                inst.Info.Name = dlsInst.Value.Info.Name;
-                inst.Info.Category = dlsInst.Value.Info.Category;
-                inst.Info.CreationDate = now;
-                inst.Info.SourceForm = Path.GetFileName(mFilePath);
+                inst.InfoName = dlsInst.Value.InfoName;
+                inst.InfoCat = dlsInst.Value.InfoCat;
+                inst.InfoDateTime = now;
+                inst.InfoSrc = Path.GetFileName(mFilePath);
 
                 if (null != dlsInst.Value.Articulations && null != dlsInst.Value.Articulations.ART) {
                     foreach (var instArt in dlsInst.Value.Articulations.ART.List.Values) {
@@ -360,8 +355,7 @@ namespace DLS {
                     wavh.Loops.Add(0, loop);
                 }
 
-                wavh.Info = new Info();
-                wavh.Info.Name = wav.Info.Name;
+                wavh.InfoName = wav.InfoName;
 
                 wavh.Data = new byte[wav.Data.Length * 2];
                 var pData = Marshal.AllocHGlobal(wavh.Data.Length);
@@ -391,9 +385,8 @@ namespace DLS {
                 ins.Header.Locale.ProgNum = srcPre.Header.ProgNum;
                 ins.Header.Regions = (uint)srcIns.Region.Count;
 
-                ins.Info = new Info();
-                ins.Info.Name = srcPre.Info.Name;
-                ins.Info.Category = srcPre.Info.Category;
+                ins.InfoName = srcPre.InfoName;
+                ins.InfoCat = srcPre.InfoCat;
 
                 ins.Articulations = new LART();
                 ins.Articulations.ART = new ART();

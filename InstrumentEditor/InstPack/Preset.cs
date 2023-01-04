@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Riff;
-
 namespace InstPack {
     public class LPreset {
         private Dictionary<PREH, Preset> List = new Dictionary<PREH, Preset>();
@@ -41,7 +39,10 @@ namespace InstPack {
         public PREH Header;
         public Lart Art = new Lart();
         public LLayer Layer = new LLayer();
-        public Info Info = new Info();
+        public string InfoName = "";
+        public string InfoCat = "";
+        public string InfoDateTime = "";
+        public string InfoSrc = "";
 
         public Preset() { }
     }

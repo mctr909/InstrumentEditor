@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Riff;
-
 namespace DLS {
-    public class WVPL : Chunk {
+    public class WVPL : Riff {
         public Dictionary<int, WAVE> List = new Dictionary<int, WAVE>();
 
         public WVPL() { }
 
-        public WVPL(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public WVPL(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
-            switch (listType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "wave":
-                List.Add(List.Count, new WAVE(ptr, ptrTerm));
+                List.Add(List.Count, new WAVE(ptr, size));
                 break;
             default:
                 throw new Exception();
@@ -51,19 +51,22 @@ namespace DLS {
         }
     }
 
-    public class WAVE : Chunk {
+    public class WAVE : Riff {
         public CK_FMT Format;
         public CK_WSMP Sampler;
         public Dictionary<int, WaveLoop> Loops = new Dictionary<int, WaveLoop>();
         public byte[] Data;
-        public Info Info = new Info();
+        public string InfoName = "";
+        public string InfoCat = "";
 
         public WAVE() { }
 
-        public WAVE(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public WAVE(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "dlid":
             case "guid":
                 break;
@@ -71,7 +74,7 @@ namespace DLS {
                 Format = Marshal.PtrToStructure<CK_FMT>(ptr);
                 break;
             case "data":
-                Data = new byte[chunkSize];
+                Data = new byte[size];
                 Marshal.Copy(ptr, Data, 0, Data.Length);
                 break;
             case "wsmp":
@@ -85,10 +88,13 @@ namespace DLS {
             }
         }
 
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
-            switch (listType) {
-            case "INFO":
-                Info = new Info(ptr, ptrTerm);
+        protected override void LoadInfo(IntPtr ptr, string value, string type) {
+            switch (type) {
+            case INFO_TYPE.INAM:
+                InfoName = value;
+                break;
+            case INFO_TYPE.ICAT:
+                InfoCat = value;
                 break;
             }
         }
@@ -113,7 +119,10 @@ namespace DLS {
             bwSmp.Write(Data.Length);
             bwSmp.Write(Data);
 
-            Info.Write(bwSmp);
+            var info = new Info();
+            info.Add(INFO_TYPE.INAM, InfoName);
+            info.Add(INFO_TYPE.ICAT, InfoCat);
+            info.Write(bwSmp);
 
             bwSmp.Seek(4, SeekOrigin.Begin);
             bwSmp.Write((uint)msSmp.Length - 8);

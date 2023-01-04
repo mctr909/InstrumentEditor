@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Riff;
-
 namespace InstPack {
     public class LLayer {
         private List<Layer> List = new List<Layer>();
@@ -89,7 +87,7 @@ namespace InstPack {
         }
     }
 
-    public class Layer : Chunk {
+    public class Layer : Riff {
         public RGNH Header;
         public int InstIndex;
         public Lart Art = new Lart();

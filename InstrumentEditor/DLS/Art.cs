@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Riff;
-
 namespace DLS {
-    public class LART : Chunk {
+    public class LART : Riff {
         public ART ART;
 
         public LART() { }
 
-        public LART(IntPtr ptr, IntPtr endPtr) : base(ptr, endPtr) { }
+        public LART(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "art1":
             case "art2":
                 ART = new ART(ptr);
                 break;
             default:
-                throw new Exception(string.Format("Unknown ChunkType [{0}]", chunkType));
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
             }
         }
 

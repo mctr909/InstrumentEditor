@@ -18,17 +18,14 @@ namespace InstrumentEditor {
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mInst = inst;
-            if (null == mInst.Info) {
-                mInst.Info = new Riff.Info();
-            }
-            txtInstName.Text = mInst.Info.Name;
+            txtInstName.Text = mInst.InfoName;
             envelope1.Art = mInst.Art;
             btnAdd.Text = "反映";
         }
 
         private void InstInfoDialog_Load(object sender, EventArgs e) {
-            if (null != mInst && null != mInst.Info) {
-                cmbCategory.SelectedText = mInst.Info.Category;
+            if (null != mInst) {
+                cmbCategory.SelectedText = mInst.InfoCat;
             }
             setCategoryList();
             setPos();
@@ -41,15 +38,14 @@ namespace InstrumentEditor {
         private void btnAdd_Click(object sender, EventArgs e) {
             if (null == mInst) {
                 mInst = new Inst();
-                mInst.Info = new Riff.Info();
-                mInst.Info.Name = txtInstName.Text;
-                mInst.Info.Category = cmbCategory.Text;
+                mInst.InfoName = txtInstName.Text;
+                mInst.InfoCat = cmbCategory.Text;
                 mFile.Inst.Add(mInst);
                 mInst.Art = new Lart();
                 envelope1.SetList(mInst.Art);
             } else {
-                mInst.Info.Name = txtInstName.Text;
-                mInst.Info.Category = cmbCategory.Text;
+                mInst.InfoName = txtInstName.Text;
+                mInst.InfoCat = cmbCategory.Text;
                 envelope1.SetList(mInst.Art);
             }
             Close();
@@ -62,9 +58,9 @@ namespace InstrumentEditor {
                 cmbCategory.Items.Add(tmpCategory);
             }
             foreach (var inst in mFile.Inst.ToArray()) {
-                if (null != inst.Info && "" != inst.Info.Category) {
-                    if (!cmbCategory.Items.Contains(inst.Info.Category.Trim())) {
-                        cmbCategory.Items.Add(inst.Info.Category.Trim());
+                if ("" != inst.InfoCat) {
+                    if (!cmbCategory.Items.Contains(inst.InfoCat.Trim())) {
+                        cmbCategory.Items.Add(inst.InfoCat.Trim());
                     }
                 }
             }

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using Riff;
-
 namespace InstPack {
     public class LInst {
         private List<Inst> List = new List<Inst>();
@@ -42,7 +40,11 @@ namespace InstPack {
     public class Inst {
         public Lart Art = new Lart();
         public LRegion Region = new LRegion();
-        public Info Info = new Info();
+        public string InfoName = "";
+        public string InfoCat = "";
+        public string InfoDateTime = "";
+        public string InfoSrc = "";
+        public string InfoComments = "";
 
         public Inst() { }
     }

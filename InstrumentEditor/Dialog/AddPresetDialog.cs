@@ -286,8 +286,8 @@ namespace InstrumentEditor {
             setProgramList();
             setBankMsbList();
             setBankLsbList();
-            if (null != mPreset && null != mPreset.Info) {
-                cmbCategory.SelectedText = mPreset.Info.Category;
+            if (null != mPreset) {
+                cmbCategory.SelectedText = mPreset.InfoCat;
             }
             setCategoryList();
         }
@@ -324,12 +324,12 @@ namespace InstrumentEditor {
             }
             var preset = new Preset();
             preset.Header = id;
-            preset.Info.Name = txtInstName.Text;
-            preset.Info.Category = cmbCategory.Text;
+            preset.InfoName = txtInstName.Text;
+            preset.InfoCat = cmbCategory.Text;
             if (null != mPreset) {
                 mPreset.Header = id;
-                mPreset.Info.Name = preset.Info.Name;
-                mPreset.Info.Category = preset.Info.Category;
+                mPreset.InfoName = preset.InfoName;
+                mPreset.InfoCat = preset.InfoCat;
                 preset = mPreset;
             }
             mFile.Preset.Add(id, preset);
@@ -343,9 +343,7 @@ namespace InstrumentEditor {
                 rbDrum.Checked = mPreset.Header.IsDrum;
                 rbDrum.Enabled = false;
                 rbNote.Enabled = false;
-                if (null != mPreset.Info) {
-                    txtInstName.Text = mPreset.Info.Name.Trim();
-                }
+                txtInstName.Text = mPreset.InfoName.Trim();
             }
 
             for (byte i = 0; i < 128; ++i) {
@@ -470,9 +468,10 @@ namespace InstrumentEditor {
                 cmbCategory.Items.Add(tmpCategory);
             }
             foreach (var preset in mFile.Preset.Values) {
-                if (null != preset.Info && "" != preset.Info.Category) {
-                    if (!cmbCategory.Items.Contains(preset.Info.Category.Trim())) {
-                        cmbCategory.Items.Add(preset.Info.Category.Trim());
+                var cat = preset.InfoCat;
+                if ("" != cat) {
+                    if (!cmbCategory.Items.Contains(cat.Trim())) {
+                        cmbCategory.Items.Add(cat.Trim());
                     }
                 }
             }

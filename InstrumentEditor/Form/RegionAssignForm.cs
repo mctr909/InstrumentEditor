@@ -97,7 +97,7 @@ namespace InstrumentEditor {
         }
 
         private void DispRegionInfo() {
-            Text = string.Format("リージョン[{0}]", mInst.Info.Name.Trim());
+            Text = string.Format("リージョン[{0}]", mInst.InfoName.Trim());
 
             var bmp = new Bitmap(picRegion.Width, picRegion.Height);
             var g = Graphics.FromImage(bmp);

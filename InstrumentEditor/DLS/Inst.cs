@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Riff;
-
 namespace DLS {
-    public class LINS : Chunk {
+    public class LINS : Riff {
         public sealed class Sort : IComparer<MidiLocale> {
             // IComparerの実装
             public int Compare(MidiLocale x, MidiLocale y) {
@@ -20,12 +18,14 @@ namespace DLS {
 
         public LINS() { }
 
-        public LINS(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public LINS(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string listType) {
             switch (listType) {
             case "ins ":
-                var inst = new INS(ptr, ptrTerm);
+                var inst = new INS(ptr, size);
                 if (List.ContainsKey(inst.Header.Locale)) {
                     return;
                 }
@@ -52,11 +52,12 @@ namespace DLS {
         }
     }
 
-    public class INS : Chunk {
+    public class INS : Riff {
         public CK_INSH Header;
         public LRGN Regions = new LRGN();
         public LART Articulations = new LART();
-        public Info Info = new Info();
+        public string InfoName = "";
+        public string InfoCat = "";
 
         public INS() { }
 
@@ -67,32 +68,35 @@ namespace DLS {
             Header.Locale.BankLSB = bankLSB;
         }
 
-        public INS(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public INS(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "insh":
                 Header = Marshal.PtrToStructure<CK_INSH>(ptr);
                 break;
-            default:
-                throw new Exception(string.Format("Unknown ChunkType [{0}]", chunkType));
-            }
-        }
-
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
-            switch (listType) {
             case "lrgn":
-                Regions = new LRGN(ptr, ptrTerm);
+                Regions = new LRGN(ptr, size);
                 break;
             case "lart":
             case "lar2":
-                Articulations = new LART(ptr, ptrTerm);
-                break;
-            case "INFO":
-                Info = new Info(ptr, ptrTerm);
+                Articulations = new LART(ptr, size);
                 break;
             default:
-                throw new Exception(string.Format("Unknown ListType [{0}]", listType));
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
+            }
+        }
+
+        protected override void LoadInfo(IntPtr ptr, string value, string type) {
+            switch (type) {
+            case INFO_TYPE.INAM:
+                InfoName = value;
+                break;
+            case INFO_TYPE.ICAT:
+                InfoCat = value;
+                break;
             }
         }
 
@@ -107,7 +111,11 @@ namespace DLS {
 
             Regions.Write(bwIns);
             Articulations.Write(bwIns);
-            Info.Write(bwIns);
+
+            var info = new Info();
+            info.Add(INFO_TYPE.INAM, InfoName);
+            info.Add(INFO_TYPE.ICAT, InfoCat);
+            info.Write(bwIns);
 
             bwIns.Seek(4, SeekOrigin.Begin);
             bwIns.Write((uint)msIns.Length - 8);

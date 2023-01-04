@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
 
-using Riff;
 using InstPack;
 
 namespace SF2 {
@@ -188,25 +187,26 @@ namespace SF2 {
         public List<PresetRange> Range = new List<PresetRange>();
     }
 
-    public class File : Chunk {
+    public class File : Riff {
         private string mPath;
         private PDTA mPdta;
         private SDTA mSdta;
 
-        public File(string filePath) : base(filePath) {
+        public File(string filePath) : base() {
             mPath = filePath;
+            load(filePath);
             //OutputPresetList();
             //OutputInstList();
             //OutputSampleList();
         }
 
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
-            switch (listType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "pdta":
-                mPdta = new PDTA(ptr, ptrTerm);
+                mPdta = new PDTA(ptr, size);
                 break;
             case "sdta":
-                mSdta = new SDTA(ptr, ptrTerm);
+                mSdta = new SDTA(ptr, size);
                 break;
             default:
                 break;
@@ -458,7 +458,7 @@ namespace SF2 {
             sw.Dispose();
         }
 
-        public InstPack.Pack ToIns() {
+        public Pack ToIns() {
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
             var instFile = new InstPack.Pack();
 
@@ -489,9 +489,9 @@ namespace SF2 {
                 Marshal.Copy(wavePtr, wi.Data, 0, waveLen / 2);
                 Marshal.FreeHGlobal(wavePtr);
 
-                wi.Info.Name = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
-                wi.Info.CreationDate = now;
-                wi.Info.SourceForm = Path.GetFileName(mPath);
+                wi.InfoName = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
+                wi.InfoDateTime = now;
+                wi.InfoSrc = Path.GetFileName(mPath);
 
                 instFile.Wave.Add(wi);
             }
@@ -499,9 +499,9 @@ namespace SF2 {
             foreach (var sf2Inst in mPdta.InstList) {
                 var inst = new InstPack.Inst();
 
-                inst.Info.Name = sf2Inst.Name.Replace("\0", "");
-                inst.Info.CreationDate = now;
-                inst.Info.SourceForm = Path.GetFileName(mPath);
+                inst.InfoName = sf2Inst.Name.Replace("\0", "");
+                inst.InfoDateTime = now;
+                inst.InfoSrc = Path.GetFileName(mPath);
 
                 foreach (var art in sf2Inst.GlobalArt) {
                     var globalArt = new ART {
@@ -626,9 +626,9 @@ namespace SF2 {
                 preset.Header.BankLSB = sf2Pres.Key.bankLSB;
                 preset.Header.ProgNum = sf2Pres.Key.progNum;
 
-                preset.Info.Name = sf2Pres.Value.Name.Replace("\0", "");
-                preset.Info.CreationDate = now;
-                preset.Info.SourceForm = Path.GetFileName(mPath);
+                preset.InfoName = sf2Pres.Value.Name.Replace("\0", "");
+                preset.InfoDateTime = now;
+                preset.InfoSrc = Path.GetFileName(mPath);
 
                 foreach (var art in sf2Pres.Value.GlobalArt) {
                     var globalArt = new ART {
@@ -698,7 +698,7 @@ namespace SF2 {
         }
     }
 
-    public class PDTA : Chunk {
+    public class PDTA : Riff {
         public Dictionary<INST_ID, Preset> PresetList = new Dictionary<INST_ID, Preset>();
         public List<Inst> InstList = new List<Inst>();
         public List<SHDR> SampleList = new List<SHDR>();
@@ -712,7 +712,8 @@ namespace SF2 {
         private List<MOD> mIMOD = new List<MOD>();
         private List<GEN> mIGEN = new List<GEN>();
 
-        public PDTA(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) {
+        public PDTA(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
             SetPresetList();
             SetInstList();
         }
@@ -912,50 +913,50 @@ namespace SF2 {
             mIMOD.Clear();
         }
 
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "phdr":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<PHDR>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<PHDR>()) {
                     mPHDR.Add(Marshal.PtrToStructure<PHDR>(ptr + pos));
                 }
                 break;
             case "pbag":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<BAG>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<BAG>()) {
                     mPBAG.Add(Marshal.PtrToStructure<BAG>(ptr + pos));
                 }
                 break;
             case "pmod":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<MOD>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<MOD>()) {
                     mPMOD.Add(Marshal.PtrToStructure<MOD>(ptr + pos));
                 }
                 break;
             case "pgen":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<GEN>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<GEN>()) {
                     mPGEN.Add(Marshal.PtrToStructure<GEN>(ptr + pos));
                 }
                 break;
             case "inst":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<INST>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<INST>()) {
                     mINST.Add(Marshal.PtrToStructure<INST>(ptr + pos));
                 }
                 break;
             case "ibag":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<BAG>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<BAG>()) {
                     mIBAG.Add(Marshal.PtrToStructure<BAG>(ptr + pos));
                 }
                 break;
             case "imod":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<MOD>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<MOD>()) {
                     mIMOD.Add(Marshal.PtrToStructure<MOD>(ptr + pos));
                 }
                 break;
             case "igen":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<GEN>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<GEN>()) {
                     mIGEN.Add(Marshal.PtrToStructure<GEN>(ptr + pos));
                 }
                 break;
             case "shdr":
-                for (int pos = 0; pos < chunkSize; pos += Marshal.SizeOf<SHDR>()) {
+                for (int pos = 0; pos < size; pos += Marshal.SizeOf<SHDR>()) {
                     SampleList.Add(Marshal.PtrToStructure<SHDR>(ptr + pos));
                 }
                 break;
@@ -965,16 +966,18 @@ namespace SF2 {
         }
     }
 
-    public class SDTA : Chunk {
+    public class SDTA : Riff {
         public byte[] Data { get; private set; }
 
-        public SDTA(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public SDTA(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "smpl":
-                Data = new byte[chunkSize];
-                Marshal.Copy(ptr, Data, 0, chunkSize);
+                Data = new byte[size];
+                Marshal.Copy(ptr, Data, 0, (int)size);
                 break;
             default:
                 break;

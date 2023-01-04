@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Riff;
-
 namespace DLS {
-    public class LRGN : Chunk {
+    public class LRGN : Riff {
         public sealed class Sort : IComparer<CK_RGNH> {
             // IComparerの実装
             public int Compare(CK_RGNH x, CK_RGNH y) {
@@ -34,16 +32,18 @@ namespace DLS {
 
         public LRGN() { }
 
-        public LRGN(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public LRGN(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
-            switch (listType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "rgn ":
-                var rgn = new RGN(ptr, ptrTerm);
+                var rgn = new RGN(ptr, size);
                 List.Add(rgn.Header, rgn);
                 break;
-            default:
-                throw new Exception(string.Format("Unknown ListType [{0}]", listType));
+            //default:
+            //    throw new Exception(string.Format("Unknown ListType [{0}]", type));
             }
         }
 
@@ -63,7 +63,7 @@ namespace DLS {
         }
     }
 
-    public class RGN : Chunk {
+    public class RGN : Riff {
         public CK_RGNH Header;
         public CK_WSMP Sampler;
         public Dictionary<int, WaveLoop> Loops = new Dictionary<int, WaveLoop>();
@@ -79,13 +79,15 @@ namespace DLS {
             Header.Vel.Hi = velocityHigh;
         }
 
-        public RGN(IntPtr ptr, IntPtr ptrTerm) : base(ptr, ptrTerm) { }
+        public RGN(IntPtr ptr, long size) : base() {
+            Load(ptr, size);
+        }
 
-        protected override void ReadChunk(IntPtr ptr, int chunkSize, string chunkType) {
-            switch (chunkType) {
+        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+            switch (type) {
             case "rgnh":
                 Header = Marshal.PtrToStructure<CK_RGNH>(ptr);
-                if (chunkSize < Marshal.SizeOf<CK_RGNH>()) {
+                if (size < Marshal.SizeOf<CK_RGNH>()) {
                     Header.Layer = 0;
                 }
                 break;
@@ -100,19 +102,12 @@ namespace DLS {
             case "wlnk":
                 WaveLink = Marshal.PtrToStructure<CK_WLNK>(ptr);
                 break;
-            default:
-                throw new Exception(string.Format("Unknown ChunkType [{0}]", chunkType));
-            }
-        }
-
-        protected override void ReadList(IntPtr ptr, IntPtr ptrTerm, string listType) {
-            switch (listType) {
             case "lart":
             case "lar2":
-                Articulations = new LART(ptr, ptrTerm);
+                Articulations = new LART(ptr, size);
                 break;
             default:
-                throw new Exception(string.Format("Unknown ListType [{0}]", listType));
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
             }
         }
 

@@ -184,7 +184,7 @@ namespace InstrumentEditor {
 
         #region チェンジイベント
         private void txtName_TextChanged(object sender, EventArgs e) {
-            mFile.Wave[mWaveIndex].Info.Name = txtName.Text;
+            mFile.Wave[mWaveIndex].InfoName = txtName.Text;
         }
 
         private void numWaveScale_ValueChanged(object sender, EventArgs e) {
@@ -309,7 +309,7 @@ namespace InstrumentEditor {
             hsbTime.Height = 19;
 
             //
-            picWave.Height = 128;
+            picWave.Height = 96;
             numWaveScale.Top = 0;
             picSpectrum.Top = numWaveScale.Top + numWaveScale.Height + 4;
             picWave.Top = picSpectrum.Top + picSpectrum.Height + 4;
@@ -361,7 +361,7 @@ namespace InstrumentEditor {
             mSpecTimeDiv = 1.0f / (float)delta / packSize;
             mSpecData = new byte[(int)(mWaveData.Length * mSpecTimeDiv)][];
 
-            var sp = new Spectrum(wave.Header.SampleRate, 27.5, 24, 192);
+            var sp = new Spectrum(wave.Header.SampleRate, 27.5, 24, (uint)picSpectrum.Height);
             var time = 0.0;
             for (var s = 0; s < mSpecData.Length; ++s) {
                 for (var i = 0; i < packSize && time < mWaveData.Length; ++i) {
@@ -394,7 +394,7 @@ namespace InstrumentEditor {
             } else {
                 numFineTune.Value = (int)(1200.0 / Math.Log(2.0, wave.Header.Pitch));
             }
-            txtName.Text = wave.Info.Name;
+            txtName.Text = wave.InfoName;
         }
 
         private void SizeChange() {
