@@ -56,8 +56,7 @@ namespace DLS {
         public CK_WSMP Sampler;
         public Dictionary<int, WaveLoop> Loops = new Dictionary<int, WaveLoop>();
         public byte[] Data;
-        public string InfoName = "";
-        public string InfoCat = "";
+        public Info Info = new Info();
 
         public WAVE() { }
 
@@ -89,14 +88,7 @@ namespace DLS {
         }
 
         protected override void LoadInfo(IntPtr ptr, string value, string type) {
-            switch (type) {
-            case INFO_TYPE.INAM:
-                InfoName = value;
-                break;
-            case INFO_TYPE.ICAT:
-                InfoCat = value;
-                break;
-            }
+            Info.Add(type, value);
         }
 
         public void Write(BinaryWriter bw) {
@@ -119,10 +111,7 @@ namespace DLS {
             bwSmp.Write(Data.Length);
             bwSmp.Write(Data);
 
-            var info = new Info();
-            info.Add(INFO_TYPE.INAM, InfoName);
-            info.Add(INFO_TYPE.ICAT, InfoCat);
-            info.Write(bwSmp);
+            Info.Write(bwSmp);
 
             bwSmp.Seek(4, SeekOrigin.Begin);
             bwSmp.Write((uint)msSmp.Length - 8);

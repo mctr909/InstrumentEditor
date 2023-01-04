@@ -107,6 +107,14 @@ public class Info {
 
     public Info() { }
 
+    public string Get(string key) {
+        if (mList.ContainsKey(key)) {
+            return mList[key];
+        } else {
+            return "";
+        }
+    }
+
     public void Add(string key, string value) {
         if (string.IsNullOrEmpty(value)) {
             return;

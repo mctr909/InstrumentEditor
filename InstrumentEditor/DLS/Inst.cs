@@ -56,8 +56,7 @@ namespace DLS {
         public CK_INSH Header;
         public LRGN Regions = new LRGN();
         public LART Articulations = new LART();
-        public string InfoName = "";
-        public string InfoCat = "";
+        public Info Info = new Info();
 
         public INS() { }
 
@@ -90,14 +89,7 @@ namespace DLS {
         }
 
         protected override void LoadInfo(IntPtr ptr, string value, string type) {
-            switch (type) {
-            case INFO_TYPE.INAM:
-                InfoName = value;
-                break;
-            case INFO_TYPE.ICAT:
-                InfoCat = value;
-                break;
-            }
+            Info.Add(type, value);
         }
 
         public void Write(BinaryWriter bw) {
@@ -112,10 +104,7 @@ namespace DLS {
             Regions.Write(bwIns);
             Articulations.Write(bwIns);
 
-            var info = new Info();
-            info.Add(INFO_TYPE.INAM, InfoName);
-            info.Add(INFO_TYPE.ICAT, InfoCat);
-            info.Write(bwIns);
+            Info.Write(bwIns);
 
             bwIns.Seek(4, SeekOrigin.Begin);
             bwIns.Write((uint)msIns.Length - 8);

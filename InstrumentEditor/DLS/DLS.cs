@@ -13,7 +13,7 @@ namespace DLS {
 
         public LINS Instruments = new LINS();
         public WVPL WavePool = new WVPL();
-        public Dictionary<string, string> Info = new Dictionary<string, string>();
+        public Info Info = new Info();
 
         public File() { }
 
@@ -67,7 +67,7 @@ namespace DLS {
 
             Instruments.Write(bw);
             WavePool.Write(bw);
-            //Info.Write(bw);
+            Info.Write(bw);
 
             var fs = new FileStream(filePath, FileMode.Create);
             var bw2 = new BinaryWriter(fs);
@@ -105,8 +105,8 @@ namespace DLS {
                 Marshal.Copy(ptr, waveInfo.Data, 0, waveInfo.Data.Length);
                 Marshal.FreeHGlobal(ptr);
 
-                waveInfo.InfoName = wave.InfoName;
-                waveInfo.InfoCat = wave.InfoCat;
+                waveInfo.InfoName = wave.Info.Get(INFO_TYPE.INAM);
+                waveInfo.InfoCat = wave.Info.Get(INFO_TYPE.ICAT);
                 waveInfo.InfoDateTime = now;
                 waveInfo.InfoSrc = Path.GetFileName(mFilePath);
 
@@ -128,15 +128,15 @@ namespace DLS {
                 lyr.InstIndex = pack.Inst.Count;
 
                 pres.Layer.Add(lyr);
-                pres.InfoName = dlsInst.Value.InfoName;
-                pres.InfoCat = dlsInst.Value.InfoCat;
+                pres.InfoName = dlsInst.Value.Info.Get(INFO_TYPE.INAM);
+                pres.InfoCat = dlsInst.Value.Info.Get(INFO_TYPE.ICAT);
                 pres.InfoDateTime = now;
                 pres.InfoSrc = Path.GetFileName(mFilePath);
                 pack.Preset.Add(pres.Header, pres);
 
                 var inst = new Inst();
-                inst.InfoName = dlsInst.Value.InfoName;
-                inst.InfoCat = dlsInst.Value.InfoCat;
+                inst.InfoName = dlsInst.Value.Info.Get(INFO_TYPE.INAM);
+                inst.InfoCat = dlsInst.Value.Info.Get(INFO_TYPE.ICAT);
                 inst.InfoDateTime = now;
                 inst.InfoSrc = Path.GetFileName(mFilePath);
 
@@ -355,7 +355,9 @@ namespace DLS {
                     wavh.Loops.Add(0, loop);
                 }
 
-                wavh.InfoName = wav.InfoName;
+                wavh.Info.Add(INFO_TYPE.INAM, wav.InfoName);
+                wavh.Info.Add(INFO_TYPE.ICAT, wav.InfoCat);
+                wavh.Info.Add(INFO_TYPE.ICRD, wav.InfoDateTime);
 
                 wavh.Data = new byte[wav.Data.Length * 2];
                 var pData = Marshal.AllocHGlobal(wavh.Data.Length);
@@ -385,8 +387,9 @@ namespace DLS {
                 ins.Header.Locale.ProgNum = srcPre.Header.ProgNum;
                 ins.Header.Regions = (uint)srcIns.Region.Count;
 
-                ins.InfoName = srcPre.InfoName;
-                ins.InfoCat = srcPre.InfoCat;
+                ins.Info.Add(INFO_TYPE.INAM, srcPre.InfoName);
+                ins.Info.Add(INFO_TYPE.ICAT, srcPre.InfoCat);
+                ins.Info.Add(INFO_TYPE.ICRD, srcPre.InfoDateTime);
 
                 ins.Articulations = new LART();
                 ins.Articulations.ART = new ART();
