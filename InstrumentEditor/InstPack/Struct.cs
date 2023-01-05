@@ -53,6 +53,8 @@ namespace InstPack {
 
     public struct ART {
         public ART_TYPE Type;
+        public uint Source;
+        public uint Contorol;
         public double Value;
     }
 }
