@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -304,6 +305,419 @@ namespace DLS {
             bw.Write(BytesPerSec);
             bw.Write(BlockAlign);
             bw.Write(Bits);
+        }
+    }
+
+    public class LINS : Riff {
+        public sealed class Sort : IComparer<MidiLocale> {
+            // IComparerの実装
+            public int Compare(MidiLocale x, MidiLocale y) {
+                var xKey = ((x.BankFlg & 0x80) << 17) | (x.ProgNum << 16) | (x.BankMSB << 8) | x.BankLSB;
+                var yKey = ((y.BankFlg & 0x80) << 17) | (y.ProgNum << 16) | (y.BankMSB << 8) | y.BankLSB;
+                return xKey - yKey;
+            }
+        }
+
+        public SortedDictionary<MidiLocale, INS> List = new SortedDictionary<MidiLocale, INS>(new Sort());
+
+        public LINS() { }
+
+        public LINS(IntPtr ptr, long size) {
+            Load(ptr, size);
+        }
+
+        public void Write(BinaryWriter bw) {
+            var msLins = new MemoryStream();
+            var bwLins = new BinaryWriter(msLins);
+            foreach (var ins in List) {
+                ins.Value.Write(bwLins);
+            }
+
+            if (0 < msLins.Length) {
+                bw.Write("LIST".ToCharArray());
+                bw.Write((uint)(msLins.Length + 4));
+                bw.Write("lins".ToCharArray());
+                bw.Write(msLins.ToArray());
+            }
+        }
+
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
+            switch (type) {
+            case "ins ":
+                var inst = new INS(ptr, size);
+                if (List.ContainsKey(inst.Header.Locale)) {
+                    return;
+                }
+                List.Add(inst.Header.Locale, inst);
+                break;
+            default:
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
+            }
+        }
+    }
+
+    public class INS : Riff {
+        public CK_INSH Header;
+        public LRGN Regions = new LRGN();
+        public LART Articulations = new LART();
+        public Info Info = new Info();
+
+        public INS(byte programNo = 0, byte bankMSB = 0, byte bankLSB = 0, bool isDrum = false) {
+            Header.Locale.BankFlg = (byte)(isDrum ? 0x80 : 0x00);
+            Header.Locale.ProgNum = programNo;
+            Header.Locale.BankMSB = bankMSB;
+            Header.Locale.BankLSB = bankLSB;
+        }
+
+        public INS(IntPtr ptr, long size) {
+            Load(ptr, size);
+        }
+
+        public void Write(BinaryWriter bw) {
+            var msIns = new MemoryStream();
+            var bwIns = new BinaryWriter(msIns);
+            bwIns.Write("LIST".ToCharArray());
+            bwIns.Write(0xFFFFFFFF);
+            bwIns.Write("ins ".ToCharArray());
+
+            Header.Write(bwIns);
+
+            Regions.Write(bwIns);
+            Articulations.Write(bwIns);
+
+            Info.Write(bwIns);
+
+            bwIns.Seek(4, SeekOrigin.Begin);
+            bwIns.Write((uint)msIns.Length - 8);
+            bw.Write(msIns.ToArray());
+        }
+
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
+            switch (type) {
+            case "insh":
+                Header = Marshal.PtrToStructure<CK_INSH>(ptr);
+                break;
+            case "lrgn":
+                Regions = new LRGN(ptr, size);
+                break;
+            case "lart":
+            case "lar2":
+                Articulations = new LART(ptr, size);
+                break;
+            default:
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
+            }
+        }
+
+        protected override void LoadInfo(IntPtr ptr, string type, string value) {
+            Info[type] = value;
+        }
+    }
+
+    public class LRGN : Riff {
+        public sealed class Sort : IComparer<CK_RGNH> {
+            // IComparerの実装
+            public int Compare(CK_RGNH x, CK_RGNH y) {
+                var keyH = x.Key.Hi < y.Key.Lo;
+                var keyL = y.Key.Hi < x.Key.Lo;
+                var velH = x.Vel.Hi < y.Vel.Lo;
+                var velL = y.Vel.Hi < x.Vel.Lo;
+                var key = keyH || keyL;
+                var vel = velH || velL;
+                if (key || vel) {
+                    if (keyH) {
+                        return 1;
+                    }
+                    if (velH) {
+                        return 1;
+                    }
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        }
+
+        public SortedDictionary<CK_RGNH, RGN> List = new SortedDictionary<CK_RGNH, RGN>(new Sort());
+
+        public LRGN() { }
+
+        public LRGN(IntPtr ptr, long size) {
+            Load(ptr, size);
+        }
+
+        public void Write(BinaryWriter bw) {
+            var msList = new MemoryStream();
+            var bwList = new BinaryWriter(msList);
+            foreach (var rgn in List) {
+                rgn.Value.Write(bwList);
+            }
+
+            if (0 < msList.Length) {
+                bw.Write("LIST".ToCharArray());
+                bw.Write((uint)(msList.Length + 4));
+                bw.Write("lrgn".ToCharArray());
+                bw.Write(msList.ToArray());
+            }
+        }
+
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
+            switch (type) {
+            case "rgn ":
+                var rgn = new RGN(ptr, size);
+                List.Add(rgn.Header, rgn);
+                break;
+            default:
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
+            }
+        }
+    }
+
+    public class RGN : Riff {
+        public CK_RGNH Header;
+        public CK_WSMP Sampler;
+        public List<WaveLoop> Loops = new List<WaveLoop>();
+        public CK_WLNK WaveLink;
+        public LART Articulations = new LART();
+
+        public RGN() {
+            Header.Key.Lo = 0;
+            Header.Key.Hi = 127;
+            Header.Vel.Lo = 0;
+            Header.Vel.Hi = 127;
+        }
+
+        public RGN(IntPtr ptr, long size) {
+            Load(ptr, size);
+        }
+
+        public void Write(BinaryWriter bw) {
+            var msRgn = new MemoryStream();
+            var bwRgn = new BinaryWriter(msRgn);
+            bwRgn.Write("LIST".ToCharArray());
+            bwRgn.Write(0xFFFFFFFF);
+            bwRgn.Write("rgn ".ToCharArray());
+
+            Header.Write(bwRgn);
+
+            bwRgn.Write("wsmp".ToCharArray());
+            bwRgn.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
+            Sampler.Write(bwRgn);
+            for (var i = 0; i < Sampler.LoopCount && i < Loops.Count; ++i) {
+                Loops[i].Write(bwRgn);
+            }
+
+            WaveLink.Write(bwRgn);
+            Articulations.Write(bwRgn);
+
+            bwRgn.Seek(4, SeekOrigin.Begin);
+            bwRgn.Write((uint)msRgn.Length - 8);
+            bw.Write(msRgn.ToArray());
+        }
+
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
+            switch (type) {
+            case "rgnh":
+                Header = Marshal.PtrToStructure<CK_RGNH>(ptr);
+                if (size < Marshal.SizeOf<CK_RGNH>()) {
+                    Header.Layer = 0;
+                }
+                break;
+            case "wsmp":
+                Sampler = Marshal.PtrToStructure<CK_WSMP>(ptr);
+                var pLoop = ptr + Marshal.SizeOf<CK_WSMP>();
+                for (var i = 0; i < Sampler.LoopCount; ++i) {
+                    Loops.Add(Marshal.PtrToStructure<WaveLoop>(pLoop));
+                    pLoop += Marshal.SizeOf<WaveLoop>();
+                }
+                break;
+            case "wlnk":
+                WaveLink = Marshal.PtrToStructure<CK_WLNK>(ptr);
+                break;
+            case "lart":
+            case "lar2":
+                Articulations = new LART(ptr, size);
+                break;
+            default:
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
+            }
+        }
+    }
+
+    public class LART : Riff {
+        public ART ART;
+
+        public LART() { }
+
+        public LART(IntPtr ptr, long size) {
+            Load(ptr, size);
+        }
+
+        public void Write(BinaryWriter bw) {
+            if (null == ART) {
+                return;
+            }
+
+            var msArt = new MemoryStream();
+            var bwArt = new BinaryWriter(msArt);
+            bwArt.Write("art1".ToCharArray());
+            bwArt.Write((uint)(Marshal.SizeOf<CK_ART1>() + ART.List.Count * Marshal.SizeOf<Connection>()));
+            bwArt.Write((uint)8);
+            bwArt.Write((uint)ART.List.Count);
+            foreach (var art in ART.List) {
+                art.Write(bwArt);
+            }
+
+            if (0 < msArt.Length) {
+                bw.Write("LIST".ToCharArray());
+                bw.Write((uint)(msArt.Length + 4));
+                bw.Write("lart".ToCharArray());
+                bw.Write(msArt.ToArray());
+            }
+        }
+
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
+            switch (type) {
+            case "art1":
+            case "art2":
+                ART = new ART(ptr);
+                break;
+            default:
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
+            }
+        }
+    }
+
+    public class ART {
+        public List<Connection> List = new List<Connection>();
+
+        public ART() { }
+
+        public ART(IntPtr ptr) {
+            var info = Marshal.PtrToStructure<CK_ART1>(ptr);
+            ptr += Marshal.SizeOf<CK_ART1>();
+
+            for (var i = 0; i < info.Count; ++i) {
+                List.Add(Marshal.PtrToStructure<Connection>(ptr));
+                ptr += Marshal.SizeOf<Connection>();
+            }
+        }
+    }
+
+    public class WVPL : Riff {
+        public List<WAVE> List = new List<WAVE>();
+
+        public WVPL() { }
+
+        public WVPL(IntPtr ptr, long size) {
+            Load(ptr, size);
+        }
+
+        public void Write(BinaryWriter bw) {
+            var msPtbl = new MemoryStream();
+            var bwPtbl = new BinaryWriter(msPtbl);
+            bwPtbl.Write("ptbl".ToCharArray());
+            bwPtbl.Write((uint)(Marshal.SizeOf<CK_PTBL>() + List.Count * sizeof(uint)));
+            bwPtbl.Write((uint)8);
+            bwPtbl.Write((uint)List.Count);
+
+            var msWave = new MemoryStream();
+            var bwWave = new BinaryWriter(msWave);
+            foreach (var wave in List) {
+                bwPtbl.Write((uint)msWave.Position);
+                wave.Write(bwWave);
+            }
+
+            if (0 < msPtbl.Length) {
+                bw.Write(msPtbl.ToArray());
+            }
+
+            if (0 < msWave.Length) {
+                bw.Write("LIST".ToCharArray());
+                bw.Write((uint)(msWave.Length + 4));
+                bw.Write("wvpl".ToCharArray());
+                bw.Write(msWave.ToArray());
+            }
+        }
+
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
+            switch (type) {
+            case "wave":
+                List.Add(new WAVE(ptr, size));
+                break;
+            default:
+                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
+            }
+        }
+    }
+
+    public class WAVE : Riff {
+        public CK_FMT Format;
+        public CK_WSMP Sampler;
+        public List<WaveLoop> Loops = new List<WaveLoop>();
+        public byte[] Data;
+        public Info Info = new Info();
+
+        public WAVE() { }
+
+        public WAVE(IntPtr ptr, long size) {
+            Load(ptr, size);
+        }
+
+        public void Write(BinaryWriter bw) {
+            var msSmp = new MemoryStream();
+            var bwSmp = new BinaryWriter(msSmp);
+            bwSmp.Write("LIST".ToCharArray());
+            bwSmp.Write(0xFFFFFFFF);
+            bwSmp.Write("wave".ToCharArray());
+
+            bwSmp.Write("wsmp".ToCharArray());
+            bwSmp.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
+            Sampler.Write(bwSmp);
+            foreach (var loop in Loops) {
+                loop.Write(bwSmp);
+            }
+
+            Format.Write(bwSmp);
+
+            bwSmp.Write("data".ToCharArray());
+            bwSmp.Write(Data.Length);
+            bwSmp.Write(Data);
+
+            Info.Write(bwSmp);
+
+            bwSmp.Seek(4, SeekOrigin.Begin);
+            bwSmp.Write((uint)msSmp.Length - 8);
+            bw.Write(msSmp.ToArray());
+        }
+
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
+            switch (type) {
+            case "dlid":
+            case "guid":
+                break;
+            case "fmt ":
+                Format = Marshal.PtrToStructure<CK_FMT>(ptr);
+                break;
+            case "data":
+                Data = new byte[size];
+                Marshal.Copy(ptr, Data, 0, Data.Length);
+                break;
+            case "wsmp":
+                Sampler = Marshal.PtrToStructure<CK_WSMP>(ptr);
+                var pLoop = ptr + Marshal.SizeOf<CK_WSMP>();
+                for (var i = 0; i < Sampler.LoopCount; ++i) {
+                    Loops.Add(Marshal.PtrToStructure<WaveLoop>(pLoop));
+                    pLoop += Marshal.SizeOf<WaveLoop>();
+                }
+                break;
+            default:
+                break;
+            }
+        }
+
+        protected override void LoadInfo(IntPtr ptr, string type, string value) {
+            Info[type] = value;
         }
     }
 }
