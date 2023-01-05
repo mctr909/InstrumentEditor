@@ -600,9 +600,7 @@ namespace SF2 {
                             });
                             break;
                         case E_OPER.OVERRIDING_ROOTKEY:
-                            ///TODO:ART
-                            //layerArt.Type = ART_TYPE.UNITY_KEY;
-                            //rgn.Art.Add(layerArt);
+                            rgn.UnityNote = (ushort)art.Value;
                             break;
 
                         case E_OPER.ENV_VOL_ATTACK:
