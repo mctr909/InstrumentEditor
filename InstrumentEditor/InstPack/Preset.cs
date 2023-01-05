@@ -42,7 +42,6 @@ namespace InstPack {
         public string InfoName = "";
         public string InfoCat = "";
         public string InfoDateTime = "";
-        public string InfoSrc = "";
 
         public Preset() { }
     }

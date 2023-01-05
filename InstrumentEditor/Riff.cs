@@ -5,11 +5,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 public class Riff {
-    private Encoding mEnc = Encoding.GetEncoding("shift-jis");
+    public static readonly Encoding Enc = Encoding.GetEncoding("shift-jis");
 
-    protected Riff() { }
-
-    protected void load(string filePath) {
+    protected void MainLoop(string filePath) {
         using (var fs = new FileStream(filePath, FileMode.Open))
         using (var br = new BinaryReader(fs)) {
             var size = (int)fs.Length;
@@ -46,20 +44,20 @@ public class Riff {
                 if ("INFO" == chunkId) {
                     loopInfo(ptr, chunkSize);
                 } else {
-                    LoadChunk(ptr, chunkSize, chunkId);
+                    LoadChunk(ptr, chunkId, chunkSize);
                 }
             } else {
-                LoadChunk(ptr, chunkSize, chunkId);
+                LoadChunk(ptr, chunkId, chunkSize);
             }
             ptr += chunkSize;
         }
     }
 
-    protected virtual void LoadChunk(IntPtr ptr, long size, string type) { }
+    protected virtual void LoadChunk(IntPtr ptr, string type, long size) { }
 
-    protected virtual void LoadInfo(IntPtr ptr, string value, string type) { }
+    protected virtual void LoadInfo(IntPtr ptr, string type, string value) { }
 
-    private void loopInfo(IntPtr ptr, int size) {
+    private void loopInfo(IntPtr ptr, long size) {
         long pos = 0;
         while (pos < size) {
             var infoType = Marshal.PtrToStringAnsi(ptr, 4);
@@ -72,9 +70,9 @@ public class Riff {
 
             var arr = new byte[infoSize];
             Marshal.Copy(ptr, arr, 0, infoSize);
-            var text = mEnc.GetString(arr).Replace("\0", "");
+            var text = Enc.GetString(arr).Replace("\0", "");
 
-            LoadInfo(ptr, text, infoType);
+            LoadInfo(ptr, infoType, text);
             ptr += infoSize;
         }
     }
@@ -102,27 +100,25 @@ public static class INFO_TYPE {
 }
 
 public class Info {
-    private Encoding mEnc = Encoding.GetEncoding("shift-jis");
     private Dictionary<string, string> mList = new Dictionary<string, string>();
 
-    public Info() { }
-
-    public string Get(string key) {
-        if (mList.ContainsKey(key)) {
-            return mList[key];
-        } else {
-            return "";
+    public string this[string key] {
+        get {
+            if (mList.ContainsKey(key)) {
+                return mList[key];
+            } else {
+                return "";
+            }
         }
-    }
-
-    public void Add(string key, string value) {
-        if (string.IsNullOrEmpty(value)) {
-            return;
-        }
-        if (mList.ContainsKey(key)) {
-            mList[key] = value;
-        } else {
-            mList.Add(key, value);
+        set {
+            if (string.IsNullOrEmpty(value)) {
+                return;
+            }
+            if (mList.ContainsKey(key)) {
+                mList[key] = value;
+            } else {
+                mList.Add(key, value);
+            }
         }
     }
 
@@ -130,7 +126,7 @@ public class Info {
         var msInfo = new MemoryStream();
         var bwInfo = new BinaryWriter(msInfo);
         foreach (var v in mList) {
-            WriteText(bwInfo, v.Key, v.Value);
+            writeText(bwInfo, v.Key, v.Value);
         }
         if (0 < msInfo.Length) {
             bw.Write("LIST".ToCharArray());
@@ -140,16 +136,14 @@ public class Info {
         }
     }
 
-    private void WriteText(BinaryWriter bw, string type, string text) {
+    private void writeText(BinaryWriter bw, string type, string text) {
         if (!string.IsNullOrWhiteSpace(text)) {
-            var pad = 2 - (mEnc.GetBytes(text).Length % 2);
+            var pad = 2 - (Riff.Enc.GetBytes(text).Length % 2);
             for (int i = 0; i < pad; ++i) {
                 text += "\0";
             }
-            var data = mEnc.GetBytes(text);
-            var typeArr = new byte[4];
-            Encoding.ASCII.GetBytes(type, 0, 4, typeArr, 0);
-            bw.Write(typeArr);
+            var data = Riff.Enc.GetBytes(text);
+            bw.Write(type.ToCharArray());
             bw.Write((uint)data.Length);
             bw.Write(data);
         }

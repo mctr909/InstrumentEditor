@@ -192,15 +192,15 @@ namespace SF2 {
         private PDTA mPdta;
         private SDTA mSdta;
 
-        public File(string filePath) : base() {
+        public File(string filePath) {
             mPath = filePath;
-            load(filePath);
+            MainLoop(filePath);
             //OutputPresetList();
             //OutputInstList();
             //OutputSampleList();
         }
 
-        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
             switch (type) {
             case "pdta":
                 mPdta = new PDTA(ptr, size);
@@ -491,7 +491,6 @@ namespace SF2 {
 
                 wi.InfoName = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
                 wi.InfoDateTime = now;
-                wi.InfoSrc = Path.GetFileName(mPath);
 
                 instFile.Wave.Add(wi);
             }
@@ -501,7 +500,6 @@ namespace SF2 {
 
                 inst.InfoName = sf2Inst.Name.Replace("\0", "");
                 inst.InfoDateTime = now;
-                inst.InfoSrc = Path.GetFileName(mPath);
 
                 foreach (var art in sf2Inst.GlobalArt) {
                     var globalArt = new ART {
@@ -628,7 +626,6 @@ namespace SF2 {
 
                 preset.InfoName = sf2Pres.Value.Name.Replace("\0", "");
                 preset.InfoDateTime = now;
-                preset.InfoSrc = Path.GetFileName(mPath);
 
                 foreach (var art in sf2Pres.Value.GlobalArt) {
                     var globalArt = new ART {
@@ -712,7 +709,7 @@ namespace SF2 {
         private List<MOD> mIMOD = new List<MOD>();
         private List<GEN> mIGEN = new List<GEN>();
 
-        public PDTA(IntPtr ptr, long size) : base() {
+        public PDTA(IntPtr ptr, long size) {
             Load(ptr, size);
             SetPresetList();
             SetInstList();
@@ -913,7 +910,7 @@ namespace SF2 {
             mIMOD.Clear();
         }
 
-        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
             switch (type) {
             case "phdr":
                 for (int pos = 0; pos < size; pos += Marshal.SizeOf<PHDR>()) {
@@ -969,11 +966,11 @@ namespace SF2 {
     public class SDTA : Riff {
         public byte[] Data { get; private set; }
 
-        public SDTA(IntPtr ptr, long size) : base() {
+        public SDTA(IntPtr ptr, long size) {
             Load(ptr, size);
         }
 
-        protected override void LoadChunk(IntPtr ptr, long size, string type) {
+        protected override void LoadChunk(IntPtr ptr, string type, long size) {
             switch (type) {
             case "smpl":
                 Data = new byte[size];
