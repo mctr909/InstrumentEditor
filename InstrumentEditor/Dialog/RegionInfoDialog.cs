@@ -44,13 +44,7 @@ namespace InstrumentEditor {
         }
 
         private void btnSelectWave_Click(object sender, EventArgs e) {
-            var waveIndex = 0;
-            foreach(var art in mRegion.Art.ToArray()) {
-                if (art.Type == ART_TYPE.WAVE_INDEX) {
-                    waveIndex = (int)art.Value;
-                    break;
-                }
-            }
+            var waveIndex = mRegion.WaveIndex;
 
             var fm = new WaveSelectDialog(mFile, mRegion);
             fm.ShowDialog();
@@ -70,13 +64,8 @@ namespace InstrumentEditor {
         }
 
         private void btnEditWave_Click(object sender, EventArgs e) {
-            foreach(var art in mRegion.Art.ToArray()) {
-                if (art.Type == ART_TYPE.WAVE_INDEX) {
-                    var fm = new WaveInfoForm(mFile, (int)art.Value);
-                    fm.ShowDialog();
-                    return;
-                }
-            }
+            var fm = new WaveInfoForm(mFile, mRegion.WaveIndex);
+            fm.ShowDialog();
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
@@ -215,13 +204,7 @@ namespace InstrumentEditor {
                 numVelocityLow.Enabled = false;
                 numVelocityHigh.Enabled = false;
 
-                var waveIndex = int.MaxValue;
-                foreach (var art in mRegion.Art.ToArray()) {
-                    if (art.Type == ART_TYPE.WAVE_INDEX) {
-                        waveIndex = (int)art.Value;
-                        break;
-                    }
-                }
+                var waveIndex = mRegion.WaveIndex;
 
                 var waveName = "";
                 if (mFile.Wave.ContainsKey(waveIndex)) {

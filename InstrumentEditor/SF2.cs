@@ -460,7 +460,7 @@ namespace SF2 {
 
         public Pack ToIns() {
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-            var instFile = new InstPack.Pack();
+            var instFile = new Pack();
 
             for (var idx = 0; idx < mPdta.SampleList.Count - 1; idx++) {
                 var smpl = mPdta.SampleList[idx];
@@ -557,10 +557,7 @@ namespace SF2 {
                     rgn.Header.VelLo = sf2InstRng.velLo;
                     rgn.Header.VelHi = sf2InstRng.velHi;
 
-                    rgn.Art.Add(new ART {
-                        Type = ART_TYPE.WAVE_INDEX,
-                        Value = sf2InstRng.sampleId
-                    });
+                    rgn.WaveIndex = (uint)sf2InstRng.sampleId;
 
                     foreach (var art in sf2InstRng.Art) {
                         var layerArt = new ART {

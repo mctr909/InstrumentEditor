@@ -21,8 +21,6 @@
         EG_CUTOFF_SUSTAIN = 0x0114,
         EG_CUTOFF_RISE = 0x0115,
         EG_CUTOFF_LEVEL = 0x0116,
-        EG_CUTOFF_FALL = 0x0117,
-
-        WAVE_INDEX = 0xFFFF
+        EG_CUTOFF_FALL = 0x0117
     }
 }

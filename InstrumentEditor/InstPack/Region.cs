@@ -122,6 +122,7 @@ namespace InstPack {
 
     public class Region {
         public RGNH Header;
+        public uint WaveIndex;
         public Lart Art = new Lart();
 
         public Region() { }

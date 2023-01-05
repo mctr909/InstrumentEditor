@@ -17,8 +17,8 @@ namespace InstPack {
             get { return List.Count; }
         }
 
-        public Wave this[int index] {
-            get { return List[index]; }
+        public Wave this[uint index] {
+            get { return List[(int)index]; }
         }
 
         public Wave[] ToArray() {
@@ -35,8 +35,8 @@ namespace InstPack {
             }
         }
 
-        public bool ContainsKey(int index) {
-            return 0 <= index && index < List.Count;
+        public bool ContainsKey(uint index) {
+            return index < List.Count;
         }
     }
 

@@ -276,7 +276,7 @@ namespace InstrumentEditor {
             }
 
             var cols = lstWave.SelectedItem.ToString().Split('|');
-            var idx = int.Parse(cols[0]);
+            var idx = uint.Parse(cols[0]);
             var fm = new WaveInfoForm(mPack, idx);
             var index = lstWave.SelectedIndex;
             fm.ShowDialog();
@@ -294,7 +294,7 @@ namespace InstrumentEditor {
             var indices = lstWave.SelectedIndices;
             foreach (var idx in indices) {
                 var cols = lstWave.Items[(int)idx].ToString().Split('|');
-                var wave = mPack.Wave[int.Parse(cols[0])];
+                var wave = mPack.Wave[uint.Parse(cols[0])];
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     wave.ToFile(Path.Combine(folderPath, string.Format("Wave{0}.wav", idx)));
                 }
@@ -322,9 +322,9 @@ namespace InstrumentEditor {
         }
 
         private void DeleteWave() {
-            var idxs = new List<int>();
+            var idxs = new List<uint>();
             foreach (var item in lstWave.SelectedItems) {
-                idxs.Add(int.Parse(((string)item).Split('|')[0]));
+                idxs.Add(uint.Parse(((string)item).Split('|')[0]));
             }
             if (mPack.DeleteWave(idxs)) {
                 DispWaveList();
@@ -336,7 +336,7 @@ namespace InstrumentEditor {
 
             lstWave.Items.Clear();
             int count = 0;
-            for (var iWave = 0; iWave < mPack.Wave.Count; iWave++) {
+            for (uint iWave = 0; iWave < mPack.Wave.Count; iWave++) {
                 var wave = mPack.Wave[iWave];
                 var name = "";
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
@@ -354,16 +354,8 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var inst in mPack.Inst.ToArray()) {
                     foreach (var rgn in inst.Region.Array) {
-                        foreach (var art in rgn.Art.ToArray()) {
-                            if (art.Type != ART_TYPE.WAVE_INDEX) {
-                                continue;
-                            }
-                            if (iWave == (int)art.Value) {
-                                use = true;
-                                break;
-                            }
-                        }
-                        if (use) {
+                        if (iWave == rgn.WaveIndex) {
+                            use = true;
                             break;
                         }
                     }

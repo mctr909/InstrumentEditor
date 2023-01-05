@@ -75,15 +75,13 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var ins in mFile.Inst.ToArray()) {
                     foreach (var rgn in ins.Region.Array) {
-                        foreach(var art in rgn.Art.ToArray()) {
-                            if (art.Type != ART_TYPE.WAVE_INDEX) {
-                                continue;
-                            }
-                            if (count == (int)art.Value) {
-                                use = true;
-                                break;
-                            }
+                        if (count == rgn.WaveIndex) {
+                            use = true;
+                            break;
                         }
+                    }
+                    if (use) {
+                        break;
                     }
                 }
 
@@ -94,15 +92,6 @@ namespace InstrumentEditor {
                     name
                 ));
                 ++count;
-            }
-
-            foreach (var art in mLayer.Art.ToArray()) {
-                if (art.Type != ART_TYPE.WAVE_INDEX) {
-                    continue;
-                }
-                if (art.Value < lstInst.Items.Count) {
-                    lstInst.SelectedIndex = (int)art.Value;
-                }
             }
         }
     }

@@ -16,7 +16,7 @@ namespace InstrumentEditor {
 
         private Pack mFile;
         private WAVH mWaveHeader;
-        private int mWaveIndex;
+        private uint mWaveIndex;
 
         private DoubleBufferBitmap mSpecBmp;
         private DoubleBufferGraphic mWaveGraph;
@@ -36,7 +36,7 @@ namespace InstrumentEditor {
         private int mDetectNote;
         private int mDetectTune;
 
-        public WaveInfoForm(Pack file, int index) {
+        public WaveInfoForm(Pack file, uint index) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 

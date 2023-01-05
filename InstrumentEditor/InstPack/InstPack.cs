@@ -6,23 +6,15 @@ namespace InstPack {
         public LInst Inst = new LInst();
         public LPreset Preset = new LPreset();
 
-        public bool DeleteWave(List<int> indices) {
+        public bool DeleteWave(List<uint> indices) {
             // find deletable wave
-            var deleteList = new Dictionary<int, bool>();
-            foreach (int selectedIndex in indices) {
+            var deleteList = new Dictionary<uint, bool>();
+            foreach (var selectedIndex in indices) {
                 var deletable = true;
                 foreach (var inst in Inst.ToArray()) {
                     foreach (var region in inst.Region.Array) {
-                        foreach (var art in region.Art.ToArray()) {
-                            if (art.Type != ART_TYPE.WAVE_INDEX) {
-                                continue;
-                            }
-                            if (selectedIndex == (int)art.Value) {
-                                deletable = false;
-                                break;
-                            }
-                        }
-                        if (!deletable) {
+                        if (selectedIndex == region.WaveIndex) {
+                            deletable = false;
                             break;
                         }
                     }
@@ -38,9 +30,9 @@ namespace InstPack {
             }
 
             // renumbering
-            var newIndex = 0;
-            var renumberingList = new Dictionary<int, int>();
-            for (var iWave = 0; iWave < Wave.Count; iWave++) {
+            uint newIndex = 0;
+            var renumberingList = new Dictionary<uint, uint>();
+            for (uint iWave = 0; iWave < Wave.Count; iWave++) {
                 if (deleteList.ContainsKey(iWave) && deleteList[iWave]) {
                     continue;
                 }
@@ -50,7 +42,7 @@ namespace InstPack {
 
             // delete wave
             var waveList = new List<Wave>();
-            for (var iWave = 0; iWave < Wave.Count; iWave++) {
+            for (uint iWave = 0; iWave < Wave.Count; iWave++) {
                 if (deleteList.ContainsKey(iWave) && deleteList[iWave]) {
                     continue;
                 }
@@ -64,15 +56,7 @@ namespace InstPack {
                 var inst = Inst[iInst];
                 for (var iRgn = 0; iRgn < inst.Region.Count; iRgn++) {
                     var rgn = inst.Region[iRgn];
-                    for (var iArt = 0; iArt < rgn.Art.Count; iArt++) {
-                        if (rgn.Art[iArt].Type != ART_TYPE.WAVE_INDEX) {
-                            continue;
-                        }
-                        var iWave = (int)rgn.Art[iArt].Value;
-                        if (renumberingList.ContainsKey(iWave)) {
-                            rgn.Art.Update(ART_TYPE.WAVE_INDEX, renumberingList[iWave]);
-                        }
-                    }
+                    inst.Region[iRgn].WaveIndex = renumberingList[rgn.WaveIndex];
                 }
             }
 

@@ -29,7 +29,7 @@ namespace InstrumentEditor {
                 return;
             }
             var cols = lstWave.SelectedItem.ToString().Split('\t');
-            var idx = int.Parse(cols[0]);
+            var idx = uint.Parse(cols[0]);
             var fm = new WaveInfoForm(mFile, idx);
             var index = lstWave.SelectedIndex;
             fm.ShowDialog();
@@ -40,7 +40,7 @@ namespace InstrumentEditor {
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstWave.SelectedIndex) {
                 var cols = lstWave.SelectedItem.ToString().Split('\t');
-                mRegion.Art.Update(ART_TYPE.WAVE_INDEX, uint.Parse(cols[0]));
+                mRegion.WaveIndex = uint.Parse(cols[0]);
             }
             Close();
         }
@@ -72,7 +72,7 @@ namespace InstrumentEditor {
         private void DispWaveList(string keyword) {
             lstWave.Items.Clear();
             int count = 0;
-            for (var iWave = 0; iWave < mFile.Wave.Count; iWave++) {
+            for (uint iWave = 0; iWave < mFile.Wave.Count; iWave++) {
                 var wave = mFile.Wave[iWave];
                 var name = "";
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
@@ -88,15 +88,13 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var inst in mFile.Inst.ToArray()) {
                     foreach (var rgn in inst.Region.Array) {
-                        foreach(var art in rgn.Art.ToArray()) {
-                            if (art.Type != ART_TYPE.WAVE_INDEX) {
-                                continue;
-                            }
-                            if (count == (int)art.Value) {
-                                use = true;
-                                break;
-                            }
+                        if (count == rgn.WaveIndex) {
+                            use = true;
+                            break;
                         }
+                    }
+                    if (use) {
+                        break;
                     }
                 }
 
@@ -110,13 +108,8 @@ namespace InstrumentEditor {
                 ++count;
             }
 
-            foreach (var art in mRegion.Art.ToArray()) {
-                if (art.Type != ART_TYPE.WAVE_INDEX) {
-                    continue;
-                }
-                if (art.Value < lstWave.Items.Count) {
-                    lstWave.SelectedIndex = (int)art.Value;
-                }
+            if (mRegion.WaveIndex < lstWave.Items.Count) {
+                lstWave.SelectedIndex = (int)mRegion.WaveIndex;
             }
         }
     }

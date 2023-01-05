@@ -186,10 +186,8 @@ namespace DLS {
                     rgn.Header.VelLo = (byte)dlsRegion.Key.Vel.Lo;
                     rgn.Header.VelHi = (byte)dlsRegion.Key.Vel.Hi;
 
-                    rgn.Art.Add(new InstPack.ART {
-                        Type = ART_TYPE.WAVE_INDEX,
-                        Value = dlsRegion.Value.WaveLink.TableIndex
-                    });
+                    rgn.WaveIndex = dlsRegion.Value.WaveLink.TableIndex;
+
                     rgn.Art.Add(new InstPack.ART {
                         Type = ART_TYPE.UNITY_KEY,
                         Value = dlsRegion.Value.Sampler.UnityNote
@@ -445,15 +443,13 @@ namespace DLS {
                     rgn.Header.Vel.Hi = srcRgn.Header.VelHi;
                     rgn.Header.Vel.Lo = srcRgn.Header.VelLo;
 
+                    rgn.WaveLink.TableIndex = srcRgn.WaveIndex;
+
                     rgn.Articulations = new LART();
                     rgn.Articulations.ART = new ART();
                     rgn.Articulations.ART.List = new List<Connection>();
                     foreach (var srcArt in srcRgn.Art.ToArray()) {
                         switch(srcArt.Type) {
-                        case ART_TYPE.WAVE_INDEX:
-                            rgn.WaveLink.Channel = 1;
-                            rgn.WaveLink.TableIndex = (uint)srcArt.Value;
-                            break;
                         case ART_TYPE.GAIN:
                             rgn.Sampler.Gain = srcArt.Value;
                             break;
