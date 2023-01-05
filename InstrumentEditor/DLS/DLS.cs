@@ -53,7 +53,7 @@ namespace DLS {
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
             var pack = new Pack();
 
-            foreach (var wave in WavePool.List.Values) {
+            foreach (var wave in WavePool.List) {
                 var waveInfo = new Wave();
                 waveInfo.Header.SampleRate = wave.Format.SampleRate;
                 if (0 < wave.Sampler.LoopCount) {
@@ -105,7 +105,7 @@ namespace DLS {
                 inst.Info[Info.TYPE.ICRD] = now;
 
                 if (null != dlsInst.Value.Articulations && null != dlsInst.Value.Articulations.ART) {
-                    foreach (var instArt in dlsInst.Value.Articulations.ART.List.Values) {
+                    foreach (var instArt in dlsInst.Value.Articulations.ART.List) {
                         if (instArt.Source != SRC_TYPE.NONE || instArt.Control != SRC_TYPE.NONE) {
                             continue;
                         }
@@ -206,7 +206,7 @@ namespace DLS {
                     });
 
                     if (null != dlsRegion.Value.Articulations && null != dlsRegion.Value.Articulations.ART) {
-                        foreach (var regionArt in dlsRegion.Value.Articulations.ART.List.Values) {
+                        foreach (var regionArt in dlsRegion.Value.Articulations.ART.List) {
                             if (regionArt.Source != SRC_TYPE.NONE || regionArt.Control != SRC_TYPE.NONE) {
                                 continue;
                             }
@@ -294,7 +294,7 @@ namespace DLS {
 
             // WAVE
             saveFile.WavePool = new WVPL();
-            saveFile.WavePool.List = new Dictionary<int, WAVE>();
+            saveFile.WavePool.List = new List<WAVE>();
             foreach (var wav in pack.Wave.ToArray()) {
                 var wavh = new WAVE();
                 wavh.Format = new CK_FMT();
@@ -315,8 +315,8 @@ namespace DLS {
                     loop.Type = 1;
                     loop.Start = wav.Header.LoopBegin;
                     loop.Length = wav.Header.LoopLength;
-                    wavh.Loops = new Dictionary<int, WaveLoop>() {
-                        { 0, loop }
+                    wavh.Loops = new List<WaveLoop>() {
+                        loop
                     };
                 }
 
@@ -328,7 +328,7 @@ namespace DLS {
                 Marshal.Copy(pData, wavh.Data, 0, wavh.Data.Length);
                 Marshal.FreeHGlobal(pData);
 
-                saveFile.WavePool.List.Add(saveFile.WavePool.List.Count, wavh);
+                saveFile.WavePool.List.Add(wavh);
             }
 
             // Inst
@@ -354,7 +354,7 @@ namespace DLS {
 
                 ins.Articulations = new LART();
                 ins.Articulations.ART = new ART();
-                ins.Articulations.ART.List = new Dictionary<int, Connection>();
+                ins.Articulations.ART.List = new List<Connection>();
                 foreach (var srcArt in srcIns.Art.ToArray()) {
                     switch (srcArt.Type) {
                     case ART_TYPE.EG_AMP_ATTACK:
@@ -363,7 +363,7 @@ namespace DLS {
                         ampA.Control = SRC_TYPE.NONE;
                         ampA.Destination = DST_TYPE.EG1_ATTACK_TIME;
                         ampA.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampA);
+                        ins.Articulations.ART.List.Add(ampA);
                         break;
                     case ART_TYPE.EG_AMP_HOLD:
                         var ampH = new Connection();
@@ -371,7 +371,7 @@ namespace DLS {
                         ampH.Control = SRC_TYPE.NONE;
                         ampH.Destination = DST_TYPE.EG1_HOLD_TIME;
                         ampH.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampH);
+                        ins.Articulations.ART.List.Add(ampH);
                         break;
                     case ART_TYPE.EG_AMP_DECAY:
                         var ampD = new Connection();
@@ -379,7 +379,7 @@ namespace DLS {
                         ampD.Control = SRC_TYPE.NONE;
                         ampD.Destination = DST_TYPE.EG1_DECAY_TIME;
                         ampD.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampD);
+                        ins.Articulations.ART.List.Add(ampD);
                         break;
                     case ART_TYPE.EG_AMP_SUSTAIN:
                         var ampS = new Connection();
@@ -387,7 +387,7 @@ namespace DLS {
                         ampS.Control = SRC_TYPE.NONE;
                         ampS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
                         ampS.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampS);
+                        ins.Articulations.ART.List.Add(ampS);
                         break;
                     case ART_TYPE.EG_AMP_RELEASE:
                         var ampR = new Connection();
@@ -395,7 +395,7 @@ namespace DLS {
                         ampR.Control = SRC_TYPE.NONE;
                         ampR.Destination = DST_TYPE.EG1_RELEASE_TIME;
                         ampR.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, ampR);
+                        ins.Articulations.ART.List.Add(ampR);
                         break;
                     case ART_TYPE.EG_CUTOFF_ATTACK:
                         var fcA = new Connection();
@@ -403,7 +403,7 @@ namespace DLS {
                         fcA.Control = SRC_TYPE.NONE;
                         fcA.Destination = DST_TYPE.EG1_ATTACK_TIME;
                         fcA.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcA);
+                        ins.Articulations.ART.List.Add(fcA);
                         break;
                     case ART_TYPE.EG_CUTOFF_HOLD:
                         var fcH = new Connection();
@@ -411,7 +411,7 @@ namespace DLS {
                         fcH.Control = SRC_TYPE.NONE;
                         fcH.Destination = DST_TYPE.EG1_HOLD_TIME;
                         fcH.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcH);
+                        ins.Articulations.ART.List.Add(fcH);
                         break;
                     case ART_TYPE.EG_CUTOFF_DECAY:
                         var fcD = new Connection();
@@ -419,7 +419,7 @@ namespace DLS {
                         fcD.Control = SRC_TYPE.NONE;
                         fcD.Destination = DST_TYPE.EG1_DECAY_TIME;
                         fcD.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcD);
+                        ins.Articulations.ART.List.Add(fcD);
                         break;
                     case ART_TYPE.EG_CUTOFF_SUSTAIN:
                         var fcS = new Connection();
@@ -427,7 +427,7 @@ namespace DLS {
                         fcS.Control = SRC_TYPE.NONE;
                         fcS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
                         fcS.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcS);
+                        ins.Articulations.ART.List.Add(fcS);
                         break;
                     case ART_TYPE.EG_CUTOFF_RELEASE:
                         var fcR = new Connection();
@@ -435,7 +435,7 @@ namespace DLS {
                         fcR.Control = SRC_TYPE.NONE;
                         fcR.Destination = DST_TYPE.EG1_RELEASE_TIME;
                         fcR.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ins.Articulations.ART.List.Count, fcR);
+                        ins.Articulations.ART.List.Add(fcR);
                         break;
                     }
                 }
@@ -451,7 +451,7 @@ namespace DLS {
 
                     rgn.Articulations = new LART();
                     rgn.Articulations.ART = new ART();
-                    rgn.Articulations.ART.List = new Dictionary<int, Connection>();
+                    rgn.Articulations.ART.List = new List<Connection>();
                     foreach (var srcArt in srcRgn.Art.ToArray()) {
                         switch(srcArt.Type) {
                         case ART_TYPE.WAVE_INDEX:
@@ -474,7 +474,7 @@ namespace DLS {
                             ampA.Control = SRC_TYPE.NONE;
                             ampA.Destination = DST_TYPE.EG1_ATTACK_TIME;
                             ampA.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampA);
+                            rgn.Articulations.ART.List.Add(ampA);
                             break;
                         case ART_TYPE.EG_AMP_HOLD:
                             var ampH = new Connection();
@@ -482,7 +482,7 @@ namespace DLS {
                             ampH.Control = SRC_TYPE.NONE;
                             ampH.Destination = DST_TYPE.EG1_HOLD_TIME;
                             ampH.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampH);
+                            rgn.Articulations.ART.List.Add(ampH);
                             break;
                         case ART_TYPE.EG_AMP_DECAY:
                             var ampD = new Connection();
@@ -490,7 +490,7 @@ namespace DLS {
                             ampD.Control = SRC_TYPE.NONE;
                             ampD.Destination = DST_TYPE.EG1_DECAY_TIME;
                             ampD.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampD);
+                            rgn.Articulations.ART.List.Add(ampD);
                             break;
                         case ART_TYPE.EG_AMP_SUSTAIN:
                             var ampS = new Connection();
@@ -498,7 +498,7 @@ namespace DLS {
                             ampS.Control = SRC_TYPE.NONE;
                             ampS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
                             ampS.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampS);
+                            rgn.Articulations.ART.List.Add(ampS);
                             break;
                         case ART_TYPE.EG_AMP_RELEASE:
                             var ampR = new Connection();
@@ -506,7 +506,7 @@ namespace DLS {
                             ampR.Control = SRC_TYPE.NONE;
                             ampR.Destination = DST_TYPE.EG1_RELEASE_TIME;
                             ampR.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, ampR);
+                            rgn.Articulations.ART.List.Add(ampR);
                             break;
                         case ART_TYPE.EG_CUTOFF_ATTACK:
                             var fcA = new Connection();
@@ -514,7 +514,7 @@ namespace DLS {
                             fcA.Control = SRC_TYPE.NONE;
                             fcA.Destination = DST_TYPE.EG1_ATTACK_TIME;
                             fcA.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcA);
+                            rgn.Articulations.ART.List.Add(fcA);
                             break;
                         case ART_TYPE.EG_CUTOFF_HOLD:
                             var fcH = new Connection();
@@ -522,7 +522,7 @@ namespace DLS {
                             fcH.Control = SRC_TYPE.NONE;
                             fcH.Destination = DST_TYPE.EG1_HOLD_TIME;
                             fcH.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcH);
+                            rgn.Articulations.ART.List.Add(fcH);
                             break;
                         case ART_TYPE.EG_CUTOFF_DECAY:
                             var fcD = new Connection();
@@ -530,7 +530,7 @@ namespace DLS {
                             fcD.Control = SRC_TYPE.NONE;
                             fcD.Destination = DST_TYPE.EG1_DECAY_TIME;
                             fcD.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcD);
+                            rgn.Articulations.ART.List.Add(fcD);
                             break;
                         case ART_TYPE.EG_CUTOFF_SUSTAIN:
                             var fcS = new Connection();
@@ -538,7 +538,7 @@ namespace DLS {
                             fcS.Control = SRC_TYPE.NONE;
                             fcS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
                             fcS.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcS);
+                            rgn.Articulations.ART.List.Add(fcS);
                             break;
                         case ART_TYPE.EG_CUTOFF_RELEASE:
                             var fcR = new Connection();
@@ -546,7 +546,7 @@ namespace DLS {
                             fcR.Control = SRC_TYPE.NONE;
                             fcR.Destination = DST_TYPE.EG1_RELEASE_TIME;
                             fcR.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(rgn.Articulations.ART.List.Count, fcR);
+                            rgn.Articulations.ART.List.Add(fcR);
                             break;
                         }
                     }
@@ -757,7 +757,7 @@ namespace DLS {
     public class RGN : Riff {
         public CK_RGNH Header;
         public CK_WSMP Sampler;
-        public Dictionary<int, WaveLoop> Loops = new Dictionary<int, WaveLoop>();
+        public List<WaveLoop> Loops = new List<WaveLoop>();
         public CK_WLNK WaveLink;
         public LART Articulations = new LART();
 
@@ -808,7 +808,7 @@ namespace DLS {
                 Sampler = Marshal.PtrToStructure<CK_WSMP>(ptr);
                 var pLoop = ptr + Marshal.SizeOf<CK_WSMP>();
                 for (var i = 0; i < Sampler.LoopCount; ++i) {
-                    Loops.Add(Loops.Count, Marshal.PtrToStructure<WaveLoop>(pLoop));
+                    Loops.Add(Marshal.PtrToStructure<WaveLoop>(pLoop));
                     pLoop += Marshal.SizeOf<WaveLoop>();
                 }
                 break;
@@ -846,7 +846,7 @@ namespace DLS {
             bwArt.Write((uint)8);
             bwArt.Write((uint)ART.List.Count);
             foreach (var art in ART.List) {
-                art.Value.Write(bwArt);
+                art.Write(bwArt);
             }
 
             if (0 < msArt.Length) {
@@ -870,7 +870,7 @@ namespace DLS {
     }
 
     public class ART {
-        public Dictionary<int, Connection> List = new Dictionary<int, Connection>();
+        public List<Connection> List = new List<Connection>();
 
         public ART() { }
 
@@ -879,14 +879,14 @@ namespace DLS {
             ptr += Marshal.SizeOf<CK_ART1>();
 
             for (var i = 0; i < info.Count; ++i) {
-                List.Add(i, Marshal.PtrToStructure<Connection>(ptr));
+                List.Add(Marshal.PtrToStructure<Connection>(ptr));
                 ptr += Marshal.SizeOf<Connection>();
             }
         }
     }
 
     public class WVPL : Riff {
-        public Dictionary<int, WAVE> List = new Dictionary<int, WAVE>();
+        public List<WAVE> List = new List<WAVE>();
 
         public WVPL() { }
 
@@ -906,7 +906,7 @@ namespace DLS {
             var bwWave = new BinaryWriter(msWave);
             foreach (var wave in List) {
                 bwPtbl.Write((uint)msWave.Position);
-                wave.Value.Write(bwWave);
+                wave.Write(bwWave);
             }
 
             if (0 < msPtbl.Length) {
@@ -924,7 +924,7 @@ namespace DLS {
         protected override void LoadChunk(IntPtr ptr, string type, long size) {
             switch (type) {
             case "wave":
-                List.Add(List.Count, new WAVE(ptr, size));
+                List.Add(new WAVE(ptr, size));
                 break;
             default:
                 throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
@@ -935,7 +935,7 @@ namespace DLS {
     public class WAVE : Riff {
         public CK_FMT Format;
         public CK_WSMP Sampler;
-        public Dictionary<int, WaveLoop> Loops = new Dictionary<int, WaveLoop>();
+        public List<WaveLoop> Loops = new List<WaveLoop>();
         public byte[] Data;
         public Info Info = new Info();
 
@@ -955,7 +955,7 @@ namespace DLS {
             bwSmp.Write("wsmp".ToCharArray());
             bwSmp.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
             Sampler.Write(bwSmp);
-            foreach (var loop in Loops.Values) {
+            foreach (var loop in Loops) {
                 loop.Write(bwSmp);
             }
 
@@ -988,7 +988,7 @@ namespace DLS {
                 Sampler = Marshal.PtrToStructure<CK_WSMP>(ptr);
                 var pLoop = ptr + Marshal.SizeOf<CK_WSMP>();
                 for (var i = 0; i < Sampler.LoopCount; ++i) {
-                    Loops.Add(Loops.Count, Marshal.PtrToStructure<WaveLoop>(pLoop));
+                    Loops.Add(Marshal.PtrToStructure<WaveLoop>(pLoop));
                     pLoop += Marshal.SizeOf<WaveLoop>();
                 }
                 break;
