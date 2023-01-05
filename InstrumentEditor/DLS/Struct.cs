@@ -500,11 +500,12 @@ namespace DLS {
 
             Header.Write(bwRgn);
 
+            Sampler.LoopCount = (uint)Loops.Count;
             bwRgn.Write("wsmp".ToCharArray());
             bwRgn.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
             Sampler.Write(bwRgn);
-            for (var i = 0; i < Sampler.LoopCount && i < Loops.Count; ++i) {
-                Loops[i].Write(bwRgn);
+            foreach (var loop in Loops) {
+                loop.Write(bwRgn);
             }
 
             WaveLink.Write(bwRgn);
@@ -671,6 +672,7 @@ namespace DLS {
             bwSmp.Write(0xFFFFFFFF);
             bwSmp.Write("wave".ToCharArray());
 
+            Sampler.LoopCount = (uint)Loops.Count;
             bwSmp.Write("wsmp".ToCharArray());
             bwSmp.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
             Sampler.Write(bwSmp);
@@ -689,6 +691,57 @@ namespace DLS {
             bwSmp.Seek(4, SeekOrigin.Begin);
             bwSmp.Write((uint)msSmp.Length - 8);
             bw.Write(msSmp.ToArray());
+        }
+
+        public void ToFile(string filePath) {
+            var fs = new FileStream(filePath, FileMode.Create);
+            var bw = new BinaryWriter(fs);
+            bw.Write("RIFF".ToCharArray());
+            bw.Write((uint)0);
+            bw.Write("WAVE".ToCharArray());
+
+            {
+                // fmt chunk
+                bw.Write("fmt ".ToCharArray());
+                bw.Write((uint)16);
+                bw.Write((ushort)1);
+                bw.Write((ushort)1);
+                bw.Write(Format.SampleRate);
+                bw.Write(Format.SampleRate * 2);
+                bw.Write((ushort)2);
+                bw.Write((ushort)16);
+            }
+
+            {
+                // data chunk
+                var ptr = Marshal.AllocHGlobal(Data.Length * 2);
+                Marshal.Copy(Data, 0, ptr, Data.Length);
+                var arr = new byte[Data.Length * 2];
+                Marshal.Copy(ptr, arr, 0, Data.Length * 2);
+                Marshal.FreeHGlobal(ptr);
+                bw.Write("data".ToCharArray());
+                bw.Write(arr.Length);
+                bw.Write(arr);
+            }
+
+            {
+                Sampler.LoopCount = (uint)Loops.Count;
+                bw.Write("wsmp".ToCharArray());
+                bw.Write((uint)(Marshal.SizeOf<CK_WSMP>() + Sampler.LoopCount * Marshal.SizeOf<WaveLoop>()));
+                Sampler.Write(bw);
+                foreach (var loop in Loops) {
+                    loop.Write(bw);
+                }
+            }
+
+            Info.Write(bw);
+
+            fs.Seek(4, SeekOrigin.Begin);
+            bw.Write((uint)(fs.Length - 8));
+
+            bw.Dispose();
+            fs.Close();
+            fs.Dispose();
         }
 
         protected override void LoadChunk(IntPtr ptr, string type, long size) {
