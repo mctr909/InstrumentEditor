@@ -184,7 +184,7 @@ namespace InstrumentEditor {
 
         #region チェンジイベント
         private void txtName_TextChanged(object sender, EventArgs e) {
-            mFile.Wave[mWaveIndex].InfoName = txtName.Text;
+            mFile.Wave[mWaveIndex].Info[Info.TYPE.INAM] = txtName.Text;
         }
 
         private void numWaveScale_ValueChanged(object sender, EventArgs e) {
@@ -394,7 +394,7 @@ namespace InstrumentEditor {
             } else {
                 numFineTune.Value = (int)(1200.0 / Math.Log(2.0, wave.Header.Pitch));
             }
-            txtName.Text = wave.InfoName;
+            txtName.Text = wave.Info[Info.TYPE.INAM];
         }
 
         private void SizeChange() {

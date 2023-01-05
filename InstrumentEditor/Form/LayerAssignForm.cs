@@ -105,7 +105,7 @@ namespace InstrumentEditor {
         }
 
         private void DispLayerInfo() {
-            Text = string.Format("レイヤー[{0}]", mPreset.InfoName.Trim());
+            Text = string.Format("レイヤー[{0}]", mPreset.Info[Info.TYPE.INAM].Trim());
 
             tscLayer.Items.Clear();
 
@@ -114,7 +114,7 @@ namespace InstrumentEditor {
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
                     var inst = mFile.Inst[instIndex];
-                    instName = inst.InfoName;
+                    instName = inst.Info[Info.TYPE.INAM];
                 }
 
                 tscLayer.Items.Add(string.Format("{0}|{1}|{2}|{3}|{4}|{5}",

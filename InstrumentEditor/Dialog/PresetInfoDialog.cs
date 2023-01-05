@@ -29,42 +29,42 @@ namespace InstrumentEditor {
         }
 
         private void txtName_Leave(object sender, EventArgs e) {
-            mPreset.InfoName = txtName.Text.Trim();
+            mPreset.Info[Info.TYPE.INAM] = txtName.Text.Trim();
             Text = string.Format("プリセット");
         }
 
         private void cmbCategory_Leave(object sender, EventArgs e) {
-            mPreset.InfoCat = cmbCategory.Text.Trim();
+            mPreset.Info[Info.TYPE.ICAT] = cmbCategory.Text.Trim();
             setCategoryList();
         }
 
         private void cmbCategory_SelectedIndexChanged(object sender, EventArgs e) {
-            mPreset.InfoCat = cmbCategory.Text;
+            mPreset.Info[Info.TYPE.ICAT] = cmbCategory.Text;
         }
 
         private void Reflect() {
-            mPreset.InfoName = txtName.Text.Trim();
-            mPreset.InfoCat = cmbCategory.Text.Trim();
+            mPreset.Info[Info.TYPE.INAM] = txtName.Text.Trim();
+            mPreset.Info[Info.TYPE.ICAT] = cmbCategory.Text.Trim();
         }
 
         private void DispInfo() {
-            txtName.Text = mPreset.InfoName.Trim();
-            cmbCategory.Text = mPreset.InfoCat.Trim();
+            txtName.Text = mPreset.Info[Info.TYPE.INAM].Trim();
+            cmbCategory.Text = mPreset.Info[Info.TYPE.ICAT].Trim();
             setCategoryList();
             Text = string.Format("プリセット");
         }
 
         private void setCategoryList() {
             cmbCategory.Items.Clear();
-            cmbCategory.Items.Add(mPreset.InfoCat);
+            cmbCategory.Items.Add(mPreset.Info[Info.TYPE.ICAT]);
             foreach (var preset in mFile.Preset.Values) {
-                if ("" != preset.InfoCat) {
-                    if (!cmbCategory.Items.Contains(preset.InfoCat.Trim())) {
-                        cmbCategory.Items.Add(preset.InfoCat.Trim());
+                if ("" != preset.Info[Info.TYPE.ICAT]) {
+                    if (!cmbCategory.Items.Contains(preset.Info[Info.TYPE.ICAT].Trim())) {
+                        cmbCategory.Items.Add(preset.Info[Info.TYPE.ICAT].Trim());
                     }
                 }
             }
-            cmbCategory.SelectedItem = mPreset.InfoCat;
+            cmbCategory.SelectedItem = mPreset.Info[Info.TYPE.ICAT];
         }
     }
 }

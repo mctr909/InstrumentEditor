@@ -75,9 +75,8 @@ namespace DLS {
                 Marshal.Copy(ptr, waveInfo.Data, 0, waveInfo.Data.Length);
                 Marshal.FreeHGlobal(ptr);
 
-                waveInfo.InfoName = wave.Info[INFO_TYPE.INAM];
-                waveInfo.InfoCat = wave.Info[INFO_TYPE.ICAT];
-                waveInfo.InfoDateTime = now;
+                waveInfo.Info.CopyFrom(wave.Info);
+                waveInfo.Info[Info.TYPE.ICRD] = now;
 
                 pack.Wave.Add(waveInfo);
             }
@@ -97,15 +96,13 @@ namespace DLS {
                 lyr.InstIndex = pack.Inst.Count;
 
                 pres.Layer.Add(lyr);
-                pres.InfoName = dlsInst.Value.Info[INFO_TYPE.INAM];
-                pres.InfoCat = dlsInst.Value.Info[INFO_TYPE.ICAT];
-                pres.InfoDateTime = now;
+                pres.Info.CopyFrom(dlsInst.Value.Info);
+                pres.Info[Info.TYPE.ICRD] = now;
                 pack.Preset.Add(pres.Header, pres);
 
                 var inst = new Inst();
-                inst.InfoName = dlsInst.Value.Info[INFO_TYPE.INAM];
-                inst.InfoCat = dlsInst.Value.Info[INFO_TYPE.ICAT];
-                inst.InfoDateTime = now;
+                inst.Info.CopyFrom(dlsInst.Value.Info);
+                inst.Info[Info.TYPE.ICRD] = now;
 
                 if (null != dlsInst.Value.Articulations && null != dlsInst.Value.Articulations.ART) {
                     foreach (var instArt in dlsInst.Value.Articulations.ART.List.Values) {
@@ -323,9 +320,7 @@ namespace DLS {
                     };
                 }
 
-                wavh.Info[INFO_TYPE.INAM] = wav.InfoName;
-                wavh.Info[INFO_TYPE.ICAT] = wav.InfoCat;
-                wavh.Info[INFO_TYPE.ICRD] = wav.InfoDateTime;
+                wavh.Info.CopyFrom(wav.Info);
 
                 wavh.Data = new byte[wav.Data.Length * 2];
                 var pData = Marshal.AllocHGlobal(wavh.Data.Length);
@@ -355,9 +350,7 @@ namespace DLS {
                 ins.Header.Locale.ProgNum = srcPre.Header.ProgNum;
                 ins.Header.Regions = (uint)srcIns.Region.Count;
 
-                ins.Info[INFO_TYPE.INAM] = srcPre.InfoName;
-                ins.Info[INFO_TYPE.ICAT] = srcPre.InfoCat;
-                ins.Info[INFO_TYPE.ICRD] = srcPre.InfoDateTime;
+                ins.Info.CopyFrom(srcPre.Info);
 
                 ins.Articulations = new LART();
                 ins.Articulations.ART = new ART();

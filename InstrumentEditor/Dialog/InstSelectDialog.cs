@@ -62,10 +62,10 @@ namespace InstrumentEditor {
             for (var iInst = 0; iInst < mFile.Inst.Count; iInst++) {
                 var inst = mFile.Inst[iInst];
                 var name = "";
-                if (string.IsNullOrWhiteSpace(inst.InfoName)) {
+                if (string.IsNullOrWhiteSpace(inst.Info[Info.TYPE.INAM])) {
                     name = string.Format("Inst[{0}]", count);
                 } else {
-                    name = inst.InfoName;
+                    name = inst.Info[Info.TYPE.INAM];
                 }
 
                 if (!string.IsNullOrEmpty(keyword) && name.IndexOf(keyword) < 0) {

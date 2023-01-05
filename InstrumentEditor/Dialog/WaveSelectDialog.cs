@@ -75,10 +75,10 @@ namespace InstrumentEditor {
             for (var iWave = 0; iWave < mFile.Wave.Count; iWave++) {
                 var wave = mFile.Wave[iWave];
                 var name = "";
-                if (string.IsNullOrWhiteSpace(wave.InfoName)) {
+                if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);
                 } else {
-                    name = wave.InfoName;
+                    name = wave.Info[Info.TYPE.INAM];
                 }
 
                 if (!string.IsNullOrEmpty(keyword) && name.IndexOf(keyword) < 0) {

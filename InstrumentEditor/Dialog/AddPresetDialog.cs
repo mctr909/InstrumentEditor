@@ -287,7 +287,7 @@ namespace InstrumentEditor {
             setBankMsbList();
             setBankLsbList();
             if (null != mPreset) {
-                cmbCategory.SelectedText = mPreset.InfoCat;
+                cmbCategory.SelectedText = mPreset.Info[Info.TYPE.ICAT];
             }
             setCategoryList();
         }
@@ -324,12 +324,11 @@ namespace InstrumentEditor {
             }
             var preset = new Preset();
             preset.Header = id;
-            preset.InfoName = txtInstName.Text;
-            preset.InfoCat = cmbCategory.Text;
+            preset.Info[Info.TYPE.INAM] = txtInstName.Text;
+            preset.Info[Info.TYPE.ICAT] = cmbCategory.Text;
             if (null != mPreset) {
                 mPreset.Header = id;
-                mPreset.InfoName = preset.InfoName;
-                mPreset.InfoCat = preset.InfoCat;
+                mPreset.Info.CopyFrom(preset.Info);
                 preset = mPreset;
             }
             mFile.Preset.Add(id, preset);
@@ -343,7 +342,7 @@ namespace InstrumentEditor {
                 rbDrum.Checked = mPreset.Header.IsDrum;
                 rbDrum.Enabled = false;
                 rbNote.Enabled = false;
-                txtInstName.Text = mPreset.InfoName.Trim();
+                txtInstName.Text = mPreset.Info[Info.TYPE.INAM].Trim();
             }
 
             for (byte i = 0; i < 128; ++i) {
@@ -468,7 +467,7 @@ namespace InstrumentEditor {
                 cmbCategory.Items.Add(tmpCategory);
             }
             foreach (var preset in mFile.Preset.Values) {
-                var cat = preset.InfoCat;
+                var cat = preset.Info[Info.TYPE.ICAT];
                 if ("" != cat) {
                     if (!cmbCategory.Items.Contains(cat.Trim())) {
                         cmbCategory.Items.Add(cat.Trim());

@@ -39,9 +39,7 @@ namespace InstPack {
         public PREH Header;
         public Lart Art = new Lart();
         public LLayer Layer = new LLayer();
-        public string InfoName = "";
-        public string InfoCat = "";
-        public string InfoDateTime = "";
+        public Info Info = new Info();
 
         public Preset() { }
     }

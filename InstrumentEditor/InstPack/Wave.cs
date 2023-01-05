@@ -43,9 +43,7 @@ namespace InstPack {
     public class Wave {
         public WAVH Header;
         public short[] Data = null;
-        public string InfoName = "";
-        public string InfoCat = "";
-        public string InfoDateTime = "";
+        public Info Info = new Info();
 
         private FMT mFormat;
 
@@ -132,8 +130,8 @@ namespace InstPack {
                 Header.Pitch = 1.0;
             }
 
-            if (string.IsNullOrWhiteSpace(InfoName)) {
-                InfoName = Path.GetFileNameWithoutExtension(filePath);
+            if (string.IsNullOrWhiteSpace(Info[Info.TYPE.INAM])) {
+                Info[Info.TYPE.INAM] = Path.GetFileNameWithoutExtension(filePath);
             }
 
             br.Dispose();

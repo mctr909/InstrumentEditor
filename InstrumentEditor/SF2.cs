@@ -489,8 +489,8 @@ namespace SF2 {
                 Marshal.Copy(wavePtr, wi.Data, 0, waveLen / 2);
                 Marshal.FreeHGlobal(wavePtr);
 
-                wi.InfoName = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
-                wi.InfoDateTime = now;
+                wi.Info[Info.TYPE.INAM] = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
+                wi.Info[Info.TYPE.ICRD] = now;
 
                 instFile.Wave.Add(wi);
             }
@@ -498,8 +498,8 @@ namespace SF2 {
             foreach (var sf2Inst in mPdta.InstList) {
                 var inst = new InstPack.Inst();
 
-                inst.InfoName = sf2Inst.Name.Replace("\0", "");
-                inst.InfoDateTime = now;
+                inst.Info[Info.TYPE.INAM] = sf2Inst.Name.Replace("\0", "");
+                inst.Info[Info.TYPE.ICRD] = now;
 
                 foreach (var art in sf2Inst.GlobalArt) {
                     var globalArt = new ART {
@@ -624,8 +624,8 @@ namespace SF2 {
                 preset.Header.BankLSB = sf2Pres.Key.bankLSB;
                 preset.Header.ProgNum = sf2Pres.Key.progNum;
 
-                preset.InfoName = sf2Pres.Value.Name.Replace("\0", "");
-                preset.InfoDateTime = now;
+                preset.Info[Info.TYPE.INAM] = sf2Pres.Value.Name.Replace("\0", "");
+                preset.Info[Info.TYPE.ICRD] = now;
 
                 foreach (var art in sf2Pres.Value.GlobalArt) {
                     var globalArt = new ART {

@@ -18,14 +18,14 @@ namespace InstrumentEditor {
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mInst = inst;
-            txtInstName.Text = mInst.InfoName;
+            txtInstName.Text = mInst.Info[Info.TYPE.INAM];
             envelope1.Art = mInst.Art;
             btnAdd.Text = "反映";
         }
 
         private void InstInfoDialog_Load(object sender, EventArgs e) {
             if (null != mInst) {
-                cmbCategory.SelectedText = mInst.InfoCat;
+                cmbCategory.SelectedText = mInst.Info[Info.TYPE.ICAT];
             }
             setCategoryList();
             setPos();
@@ -38,14 +38,14 @@ namespace InstrumentEditor {
         private void btnAdd_Click(object sender, EventArgs e) {
             if (null == mInst) {
                 mInst = new Inst();
-                mInst.InfoName = txtInstName.Text;
-                mInst.InfoCat = cmbCategory.Text;
+                mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
+                mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
                 mFile.Inst.Add(mInst);
                 mInst.Art = new Lart();
                 envelope1.SetList(mInst.Art);
             } else {
-                mInst.InfoName = txtInstName.Text;
-                mInst.InfoCat = cmbCategory.Text;
+                mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
+                mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
                 envelope1.SetList(mInst.Art);
             }
             Close();
@@ -58,9 +58,9 @@ namespace InstrumentEditor {
                 cmbCategory.Items.Add(tmpCategory);
             }
             foreach (var inst in mFile.Inst.ToArray()) {
-                if ("" != inst.InfoCat) {
-                    if (!cmbCategory.Items.Contains(inst.InfoCat.Trim())) {
-                        cmbCategory.Items.Add(inst.InfoCat.Trim());
+                if ("" != inst.Info[Info.TYPE.ICAT]) {
+                    if (!cmbCategory.Items.Contains(inst.Info[Info.TYPE.ICAT].Trim())) {
+                        cmbCategory.Items.Add(inst.Info[Info.TYPE.ICAT].Trim());
                     }
                 }
             }

@@ -78,28 +78,46 @@ public class Riff {
     }
 }
 
-public static class INFO_TYPE {
-    public const string IARL = "IARL"; // ArchivalLocation
-    public const string IART = "IART"; // Artists
-    public const string ICAT = "ICAT"; // Category
-    public const string ICMS = "ICMS"; // Commissioned
-    public const string ICMT = "ICMT"; // Comments
-    public const string ICOP = "ICOP"; // Copyright
-    public const string ICRD = "ICRD"; // CreationDate
-    public const string IENG = "IENG"; // Engineer
-    public const string IGNR = "IGNR"; // Genre
-    public const string IKEY = "IKEY"; // Keywords
-    public const string IMED = "IMED"; // Medium
-    public const string INAM = "INAM"; // Name
-    public const string IPRD = "IPRD"; // Product
-    public const string ISFT = "ISFT"; // Software
-    public const string ISRC = "ISRC"; // Source
-    public const string ISRF = "ISRF"; // SourceForm
-    public const string ISBJ = "ISBJ"; // Subject
-    public const string ITCH = "ITCH"; // Technician
-}
-
 public class Info {
+    public static class TYPE {
+        /// <summary>ArchivalLocation</summary>
+        public const string IARL = "IARL";
+        /// <summary>Artists</summary>
+        public const string IART = "IART";
+        /// <summary>Category</summary>
+        public const string ICAT = "ICAT";
+        /// <summary>Commissioned</summary>
+        public const string ICMS = "ICMS";
+        /// <summary>Comments</summary>
+        public const string ICMT = "ICMT";
+        /// <summary>Copyright</summary>
+        public const string ICOP = "ICOP";
+        /// <summary>CreationDate</summary>
+        public const string ICRD = "ICRD";
+        /// <summary>Engineer</summary>
+        public const string IENG = "IENG";
+        /// <summary>Genre</summary>
+        public const string IGNR = "IGNR";
+        /// <summary>Keywords</summary>
+        public const string IKEY = "IKEY";
+        /// <summary>Medium</summary>
+        public const string IMED = "IMED";
+        /// <summary>Name</summary>
+        public const string INAM = "INAM";
+        /// <summary>Product</summary>
+        public const string IPRD = "IPRD";
+        /// <summary>Software</summary>
+        public const string ISFT = "ISFT";
+        /// <summary>Source</summary>
+        public const string ISRC = "ISRC";
+        /// <summary>SourceForm</summary>
+        public const string ISRF = "ISRF";
+        /// <summary>Subject</summary>
+        public const string ISBJ = "ISBJ";
+        /// <summary>Technician</summary>
+        public const string ITCH = "ITCH";
+    }
+
     private Dictionary<string, string> mList = new Dictionary<string, string>();
 
     public string this[string key] {
@@ -119,6 +137,12 @@ public class Info {
             } else {
                 mList.Add(key, value);
             }
+        }
+    }
+
+    public void CopyFrom(Info info) {
+        foreach (var v in info.mList) {
+            this[v.Key] = v.Value;
         }
     }
 

@@ -45,7 +45,7 @@ namespace InstrumentEditor {
                 txtInst.Text = string.Format(
                     "{0} {1}",
                     instIndex.ToString("0000"),
-                    inst.InfoName
+                    inst.Info[Info.TYPE.INAM]
                 );
             } else {
                 txtInst.Text = "";
@@ -166,7 +166,7 @@ namespace InstrumentEditor {
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
                     var inst = mFile.Inst[instIndex];
-                    instName = inst.InfoName;
+                    instName = inst.Info[Info.TYPE.INAM];
                 }
 
                 if (int.MaxValue == instIndex) {

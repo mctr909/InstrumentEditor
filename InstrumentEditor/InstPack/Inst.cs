@@ -40,10 +40,7 @@ namespace InstPack {
     public class Inst {
         public Lart Art = new Lart();
         public LRegion Region = new LRegion();
-        public string InfoName = "";
-        public string InfoCat = "";
-        public string InfoDateTime = "";
-        public string InfoComments = "";
+        public Info Info = new Info();
 
         public Inst() { }
     }
