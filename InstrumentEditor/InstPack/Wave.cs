@@ -76,6 +76,23 @@ namespace InstPack {
                 case "wavh":
                     Header = Marshal.PtrToStructure<WAVH>(pChunkData);
                     break;
+                case "LIST":
+                    var listType = Marshal.PtrToStringAnsi(pChunkData, 4);
+                    if ("INFO" == listType) {
+                        int pos = 4;
+                        while (pos < chunkSize) {
+                            var infoType = Marshal.PtrToStringAnsi(pChunkData + pos, 4);
+                            pos += 4;
+                            var infoSize = Marshal.PtrToStructure<int>(pChunkData + pos);
+                            pos += 4;
+                            infoSize += (0 == infoSize % 2) ? 0 : 1;
+                            var arr = new byte[infoSize];
+                            Marshal.Copy(pChunkData + pos, arr, 0, infoSize);
+                            Info[infoType] = Riff.Enc.GetString(arr).Replace("\0", "").TrimEnd();
+                            pos += infoSize + 8;
+                        }
+                    }
+                    break;
                 default:
                     break;
                 }
@@ -140,8 +157,8 @@ namespace InstPack {
         }
 
         public void ToFile(string filePath) {
-            FileStream fs = new FileStream(filePath, FileMode.Create);
-            BinaryWriter bw = new BinaryWriter(fs);
+            var fs = new FileStream(filePath, FileMode.Create);
+            var bw = new BinaryWriter(fs);
             bw.Write("RIFF".ToCharArray());
             bw.Write((uint)0);
             bw.Write("WAVE".ToCharArray());
@@ -171,7 +188,7 @@ namespace InstPack {
             }
 
             Header.Write(bw);
-            //Info.Write(bw);
+            Info.Write(bw);
 
             fs.Seek(4, SeekOrigin.Begin);
             bw.Write((uint)(fs.Length - 8));
