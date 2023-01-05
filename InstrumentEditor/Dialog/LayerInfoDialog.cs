@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-
+using DLS;
 using InstPack;
 
 namespace InstrumentEditor {
@@ -57,23 +57,24 @@ namespace InstrumentEditor {
             mLayer.Header.KeyHi = (byte)numKeyHigh.Value;
             mLayer.Header.VelLo = (byte)numVelocityLow.Value;
             mLayer.Header.VelHi = (byte)numVelocityHigh.Value;
-            if (0 == numTranspose.Value) {
-                mLayer.Art.Delete(ART_TYPE.COASE_TUNE);
-            } else {
-                mLayer.Art.Update(ART_TYPE.COASE_TUNE, (int)numTranspose.Value);
-            }
-            var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
-            if (0 == fineTune) {
-                mLayer.Art.Delete(ART_TYPE.FINE_TUNE);
-            } else {
-                mLayer.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, fineTune));
-            }
-            var gain = (int)(20 * numVolume.Value) / 400.0;
-            if (0 == gain) {
-                mLayer.Art.Delete(ART_TYPE.GAIN);
-            } else {
-                mLayer.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
-            }
+            ///TODO:ART
+            //if (0 == numTranspose.Value) {
+            //    mLayer.Art.Delete(ART_TYPE.COASE_TUNE);
+            //} else {
+            //    mLayer.Art.Update(ART_TYPE.COASE_TUNE, (int)numTranspose.Value);
+            //}
+            //var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
+            //if (0 == fineTune) {
+            //    mLayer.Art.Delete(ART_TYPE.FINE_TUNE);
+            //} else {
+            //    mLayer.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, fineTune));
+            //}
+            //var gain = (int)(20 * numVolume.Value) / 400.0;
+            //if (0 == gain) {
+            //    mLayer.Art.Delete(ART_TYPE.GAIN);
+            //} else {
+            //    mLayer.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
+            //}
             Close();
         }
 
@@ -180,16 +181,17 @@ namespace InstrumentEditor {
                 }
 
                 foreach(var art in mLayer.Art.ToArray()) {
-                    switch (art.Type) {
-                    case ART_TYPE.GAIN:
-                        numVolume.Value = (decimal)(20.0 * Math.Log10(art.Value));
+                    switch (art.Destination) {
+                    case DST_TYPE.GAIN:
+                        numVolume.Value = (decimal)(20 * Math.Log10(art.Value));
                         break;
-                    case ART_TYPE.FINE_TUNE:
+                    case DST_TYPE.PITCH:
                         numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
                         break;
-                    case ART_TYPE.COASE_TUNE:
-                        numTranspose.Value = (int)art.Value;
-                        break;
+                    ///TODO:ART
+                    //case ART_TYPE.COASE_TUNE:
+                    //    numTranspose.Value = (int)art.Value;
+                    //    break;
                     }
                 }
 

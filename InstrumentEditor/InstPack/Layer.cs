@@ -90,7 +90,7 @@ namespace InstPack {
     public class Layer : Riff {
         public RGNH Header;
         public int InstIndex;
-        public Lart Art = new Lart();
+        public List<DLS.Connection> Art = new List<DLS.Connection>();
 
         public Layer() { }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DLS;
+using System.Collections.Generic;
 
 namespace InstPack {
     public class LInst {
@@ -38,9 +39,9 @@ namespace InstPack {
     }
 
     public class Inst {
-        public Lart Art = new Lart();
         public LRegion Region = new LRegion();
         public Info Info = new Info();
+        public List<Connection> Art = new List<Connection>();
 
         public Inst() { }
     }

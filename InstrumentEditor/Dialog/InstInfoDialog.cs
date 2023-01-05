@@ -1,6 +1,8 @@
-﻿using InstPack;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class InstInfoDialog : Form {
@@ -41,7 +43,7 @@ namespace InstrumentEditor {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
                 mFile.Inst.Add(mInst);
-                mInst.Art = new Lart();
+                mInst.Art = new List<DLS.Connection>();
                 envelope1.SetList(mInst.Art);
             } else {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;

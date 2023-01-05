@@ -83,8 +83,6 @@
     <Compile Include="Form\RegionAssignForm.Designer.cs">
       <DependentUpon>RegionAssignForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="InstPack\Art.cs" />
-    <Compile Include="InstPack\Enum.cs" />
     <Compile Include="InstPack\Inst.cs" />
     <Compile Include="InstPack\InstPack.cs" />
     <Compile Include="InstPack\Layer.cs" />

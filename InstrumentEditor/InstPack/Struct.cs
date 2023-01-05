@@ -50,11 +50,4 @@ namespace InstPack {
         public byte VelLo;
         public byte VelHi;
     }
-
-    public struct ART {
-        public ART_TYPE Type;
-        public uint Source;
-        public uint Contorol;
-        public double Value;
-    }
 }

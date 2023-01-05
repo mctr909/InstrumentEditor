@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-
+using DLS;
 using InstPack;
 
 namespace InstrumentEditor {
@@ -75,24 +75,24 @@ namespace InstrumentEditor {
                 mRegion.Header.VelLo = (byte)numVelocityLow.Value;
                 mRegion.Header.VelHi = (byte)numVelocityHigh.Value;
             }
-
-            if (0 == numUnityNote.Value) {
-                mRegion.Art.Delete(ART_TYPE.UNITY_KEY);
-            } else {
-                mRegion.Art.Update(ART_TYPE.UNITY_KEY, (int)numUnityNote.Value);
-            }
-            var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
-            if (0 == fineTune) {
-                mRegion.Art.Delete(ART_TYPE.FINE_TUNE);
-            } else {
-                mRegion.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, fineTune));
-            }
-            var gain = (int)(20 * numVolume.Value) / 400.0;
-            if (0 == gain) {
-                mRegion.Art.Delete(ART_TYPE.GAIN);
-            } else {
-                mRegion.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
-            }
+            ///TODO:ART
+            //if (0 == numUnityNote.Value) {
+            //    mRegion.Art.Delete(ART_TYPE.UNITY_KEY);
+            //} else {
+            //    mRegion.Art.Update(ART_TYPE.UNITY_KEY, (int)numUnityNote.Value);
+            //}
+            //var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
+            //if (0 == fineTune) {
+            //    mRegion.Art.Delete(ART_TYPE.FINE_TUNE);
+            //} else {
+            //    mRegion.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, fineTune));
+            //}
+            //var gain = (int)(20 * numVolume.Value) / 400.0;
+            //if (0 == gain) {
+            //    mRegion.Art.Delete(ART_TYPE.GAIN);
+            //} else {
+            //    mRegion.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
+            //}
 
             envelope1.SetList(mRegion.Art);
 
@@ -226,20 +226,20 @@ namespace InstrumentEditor {
                 }
 
                 foreach(var art in mRegion.Art.ToArray()) {
-                    switch (art.Type) {
-                    case ART_TYPE.GAIN:
-                        numVolume.Value = (decimal)(20.0 * Math.Log10(art.Value));
+                    switch (art.Destination) {
+                    case DST_TYPE.GAIN:
+                        numVolume.Value = (decimal)(20 * Math.Log10(art.Value));
                         break;
-                    case ART_TYPE.FINE_TUNE:
-                        if (1.0 == art.Value) {
-                            numFineTune.Value = 0;
-                        } else {
-                            numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
-                        }
-                        break;
-                    case ART_TYPE.UNITY_KEY:
-                        numUnityNote.Value = (int)art.Value;
-                        break;
+                    //case ART_TYPE.FINE_TUNE:
+                    //    if (1.0 == art.Value) {
+                    //        numFineTune.Value = 0;
+                    //    } else {
+                    //        numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
+                    //    }
+                    //    break;
+                    //case ART_TYPE.UNITY_KEY:
+                    //    numUnityNote.Value = (int)art.Value;
+                    //    break;
                     }
                 }
 

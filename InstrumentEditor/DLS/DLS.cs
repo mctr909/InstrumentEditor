@@ -106,76 +106,13 @@ namespace DLS {
 
                 if (null != dlsInst.Value.Articulations && null != dlsInst.Value.Articulations.ART) {
                     foreach (var instArt in dlsInst.Value.Articulations.ART.List) {
-                        var art = new InstPack.ART {
+                        var art = new Connection {
                             Value = instArt.Value,
-                            Source = (uint)instArt.Source,
-                            Contorol = (uint)instArt.Control
+                            Source = instArt.Source,
+                            Control = instArt.Control,
+                            Destination = instArt.Destination
                         };
-
-                        switch (instArt.Destination) {
-                        case DST_TYPE.EG1_ATTACK_TIME:
-                            art.Type = ART_TYPE.EG_AMP_ATTACK;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG1_HOLD_TIME:
-                            art.Type = ART_TYPE.EG_AMP_HOLD;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG1_DECAY_TIME:
-                            art.Type = ART_TYPE.EG_AMP_DECAY;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG1_SUSTAIN_LEVEL:
-                            art.Type = ART_TYPE.EG_AMP_SUSTAIN;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG1_RELEASE_TIME:
-                            art.Type = ART_TYPE.EG_AMP_RELEASE;
-                            inst.Art.Add(art);
-                            break;
-
-                        case DST_TYPE.EG2_ATTACK_TIME:
-                            art.Type = ART_TYPE.EG_CUTOFF_ATTACK;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG2_HOLD_TIME:
-                            art.Type = ART_TYPE.EG_CUTOFF_HOLD;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG2_DECAY_TIME:
-                            art.Type = ART_TYPE.EG_CUTOFF_DECAY;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG2_SUSTAIN_LEVEL:
-                            art.Type = ART_TYPE.EG_CUTOFF_SUSTAIN;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.EG2_RELEASE_TIME:
-                            art.Type = ART_TYPE.EG_CUTOFF_RELEASE;
-                            inst.Art.Add(art);
-                            break;
-
-                        case DST_TYPE.GAIN:
-                            art.Type = ART_TYPE.GAIN;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.PAN:
-                            art.Type = ART_TYPE.PAN;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.PITCH:
-                            art.Type = ART_TYPE.FINE_TUNE;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.FILTER_Q:
-                            art.Type = ART_TYPE.LPF_RESONANCE;
-                            inst.Art.Add(art);
-                            break;
-                        case DST_TYPE.FILTER_CUTOFF:
-                            art.Type = ART_TYPE.LPF_CUTOFF;
-                            inst.Art.Add(art);
-                            break;
-                        }
+                        inst.Art.Add(art);
                     }
                 }
 
@@ -187,92 +124,19 @@ namespace DLS {
                     rgn.Header.VelHi = (byte)dlsRegion.Key.Vel.Hi;
 
                     rgn.WaveIndex = dlsRegion.Value.WaveLink.TableIndex;
-
-                    rgn.Art.Add(new InstPack.ART {
-                        Type = ART_TYPE.UNITY_KEY,
-                        Value = dlsRegion.Value.Sampler.UnityNote
-                    });
-                    rgn.Art.Add(new InstPack.ART {
-                        Type = ART_TYPE.FINE_TUNE,
-                        Value = Math.Pow(2.0, dlsRegion.Value.Sampler.FineTune / 1200.0)
-                    });
-                    rgn.Art.Add(new InstPack.ART {
-                        Type = ART_TYPE.GAIN,
-                        Value = dlsRegion.Value.Sampler.Gain
-                    });
+                    rgn.UnityNote = dlsRegion.Value.Sampler.UnityNote;
+                    rgn.FineTune = Math.Pow(2.0, dlsRegion.Value.Sampler.FineTune / 1200.0);
+                    rgn.Gain = dlsRegion.Value.Sampler.Gain;
 
                     if (null != dlsRegion.Value.Articulations && null != dlsRegion.Value.Articulations.ART) {
                         foreach (var regionArt in dlsRegion.Value.Articulations.ART.List) {
-                            var art = new InstPack.ART {
+                            var art = new Connection {
                                 Value = regionArt.Value,
-                                Source = (uint)regionArt.Source,
-                                Contorol = (uint)regionArt.Control
+                                Source = regionArt.Source,
+                                Control = regionArt.Control,
+                                Destination = regionArt.Destination
                             };
-
-                            switch (regionArt.Destination) {
-                            case DST_TYPE.EG1_ATTACK_TIME:
-                                art.Type = ART_TYPE.EG_AMP_ATTACK;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG1_HOLD_TIME:
-                                art.Type = ART_TYPE.EG_AMP_HOLD;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG1_DECAY_TIME:
-                                art.Type = ART_TYPE.EG_AMP_DECAY;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG1_SUSTAIN_LEVEL:
-                                art.Type = ART_TYPE.EG_AMP_SUSTAIN;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG1_RELEASE_TIME:
-                                art.Type = ART_TYPE.EG_AMP_RELEASE;
-                                rgn.Art.Add(art);
-                                break;
-
-                            case DST_TYPE.EG2_ATTACK_TIME:
-                                art.Type = ART_TYPE.EG_CUTOFF_ATTACK;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG2_HOLD_TIME:
-                                art.Type = ART_TYPE.EG_CUTOFF_HOLD;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG2_DECAY_TIME:
-                                art.Type = ART_TYPE.EG_CUTOFF_DECAY;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG2_SUSTAIN_LEVEL:
-                                art.Type = ART_TYPE.EG_CUTOFF_SUSTAIN;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.EG2_RELEASE_TIME:
-                                art.Type = ART_TYPE.EG_CUTOFF_RELEASE;
-                                rgn.Art.Add(art);
-                                break;
-
-                            case DST_TYPE.GAIN:
-                                art.Type = ART_TYPE.GAIN;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.PAN:
-                                art.Type = ART_TYPE.PAN;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.PITCH:
-                                art.Type = ART_TYPE.FINE_TUNE;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.FILTER_Q:
-                                art.Type = ART_TYPE.LPF_RESONANCE;
-                                rgn.Art.Add(art);
-                                break;
-                            case DST_TYPE.FILTER_CUTOFF:
-                                art.Type = ART_TYPE.LPF_CUTOFF;
-                                rgn.Art.Add(art);
-                                break;
-                            }
+                            rgn.Art.Add(art);
                         }
                     }
                     inst.Region.Add(rgn);
@@ -350,88 +214,7 @@ namespace DLS {
                 ins.Articulations.ART = new ART();
                 ins.Articulations.ART.List = new List<Connection>();
                 foreach (var srcArt in srcIns.Art.ToArray()) {
-                    switch (srcArt.Type) {
-                    case ART_TYPE.EG_AMP_ATTACK:
-                        var ampA = new Connection();
-                        ampA.Source = (SRC_TYPE)srcArt.Source;
-                        ampA.Control = (SRC_TYPE)srcArt.Contorol;
-                        ampA.Destination = DST_TYPE.EG1_ATTACK_TIME;
-                        ampA.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ampA);
-                        break;
-                    case ART_TYPE.EG_AMP_HOLD:
-                        var ampH = new Connection();
-                        ampH.Source = (SRC_TYPE)srcArt.Source;
-                        ampH.Control = (SRC_TYPE)srcArt.Contorol;
-                        ampH.Destination = DST_TYPE.EG1_HOLD_TIME;
-                        ampH.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ampH);
-                        break;
-                    case ART_TYPE.EG_AMP_DECAY:
-                        var ampD = new Connection();
-                        ampD.Source = (SRC_TYPE)srcArt.Source;
-                        ampD.Control = (SRC_TYPE)srcArt.Contorol;
-                        ampD.Destination = DST_TYPE.EG1_DECAY_TIME;
-                        ampD.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ampD);
-                        break;
-                    case ART_TYPE.EG_AMP_SUSTAIN:
-                        var ampS = new Connection();
-                        ampS.Source = (SRC_TYPE)srcArt.Source;
-                        ampS.Control = (SRC_TYPE)srcArt.Contorol;
-                        ampS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
-                        ampS.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ampS);
-                        break;
-                    case ART_TYPE.EG_AMP_RELEASE:
-                        var ampR = new Connection();
-                        ampR.Source = (SRC_TYPE)srcArt.Source;
-                        ampR.Control = (SRC_TYPE)srcArt.Contorol;
-                        ampR.Destination = DST_TYPE.EG1_RELEASE_TIME;
-                        ampR.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(ampR);
-                        break;
-                    case ART_TYPE.EG_CUTOFF_ATTACK:
-                        var fcA = new Connection();
-                        fcA.Source = (SRC_TYPE)srcArt.Source;
-                        fcA.Control = (SRC_TYPE)srcArt.Contorol;
-                        fcA.Destination = DST_TYPE.EG1_ATTACK_TIME;
-                        fcA.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(fcA);
-                        break;
-                    case ART_TYPE.EG_CUTOFF_HOLD:
-                        var fcH = new Connection();
-                        fcH.Source = (SRC_TYPE)srcArt.Source;
-                        fcH.Control = (SRC_TYPE)srcArt.Contorol;
-                        fcH.Destination = DST_TYPE.EG1_HOLD_TIME;
-                        fcH.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(fcH);
-                        break;
-                    case ART_TYPE.EG_CUTOFF_DECAY:
-                        var fcD = new Connection();
-                        fcD.Source = (SRC_TYPE)srcArt.Source;
-                        fcD.Control = (SRC_TYPE)srcArt.Contorol;
-                        fcD.Destination = DST_TYPE.EG1_DECAY_TIME;
-                        fcD.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(fcD);
-                        break;
-                    case ART_TYPE.EG_CUTOFF_SUSTAIN:
-                        var fcS = new Connection();
-                        fcS.Source = (SRC_TYPE)srcArt.Source;
-                        fcS.Control = (SRC_TYPE)srcArt.Contorol;
-                        fcS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
-                        fcS.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(fcS);
-                        break;
-                    case ART_TYPE.EG_CUTOFF_RELEASE:
-                        var fcR = new Connection();
-                        fcR.Source = (SRC_TYPE)srcArt.Source;
-                        fcR.Control = (SRC_TYPE)srcArt.Contorol;
-                        fcR.Destination = DST_TYPE.EG1_RELEASE_TIME;
-                        fcR.Value = srcArt.Value;
-                        ins.Articulations.ART.List.Add(fcR);
-                        break;
-                    }
+                    ins.Articulations.ART.List.Add(srcArt);
                 }
 
                 ins.Regions = new LRGN();
@@ -445,102 +228,15 @@ namespace DLS {
 
                     rgn.WaveLink.TableIndex = srcRgn.WaveIndex;
 
+                    rgn.Sampler.Gain = srcRgn.Gain;
+                    rgn.Sampler.UnityNote = srcRgn.UnityNote;
+                    rgn.Sampler.FineTune = (short)(Math.Log(srcRgn.FineTune, 2.0) * 1200);
+
                     rgn.Articulations = new LART();
                     rgn.Articulations.ART = new ART();
                     rgn.Articulations.ART.List = new List<Connection>();
                     foreach (var srcArt in srcRgn.Art.ToArray()) {
-                        switch(srcArt.Type) {
-                        case ART_TYPE.GAIN:
-                            rgn.Sampler.Gain = srcArt.Value;
-                            break;
-                        case ART_TYPE.UNITY_KEY:
-                            rgn.Sampler.UnityNote = (ushort)srcArt.Value;
-                            break;
-                        case ART_TYPE.FINE_TUNE:
-                            rgn.Sampler.FineTune = (short)(Math.Log(srcArt.Value, 2.0) * 1200);
-                            break;
-
-                        case ART_TYPE.EG_AMP_ATTACK:
-                            var ampA = new Connection();
-                            ampA.Source = (SRC_TYPE)srcArt.Source;
-                            ampA.Control = (SRC_TYPE)srcArt.Contorol;
-                            ampA.Destination = DST_TYPE.EG1_ATTACK_TIME;
-                            ampA.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(ampA);
-                            break;
-                        case ART_TYPE.EG_AMP_HOLD:
-                            var ampH = new Connection();
-                            ampH.Source = (SRC_TYPE)srcArt.Source;
-                            ampH.Control = (SRC_TYPE)srcArt.Contorol;
-                            ampH.Destination = DST_TYPE.EG1_HOLD_TIME;
-                            ampH.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(ampH);
-                            break;
-                        case ART_TYPE.EG_AMP_DECAY:
-                            var ampD = new Connection();
-                            ampD.Source = (SRC_TYPE)srcArt.Source;
-                            ampD.Control = (SRC_TYPE)srcArt.Contorol;
-                            ampD.Destination = DST_TYPE.EG1_DECAY_TIME;
-                            ampD.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(ampD);
-                            break;
-                        case ART_TYPE.EG_AMP_SUSTAIN:
-                            var ampS = new Connection();
-                            ampS.Source = (SRC_TYPE)srcArt.Source;
-                            ampS.Control = (SRC_TYPE)srcArt.Contorol;
-                            ampS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
-                            ampS.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(ampS);
-                            break;
-                        case ART_TYPE.EG_AMP_RELEASE:
-                            var ampR = new Connection();
-                            ampR.Source = (SRC_TYPE)srcArt.Source;
-                            ampR.Control = (SRC_TYPE)srcArt.Contorol;
-                            ampR.Destination = DST_TYPE.EG1_RELEASE_TIME;
-                            ampR.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(ampR);
-                            break;
-                        case ART_TYPE.EG_CUTOFF_ATTACK:
-                            var fcA = new Connection();
-                            fcA.Source = (SRC_TYPE)srcArt.Source;
-                            fcA.Control = (SRC_TYPE)srcArt.Contorol;
-                            fcA.Destination = DST_TYPE.EG1_ATTACK_TIME;
-                            fcA.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(fcA);
-                            break;
-                        case ART_TYPE.EG_CUTOFF_HOLD:
-                            var fcH = new Connection();
-                            fcH.Source = (SRC_TYPE)srcArt.Source;
-                            fcH.Control = (SRC_TYPE)srcArt.Contorol;
-                            fcH.Destination = DST_TYPE.EG1_HOLD_TIME;
-                            fcH.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(fcH);
-                            break;
-                        case ART_TYPE.EG_CUTOFF_DECAY:
-                            var fcD = new Connection();
-                            fcD.Source = (SRC_TYPE)srcArt.Source;
-                            fcD.Control = (SRC_TYPE)srcArt.Contorol;
-                            fcD.Destination = DST_TYPE.EG1_DECAY_TIME;
-                            fcD.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(fcD);
-                            break;
-                        case ART_TYPE.EG_CUTOFF_SUSTAIN:
-                            var fcS = new Connection();
-                            fcS.Source = (SRC_TYPE)srcArt.Source;
-                            fcS.Control = (SRC_TYPE)srcArt.Contorol;
-                            fcS.Destination = DST_TYPE.EG1_SUSTAIN_LEVEL;
-                            fcS.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(fcS);
-                            break;
-                        case ART_TYPE.EG_CUTOFF_RELEASE:
-                            var fcR = new Connection();
-                            fcR.Source = (SRC_TYPE)srcArt.Source;
-                            fcR.Control = (SRC_TYPE)srcArt.Contorol;
-                            fcR.Destination = DST_TYPE.EG1_RELEASE_TIME;
-                            fcR.Value = srcArt.Value;
-                            rgn.Articulations.ART.List.Add(fcR);
-                            break;
-                        }
+                        ins.Articulations.ART.List.Add(srcArt);
                     }
 
                     ins.Regions.List.Add(rgn.Header, rgn);

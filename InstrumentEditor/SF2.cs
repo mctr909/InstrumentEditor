@@ -502,50 +502,65 @@ namespace SF2 {
                 inst.Info[Info.TYPE.ICRD] = now;
 
                 foreach (var art in sf2Inst.GlobalArt) {
-                    var globalArt = new ART {
-                        Value = art.Value
-                    };
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        globalArt.Type = ART_TYPE.GAIN;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.GAIN,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.PAN:
-                        globalArt.Type = ART_TYPE.PAN;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.PAN,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.COARSE_TUNE:
-                        globalArt.Type = ART_TYPE.COASE_TUNE;
-                        inst.Art.Add(globalArt);
+                        ///TODO:ART
+                        //globalArt.Destination = ;
+                        //inst.Art.Add(globalArt);
                         break;
                     case E_OPER.FINETUNE:
-                        globalArt.Type = ART_TYPE.FINE_TUNE;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.PITCH,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.OVERRIDING_ROOTKEY:
-                        globalArt.Type = ART_TYPE.UNITY_KEY;
-                        inst.Art.Add(globalArt);
+                        ///TODO:ART
+                        //globalArt.Type = ART_TYPE.UNITY_KEY;
+                        //inst.Art.Add(globalArt);
                         break;
 
                     case E_OPER.ENV_VOL_ATTACK:
-                        globalArt.Type = ART_TYPE.EG_AMP_ATTACK;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.EG1_ATTACK_TIME,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.ENV_VOL_HOLD:
-                        globalArt.Type = ART_TYPE.EG_AMP_HOLD;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.EG1_HOLD_TIME,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.ENV_VOL_DECAY:
-                        globalArt.Type = ART_TYPE.EG_AMP_DECAY;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.EG1_DECAY_TIME,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.ENV_VOL_SUSTAIN:
-                        globalArt.Type = ART_TYPE.EG_AMP_SUSTAIN;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.EG1_SUSTAIN_LEVEL,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.ENV_VOL_RELEASE:
-                        globalArt.Type = ART_TYPE.EG_AMP_RELEASE;
-                        inst.Art.Add(globalArt);
+                        inst.Art.Add(new DLS.Connection() {
+                            Destination = DLS.DST_TYPE.EG1_RELEASE_TIME,
+                            Value = art.Value
+                        });
                         break;
                     }
                 }
@@ -560,50 +575,65 @@ namespace SF2 {
                     rgn.WaveIndex = (uint)sf2InstRng.sampleId;
 
                     foreach (var art in sf2InstRng.Art) {
-                        var layerArt = new ART {
-                            Value = art.Value
-                        };
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
-                            layerArt.Type = ART_TYPE.GAIN;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.GAIN,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.PAN:
-                            layerArt.Type = ART_TYPE.PAN;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.PAN,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.COARSE_TUNE:
-                            layerArt.Type = ART_TYPE.COASE_TUNE;
-                            rgn.Art.Add(layerArt);
+                            ///TODO:ART
+                            //layerArt.Type = ART_TYPE.COASE_TUNE;
+                            //rgn.Art.Add(layerArt);
                             break;
                         case E_OPER.FINETUNE:
-                            layerArt.Type = ART_TYPE.FINE_TUNE;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.PITCH,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.OVERRIDING_ROOTKEY:
-                            layerArt.Type = ART_TYPE.UNITY_KEY;
-                            rgn.Art.Add(layerArt);
+                            ///TODO:ART
+                            //layerArt.Type = ART_TYPE.UNITY_KEY;
+                            //rgn.Art.Add(layerArt);
                             break;
 
                         case E_OPER.ENV_VOL_ATTACK:
-                            layerArt.Type = ART_TYPE.EG_AMP_ATTACK;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.EG1_ATTACK_TIME,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.ENV_VOL_HOLD:
-                            layerArt.Type = ART_TYPE.EG_AMP_HOLD;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.EG1_HOLD_TIME,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.ENV_VOL_DECAY:
-                            layerArt.Type = ART_TYPE.EG_AMP_DECAY;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.EG1_DECAY_TIME,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.ENV_VOL_SUSTAIN:
-                            layerArt.Type = ART_TYPE.EG_AMP_SUSTAIN;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.EG1_SUSTAIN_LEVEL,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.ENV_VOL_RELEASE:
-                            layerArt.Type = ART_TYPE.EG_AMP_RELEASE;
-                            rgn.Art.Add(layerArt);
+                            rgn.Art.Add(new DLS.Connection() {
+                                Destination = DLS.DST_TYPE.EG1_RELEASE_TIME,
+                                Value = art.Value
+                            });
                             break;
                         }
                     }
@@ -625,25 +655,29 @@ namespace SF2 {
                 preset.Info[Info.TYPE.ICRD] = now;
 
                 foreach (var art in sf2Pres.Value.GlobalArt) {
-                    var globalArt = new ART {
-                        Value = art.Value
-                    };
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        globalArt.Type = ART_TYPE.GAIN;
-                        preset.Art.Add(globalArt);
+                        preset.Art.Add(new DLS.Connection {
+                            Destination = DLS.DST_TYPE.GAIN,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.PAN:
-                        globalArt.Type = ART_TYPE.PAN;
-                        preset.Art.Add(globalArt);
+                        preset.Art.Add(new DLS.Connection {
+                            Destination = DLS.DST_TYPE.PAN,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.COARSE_TUNE:
-                        globalArt.Type = ART_TYPE.COASE_TUNE;
-                        preset.Art.Add(globalArt);
+                        ///TODO:ART
+                        //globalArt.Type = ART_TYPE.COASE_TUNE;
+                        //preset.Art.Add(globalArt);
                         break;
                     case E_OPER.FINETUNE:
-                        globalArt.Type = ART_TYPE.FINE_TUNE;
-                        preset.Art.Add(globalArt);
+                        preset.Art.Add(new DLS.Connection {
+                            Destination = DLS.DST_TYPE.PITCH,
+                            Value = art.Value
+                        });
                         break;
                     case E_OPER.INSTRUMENT:
                         break;
@@ -658,25 +692,29 @@ namespace SF2 {
                     layer.Header.VelHi = sf2PresRng.velHi;
 
                     foreach(var art in sf2PresRng.Art) {
-                        var layerArt = new ART {
-                            Value = art.Value
-                        };
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
-                            layerArt.Type = ART_TYPE.GAIN;
-                            layer.Art.Add(layerArt);
+                            layer.Art.Add(new DLS.Connection {
+                                Destination = DLS.DST_TYPE.GAIN,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.PAN:
-                            layerArt.Type = ART_TYPE.PAN;
-                            layer.Art.Add(layerArt);
+                            layer.Art.Add(new DLS.Connection {
+                                Destination = DLS.DST_TYPE.PAN,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.COARSE_TUNE:
-                            layerArt.Type = ART_TYPE.COASE_TUNE;
-                            layer.Art.Add(layerArt);
+                            ///TODO:ART
+                            //layerArt.Type = ART_TYPE.COASE_TUNE;
+                            //layer.Art.Add(layerArt);
                             break;
                         case E_OPER.FINETUNE:
-                            layerArt.Type = ART_TYPE.FINE_TUNE;
-                            layer.Art.Add(layerArt);
+                            layer.Art.Add(new DLS.Connection {
+                                Destination = DLS.DST_TYPE.PITCH,
+                                Value = art.Value
+                            });
                             break;
                         case E_OPER.INSTRUMENT:
                             layer.InstIndex = (int)art.Value;

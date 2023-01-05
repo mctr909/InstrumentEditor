@@ -123,7 +123,10 @@ namespace InstPack {
     public class Region {
         public RGNH Header;
         public uint WaveIndex;
-        public Lart Art = new Lart();
+        public ushort UnityNote;
+        public double FineTune;
+        public double Gain;
+        public List<DLS.Connection> Art = new List<DLS.Connection>();
 
         public Region() { }
     }
