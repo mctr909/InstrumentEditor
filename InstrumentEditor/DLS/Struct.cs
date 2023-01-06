@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using InstPack;
-
 namespace DLS {
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
     public struct MidiLocale {

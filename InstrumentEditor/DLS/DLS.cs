@@ -56,16 +56,13 @@ namespace DLS {
             foreach (var wave in WavePool.List) {
                 var waveInfo = new WAVE();
                 waveInfo.Format = wave.Format;
-                if (0 < wave.Loops.Count) {
-                    var loop = new WaveLoop();
-                    loop.Start = wave.Loops[0].Start;
-                    loop.Length = wave.Loops[0].Length;
-                    waveInfo.Loops.Add(loop);
-                    waveInfo.Sampler.LoopCount = 1;
+                waveInfo.Sampler = wave.Sampler;
+                foreach (var src in wave.Loops) {
+                    waveInfo.Loops.Add(new WaveLoop() {
+                        Start = src.Start,
+                        Length = src.Length
+                    });
                 }
-                waveInfo.Sampler.UnityNote = (byte)wave.Sampler.UnityNote;
-                waveInfo.Sampler.Gain = wave.Sampler.Gain;
-                waveInfo.Sampler.FineTune = wave.Sampler.FineTune;
 
                 var ptr = Marshal.AllocHGlobal(wave.Data.Length);
                 Marshal.Copy(wave.Data, 0, ptr, wave.Data.Length);
