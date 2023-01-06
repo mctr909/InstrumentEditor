@@ -217,6 +217,8 @@ namespace InstrumentEditor {
                     );
                 }
 
+                chkLoop.Checked = 0 < mRegion.Loops.Count;
+
                 btnAdd.Text = "反映";
             }
             SetKeyLow();

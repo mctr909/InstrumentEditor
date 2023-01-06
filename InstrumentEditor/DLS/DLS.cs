@@ -112,6 +112,12 @@ namespace DLS {
                     rgn.Header = dlsRegion.Key;
                     rgn.WaveLink = dlsRegion.Value.WaveLink;
                     rgn.Sampler = dlsRegion.Value.Sampler;
+                    foreach (var src in dlsRegion.Value.Loops) {
+                        rgn.Loops.Add(new WaveLoop() {
+                            Start = src.Start,
+                            Length = src.Length
+                        });
+                    }
                     foreach (var regionArt in dlsRegion.Value.Articulations.List) {
                         var art = new Connection {
                             Source = regionArt.Source,
