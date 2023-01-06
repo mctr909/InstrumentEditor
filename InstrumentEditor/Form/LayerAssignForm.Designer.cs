@@ -42,12 +42,10 @@
             // pnlLayer
             // 
             this.pnlLayer.AutoScroll = true;
-            this.pnlLayer.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pnlLayer.Controls.Add(this.picLayer);
-            this.pnlLayer.Location = new System.Drawing.Point(9, 114);
-            this.pnlLayer.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.pnlLayer.Location = new System.Drawing.Point(4, 57);
             this.pnlLayer.Name = "pnlLayer";
-            this.pnlLayer.Size = new System.Drawing.Size(1763, 732);
+            this.pnlLayer.Size = new System.Drawing.Size(816, 368);
             this.pnlLayer.TabIndex = 7;
             this.pnlLayer.Visible = false;
             // 
@@ -55,9 +53,8 @@
             // 
             this.picLayer.InitialImage = null;
             this.picLayer.Location = new System.Drawing.Point(0, 0);
-            this.picLayer.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
             this.picLayer.Name = "picLayer";
-            this.picLayer.Size = new System.Drawing.Size(1764, 1024);
+            this.picLayer.Size = new System.Drawing.Size(814, 512);
             this.picLayer.TabIndex = 0;
             this.picLayer.TabStop = false;
             this.picLayer.DoubleClick += new System.EventHandler(this.picLayer_DoubleClick);
@@ -75,10 +72,10 @@
             this.tscLayer,
             this.toolStripSeparator1,
             this.txtLayer});
-            this.toolStrip1.Location = new System.Drawing.Point(9, 8);
+            this.toolStrip1.Location = new System.Drawing.Point(4, 4);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
-            this.toolStrip1.Size = new System.Drawing.Size(427, 40);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip1.Size = new System.Drawing.Size(221, 25);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -89,7 +86,7 @@
             this.tsbAddRange.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbAddRange.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddRange.Name = "tsbAddRange";
-            this.tsbAddRange.Size = new System.Drawing.Size(46, 34);
+            this.tsbAddRange.Size = new System.Drawing.Size(23, 22);
             this.tsbAddRange.Text = "追加";
             this.tsbAddRange.Click += new System.EventHandler(this.tsbAddLayer_Click);
             // 
@@ -100,33 +97,33 @@
             this.tsbDeleteRange.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbDeleteRange.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbDeleteRange.Name = "tsbDeleteRange";
-            this.tsbDeleteRange.Size = new System.Drawing.Size(46, 34);
+            this.tsbDeleteRange.Size = new System.Drawing.Size(23, 22);
             this.tsbDeleteRange.Text = "削除";
             this.tsbDeleteRange.Click += new System.EventHandler(this.tsbDeleteLayer_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // tscLayer
             // 
             this.tscLayer.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tscLayer.Name = "tscLayer";
-            this.tscLayer.Size = new System.Drawing.Size(141, 40);
+            this.tscLayer.Size = new System.Drawing.Size(75, 25);
             this.tscLayer.SelectedIndexChanged += new System.EventHandler(this.tscLayer_SelectedIndexChanged);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 40);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // txtLayer
             // 
             this.txtLayer.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtLayer.Name = "txtLayer";
             this.txtLayer.ReadOnly = true;
-            this.txtLayer.Size = new System.Drawing.Size(150, 40);
+            this.txtLayer.Size = new System.Drawing.Size(71, 25);
             // 
             // timer1
             // 
@@ -134,13 +131,13 @@
             // 
             // LayerAssignForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1798, 868);
+            this.ClientSize = new System.Drawing.Size(830, 434);
             this.Controls.Add(this.pnlLayer);
             this.Controls.Add(this.toolStrip1);
             this.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
+            this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.Name = "LayerAssignForm";
             this.Text = "InstInfoForm";
             this.SizeChanged += new System.EventHandler(this.InstInfoForm_SizeChanged);

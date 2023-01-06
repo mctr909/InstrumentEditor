@@ -8,13 +8,13 @@ namespace InstrumentEditor {
         private Pack mFile;
         private Preset mPreset;
 
-        public PresetInfoDialog(Pack file, Preset preset) {
+        public PresetInfoDialog(Pack file, Preset preset, bool multi = false) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mPreset = preset;
             DispInfo();
-            if (0 == mPreset.Articulations.List.Count) {
+            if (multi) {
                 txtName.Enabled = false;
             }
         }

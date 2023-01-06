@@ -10,7 +10,7 @@ namespace InstrumentEditor {
         private Pack mFile;
         private INS mInst;
         private bool mOnRange;
-        private const int KEY_WIDTH = 8;
+        private const int KEY_WIDTH = 6;
         private const int VEL_HEIGHT = 4;
 
         public RegionAssignForm(Pack file, INS inst) {
@@ -103,7 +103,7 @@ namespace InstrumentEditor {
 
             var bmp = new Bitmap(picRegion.Width, picRegion.Height);
             var g = Graphics.FromImage(bmp);
-            var redLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
+            var redLine = new Pen(Color.FromArgb(255, 0, 0, 255), 1.0f);
             var greenFill = new Pen(Color.FromArgb(64, 0, 255, 0), 1.0f).Brush;
 
             foreach (var region in mInst.Regions.Array) {
@@ -118,7 +118,7 @@ namespace InstrumentEditor {
                 g.DrawRectangle(
                     redLine,
                     range.Key.Lo * KEY_WIDTH,
-                    bmp.Height - (range.Vel.Hi + 1) * VEL_HEIGHT,
+                    bmp.Height - (range.Vel.Hi + 1) * VEL_HEIGHT - 1,
                     (range.Key.Hi - range.Key.Lo + 1) * KEY_WIDTH,
                     (range.Vel.Hi - range.Vel.Lo + 1) * VEL_HEIGHT
                 );
@@ -155,8 +155,7 @@ namespace InstrumentEditor {
         }
 
         private void DeleteRegion() {
-            //mInst.Region.Remove(range);
-
+            //mInst.Regions.Remove(range);
             DispRegionInfo();
         }
 
@@ -196,7 +195,7 @@ namespace InstrumentEditor {
         }
 
         private void DrawBackground() {
-            var bmp = new Bitmap(KEY_WIDTH * 128, VEL_HEIGHT * 128);
+            var bmp = new Bitmap(KEY_WIDTH * 128 + 1, VEL_HEIGHT * 128 + 1);
             var g = Graphics.FromImage(bmp);
             for (int k = 0; k < 128; k++) {
                 switch (k % 12) {

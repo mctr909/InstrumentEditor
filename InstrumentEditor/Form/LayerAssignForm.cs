@@ -9,7 +9,7 @@ namespace InstrumentEditor {
         private Pack mFile;
         private Preset mPreset;
         private bool mOnRange;
-        private const int KEY_WIDTH = 8;
+        private const int KEY_WIDTH = 6;
         private const int VEL_HEIGHT = 4;
 
         public LayerAssignForm(Pack file, Preset preset) {
@@ -133,7 +133,7 @@ namespace InstrumentEditor {
         private void DispLayerRanges() {
             var bmp = new Bitmap(picLayer.Width, picLayer.Height);
             var g = Graphics.FromImage(bmp);
-            var blueLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
+            var blueLine = new Pen(Color.FromArgb(255, 0, 0, 255), 1.0f);
             var greenFill = new Pen(Color.FromArgb(64, 0, 255, 0), 1.0f).Brush;
 
             var cols = ((string)tscLayer.SelectedItem).Split('|');
@@ -152,7 +152,7 @@ namespace InstrumentEditor {
             g.DrawRectangle(
                 blueLine,
                 keyLo * KEY_WIDTH,
-                bmp.Height - (velHi + 1) * VEL_HEIGHT,
+                bmp.Height - (velHi + 1) * VEL_HEIGHT - 1,
                 (keyHi - keyLo + 1) * KEY_WIDTH,
                 (velHi - velLo + 1) * VEL_HEIGHT
             );
@@ -228,7 +228,7 @@ namespace InstrumentEditor {
         }
 
         private void DrawBackground() {
-            var bmp = new Bitmap(KEY_WIDTH * 128, VEL_HEIGHT * 128);
+            var bmp = new Bitmap(KEY_WIDTH * 128 + 1, VEL_HEIGHT * 128 + 1);
             var g = Graphics.FromImage(bmp);
             for (int k = 0; k < 128; k++) {
                 switch (k % 12) {

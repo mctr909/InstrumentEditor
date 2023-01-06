@@ -514,7 +514,7 @@ namespace InstrumentEditor {
             }
             if (1 < lst.Count) {
                 var preset = new Preset();
-                var fm = new PresetInfoDialog(mPack, preset);
+                var fm = new PresetInfoDialog(mPack, preset, true);
                 fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info[Info.TYPE.ICAT] = preset.Info[Info.TYPE.ICAT];
