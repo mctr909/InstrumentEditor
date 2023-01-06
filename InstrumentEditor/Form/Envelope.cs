@@ -7,10 +7,10 @@ using DLS;
 namespace InstrumentEditor {
     public partial class Envelope : UserControl {
         private List<Connection> mLart;
-        private static int TimeDiv = 500;
-        private static int TimeTick = 50;
-        private static int TimeGamma = 1000;
-        private static int TrackBarWidth = 200;
+        private const int TimeDiv = 500;
+        private const int TimeTick = 50;
+        private const int TimeGamma = 1000;
+        private const int TrackBarWidth = 200;
 
         public Envelope() {
             InitializeComponent();
@@ -204,21 +204,6 @@ namespace InstrumentEditor {
                 mLart = value;
                 disp();
             }
-        }
-
-        void updateArt(List<Connection> list, DST_TYPE type, double value) {
-            for (int i = 0; i < list.Count; i++) {
-                var art = list[i];
-                if (type == art.Destination) {
-                    art.Value = value;
-                    Art[i] = art;
-                    return;
-                }
-            }
-            list.Add(new Connection {
-                Destination = type,
-                Value = value
-            });
         }
 
         public void SetList(LART art) {

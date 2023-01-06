@@ -4,38 +4,38 @@ using DLS;
 
 namespace InstPack {
     public class LInst {
-        private List<INS> List = new List<INS>();
+        List<INS> mList = new List<INS>();
 
         public LInst() { }
 
         public void Clear() {
-            List.Clear();
+            mList.Clear();
         }
 
         public int Count {
-            get { return List.Count; }
+            get { return mList.Count; }
         }
 
         public INS this[int index] {
-            get { return List[index]; }
+            get { return mList[index]; }
         }
 
         public INS[] ToArray() {
-            return List.ToArray();
+            return mList.ToArray();
         }
 
         public void Add(INS inst) {
-            List.Add(inst);
+            mList.Add(inst);
         }
 
         public void AddRange(List<INS> instList) {
             foreach (var inst in instList) {
-                List.Add(inst);
+                mList.Add(inst);
             }
         }
 
         public void Remove(int index) {
-            List.RemoveAt(index);
+            mList.RemoveAt(index);
         }
     }
 }

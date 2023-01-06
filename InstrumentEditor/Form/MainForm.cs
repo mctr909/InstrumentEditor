@@ -339,7 +339,7 @@ namespace InstrumentEditor {
             int count = 0;
             for (uint iWave = 0; iWave < mPack.Wave.List.Count; iWave++) {
                 var wave = mPack.Wave.List[(int)iWave];
-                var name = "";
+                string name;
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);
                 } else {
@@ -534,13 +534,12 @@ namespace InstrumentEditor {
 
             var cols = lstPreset.Items[index].ToString().Split('|');
 
-            var locale = new PREH();
-            locale.IsDrum = "Drum" == cols[0];
-            locale.ProgNum = byte.Parse(cols[1]);
-            locale.BankMSB = byte.Parse(cols[2]);
-            locale.BankLSB = byte.Parse(cols[3]);
-
-            return locale;
+            return new PREH() {
+                IsDrum = "Drum" == cols[0],
+                ProgNum = byte.Parse(cols[1]),
+                BankMSB = byte.Parse(cols[2]),
+                BankLSB = byte.Parse(cols[3])
+            };
         }
 
         private List<PREH> GetPresetLocales(ListBox.SelectedIndexCollection indeces) {
@@ -555,12 +554,12 @@ namespace InstrumentEditor {
 
             foreach (int index in indeces) {
                 var cols = lstPreset.Items[index].ToString().Split('|');
-                var locale = new PREH();
-                locale.IsDrum = "Drum" == cols[0];
-                locale.ProgNum = byte.Parse(cols[1]);
-                locale.BankMSB = byte.Parse(cols[2]);
-                locale.BankLSB = byte.Parse(cols[3]);
-                list.Add(locale);
+                list.Add(new PREH() {
+                    IsDrum = "Drum" == cols[0],
+                    ProgNum = byte.Parse(cols[1]),
+                    BankMSB = byte.Parse(cols[2]),
+                    BankLSB = byte.Parse(cols[3])
+                });
             }
             return list;
         }
