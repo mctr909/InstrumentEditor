@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-using InstPack;
+using DLS;
 
 namespace InstrumentEditor {
     public partial class Envelope : UserControl {
-        private List<DLS.Connection> mLart;
+        private List<Connection> mLart;
         private static int TimeDiv = 500;
         private static int TimeTick = 50;
         private static int TimeGamma = 1000;
@@ -198,7 +198,7 @@ namespace InstrumentEditor {
             disp();
         }
 
-        public List<DLS.Connection> Art {
+        public List<Connection> Art {
             get { return mLart; }
             set {
                 mLart = value;
@@ -206,47 +206,53 @@ namespace InstrumentEditor {
             }
         }
 
-        public void SetList(List<DLS.Connection> list) {
-            ///TODO:ART
-            //if (chkAmpAttack.Checked) {
-            //    list.Update(ART_TYPE.EG_AMP_ATTACK,(float)ampAttack);
-            //}
+        void updateArt(List<Connection> list, DST_TYPE type, double value) {
+            for (int i = 0; i < list.Count; i++) {
+                var art = list[i];
+                if (type == art.Destination) {
+                    art.Value = value;
+                    Art[i] = art;
+                    return;
+                }
+            }
+            list.Add(new Connection {
+                Destination = type,
+                Value = value
+            });
+        }
 
-            //if (chkAmpHold.Checked) {
-            //    list.Update(ART_TYPE.EG_AMP_HOLD, (float)ampHold);
-            //}
+        public void SetList(LART art) {
+            if (chkAmpAttack.Checked) {
+                art.Update(DST_TYPE.EG1_ATTACK_TIME, ampAttack);
+            }
+            if (chkAmpHold.Checked) {
+                art.Update(DST_TYPE.EG1_HOLD_TIME, ampHold);
+            }
+            if (chkAmpDecay.Checked) {
+                art.Update(DST_TYPE.EG1_DECAY_TIME, ampDecay);
+            }
+            if (chkAmpSustain.Checked) {
+                art.Update(DST_TYPE.EG1_SUSTAIN_LEVEL, ampSustain);
+            }
+            if (chkAmpReleace.Checked) {
+                art.Update(DST_TYPE.EG1_RELEASE_TIME, ampReleace);
+            }
 
-            //if (chkAmpDecay.Checked) {
-            //    list.Update(ART_TYPE.EG_AMP_DECAY, (float)ampDecay);
-            //}
-
-            //if (chkAmpSustain.Checked) {
-            //    list.Update(ART_TYPE.EG_AMP_SUSTAIN, (float)ampSustain);
-            //}
-
-            //if (chkAmpReleace.Checked) {
-            //    list.Update(ART_TYPE.EG_AMP_RELEASE, (float)ampReleace);
-            //}
-
-            //if (chkEqAttack.Checked) {
-            //    list.Update(ART_TYPE.EG_CUTOFF_ATTACK, (float)eqAttack);
-            //}
-
-            //if (chkEqHold.Checked) {
-            //    list.Update(ART_TYPE.EG_CUTOFF_HOLD, (float)eqHold);
-            //}
-
-            //if (chkEqDecay.Checked) {
-            //    list.Update(ART_TYPE.EG_CUTOFF_DECAY, (float)eqDecay);
-            //}
-
-            //if (chkEqSustain.Checked) {
-            //    list.Update(ART_TYPE.EG_CUTOFF_SUSTAIN, (float)eqSustain);
-            //}
-
-            //if (chkEqReleace.Checked) {
-            //    list.Update(ART_TYPE.EG_CUTOFF_RELEASE, (float)eqReleace);
-            //}
+            if (chkEqAttack.Checked) {
+                art.Update(DST_TYPE.EG2_ATTACK_TIME, eqAttack);
+            }
+            if (chkEqHold.Checked) {
+                art.Update(DST_TYPE.EG2_HOLD_TIME, eqHold);
+            }
+            if (chkEqDecay.Checked) {
+                art.Update(DST_TYPE.EG2_DECAY_TIME, eqDecay);
+            }
+            if (chkEqSustain.Checked) {
+                art.Update(DST_TYPE.EG2_SUSTAIN_LEVEL, eqSustain);
+            }
+            if (chkEqReleace.Checked) {
+                art.Update(DST_TYPE.EG2_RELEASE_TIME, eqReleace);
+            }
         }
 
         #region AMP
@@ -558,35 +564,35 @@ namespace InstrumentEditor {
             if (null != mLart) {
                 foreach (var art in mLart) {
                     switch (art.Destination) {
-                    case DLS.DST_TYPE.EG1_ATTACK_TIME:
+                    case DST_TYPE.EG1_ATTACK_TIME:
                         ampAttack = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG1_HOLD_TIME:
+                    case DST_TYPE.EG1_HOLD_TIME:
                         ampHold = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG1_DECAY_TIME:
+                    case DST_TYPE.EG1_DECAY_TIME:
                         ampDecay = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG1_SUSTAIN_LEVEL:
+                    case DST_TYPE.EG1_SUSTAIN_LEVEL:
                         ampSustain = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG1_RELEASE_TIME:
+                    case DST_TYPE.EG1_RELEASE_TIME:
                         ampReleace = art.Value;
                         break;
 
-                    case DLS.DST_TYPE.EG2_ATTACK_TIME:
+                    case DST_TYPE.EG2_ATTACK_TIME:
                         eqAttack = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG2_HOLD_TIME:
+                    case DST_TYPE.EG2_HOLD_TIME:
                         eqHold = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG2_DECAY_TIME:
+                    case DST_TYPE.EG2_DECAY_TIME:
                         eqDecay = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG2_SUSTAIN_LEVEL:
+                    case DST_TYPE.EG2_SUSTAIN_LEVEL:
                         eqSustain = art.Value;
                         break;
-                    case DLS.DST_TYPE.EG2_RELEASE_TIME:
+                    case DST_TYPE.EG2_RELEASE_TIME:
                         eqReleace = art.Value;
                         break;
 

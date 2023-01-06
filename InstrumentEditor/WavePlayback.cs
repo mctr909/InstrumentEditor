@@ -1,13 +1,11 @@
-﻿using InstPack;
-
-namespace InstrumentEditor {
+﻿namespace InstrumentEditor {
     unsafe public class WavePlayback : WaveOutLib {
         public int mLoopBegin;
         public int mLoopEnd;
         public double mVolume;
         public double mPitch;
 
-        private short[] mWave;
+        private float[] mWave;
         private int mSampleRate;
         private double mDelta;
         private double mTime;
@@ -15,17 +13,14 @@ namespace InstrumentEditor {
         private FFT mFft;
 
         public WavePlayback() : base(44100, 1, 4096, 4) {
-            mWave = new short[1];
+            mWave = new float[1];
             mFft = new FFT(16384, SampleRate);
             Stop();
         }
 
         public void SetValue(DLS.WAVE wave) {
-            mWave = new short[wave.Data.Length];
+            mWave = wave.GetFloat();
             mSampleRate = (int)wave.Format.SampleRate;
-            for (var i = 0; i < mWave.Length; ++i) {
-                mWave[i] = wave.Data[i];
-            }
         }
 
         public void Play() {
@@ -41,7 +36,7 @@ namespace InstrumentEditor {
         protected override void SetData() {
             for (var i = 0; i < BufferSize; i++) {
                 var wave = ((int)mTime < mWave.Length) ? (mWave[(int)mTime] * mVolume) : 0.0;
-                WaveBuffer[i] = (short)wave;
+                WaveBuffer[i] = (short)(wave * 32767);
 
                 mFft.Re[mFftIndex] = wave;
                 mFft.Im[mFftIndex] = 0.0;

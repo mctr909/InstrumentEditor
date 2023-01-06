@@ -636,7 +636,11 @@ namespace DLS {
     }
 
     public class LART : Riff {
-        public ART ART = new ART();
+        ART mArt = new ART();
+
+        public List<Connection> List {
+            get { return mArt.List; }
+        }
 
         public LART() { }
 
@@ -645,17 +649,17 @@ namespace DLS {
         }
 
         public void Write(BinaryWriter bw) {
-            if (0 == ART.List.Count) {
+            if (0 == mArt.List.Count) {
                 return;
             }
 
             var msArt = new MemoryStream();
             var bwArt = new BinaryWriter(msArt);
             bwArt.Write("art1".ToCharArray());
-            bwArt.Write((uint)(Marshal.SizeOf<CK_ART1>() + ART.List.Count * Marshal.SizeOf<Connection>()));
+            bwArt.Write((uint)(Marshal.SizeOf<CK_ART1>() + mArt.List.Count * Marshal.SizeOf<Connection>()));
             bwArt.Write((uint)8);
-            bwArt.Write((uint)ART.List.Count);
-            foreach (var art in ART.List) {
+            bwArt.Write((uint)mArt.List.Count);
+            foreach (var art in mArt.List) {
                 art.Write(bwArt);
             }
 
@@ -667,11 +671,51 @@ namespace DLS {
             }
         }
 
+        public void Add(Connection conn) {
+            Delete(conn.Destination);
+            mArt.List.Add(conn);
+        }
+
+        public void AddRange(IEnumerable<Connection> list) {
+            mArt.List.AddRange(list);
+        }
+
+        public void Clear() {
+            mArt.List.Clear();
+        }
+
+        public void Delete(DST_TYPE type) {
+            var tmp = new List<Connection>();
+            for (int i = 0; i < mArt.List.Count; i++) {
+                var art = mArt.List[i];
+                if (type == art.Destination) {
+                    continue;
+                }
+                tmp.Add(art);
+            }
+            mArt.List = tmp;
+        }
+
+        public void Update(DST_TYPE type, double value) {
+            for (int i = 0; i < mArt.List.Count; i++) {
+                var art = mArt.List[i];
+                if (type == art.Destination) {
+                    art.Value = value;
+                    mArt.List[i] = art;
+                    return;
+                }
+            }
+            mArt.List.Add(new Connection {
+                Destination = type,
+                Value = value
+            });
+        }
+
         protected override void LoadChunk(IntPtr ptr, string type, long size) {
             switch (type) {
             case "art1":
             case "art2":
-                ART = new ART(ptr);
+                mArt = new ART(ptr);
                 break;
             default:
                 throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
@@ -840,7 +884,10 @@ namespace DLS {
 
         public float[] GetFloat(int packSize = 0) {
             var samples = Data.Length * 8 / Format.Bits;
-            var len = samples + (packSize * 2 - (samples % (packSize * 2)));
+            var len = samples;
+            if (0 < packSize) {
+                len += packSize * 2 - (samples % (packSize * 2));
+            }
             var ret = new float[len];
             switch (Format.Bits) {
             case 8:

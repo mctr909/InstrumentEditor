@@ -14,7 +14,7 @@ namespace InstrumentEditor {
             mFile = file;
             mPreset = preset;
             DispInfo();
-            if (0 == mPreset.Art.Count) {
+            if (0 == mPreset.Articulations.List.Count) {
                 txtName.Enabled = false;
             }
         }

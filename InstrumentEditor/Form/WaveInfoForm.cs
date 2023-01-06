@@ -205,8 +205,8 @@ namespace InstrumentEditor {
         }
 
         private void numVolume_ValueChanged(object sender, EventArgs e) {
-            var gain = Math.Pow(10.0, (int)(20 * numVolume.Value) / 400.0);
-            mFile.Wave.List[mWaveIndex].Sampler.Gain = gain;
+            var gain = (int)(20 * numVolume.Value) / 400.0;
+            mFile.Wave.List[mWaveIndex].Sampler.Gain = Math.Pow(10.0, gain);
             mWaveOut.mVolume = gain;
         }
 
@@ -384,7 +384,7 @@ namespace InstrumentEditor {
             }
 
             mWaveOut.mVolume = wave.Sampler.Gain;
-            numVolume.Value = (decimal)(20.0 * Math.Log10(wave.Sampler.Gain));
+            numVolume.Value = (decimal)(20 * Math.Log10(wave.Sampler.Gain));
             numUnityNote.Value = wave.Sampler.UnityNote;
             if (0 == wave.Sampler.FineTune) {
                 numFineTune.Value = 0;

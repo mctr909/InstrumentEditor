@@ -441,15 +441,16 @@ namespace InstrumentEditor {
             // Layer
             mClipboardPreset.Layer.Clear();
             foreach (var layer in preset.Layer.ToArray()) {
-                mClipboardPreset.Layer.Add(new Layer {
-                    Header = layer.Header,
-                    Art = layer.Art
-                });
+                var tmp = new Layer {
+                    Header = layer.Header
+                };
+                tmp.Articulations.AddRange(layer.Articulations.List);
+                mClipboardPreset.Layer.Add(tmp);
             }
             // Articulations
-            mClipboardPreset.Art.Clear();
-            foreach (var art in preset.Art.ToArray()) {
-                mClipboardPreset.Art.Add(art);
+            mClipboardPreset.Articulations.Clear();
+            foreach (var art in preset.Articulations.List) {
+                mClipboardPreset.Articulations.Add(art);
             }
             // Info
             mClipboardPreset.Info.CopyFrom(preset.Info);
@@ -647,17 +648,17 @@ namespace InstrumentEditor {
             // Region
             mClipboardInst.Regions.Clear();
             foreach (var layer in inst.Regions.Array) {
-                mClipboardInst.Regions.Add(new RGN {
-                    Header = layer.Header,
-                    ///TODO:ART
-                    //Art = layer.Art
-                });
+                var rgn = new RGN {
+                    Header = layer.Header
+                };
+                rgn.Articulations.AddRange(layer.Articulations.List);
+                mClipboardInst.Regions.Add(rgn);
             }
 
             // Articulations
-            mClipboardInst.Articulations.ART.List.Clear();
-            foreach (var art in inst.Articulations.ART.List) {
-                mClipboardInst.Articulations.ART.List.Add(art);
+            mClipboardInst.Articulations.Clear();
+            foreach (var art in inst.Articulations.List) {
+                mClipboardInst.Articulations.Add(art);
             }
 
             // Info

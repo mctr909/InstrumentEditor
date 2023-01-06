@@ -22,7 +22,7 @@ namespace InstrumentEditor {
             mFile = file;
             mInst = inst;
             txtInstName.Text = mInst.Info[Info.TYPE.INAM];
-            envelope1.Art = mInst.Articulations.ART.List;
+            envelope1.Art = mInst.Articulations.List;
             btnAdd.Text = "反映";
         }
 
@@ -44,12 +44,11 @@ namespace InstrumentEditor {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
                 mFile.Inst.Add(mInst);
-                mInst.Articulations.ART.List = new List<Connection>();
-                envelope1.SetList(mInst.Articulations.ART.List);
+                envelope1.SetList(mInst.Articulations);
             } else {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
-                envelope1.SetList(mInst.Articulations.ART.List);
+                envelope1.SetList(mInst.Articulations);
             }
             Close();
         }

@@ -97,42 +97,30 @@ namespace DLS {
                 inst.Info.CopyFrom(dlsInst.Value.Info);
                 inst.Info[Info.TYPE.ICRD] = now;
 
-                if (null != dlsInst.Value.Articulations && null != dlsInst.Value.Articulations.ART) {
-                    foreach (var instArt in dlsInst.Value.Articulations.ART.List) {
-                        var art = new Connection {
-                            Source = instArt.Source,
-                            Control = instArt.Control,
-                            Destination = instArt.Destination,
-                            Value = instArt.Value
-                        };
-                        inst.Articulations.ART.List.Add(art);
-                    }
+                foreach (var instArt in dlsInst.Value.Articulations.List) {
+                    var art = new Connection {
+                        Source = instArt.Source,
+                        Control = instArt.Control,
+                        Destination = instArt.Destination,
+                        Value = instArt.Value
+                    };
+                    inst.Articulations.Add(art);
                 }
 
                 foreach (var dlsRegion in dlsInst.Value.Regions.List) {
                     var rgn = new RGN();
-                    rgn.Header.Key.Lo = (byte)dlsRegion.Key.Key.Lo;
-                    rgn.Header.Key.Hi = (byte)dlsRegion.Key.Key.Hi;
-                    rgn.Header.Vel.Lo = (byte)dlsRegion.Key.Vel.Lo;
-                    rgn.Header.Vel.Hi = (byte)dlsRegion.Key.Vel.Hi;
-
-                    rgn.WaveLink.TableIndex = dlsRegion.Value.WaveLink.TableIndex;
-                    rgn.Sampler.UnityNote = dlsRegion.Value.Sampler.UnityNote;
-                    rgn.Sampler.FineTune = dlsRegion.Value.Sampler.FineTune;
-                    rgn.Sampler.Gain = dlsRegion.Value.Sampler.Gain;
-
-                    ///TODO:ART
-                    //if (null != dlsRegion.Value.Articulations && null != dlsRegion.Value.Articulations.ART) {
-                    //    foreach (var regionArt in dlsRegion.Value.Articulations.ART.List) {
-                    //        var art = new Connection {
-                    //            Source = regionArt.Source,
-                    //            Control = regionArt.Control,
-                    //            Destination = regionArt.Destination,
-                    //            Value = regionArt.Value
-                    //        };
-                    //        rgn.Art.Add(art);
-                    //    }
-                    //}
+                    rgn.Header = dlsRegion.Key;
+                    rgn.WaveLink = dlsRegion.Value.WaveLink;
+                    rgn.Sampler = dlsRegion.Value.Sampler;
+                    foreach (var regionArt in dlsRegion.Value.Articulations.List) {
+                        var art = new Connection {
+                            Source = regionArt.Source,
+                            Control = regionArt.Control,
+                            Destination = regionArt.Destination,
+                            Value = regionArt.Value
+                        };
+                        rgn.Articulations.Add(art);
+                    }
                     inst.Regions.Add(rgn);
                 }
                 pack.Inst.Add(inst);
@@ -157,10 +145,7 @@ namespace DLS {
                 wavh.Format.BlockAlign = (ushort)(wavh.Format.Bits * wavh.Format.Channels / 8);
                 wavh.Format.BytesPerSec = wavh.Format.SampleRate * wavh.Format.BlockAlign;
 
-                wavh.Sampler = new CK_WSMP();
-                wavh.Sampler.Gain = wav.Sampler.Gain;
-                wavh.Sampler.FineTune = wav.Sampler.FineTune;
-                wavh.Sampler.UnityNote = wav.Sampler.UnityNote;
+                wavh.Sampler = wav.Sampler;
                 if (0 < wav.Loops.Count) {
                     wavh.Sampler.LoopCount = 1;
                     var loop = new WaveLoop();
@@ -205,32 +190,22 @@ namespace DLS {
                 ins.Info.CopyFrom(srcPre.Info);
 
                 ins.Articulations = new LART();
-                ins.Articulations.ART = new ART();
-                ins.Articulations.ART.List = new List<Connection>();
-                foreach (var srcArt in srcIns.Articulations.ART.List) {
-                    ins.Articulations.ART.List.Add(srcArt);
+                foreach (var srcArt in srcIns.Articulations.List) {
+                    ins.Articulations.Add(srcArt);
                 }
 
                 ins.Regions = new LRGN();
                 ins.Regions.List = new SortedList<CK_RGNH, RGN>(new LRGN.Sort());
                 foreach(var srcRgn in srcIns.Regions.Array) {
                     var rgn = new RGN();
-                    rgn.Header.Key.Hi = srcRgn.Header.Key.Hi;
-                    rgn.Header.Key.Lo = srcRgn.Header.Key.Lo;
-                    rgn.Header.Vel.Hi = srcRgn.Header.Vel.Hi;
-                    rgn.Header.Vel.Lo = srcRgn.Header.Vel.Lo;
-
+                    rgn.Header = srcRgn.Header;
                     rgn.WaveLink = srcRgn.WaveLink;
-
                     rgn.Sampler = srcRgn.Sampler;
 
-                    ///TODO:ART
-                    //rgn.Articulations = new LART();
-                    //rgn.Articulations.ART = new ART();
-                    //rgn.Articulations.ART.List = new List<Connection>();
-                    //foreach (var srcArt in srcRgn.Art.ToArray()) {
-                    //    ins.Articulations.ART.List.Add(srcArt);
-                    //}
+                    rgn.Articulations = new LART();
+                    foreach (var srcArt in srcRgn.Articulations.List) {
+                        ins.Articulations.Add(srcArt);
+                    }
 
                     ins.Regions.List.Add(rgn.Header, rgn);
                 }

@@ -508,60 +508,60 @@ namespace SF2 {
                 foreach (var art in sf2Inst.GlobalArt) {
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.GAIN,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.PAN:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.PAN,
                             Value = art.Value
                         });
                         break;
-                    case E_OPER.COARSE_TUNE:
-                        ///TODO:ART
-                        //globalArt.Destination = ;
-                        //inst.Art.Add(globalArt);
-                        break;
+                    ///TODO:ART
+                    //case E_OPER.COARSE_TUNE:
+                    //    globalArt.Destination = ;
+                    //    inst.Articulations.Add(globalArt);
+                    //    break;
+                    //case E_OPER.OVERRIDING_ROOTKEY:
+                    //    globalArt.Type = DST_TYPE.UNITY_KEY;
+                    //    inst.Articulations.Add(globalArt);
+                    //    break;
                     case E_OPER.FINETUNE:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.PITCH,
                             Value = art.Value
                         });
                         break;
-                    case E_OPER.OVERRIDING_ROOTKEY:
-                        ///TODO:ART
-                        //globalArt.Type = ART_TYPE.UNITY_KEY;
-                        //inst.Art.Add(globalArt);
-                        break;
+
 
                     case E_OPER.ENV_VOL_ATTACK:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.EG1_ATTACK_TIME,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_HOLD:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.EG1_HOLD_TIME,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_DECAY:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.EG1_DECAY_TIME,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_SUSTAIN:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.EG1_SUSTAIN_LEVEL,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_RELEASE:
-                        inst.Articulations.ART.List.Add(new Connection() {
+                        inst.Articulations.Add(new Connection() {
                             Destination = DST_TYPE.EG1_RELEASE_TIME,
                             Value = art.Value
                         });
@@ -578,67 +578,68 @@ namespace SF2 {
 
                     rgn.WaveLink.TableIndex = (uint)sf2InstRng.sampleId;
 
-                    ///TODO:ART
-                    //foreach (var art in sf2InstRng.Art) {
-                    //    switch (art.Key) {
-                    //    case E_OPER.INITIAL_ATTENUATION:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.GAIN,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    case E_OPER.PAN:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.PAN,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    case E_OPER.COARSE_TUNE:
-                    //        layerArt.Type = ART_TYPE.COASE_TUNE;
-                    //        rgn.Art.Add(layerArt);
-                    //        break;
-                    //    case E_OPER.FINETUNE:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.PITCH,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    case E_OPER.OVERRIDING_ROOTKEY:
-                    //        rgn.UnityNote = (ushort)art.Value;
-                    //        break;
+                    
+                    foreach (var art in sf2InstRng.Art) {
+                        switch (art.Key) {
+                        case E_OPER.INITIAL_ATTENUATION:
+                            rgn.Articulations.Add(new Connection() {
+                                Destination = DST_TYPE.GAIN,
+                                Value = art.Value
+                            });
+                            break;
+                        case E_OPER.PAN:
+                            rgn.Articulations.Add(new Connection() {
+                                Destination = DST_TYPE.PAN,
+                                Value = art.Value
+                            });
+                            break;
+                        ///TODO:ART
+                        //    case E_OPER.COARSE_TUNE:
+                        //        layerArt.Type = ART_TYPE.COASE_TUNE;
+                        //        rgn.Articulations.Add(layerArt);
+                        //        break;
+                        //    case E_OPER.FINETUNE:
+                        //        rgn.Articulations.Add(new Connection() {
+                        //            Destination = DST_TYPE.PITCH,
+                        //            Value = art.Value
+                        //        });
+                        //        break;
+                        case E_OPER.OVERRIDING_ROOTKEY:
+                            rgn.Sampler.UnityNote = (ushort)art.Value;
+                            break;
 
-                    //    case E_OPER.ENV_VOL_ATTACK:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.EG1_ATTACK_TIME,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    case E_OPER.ENV_VOL_HOLD:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.EG1_HOLD_TIME,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    case E_OPER.ENV_VOL_DECAY:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.EG1_DECAY_TIME,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    case E_OPER.ENV_VOL_SUSTAIN:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.EG1_SUSTAIN_LEVEL,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    case E_OPER.ENV_VOL_RELEASE:
-                    //        rgn.Art.Add(new Connection() {
-                    //            Destination = DST_TYPE.EG1_RELEASE_TIME,
-                    //            Value = art.Value
-                    //        });
-                    //        break;
-                    //    }
-                    //}
+                        case E_OPER.ENV_VOL_ATTACK:
+                            rgn.Articulations.Add(new Connection() {
+                                Destination = DST_TYPE.EG1_ATTACK_TIME,
+                                Value = art.Value
+                            });
+                            break;
+                        case E_OPER.ENV_VOL_HOLD:
+                            rgn.Articulations.Add(new Connection() {
+                                Destination = DST_TYPE.EG1_HOLD_TIME,
+                                Value = art.Value
+                            });
+                            break;
+                        case E_OPER.ENV_VOL_DECAY:
+                            rgn.Articulations.Add(new Connection() {
+                                Destination = DST_TYPE.EG1_DECAY_TIME,
+                                Value = art.Value
+                            });
+                            break;
+                        case E_OPER.ENV_VOL_SUSTAIN:
+                            rgn.Articulations.Add(new Connection() {
+                                Destination = DST_TYPE.EG1_SUSTAIN_LEVEL,
+                                Value = art.Value
+                            });
+                            break;
+                        case E_OPER.ENV_VOL_RELEASE:
+                            rgn.Articulations.Add(new Connection() {
+                                Destination = DST_TYPE.EG1_RELEASE_TIME,
+                                Value = art.Value
+                            });
+                            break;
+                        }
+                    }
 
                     inst.Regions.Add(rgn);
                 }
@@ -659,13 +660,13 @@ namespace SF2 {
                 foreach (var art in sf2Pres.Value.GlobalArt) {
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        preset.Art.Add(new Connection {
+                        preset.Articulations.Add(new Connection {
                             Destination = DST_TYPE.GAIN,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.PAN:
-                        preset.Art.Add(new Connection {
+                        preset.Articulations.Add(new Connection {
                             Destination = DST_TYPE.PAN,
                             Value = art.Value
                         });
@@ -676,7 +677,7 @@ namespace SF2 {
                         //preset.Art.Add(globalArt);
                         break;
                     case E_OPER.FINETUNE:
-                        preset.Art.Add(new Connection {
+                        preset.Articulations.Add(new Connection {
                             Destination = DST_TYPE.PITCH,
                             Value = art.Value
                         });
@@ -696,13 +697,13 @@ namespace SF2 {
                     foreach(var art in sf2PresRng.Art) {
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
-                            layer.Art.Add(new Connection {
+                            layer.Articulations.Add(new Connection {
                                 Destination = DST_TYPE.GAIN,
                                 Value = art.Value
                             });
                             break;
                         case E_OPER.PAN:
-                            layer.Art.Add(new Connection {
+                            layer.Articulations.Add(new Connection {
                                 Destination = DST_TYPE.PAN,
                                 Value = art.Value
                             });
@@ -713,7 +714,7 @@ namespace SF2 {
                             //layer.Art.Add(layerArt);
                             break;
                         case E_OPER.FINETUNE:
-                            layer.Art.Add(new Connection {
+                            layer.Articulations.Add(new Connection {
                                 Destination = DST_TYPE.PITCH,
                                 Value = art.Value
                             });

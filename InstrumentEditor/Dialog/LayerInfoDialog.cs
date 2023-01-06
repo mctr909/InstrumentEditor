@@ -57,23 +57,23 @@ namespace InstrumentEditor {
             mLayer.Header.Key.Hi = (byte)numKeyHigh.Value;
             mLayer.Header.Vel.Lo = (byte)numVelocityLow.Value;
             mLayer.Header.Vel.Hi = (byte)numVelocityHigh.Value;
+            var gain = (int)(20 * numVolume.Value) / 400.0;
+            if (0 == gain) {
+                mLayer.Articulations.Delete(DST_TYPE.GAIN);
+            } else {
+                mLayer.Articulations.Update(DST_TYPE.GAIN, (float)Math.Pow(10.0, gain));
+            }
+            var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
+            if (0 == fineTune) {
+                mLayer.Articulations.Delete(DST_TYPE.PITCH);
+            } else {
+                mLayer.Articulations.Update(DST_TYPE.PITCH, (float)Math.Pow(2.0, fineTune));
+            }
             ///TODO:ART
             //if (0 == numTranspose.Value) {
-            //    mLayer.Art.Delete(ART_TYPE.COASE_TUNE);
+            //    mLayer.Articulations.Delete(DST_TYPE.COASE_TUNE);
             //} else {
-            //    mLayer.Art.Update(ART_TYPE.COASE_TUNE, (int)numTranspose.Value);
-            //}
-            //var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
-            //if (0 == fineTune) {
-            //    mLayer.Art.Delete(ART_TYPE.FINE_TUNE);
-            //} else {
-            //    mLayer.Art.Update(ART_TYPE.FINE_TUNE, (float)Math.Pow(2.0, fineTune));
-            //}
-            //var gain = (int)(20 * numVolume.Value) / 400.0;
-            //if (0 == gain) {
-            //    mLayer.Art.Delete(ART_TYPE.GAIN);
-            //} else {
-            //    mLayer.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
+            //    mLayer.Articulations.Update(DST_TYPE.COASE_TUNE, (int)numTranspose.Value);
             //}
             Close();
         }
@@ -180,7 +180,7 @@ namespace InstrumentEditor {
                     );
                 }
 
-                foreach(var art in mLayer.Art.ToArray()) {
+                foreach(var art in mLayer.Articulations.List) {
                     switch (art.Destination) {
                     case DST_TYPE.GAIN:
                         numVolume.Value = (decimal)(20 * Math.Log10(art.Value));

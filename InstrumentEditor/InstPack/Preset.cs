@@ -44,7 +44,7 @@ namespace InstPack {
 
     public class Preset {
         public PREH Header;
-        public List<DLS.Connection> Art = new List<DLS.Connection>();
+        public DLS.LART Articulations = new DLS.LART();
         public LLayer Layer = new LLayer();
         public Info Info = new Info();
 
