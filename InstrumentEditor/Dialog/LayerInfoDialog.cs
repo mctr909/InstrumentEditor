@@ -64,17 +64,13 @@ namespace InstrumentEditor {
                 mLayer.Articulations.Update(DST_TYPE.GAIN, (float)Math.Pow(10.0, gain));
             }
             var fineTune = (int)(1200 * numFineTune.Value) / 1440000.0;
-            if (0 == fineTune) {
+            if (0 == fineTune && 0 == numTranspose.Value) {
                 mLayer.Articulations.Delete(DST_TYPE.PITCH);
             } else {
-                mLayer.Articulations.Update(DST_TYPE.PITCH, (float)Math.Pow(2.0, fineTune));
+                mLayer.Articulations.Update(DST_TYPE.PITCH,
+                    (float)Math.Pow(2.0, (double)numTranspose.Value / 12.0 + fineTune)
+                );
             }
-            ///TODO:ART
-            //if (0 == numTranspose.Value) {
-            //    mLayer.Articulations.Delete(DST_TYPE.COASE_TUNE);
-            //} else {
-            //    mLayer.Articulations.Update(DST_TYPE.COASE_TUNE, (int)numTranspose.Value);
-            //}
             Close();
         }
 
@@ -180,20 +176,20 @@ namespace InstrumentEditor {
                     );
                 }
 
+                var cent = 0;
                 foreach(var art in mLayer.Articulations.List) {
                     switch (art.Destination) {
                     case DST_TYPE.GAIN:
                         numVolume.Value = (decimal)(20 * Math.Log10(art.Value));
                         break;
                     case DST_TYPE.PITCH:
-                        numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
+                        cent = (int)(1200.0 / Math.Log(2.0, art.Value));
                         break;
-                    ///TODO:ART
-                    //case ART_TYPE.COASE_TUNE:
-                    //    numTranspose.Value = (int)art.Value;
-                    //    break;
                     }
                 }
+
+                numFineTune.Value = cent % 100;
+                numTranspose.Value = cent / 100;
 
                 btnAdd.Text = "反映";
             }
