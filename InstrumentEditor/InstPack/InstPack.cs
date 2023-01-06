@@ -1,8 +1,9 @@
+using DLS;
 using System.Collections.Generic;
 
 namespace InstPack {
     public class Pack {
-        public LWave Wave = new LWave();
+        public WVPL Wave = new WVPL();
         public LInst Inst = new LInst();
         public LPreset Preset = new LPreset();
 
@@ -32,7 +33,7 @@ namespace InstPack {
             // renumbering
             uint newIndex = 0;
             var renumberingList = new Dictionary<uint, uint>();
-            for (uint iWave = 0; iWave < Wave.Count; iWave++) {
+            for (uint iWave = 0; iWave < Wave.List.Count; iWave++) {
                 if (deleteList.ContainsKey(iWave) && deleteList[iWave]) {
                     continue;
                 }
@@ -41,15 +42,15 @@ namespace InstPack {
             }
 
             // delete wave
-            var waveList = new List<Wave>();
-            for (uint iWave = 0; iWave < Wave.Count; iWave++) {
+            var waveList = new List<WAVE>();
+            for (uint iWave = 0; iWave < Wave.List.Count; iWave++) {
                 if (deleteList.ContainsKey(iWave) && deleteList[iWave]) {
                     continue;
                 }
-                waveList.Add(Wave[iWave]);
+                waveList.Add(Wave.List[(int)iWave]);
             }
-            Wave.Clear();
-            Wave.AddRange(waveList);
+            Wave.List.Clear();
+            Wave.List.AddRange(waveList);
 
             // update inst's region art
             for (var iInst = 0; iInst < Inst.Count; iInst++) {

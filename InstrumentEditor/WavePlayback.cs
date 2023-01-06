@@ -20,9 +20,9 @@ namespace InstrumentEditor {
             Stop();
         }
 
-        public void SetValue(Wave wave) {
+        public void SetValue(DLS.WAVE wave) {
             mWave = new short[wave.Data.Length];
-            mSampleRate = (int)wave.Header.SampleRate;
+            mSampleRate = (int)wave.Format.SampleRate;
             for (var i = 0; i < mWave.Length; ++i) {
                 mWave[i] = wave.Data[i];
             }

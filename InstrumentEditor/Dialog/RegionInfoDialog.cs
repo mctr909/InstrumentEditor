@@ -49,8 +49,8 @@ namespace InstrumentEditor {
             var fm = new WaveSelectDialog(mFile, mRegion);
             fm.ShowDialog();
 
-            if (mFile.Wave.ContainsKey(waveIndex)) {
-                var wave = mFile.Wave[waveIndex];
+            if (waveIndex < mFile.Wave.List.Count) {
+                var wave = mFile.Wave.List[(int)waveIndex];
                 btnEditWave.Enabled = true;
                 txtWave.Text = string.Format(
                     "{0} {1}",
@@ -64,7 +64,7 @@ namespace InstrumentEditor {
         }
 
         private void btnEditWave_Click(object sender, EventArgs e) {
-            var fm = new WaveInfoForm(mFile, mRegion.WaveIndex);
+            var fm = new WaveInfoForm(mFile, (int)mRegion.WaveIndex);
             fm.ShowDialog();
         }
 
@@ -204,11 +204,11 @@ namespace InstrumentEditor {
                 numVelocityLow.Enabled = false;
                 numVelocityHigh.Enabled = false;
 
-                var waveIndex = mRegion.WaveIndex;
+                var waveIndex = (int)mRegion.WaveIndex;
 
                 var waveName = "";
-                if (mFile.Wave.ContainsKey(waveIndex)) {
-                    var wave = mFile.Wave[waveIndex];
+                if (waveIndex < mFile.Wave.List.Count) {
+                    var wave = mFile.Wave.List[waveIndex];
                     waveName = wave.Info[Info.TYPE.INAM];
                     btnEditWave.Enabled = true;
                 } else {

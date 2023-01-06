@@ -54,31 +54,29 @@ namespace DLS {
             var pack = new Pack();
 
             foreach (var wave in WavePool.List) {
-                var waveInfo = new Wave();
-                waveInfo.Header.SampleRate = wave.Format.SampleRate;
-                if (0 < wave.Sampler.LoopCount) {
-                    waveInfo.Header.LoopEnable = 1;
-                    waveInfo.Header.LoopBegin = wave.Loops[0].Start;
-                    waveInfo.Header.LoopLength = wave.Loops[0].Length;
-                } else {
-                    waveInfo.Header.LoopEnable = 0;
-                    waveInfo.Header.LoopBegin = 0;
-                    waveInfo.Header.LoopLength = (uint)(wave.Data.Length / wave.Format.BlockAlign);
+                var waveInfo = new WAVE();
+                waveInfo.Format.SampleRate = wave.Format.SampleRate;
+                if (0 < wave.Loops.Count) {
+                    var loop = new WaveLoop();
+                    loop.Start = wave.Loops[0].Start;
+                    loop.Length = wave.Loops[0].Length;
+                    waveInfo.Loops.Add(loop);
+                    waveInfo.Sampler.LoopCount = 1;
                 }
-                waveInfo.Header.UnityNote = (byte)wave.Sampler.UnityNote;
-                waveInfo.Header.Gain = wave.Sampler.Gain;
-                waveInfo.Header.Pitch = Math.Pow(2.0, wave.Sampler.FineTune / 1200.0);
+                waveInfo.Sampler.UnityNote = (byte)wave.Sampler.UnityNote;
+                waveInfo.Sampler.Gain = wave.Sampler.Gain;
+                waveInfo.Sampler.FineTune = wave.Sampler.FineTune;
 
                 var ptr = Marshal.AllocHGlobal(wave.Data.Length);
                 Marshal.Copy(wave.Data, 0, ptr, wave.Data.Length);
-                waveInfo.Data = new short[wave.Data.Length / 2];
+                waveInfo.Data = new byte[wave.Data.Length];
                 Marshal.Copy(ptr, waveInfo.Data, 0, waveInfo.Data.Length);
                 Marshal.FreeHGlobal(ptr);
 
                 waveInfo.Info.CopyFrom(wave.Info);
                 waveInfo.Info[Info.TYPE.ICRD] = now;
 
-                pack.Wave.Add(waveInfo);
+                pack.Wave.List.Add(waveInfo);
             }
 
             foreach (var dlsInst in Instruments.List) {
@@ -153,26 +151,26 @@ namespace DLS {
             // WAVE
             saveFile.WavePool = new WVPL();
             saveFile.WavePool.List = new List<WAVE>();
-            foreach (var wav in pack.Wave.ToArray()) {
+            foreach (var wav in pack.Wave.List) {
                 var wavh = new WAVE();
                 wavh.Format = new CK_FMT();
                 wavh.Format.Tag = 1;
                 wavh.Format.Bits = 16;
                 wavh.Format.Channels = 1;
-                wavh.Format.SampleRate = wav.Header.SampleRate;
+                wavh.Format.SampleRate = wav.Format.SampleRate;
                 wavh.Format.BlockAlign = (ushort)(wavh.Format.Bits * wavh.Format.Channels / 8);
                 wavh.Format.BytesPerSec = wavh.Format.SampleRate * wavh.Format.BlockAlign;
 
                 wavh.Sampler = new CK_WSMP();
-                wavh.Sampler.Gain = wav.Header.Gain;
-                wavh.Sampler.FineTune = (short)(Math.Log(wav.Header.Pitch, 2.0) * 1200);
-                wavh.Sampler.UnityNote = wav.Header.UnityNote;
-                if (0 != wav.Header.LoopEnable) {
+                wavh.Sampler.Gain = wav.Sampler.Gain;
+                wavh.Sampler.FineTune = wav.Sampler.FineTune;
+                wavh.Sampler.UnityNote = wav.Sampler.UnityNote;
+                if (0 < wav.Loops.Count) {
                     wavh.Sampler.LoopCount = 1;
                     var loop = new WaveLoop();
                     loop.Type = 1;
-                    loop.Start = wav.Header.LoopBegin;
-                    loop.Length = wav.Header.LoopLength;
+                    loop.Start = wav.Loops[0].Start;
+                    loop.Length = wav.Loops[0].Length;
                     wavh.Loops = new List<WaveLoop>() {
                         loop
                     };

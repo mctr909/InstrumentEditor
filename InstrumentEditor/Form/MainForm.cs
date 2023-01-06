@@ -276,7 +276,7 @@ namespace InstrumentEditor {
             }
 
             var cols = lstWave.SelectedItem.ToString().Split('|');
-            var idx = uint.Parse(cols[0]);
+            var idx = int.Parse(cols[0]);
             var fm = new WaveInfoForm(mPack, idx);
             var index = lstWave.SelectedIndex;
             fm.ShowDialog();
@@ -294,7 +294,7 @@ namespace InstrumentEditor {
             var indices = lstWave.SelectedIndices;
             foreach (var idx in indices) {
                 var cols = lstWave.Items[(int)idx].ToString().Split('|');
-                var wave = mPack.Wave[uint.Parse(cols[0])];
+                var wave = mPack.Wave.List[int.Parse(cols[0])];
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     wave.ToFile(Path.Combine(folderPath, string.Format("Wave{0}.wav", idx)));
                 }
@@ -315,7 +315,7 @@ namespace InstrumentEditor {
                 if (!File.Exists(filePath)) {
                     continue;
                 }
-                mPack.Wave.Add(new Wave(filePath));
+                mPack.Wave.List.Add(new DLS.WAVE(filePath));
             }
 
             DispWaveList();
@@ -336,8 +336,8 @@ namespace InstrumentEditor {
 
             lstWave.Items.Clear();
             int count = 0;
-            for (uint iWave = 0; iWave < mPack.Wave.Count; iWave++) {
-                var wave = mPack.Wave[iWave];
+            for (uint iWave = 0; iWave < mPack.Wave.List.Count; iWave++) {
+                var wave = mPack.Wave.List[(int)iWave];
                 var name = "";
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);
@@ -367,10 +367,10 @@ namespace InstrumentEditor {
                 lstWave.Items.Add(string.Format("{0}|{1}|{2}|{3}|{4}|{5}",
                     iWave.ToString("0000"),
                     (use ? "use" : "   "),
-                    (0 < wave.Header.LoopEnable ? "loop" : "    "),
-                    Const.NoteName[wave.Header.UnityNote % 12]
-                        + (wave.Header.UnityNote < 12 ? "" : "+")
-                        + (wave.Header.UnityNote / 12 - 2).ToString("00"),
+                    (0 < wave.Loops.Count ? "loop" : "    "),
+                    Const.NoteName[wave.Sampler.UnityNote % 12]
+                        + (wave.Sampler.UnityNote < 12 ? "" : "+")
+                        + (wave.Sampler.UnityNote / 12 - 2).ToString("00"),
                     wave.Info[Info.TYPE.ICAT].PadRight(16, ' ').Substring(0, 16),
                     name
                 ));

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using InstPack;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace DLS {
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
@@ -665,6 +667,10 @@ namespace DLS {
             Load(ptr, size);
         }
 
+        public WAVE(string filePath) {
+            MainLoop(filePath);
+        }
+
         public void Write(BinaryWriter bw) {
             var msSmp = new MemoryStream();
             var bwSmp = new BinaryWriter(msSmp);
@@ -714,10 +720,10 @@ namespace DLS {
 
             {
                 // data chunk
-                var ptr = Marshal.AllocHGlobal(Data.Length * 2);
+                var ptr = Marshal.AllocHGlobal(Data.Length);
                 Marshal.Copy(Data, 0, ptr, Data.Length);
-                var arr = new byte[Data.Length * 2];
-                Marshal.Copy(ptr, arr, 0, Data.Length * 2);
+                var arr = new byte[Data.Length];
+                Marshal.Copy(ptr, arr, 0, Data.Length);
                 Marshal.FreeHGlobal(ptr);
                 bw.Write("data".ToCharArray());
                 bw.Write(arr.Length);

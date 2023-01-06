@@ -29,7 +29,7 @@ namespace InstrumentEditor {
                 return;
             }
             var cols = lstWave.SelectedItem.ToString().Split('\t');
-            var idx = uint.Parse(cols[0]);
+            var idx = int.Parse(cols[0]);
             var fm = new WaveInfoForm(mFile, idx);
             var index = lstWave.SelectedIndex;
             fm.ShowDialog();
@@ -72,8 +72,8 @@ namespace InstrumentEditor {
         private void DispWaveList(string keyword) {
             lstWave.Items.Clear();
             int count = 0;
-            for (uint iWave = 0; iWave < mFile.Wave.Count; iWave++) {
-                var wave = mFile.Wave[iWave];
+            for (uint iWave = 0; iWave < mFile.Wave.List.Count; iWave++) {
+                var wave = mFile.Wave.List[(int)iWave];
                 var name = "";
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);
@@ -102,7 +102,7 @@ namespace InstrumentEditor {
                     "{0}\t{1}\t{2}\t{3}",
                     iWave.ToString("0000"),
                     use ? "use" : "   ",
-                    0 < wave.Header.LoopEnable ? "loop" : "    ",
+                    0 < wave.Loops.Count ? "loop" : "    ",
                     name
                 ));
                 ++count;

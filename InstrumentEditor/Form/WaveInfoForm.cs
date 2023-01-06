@@ -15,8 +15,8 @@ namespace InstrumentEditor {
         private WavePlayback mWaveOut;
 
         private Pack mFile;
-        private WAVH mWaveHeader;
-        private uint mWaveIndex;
+        private DLS.CK_WSMP mWaveHeader;
+        private int mWaveIndex;
 
         private DoubleBufferBitmap mSpecBmp;
         private DoubleBufferGraphic mWaveGraph;
@@ -36,18 +36,18 @@ namespace InstrumentEditor {
         private int mDetectNote;
         private int mDetectTune;
 
-        public WaveInfoForm(Pack file, uint index) {
+        public WaveInfoForm(Pack file, int index) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 
             mFile = file;
             mWaveIndex = index;
-            mWaveHeader = mFile.Wave[index].Header;
+            mWaveHeader = mFile.Wave.List[index].Sampler;
         }
 
         private void WaveInfoForm_Load(object sender, EventArgs e) {
             mWaveOut = new WavePlayback();
-            mWaveOut.SetValue(mFile.Wave[mWaveIndex]);
+            mWaveOut.SetValue(mFile.Wave.List[mWaveIndex]);
 
             mSpecBmp = new DoubleBufferBitmap(picSpectrum);
             mWaveGraph = new DoubleBufferGraphic(picWave, null);
@@ -119,9 +119,10 @@ namespace InstrumentEditor {
         #region クリックイベント
         private void btnPlay_Click(object sender, EventArgs e) {
             if ("再生" == btnPlay.Text) {
-                if (0 < mFile.Wave[mWaveIndex].Header.LoopEnable) {
-                    mWaveOut.mLoopBegin = (int)mWaveHeader.LoopBegin;
-                    mWaveOut.mLoopEnd = mWaveOut.mLoopBegin + (int)mWaveHeader.LoopLength;
+                if (0 < mFile.Wave.List[mWaveIndex].Loops.Count) {
+                    ///TODO:LOOP
+                    //mWaveOut.mLoopBegin = (int)mWaveHeader[0].Start;
+                    //mWaveOut.mLoopEnd = mWaveOut.mLoopBegin + (int)mWaveHeader.Loops[0].Length;
                 }
                 else {
                     mWaveOut.mLoopBegin = 0;
@@ -137,10 +138,10 @@ namespace InstrumentEditor {
         }
 
         private void btnUpdate_Click(object sender, EventArgs e) {
-            if (0 < mWaveHeader.LoopEnable) {
-                mFile.Wave[mWaveIndex].Header.LoopEnable = mWaveHeader.LoopEnable;
-                mFile.Wave[mWaveIndex].Header.LoopBegin = mWaveHeader.LoopBegin;
-                mFile.Wave[mWaveIndex].Header.LoopLength = mWaveHeader.LoopLength;
+            if (0 < mWaveHeader.LoopCount) {
+                ///TODO:LOOP
+                //mFile.Wave[mWaveIndex].Header.Start = mWaveHeader.Start;
+                //mFile.Wave[mWaveIndex].Header.Length = mWaveHeader.Length;
                 btnUpdate.Enabled = false;
             }
         }
@@ -149,42 +150,38 @@ namespace InstrumentEditor {
             if (0 <= mDetectNote) {
                 numUnityNote.Value = mDetectNote;
                 numFineTune.Value = mDetectTune;
-                mFile.Wave[mWaveIndex].Header.UnityNote = (byte)mDetectNote;
-                mFile.Wave[mWaveIndex].Header.Pitch = Math.Pow(2.0, mDetectTune / 1200.0);
+                mFile.Wave.List[mWaveIndex].Sampler.UnityNote = (byte)mDetectNote;
+                mFile.Wave.List[mWaveIndex].Sampler.FineTune = (short)mDetectTune;
             }
         }
 
         private void btnLoopCreate_Click(object sender, EventArgs e) {
-            if (0 < mWaveHeader.LoopEnable) {
-                var hd = mFile.Wave[mWaveIndex].Header;
-                hd.LoopEnable = 0;
-                hd.LoopBegin = 0;
-                hd.LoopLength = (uint)mWaveData.Length;
-                mWaveOut.mLoopBegin = 0;
-                mWaveOut.mLoopEnd = mWaveData.Length;
-                mWaveHeader.LoopEnable = 0;
-                mWaveHeader.LoopBegin = (uint)mWaveOut.mLoopBegin;
-                mWaveHeader.LoopLength = (uint)mWaveOut.mLoopEnd - (uint)mWaveOut.mLoopBegin;
-                mFile.Wave[mWaveIndex].Header = hd;
-                btnLoopCreate.Text = "ループ作成";
-            }
-            else {
-                var hd = mFile.Wave[mWaveIndex].Header;
-                hd.LoopEnable = 1;
-                hd.LoopBegin = (uint)hsbTime.Value;
-                hd.LoopLength = 128;
-                mWaveOut.mLoopBegin = (int)hd.LoopBegin;
-                mWaveOut.mLoopEnd = (int)hd.LoopBegin + (int)hd.LoopLength;
-                mWaveHeader.LoopEnable = 1;
-                mFile.Wave[mWaveIndex].Header = hd;
-                btnLoopCreate.Text = "ループ削除";
-            }
+            ///TODO:LOOP
+            //if (0 < mWaveHeader.LoopEnable) {
+            //    var hd = mFile.Wave[mWaveIndex].Header;
+            //    hd.LoopBegin = 0;
+            //    hd.LoopLength = (uint)mWaveData.Length;
+            //    mWaveOut.mLoopBegin = 0;
+            //    mWaveOut.mLoopEnd = mWaveData.Length;
+            //    mWaveHeader.Start = (uint)mWaveOut.mLoopBegin;
+            //    mWaveHeader.Length = (uint)mWaveOut.mLoopEnd - (uint)mWaveOut.mLoopBegin;
+            //    mFile.Wave[mWaveIndex].Header = hd;
+            //    btnLoopCreate.Text = "ループ作成";
+            //} else {
+            //    var hd = mFile.Wave[mWaveIndex].Header;
+            //    hd.LoopBegin = (uint)hsbTime.Value;
+            //    hd.LoopLength = 128;
+            //    mWaveOut.mLoopBegin = (int)hd.LoopBegin;
+            //    mWaveOut.mLoopEnd = (int)hd.LoopBegin + (int)hd.LoopLength;
+            //    mFile.Wave[mWaveIndex].Header = hd;
+            //    btnLoopCreate.Text = "ループ削除";
+            //}
         }
         #endregion
 
         #region チェンジイベント
         private void txtName_TextChanged(object sender, EventArgs e) {
-            mFile.Wave[mWaveIndex].Info[Info.TYPE.INAM] = txtName.Text;
+            mFile.Wave.List[mWaveIndex].Info[Info.TYPE.INAM] = txtName.Text;
         }
 
         private void numWaveScale_ValueChanged(object sender, EventArgs e) {
@@ -205,7 +202,7 @@ namespace InstrumentEditor {
 
         private void numVolume_ValueChanged(object sender, EventArgs e) {
             var gain = Math.Pow(10.0, (int)(20 * numVolume.Value) / 400.0);
-            mFile.Wave[mWaveIndex].Header.Gain = gain;
+            mFile.Wave.List[mWaveIndex].Sampler.Gain = gain;
             mWaveOut.mVolume = gain;
         }
 
@@ -213,11 +210,11 @@ namespace InstrumentEditor {
             var oct = (int)numUnityNote.Value / 12 - 2;
             var note = (int)numUnityNote.Value % 12;
             lblUnityNote.Text = string.Format("{0}{1}", Const.NoteName[note], oct);
-            mFile.Wave[mWaveIndex].Header.UnityNote = (byte)numUnityNote.Value;
+            mFile.Wave.List[mWaveIndex].Sampler.UnityNote = (byte)numUnityNote.Value;
         }
 
         private void numFineTune_ValueChanged(object sender, EventArgs e) {
-            mFile.Wave[mWaveIndex].Header.Pitch = Math.Pow(2.0, (double)numFineTune.Value / 1200.0);
+            mFile.Wave.List[mWaveIndex].Sampler.FineTune = (short)numFineTune.Value;
         }
         #endregion
 
@@ -230,10 +227,11 @@ namespace InstrumentEditor {
             onDragWave = false;
             onDragLoopBegin = false;
             onDragLoopEnd = false;
-            var fileLoop = mFile.Wave[mWaveIndex].Header;
-            btnUpdate.Enabled
-                = fileLoop.LoopBegin != mWaveHeader.LoopBegin
-                || fileLoop.LoopLength != mWaveHeader.LoopLength;
+            ///TODO:LOOP
+            //var fileLoop = mFile.Wave.List[mWaveIndex].Loops;
+            //btnUpdate.Enabled
+            //    = fileLoop.LoopBegin != mWaveHeader.LoopBegin
+            //    || fileLoop.LoopLength != mWaveHeader.LoopLength;
         }
 
         private void picWave_MouseMove(object sender, MouseEventArgs e) {
@@ -244,20 +242,22 @@ namespace InstrumentEditor {
             }
 
             if (onDragLoopBegin) {
-                mWaveHeader.LoopBegin = (uint)pos;
+                ///TODO:LOOP
+                //mWaveHeader.LoopBegin = (uint)pos;
             }
 
             if (onDragLoopEnd) {
-                if ((pos - 16) < mWaveHeader.LoopBegin) {
-                    mWaveHeader.LoopLength = 16;
-                }
-                else {
-                    mWaveHeader.LoopLength = (uint)pos - mWaveHeader.LoopBegin;
-                }
+                ///TODO:LOOP
+                //if ((pos - 16) < mWaveHeader.LoopBegin) {
+                //    mWaveHeader.LoopLength = 16;
+                //} else {
+                //    mWaveHeader.LoopLength = (uint)pos - mWaveHeader.LoopBegin;
+                //}
             }
 
-            mWaveOut.mLoopBegin = (int)mWaveHeader.LoopBegin;
-            mWaveOut.mLoopEnd = (int)mWaveHeader.LoopBegin + (int)mWaveHeader.LoopLength;
+            ///TODO:LOOP
+            //mWaveOut.mLoopBegin = (int)mWaveHeader.LoopBegin;
+            //mWaveOut.mLoopEnd = (int)mWaveHeader.LoopBegin + (int)mWaveHeader.LoopLength;
         }
 
         private void picWave_MouseEnter(object sender, EventArgs e) {
@@ -344,7 +344,7 @@ namespace InstrumentEditor {
         }
 
         private void SetData() {
-            var wave = mFile.Wave[mWaveIndex];
+            var wave = mFile.Wave.List[mWaveIndex];
             var samples = wave.Data.Length;
             var packSize = 24;
             samples += packSize * 2 - (samples % (packSize * 2));
@@ -357,11 +357,11 @@ namespace InstrumentEditor {
             hsbTime.Value = 0;
             hsbTime.Maximum = samples;
 
-            var delta = wave.Header.SampleRate / 44100.0;
+            var delta = wave.Format.SampleRate / 44100.0;
             mSpecTimeDiv = 1.0f / (float)delta / packSize;
             mSpecData = new byte[(int)(mWaveData.Length * mSpecTimeDiv)][];
 
-            var sp = new Spectrum(wave.Header.SampleRate, 27.5, 24, (uint)picSpectrum.Height);
+            var sp = new Spectrum(wave.Format.SampleRate, 27.5, 24, (uint)picSpectrum.Height);
             var time = 0.0;
             for (var s = 0; s < mSpecData.Length; ++s) {
                 for (var i = 0; i < packSize && time < mWaveData.Length; ++i) {
@@ -379,20 +379,19 @@ namespace InstrumentEditor {
                 }
             }
 
-            if (0 < wave.Header.LoopEnable) {
+            if (0 < wave.Loops.Count) {
                 btnLoopCreate.Text = "ループ削除";
-            }
-            else {
+            } else {
                 btnLoopCreate.Text = "ループ作成";
             }
 
-            mWaveOut.mVolume = wave.Header.Gain;
-            numVolume.Value = (decimal)(20.0 * Math.Log10(wave.Header.Gain));
-            numUnityNote.Value = wave.Header.UnityNote;
-            if (1.0 == wave.Header.Pitch) {
+            mWaveOut.mVolume = wave.Sampler.Gain;
+            numVolume.Value = (decimal)(20.0 * Math.Log10(wave.Sampler.Gain));
+            numUnityNote.Value = wave.Sampler.UnityNote;
+            if (0 == wave.Sampler.FineTune) {
                 numFineTune.Value = 0;
             } else {
-                numFineTune.Value = (int)(1200.0 / Math.Log(2.0, wave.Header.Pitch));
+                numFineTune.Value = wave.Sampler.FineTune;
             }
             txtName.Text = wave.Info[Info.TYPE.INAM];
         }
@@ -458,28 +457,27 @@ namespace InstrumentEditor {
             var begin = hsbTime.Value;
 
             //
-            var wave = mFile.Wave[mWaveIndex];
-            if (0 < wave.Header.LoopEnable) {
-                var loopBegin = (mWaveHeader.LoopBegin - begin) * mWaveTimeScale;
-                var loopLength = mWaveHeader.LoopLength * mWaveTimeScale;
-                var loopEnd = loopBegin + loopLength;
-                graph.FillRectangle(Brushes.WhiteSmoke, loopBegin, 0, loopLength, picWave.Height);
+            var wave = mFile.Wave.List[mWaveIndex];
+            if (0 < wave.Loops.Count) {
+                ///TODO:LOOP
+                //var loopBegin = (mWaveHeader.LoopBegin - begin) * mWaveTimeScale;
+                //var loopLength = mWaveHeader.LoopLength * mWaveTimeScale;
+                //var loopEnd = loopBegin + loopLength;
+                //graph.FillRectangle(Brushes.WhiteSmoke, loopBegin, 0, loopLength, picWave.Height);
 
-                if (onWaveDisp && Math.Abs(mCursolPos - loopBegin) <= 8) {
-                    Cursor = Cursors.SizeWE;
-                    if (onDragWave && !onDragLoopEnd) {
-                        onDragLoopBegin = true;
-                    }
-                }
-                else if (onWaveDisp && Math.Abs(mCursolPos - loopEnd) <= 8) {
-                    Cursor = Cursors.SizeWE;
-                    if (onDragWave && !onDragLoopBegin) {
-                        onDragLoopEnd = true;
-                    }
-                }
-                else {
-                    Cursor = Cursors.Default;
-                }
+                //if (onWaveDisp && Math.Abs(mCursolPos - loopBegin) <= 8) {
+                //    Cursor = Cursors.SizeWE;
+                //    if (onDragWave && !onDragLoopEnd) {
+                //        onDragLoopBegin = true;
+                //    }
+                //} else if (onWaveDisp && Math.Abs(mCursolPos - loopEnd) <= 8) {
+                //    Cursor = Cursors.SizeWE;
+                //    if (onDragWave && !onDragLoopBegin) {
+                //        onDragLoopEnd = true;
+                //    }
+                //} else {
+                //    Cursor = Cursors.Default;
+                //}
             }
 
             //
@@ -512,61 +510,62 @@ namespace InstrumentEditor {
         }
 
         private void DrawLoop() {
-            var graph = mLoopGraph.Graphics;
-            var green = new Pen(Color.FromArgb(0, 168, 0), 1.0f);
+            ///TODO:LOOP
+            //var graph = mLoopGraph.Graphics;
+            //var green = new Pen(Color.FromArgb(0, 168, 0), 1.0f);
 
-            var amp = picLoop.Height - 1;
-            var halfWidth = (int)(picLoop.Width / 2.0f - 1);
+            //var amp = picLoop.Height - 1;
+            //var halfWidth = (int)(picLoop.Width / 2.0f - 1);
 
-            //
-            var loopBegin = (int)mWaveHeader.LoopBegin;
-            var loopEnd = (int)mWaveHeader.LoopBegin + (int)mWaveHeader.LoopLength;
-            if (mWaveData.Length <= loopEnd) {
-                loopEnd = mWaveData.Length - 1;
-            }
+            ////
+            //var loopBegin = (int)mWaveHeader.LoopBegin;
+            //var loopEnd = (int)mWaveHeader.LoopBegin + (int)mWaveHeader.LoopLength;
+            //if (mWaveData.Length <= loopEnd) {
+            //    loopEnd = mWaveData.Length - 1;
+            //}
 
-            //
-            graph.DrawLine(Pens.Red, 0, picLoop.Height / 2.0f - 1, picLoop.Width - 1, picLoop.Height / 2.0f - 1);
-            graph.DrawLine(Pens.Red, halfWidth, 0, halfWidth, picLoop.Height);
+            ////
+            //graph.DrawLine(Pens.Red, 0, picLoop.Height / 2.0f - 1, picLoop.Width - 1, picLoop.Height / 2.0f - 1);
+            //graph.DrawLine(Pens.Red, halfWidth, 0, halfWidth, picLoop.Height);
 
-            //
-            float x1 = halfWidth;
-            float x2 = halfWidth + mLoopTimeScale;
-            for (int t1 = loopBegin, t2 = loopBegin + 1; t2 <= loopEnd; ++t1, ++t2) {
-                var w1 = mLoopAmp * mWaveData[t1];
-                var w2 = mLoopAmp * mWaveData[t2];
-                if (w1 < -1.0) w1 = -1.0f;
-                if (w2 < -1.0) w2 = -1.0f;
-                if (1.0 < w1) w1 = 1.0f;
-                if (1.0 < w2) w2 = 1.0f;
-                var y1 = (0.5f - 0.5f * w1) * amp;
-                var y2 = (0.5f - 0.5f * w2) * amp;
+            ////
+            //float x1 = halfWidth;
+            //float x2 = halfWidth + mLoopTimeScale;
+            //for (int t1 = loopBegin, t2 = loopBegin + 1; t2 <= loopEnd; ++t1, ++t2) {
+            //    var w1 = mLoopAmp * mWaveData[t1];
+            //    var w2 = mLoopAmp * mWaveData[t2];
+            //    if (w1 < -1.0) w1 = -1.0f;
+            //    if (w2 < -1.0) w2 = -1.0f;
+            //    if (1.0 < w1) w1 = 1.0f;
+            //    if (1.0 < w2) w2 = 1.0f;
+            //    var y1 = (0.5f - 0.5f * w1) * amp;
+            //    var y2 = (0.5f - 0.5f * w2) * amp;
 
-                graph.DrawLine(green, x1, y1, x2, y2);
-                x1 += mLoopTimeScale;
-                x2 += mLoopTimeScale;
-            }
+            //    graph.DrawLine(green, x1, y1, x2, y2);
+            //    x1 += mLoopTimeScale;
+            //    x2 += mLoopTimeScale;
+            //}
 
-            //
-            x1 = halfWidth;
-            x2 = halfWidth - mLoopTimeScale;
-            for (int t1 = loopEnd, t2 = loopEnd - 1; loopBegin <= t2; --t1, --t2) {
-                var w1 = mLoopAmp * mWaveData[t1];
-                var w2 = mLoopAmp * mWaveData[t2];
-                if (w1 < -1.0) w1 = -1.0f;
-                if (w2 < -1.0) w2 = -1.0f;
-                if (1.0 < w1) w1 = 1.0f;
-                if (1.0 < w2) w2 = 1.0f;
-                var y1 = (0.5f - 0.5f * w1) * amp;
-                var y2 = (0.5f - 0.5f * w2) * amp;
+            ////
+            //x1 = halfWidth;
+            //x2 = halfWidth - mLoopTimeScale;
+            //for (int t1 = loopEnd, t2 = loopEnd - 1; loopBegin <= t2; --t1, --t2) {
+            //    var w1 = mLoopAmp * mWaveData[t1];
+            //    var w2 = mLoopAmp * mWaveData[t2];
+            //    if (w1 < -1.0) w1 = -1.0f;
+            //    if (w2 < -1.0) w2 = -1.0f;
+            //    if (1.0 < w1) w1 = 1.0f;
+            //    if (1.0 < w2) w2 = 1.0f;
+            //    var y1 = (0.5f - 0.5f * w1) * amp;
+            //    var y2 = (0.5f - 0.5f * w2) * amp;
 
-                graph.DrawLine(green, x1, y1, x2, y2);
-                x1 -= mLoopTimeScale;
-                x2 -= mLoopTimeScale;
-            }
+            //    graph.DrawLine(green, x1, y1, x2, y2);
+            //    x1 -= mLoopTimeScale;
+            //    x2 -= mLoopTimeScale;
+            //}
 
-            //
-            mLoopGraph.Render();
+            ////
+            //mLoopGraph.Render();
         }
     }
 }

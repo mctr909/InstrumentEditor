@@ -464,35 +464,33 @@ namespace SF2 {
 
             for (var idx = 0; idx < mPdta.SampleList.Count - 1; idx++) {
                 var smpl = mPdta.SampleList[idx];
-                var wi = new Wave();
-                wi.Header.SampleRate = smpl.sampleRate;
-                wi.Header.UnityNote = smpl.originalKey;
+                var wi = new DLS.WAVE();
+                wi.Format.SampleRate = smpl.sampleRate;
+                wi.Sampler.UnityNote = smpl.originalKey;
 
                 if (1 == (byte)(smpl.type & 1)) {
-                    wi.Header.LoopBegin = smpl.loopstart - smpl.start;
-                    wi.Header.LoopLength = smpl.loopend - smpl.loopstart;
-                    wi.Header.LoopEnable = 1;
-                } else {
-                    wi.Header.LoopBegin = smpl.start;
-                    wi.Header.LoopLength = smpl.end - smpl.start;
-                    wi.Header.LoopEnable = 0;
+                    var loop = new DLS.WaveLoop();
+                    loop.Start = smpl.loopstart - smpl.start;
+                    loop.Length = smpl.loopend - smpl.loopstart;
+                    wi.Loops.Add(loop);
+                    wi.Sampler.LoopCount = 1;
                 }
 
-                wi.Header.Gain = 1.0;
-                wi.Header.Pitch = 1.0;
+                wi.Sampler.Gain = 1.0;
+                wi.Sampler.FineTune = 0;
 
                 var wavePos = (int)(smpl.start * 2);
                 var waveLen = (int)(smpl.end - smpl.start + 1) * 2;
                 var wavePtr = Marshal.AllocHGlobal(waveLen);
-                wi.Data = new short[waveLen / 2];
+                wi.Data = new byte[waveLen];
                 Marshal.Copy(mSdta.Data, wavePos, wavePtr, waveLen);
-                Marshal.Copy(wavePtr, wi.Data, 0, waveLen / 2);
+                Marshal.Copy(wavePtr, wi.Data, 0, waveLen);
                 Marshal.FreeHGlobal(wavePtr);
 
                 wi.Info[Info.TYPE.INAM] = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
                 wi.Info[Info.TYPE.ICRD] = now;
 
-                instFile.Wave.Add(wi);
+                instFile.Wave.List.Add(wi);
             }
 
             foreach (var sf2Inst in mPdta.InstList) {
