@@ -748,34 +748,95 @@ namespace DLS {
             fs.Dispose();
         }
 
-        public float[] ToFloat(int packSize = 0) {
+        public float[] GetFloat(int packSize = 0) {
             var samples = Data.Length * 8 / Format.Bits;
             var len = samples + (packSize * 2 - (samples % (packSize * 2)));
             var ret = new float[len];
             switch (Format.Bits) {
             case 8:
-                for (int i = 0; i < samples; i++) {
-                    ret[i] = (Data[i] - 128) / 128.0f;
+                for (int s = 0; s < samples; s++) {
+                    ret[s] = (Data[s] - 128) / 128.0f;
                 }
                 return ret;
             case 16:
-                for (int i = 0, j = 0; i < samples; i++, j += 2) {
-                    ret[i] = (short)(Data[j] | Data[j + 1] << 8) / 32768.0f;
+                for (int s = 0, i2 = 0; s < samples; s++, i2 += 2) {
+                    ret[s] = (short)(Data[i2] | Data[i2 + 1] << 8) / 32768.0f;
                 }
                 return ret;
             case 24:
-                for (int i = 0, j = 0; i < samples; i++, j += 3) {
-                    ret[i] = (short)(Data[j + 1] | Data[j + 2] << 8) / 32768.0f;
+                for (int s = 0, i3 = 0; s < samples; s++, i3 += 3) {
+                    ret[s] = (short)(Data[i3 + 1] | Data[i3 + 2] << 8) / 32768.0f;
                 }
                 return ret;
             case 32:
-                for (int i = 0, j = 0; i < samples; i++, j += 4) {
-                    ret[i] = (short)(Data[j + 2] | Data[j + 3] << 8) / 32768.0f;
+                if (Format.Tag == 3) {
+                    for (int s = 0, i4 = 0; s < samples; s++, i4 += 4) {
+                        ret[s] = BitConverter.ToSingle(Data, i4);
+                    }
+                } else {
+                    for (int s = 0, i4 = 0; s < samples; s++, i4 += 4) {
+                        ret[s] = (short)(Data[i4 + 2] | Data[i4 + 3] << 8) / 32768.0f;
+                    }
                 }
                 return ret;
             default:
                 return ret;
             }
+        }
+
+        public void To16bit() {
+            if (16 == Format.Bits) {
+                return;
+            }
+            var samples = Data.Length * 8 / Format.Bits;
+            var tmpArr = new byte[samples * 2];
+            switch (Format.Bits) {
+            case 8:
+                for (int s = 0, i2 = 0; s < samples; s++, i2 += 2) {
+                    var val = (short)((Data[s] - 128) * 32767 / 128);
+                    tmpArr[i2] = (byte)(val & 0xFF);
+                    tmpArr[i2 + 1] = (byte)((val & 0xFF00) >> 8);
+                }
+                Data = tmpArr;
+                break;
+            case 24:
+                for (int s = 0, i2 = 0, i3 = 0; s < samples; s++, i2 += 2, i3 += 3) {
+                    var val = (short)(Data[i3 + 1] | Data[i3 + 2] << 8);
+                    tmpArr[i2] = (byte)(val & 0xFF);
+                    tmpArr[i2 + 1] = (byte)((val & 0xFF00) >> 8);
+                }
+                Data = tmpArr;
+                break;
+            case 32:
+                if (Format.Tag == 3) {
+                    for (int s = 0, i2 = 0, i4 = 0; s < samples; s++, i2 += 2, i4 += 4) {
+                        var vf = BitConverter.ToSingle(Data, i4);
+                        if (vf < -1.0f) {
+                            vf = -1.0f;
+                        }
+                        if (1.0f < vf) {
+                            vf = 1.0f;
+                        }
+                        var val = (short)(vf * 32767);
+                        tmpArr[i2] = (byte)(val & 0xFF);
+                        tmpArr[i2 + 1] = (byte)((val & 0xFF00) >> 8);
+                    }
+                } else {
+                    for (int s = 0, i2 = 0, i4 = 0; s < samples; s++, i2 += 2, i4 += 4) {
+                        var val = (short)(Data[i4 + 2] | Data[i4 + 3] << 8);
+                        tmpArr[i2] = (byte)(val & 0xFF);
+                        tmpArr[i2 + 1] = (byte)((val & 0xFF00) >> 8);
+                    }
+                }
+                Data = tmpArr;
+                break;
+            default:
+                break;
+            }
+            Format.Tag = 1;
+            Format.Bits = 16;
+            Format.BlockAlign = (ushort)(Format.Bits * Format.Channels >> 3);
+            Format.BytesPerSec = Format.BlockAlign * Format.SampleRate;
         }
 
         protected override void LoadChunk(IntPtr ptr, string type, long size) {

@@ -349,7 +349,7 @@ namespace InstrumentEditor {
         private void SetData() {
             var packSize = 24;
             var wave = mFile.Wave.List[mWaveIndex];
-            mWaveData = wave.ToFloat(packSize);
+            mWaveData = wave.GetFloat(packSize);
             var samples = mWaveData.Length;
             
             hsbTime.Value = 0;

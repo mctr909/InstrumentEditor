@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 
 using InstPack;
+using DLS;
 
 namespace SF2 {
     #region enum
@@ -458,15 +459,19 @@ namespace SF2 {
             sw.Dispose();
         }
 
-        public Pack ToIns() {
+        public Pack ToPack() {
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
             var instFile = new Pack();
 
             for (var idx = 0; idx < mPdta.SampleList.Count - 1; idx++) {
                 var smpl = mPdta.SampleList[idx];
-                var wi = new DLS.WAVE();
+                var wi = new WAVE();
+                wi.Format.Tag = 1;
+                wi.Format.Bits = 16;
+                wi.Format.Channels = 1;
                 wi.Format.SampleRate = smpl.sampleRate;
-                wi.Sampler.UnityNote = smpl.originalKey;
+                wi.Format.BlockAlign = (ushort)(wi.Format.Bits * wi.Format.Channels >> 3);
+                wi.Format.BytesPerSec = wi.Format.BlockAlign * wi.Format.SampleRate;
 
                 if (1 == (byte)(smpl.type & 1)) {
                     var loop = new DLS.WaveLoop();
@@ -476,6 +481,7 @@ namespace SF2 {
                     wi.Sampler.LoopCount = 1;
                 }
 
+                wi.Sampler.UnityNote = smpl.originalKey;
                 wi.Sampler.Gain = 1.0;
                 wi.Sampler.FineTune = 0;
 

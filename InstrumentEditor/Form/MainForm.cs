@@ -43,7 +43,7 @@ namespace InstrumentEditor {
 
             switch(Path.GetExtension(filePath)) {
             case ".sf2":
-                mPack = new SF2.File(filePath).ToIns();
+                mPack = new SF2.File(filePath).ToPack();
                 break;
             case ".dls":
                 mPack = new DLS.File(filePath).ToPack();

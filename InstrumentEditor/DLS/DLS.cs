@@ -64,11 +64,9 @@ namespace DLS {
                     });
                 }
 
-                var ptr = Marshal.AllocHGlobal(wave.Data.Length);
-                Marshal.Copy(wave.Data, 0, ptr, wave.Data.Length);
                 waveInfo.Data = new byte[wave.Data.Length];
-                Marshal.Copy(ptr, waveInfo.Data, 0, waveInfo.Data.Length);
-                Marshal.FreeHGlobal(ptr);
+                Array.Copy(wave.Data, 0, waveInfo.Data, 0, wave.Data.Length);
+                waveInfo.To16bit();
 
                 waveInfo.Info.CopyFrom(wave.Info);
                 waveInfo.Info[Info.TYPE.ICRD] = now;
