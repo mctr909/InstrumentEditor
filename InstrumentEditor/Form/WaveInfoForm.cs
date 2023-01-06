@@ -47,6 +47,9 @@ namespace InstrumentEditor {
             mFile = file;
             mWaveIndex = index;
             mSampler = mFile.Wave.List[index].Sampler;
+            if (0 < mFile.Wave.List[index].Loops.Count) {
+                mLoop = mFile.Wave.List[index].Loops[0];
+            }
         }
 
         private void WaveInfoForm_Load(object sender, EventArgs e) {
@@ -344,26 +347,22 @@ namespace InstrumentEditor {
         }
 
         private void SetData() {
-            var wave = mFile.Wave.List[mWaveIndex];
-            var data = wave.ToFloat();
-            var samples = data.Length;
             var packSize = 24;
-            samples += packSize * 2 - (samples % (packSize * 2));
-
-            mWaveData = new float[samples];
-            Array.Copy(data, mWaveData, data.Length);
-
+            var wave = mFile.Wave.List[mWaveIndex];
+            mWaveData = wave.ToFloat(packSize);
+            var samples = mWaveData.Length;
+            
             hsbTime.Value = 0;
             hsbTime.Maximum = samples;
 
             var delta = wave.Format.SampleRate / 44100.0;
             mSpecTimeDiv = 1.0f / (float)delta / packSize;
-            mSpecData = new byte[(int)(mWaveData.Length * mSpecTimeDiv)][];
+            mSpecData = new byte[(int)(samples * mSpecTimeDiv)][];
 
             var sp = new Spectrum(wave.Format.SampleRate, 27.5, 24, (uint)picSpectrum.Height);
             var time = 0.0;
             for (var s = 0; s < mSpecData.Length; ++s) {
-                for (var i = 0; i < packSize && time < mWaveData.Length; ++i) {
+                for (var i = 0; i < packSize && time < samples; ++i) {
                     sp.Filtering(mWaveData[(int)time]);
                     time += delta;
                 }
@@ -508,62 +507,61 @@ namespace InstrumentEditor {
         }
 
         private void DrawLoop() {
-            ///TODO:LOOP
-            //var graph = mLoopGraph.Graphics;
-            //var green = new Pen(Color.FromArgb(0, 168, 0), 1.0f);
+            var graph = mLoopGraph.Graphics;
+            var green = new Pen(Color.FromArgb(0, 168, 0), 1.0f);
 
-            //var amp = picLoop.Height - 1;
-            //var halfWidth = (int)(picLoop.Width / 2.0f - 1);
+            var amp = picLoop.Height - 1;
+            var halfWidth = (int)(picLoop.Width / 2.0f - 1);
 
-            ////
-            //var loopBegin = (int)mWaveHeader.LoopBegin;
-            //var loopEnd = (int)mWaveHeader.LoopBegin + (int)mWaveHeader.LoopLength;
-            //if (mWaveData.Length <= loopEnd) {
-            //    loopEnd = mWaveData.Length - 1;
-            //}
+            //
+            var loopBegin = (int)mLoop.Start;
+            var loopEnd = (int)mLoop.Start + (int)mLoop.Length;
+            if (mWaveData.Length <= loopEnd) {
+                loopEnd = mWaveData.Length - 1;
+            }
 
-            ////
-            //graph.DrawLine(Pens.Red, 0, picLoop.Height / 2.0f - 1, picLoop.Width - 1, picLoop.Height / 2.0f - 1);
-            //graph.DrawLine(Pens.Red, halfWidth, 0, halfWidth, picLoop.Height);
+            //
+            graph.DrawLine(Pens.Red, 0, picLoop.Height / 2.0f - 1, picLoop.Width - 1, picLoop.Height / 2.0f - 1);
+            graph.DrawLine(Pens.Red, halfWidth, 0, halfWidth, picLoop.Height);
 
-            ////
-            //float x1 = halfWidth;
-            //float x2 = halfWidth + mLoopTimeScale;
-            //for (int t1 = loopBegin, t2 = loopBegin + 1; t2 <= loopEnd; ++t1, ++t2) {
-            //    var w1 = mLoopAmp * mWaveData[t1];
-            //    var w2 = mLoopAmp * mWaveData[t2];
-            //    if (w1 < -1.0) w1 = -1.0f;
-            //    if (w2 < -1.0) w2 = -1.0f;
-            //    if (1.0 < w1) w1 = 1.0f;
-            //    if (1.0 < w2) w2 = 1.0f;
-            //    var y1 = (0.5f - 0.5f * w1) * amp;
-            //    var y2 = (0.5f - 0.5f * w2) * amp;
+            //
+            float x1 = halfWidth;
+            float x2 = halfWidth + mLoopTimeScale;
+            for (int t1 = loopBegin, t2 = loopBegin + 1; t2 <= loopEnd; ++t1, ++t2) {
+                var w1 = mLoopAmp * mWaveData[t1];
+                var w2 = mLoopAmp * mWaveData[t2];
+                if (w1 < -1.0) w1 = -1.0f;
+                if (w2 < -1.0) w2 = -1.0f;
+                if (1.0 < w1) w1 = 1.0f;
+                if (1.0 < w2) w2 = 1.0f;
+                var y1 = (0.5f - 0.5f * w1) * amp;
+                var y2 = (0.5f - 0.5f * w2) * amp;
 
-            //    graph.DrawLine(green, x1, y1, x2, y2);
-            //    x1 += mLoopTimeScale;
-            //    x2 += mLoopTimeScale;
-            //}
+                graph.DrawLine(green, x1, y1, x2, y2);
+                x1 += mLoopTimeScale;
+                x2 += mLoopTimeScale;
+            }
 
-            ////
-            //x1 = halfWidth;
-            //x2 = halfWidth - mLoopTimeScale;
-            //for (int t1 = loopEnd, t2 = loopEnd - 1; loopBegin <= t2; --t1, --t2) {
-            //    var w1 = mLoopAmp * mWaveData[t1];
-            //    var w2 = mLoopAmp * mWaveData[t2];
-            //    if (w1 < -1.0) w1 = -1.0f;
-            //    if (w2 < -1.0) w2 = -1.0f;
-            //    if (1.0 < w1) w1 = 1.0f;
-            //    if (1.0 < w2) w2 = 1.0f;
-            //    var y1 = (0.5f - 0.5f * w1) * amp;
-            //    var y2 = (0.5f - 0.5f * w2) * amp;
+            //
+            x1 = halfWidth;
+            x2 = halfWidth - mLoopTimeScale;
+            for (int t1 = loopEnd, t2 = loopEnd - 1; loopBegin <= t2; --t1, --t2) {
+                var w1 = mLoopAmp * mWaveData[t1];
+                var w2 = mLoopAmp * mWaveData[t2];
+                if (w1 < -1.0) w1 = -1.0f;
+                if (w2 < -1.0) w2 = -1.0f;
+                if (1.0 < w1) w1 = 1.0f;
+                if (1.0 < w2) w2 = 1.0f;
+                var y1 = (0.5f - 0.5f * w1) * amp;
+                var y2 = (0.5f - 0.5f * w2) * amp;
 
-            //    graph.DrawLine(green, x1, y1, x2, y2);
-            //    x1 -= mLoopTimeScale;
-            //    x2 -= mLoopTimeScale;
-            //}
+                graph.DrawLine(green, x1, y1, x2, y2);
+                x1 -= mLoopTimeScale;
+                x2 -= mLoopTimeScale;
+            }
 
-            ////
-            //mLoopGraph.Render();
+            //
+            mLoopGraph.Render();
         }
     }
 }
