@@ -93,7 +93,7 @@ namespace DLS {
                 pres.Info[Info.TYPE.ICRD] = now;
                 pack.Preset.Add(pres.Header, pres);
 
-                var inst = new Inst();
+                var inst = new INS();
                 inst.Info.CopyFrom(dlsInst.Value.Info);
                 inst.Info[Info.TYPE.ICRD] = now;
 
@@ -105,7 +105,7 @@ namespace DLS {
                             Destination = instArt.Destination,
                             Value = instArt.Value
                         };
-                        inst.Art.Add(art);
+                        inst.Articulations.ART.List.Add(art);
                     }
                 }
 
@@ -133,7 +133,7 @@ namespace DLS {
                     //        rgn.Art.Add(art);
                     //    }
                     //}
-                    inst.Region.Add(rgn);
+                    inst.Regions.Add(rgn);
                 }
                 pack.Inst.Add(inst);
             }
@@ -200,20 +200,20 @@ namespace DLS {
                 ins.Header.Locale.BankMSB = srcPre.Header.BankMSB;
                 ins.Header.Locale.BankLSB = srcPre.Header.BankLSB;
                 ins.Header.Locale.ProgNum = srcPre.Header.ProgNum;
-                ins.Header.Regions = (uint)srcIns.Region.Count;
+                ins.Header.Regions = (uint)srcIns.Regions.Count;
 
                 ins.Info.CopyFrom(srcPre.Info);
 
                 ins.Articulations = new LART();
                 ins.Articulations.ART = new ART();
                 ins.Articulations.ART.List = new List<Connection>();
-                foreach (var srcArt in srcIns.Art.ToArray()) {
+                foreach (var srcArt in srcIns.Articulations.ART.List) {
                     ins.Articulations.ART.List.Add(srcArt);
                 }
 
                 ins.Regions = new LRGN();
                 ins.Regions.List = new SortedList<CK_RGNH, RGN>(new LRGN.Sort());
-                foreach(var srcRgn in srcIns.Region.Array) {
+                foreach(var srcRgn in srcIns.Regions.Array) {
                     var rgn = new RGN();
                     rgn.Header.Key.Hi = srcRgn.Header.Key.Hi;
                     rgn.Header.Key.Lo = srcRgn.Header.Key.Lo;

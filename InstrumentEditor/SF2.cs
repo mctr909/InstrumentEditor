@@ -474,7 +474,7 @@ namespace SF2 {
                 wi.Format.BytesPerSec = wi.Format.BlockAlign * wi.Format.SampleRate;
 
                 if (1 == (byte)(smpl.type & 1)) {
-                    var loop = new DLS.WaveLoop();
+                    var loop = new WaveLoop();
                     loop.Start = smpl.loopstart - smpl.start;
                     loop.Length = smpl.loopend - smpl.loopstart;
                     wi.Loops.Add(loop);
@@ -500,7 +500,7 @@ namespace SF2 {
             }
 
             foreach (var sf2Inst in mPdta.InstList) {
-                var inst = new InstPack.Inst();
+                var inst = new INS();
 
                 inst.Info[Info.TYPE.INAM] = sf2Inst.Name.Replace("\0", "");
                 inst.Info[Info.TYPE.ICRD] = now;
@@ -508,14 +508,14 @@ namespace SF2 {
                 foreach (var art in sf2Inst.GlobalArt) {
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.GAIN,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.GAIN,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.PAN:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.PAN,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.PAN,
                             Value = art.Value
                         });
                         break;
@@ -525,8 +525,8 @@ namespace SF2 {
                         //inst.Art.Add(globalArt);
                         break;
                     case E_OPER.FINETUNE:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.PITCH,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.PITCH,
                             Value = art.Value
                         });
                         break;
@@ -537,32 +537,32 @@ namespace SF2 {
                         break;
 
                     case E_OPER.ENV_VOL_ATTACK:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.EG1_ATTACK_TIME,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.EG1_ATTACK_TIME,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_HOLD:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.EG1_HOLD_TIME,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.EG1_HOLD_TIME,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_DECAY:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.EG1_DECAY_TIME,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.EG1_DECAY_TIME,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_SUSTAIN:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.EG1_SUSTAIN_LEVEL,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.EG1_SUSTAIN_LEVEL,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.ENV_VOL_RELEASE:
-                        inst.Art.Add(new DLS.Connection() {
-                            Destination = DLS.DST_TYPE.EG1_RELEASE_TIME,
+                        inst.Articulations.ART.List.Add(new Connection() {
+                            Destination = DST_TYPE.EG1_RELEASE_TIME,
                             Value = art.Value
                         });
                         break;
@@ -640,7 +640,7 @@ namespace SF2 {
                     //    }
                     //}
 
-                    inst.Region.Add(rgn);
+                    inst.Regions.Add(rgn);
                 }
 
                 instFile.Inst.Add(inst);
@@ -659,14 +659,14 @@ namespace SF2 {
                 foreach (var art in sf2Pres.Value.GlobalArt) {
                     switch (art.Key) {
                     case E_OPER.INITIAL_ATTENUATION:
-                        preset.Art.Add(new DLS.Connection {
-                            Destination = DLS.DST_TYPE.GAIN,
+                        preset.Art.Add(new Connection {
+                            Destination = DST_TYPE.GAIN,
                             Value = art.Value
                         });
                         break;
                     case E_OPER.PAN:
-                        preset.Art.Add(new DLS.Connection {
-                            Destination = DLS.DST_TYPE.PAN,
+                        preset.Art.Add(new Connection {
+                            Destination = DST_TYPE.PAN,
                             Value = art.Value
                         });
                         break;
@@ -676,8 +676,8 @@ namespace SF2 {
                         //preset.Art.Add(globalArt);
                         break;
                     case E_OPER.FINETUNE:
-                        preset.Art.Add(new DLS.Connection {
-                            Destination = DLS.DST_TYPE.PITCH,
+                        preset.Art.Add(new Connection {
+                            Destination = DST_TYPE.PITCH,
                             Value = art.Value
                         });
                         break;
@@ -696,14 +696,14 @@ namespace SF2 {
                     foreach(var art in sf2PresRng.Art) {
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
-                            layer.Art.Add(new DLS.Connection {
-                                Destination = DLS.DST_TYPE.GAIN,
+                            layer.Art.Add(new Connection {
+                                Destination = DST_TYPE.GAIN,
                                 Value = art.Value
                             });
                             break;
                         case E_OPER.PAN:
-                            layer.Art.Add(new DLS.Connection {
-                                Destination = DLS.DST_TYPE.PAN,
+                            layer.Art.Add(new Connection {
+                                Destination = DST_TYPE.PAN,
                                 Value = art.Value
                             });
                             break;
@@ -713,8 +713,8 @@ namespace SF2 {
                             //layer.Art.Add(layerArt);
                             break;
                         case E_OPER.FINETUNE:
-                            layer.Art.Add(new DLS.Connection {
-                                Destination = DLS.DST_TYPE.PITCH,
+                            layer.Art.Add(new Connection {
+                                Destination = DST_TYPE.PITCH,
                                 Value = art.Value
                             });
                             break;

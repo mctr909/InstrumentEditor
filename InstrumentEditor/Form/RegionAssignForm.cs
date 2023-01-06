@@ -1,17 +1,19 @@
-﻿using InstPack;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+
+using DLS;
+using InstPack;
 
 namespace InstrumentEditor {
     public partial class RegionAssignForm : Form {
         private Pack mFile;
-        private Inst mInst;
+        private INS mInst;
         private bool mOnRange;
         private const int KEY_WIDTH = 8;
         private const int VEL_HEIGHT = 4;
 
-        public RegionAssignForm(Pack file, Inst inst) {
+        public RegionAssignForm(Pack file, INS inst) {
             mFile = file;
             mInst = inst;
             InitializeComponent();
@@ -104,7 +106,7 @@ namespace InstrumentEditor {
             var redLine = new Pen(Color.FromArgb(255, 0, 0, 255), 2.0f);
             var greenFill = new Pen(Color.FromArgb(64, 0, 255, 0), 1.0f).Brush;
 
-            foreach (var region in mInst.Region.Array) {
+            foreach (var region in mInst.Regions.Array) {
                 var range = region.Header;
                 g.FillRectangle(
                     greenFill,
@@ -130,20 +132,20 @@ namespace InstrumentEditor {
         }
 
         private void AddRegion() {
-            var region = new DLS.RGN();
+            var region = new RGN();
             region.Header.Key.Lo = byte.MaxValue;
             var fm = new RegionInfoDialog(mFile, region);
             fm.ShowDialog();
 
             if (byte.MaxValue != region.Header.Key.Lo) {
-                mInst.Region.Add(region);
+                mInst.Regions.Add(region);
                 DispRegionInfo();
             }
         }
 
-        private void EditRegion(DLS.CK_RGNH range) {
-            if (mInst.Region.ContainsKey(range)) {
-                var region = mInst.Region.FindFirst(range);
+        private void EditRegion(CK_RGNH range) {
+            if (mInst.Regions.ContainsKey(range)) {
+                var region = mInst.Regions.FindFirst(range);
                 var fm = new RegionInfoDialog(mFile, region);
                 fm.ShowDialog();
                 DispRegionInfo();
@@ -180,10 +182,10 @@ namespace InstrumentEditor {
             return posRegion;
         }
 
-        private DLS.CK_RGNH PosToRange() {
-            var range = new DLS.CK_RGNH();
+        private CK_RGNH PosToRange() {
+            var range = new CK_RGNH();
             var posRegion = PosToRegion();
-            foreach (var rgn in mInst.Region.Array) {
+            foreach (var rgn in mInst.Regions.Array) {
                 if (rgn.Header.Key.Lo <= posRegion.X && posRegion.X <= rgn.Header.Key.Hi &&
                     rgn.Header.Vel.Lo <= posRegion.Y && posRegion.Y <= rgn.Header.Vel.Hi) {
                     range = rgn.Header;

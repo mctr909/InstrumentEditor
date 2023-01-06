@@ -1,9 +1,10 @@
-﻿using DLS;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using DLS;
 
 namespace InstPack {
     public class LInst {
-        private List<Inst> List = new List<Inst>();
+        private List<INS> List = new List<INS>();
 
         public LInst() { }
 
@@ -15,19 +16,19 @@ namespace InstPack {
             get { return List.Count; }
         }
 
-        public Inst this[int index] {
+        public INS this[int index] {
             get { return List[index]; }
         }
 
-        public Inst[] ToArray() {
+        public INS[] ToArray() {
             return List.ToArray();
         }
 
-        public void Add(Inst inst) {
+        public void Add(INS inst) {
             List.Add(inst);
         }
 
-        public void AddRange(List<Inst> instList) {
+        public void AddRange(List<INS> instList) {
             foreach (var inst in instList) {
                 List.Add(inst);
             }
@@ -36,13 +37,5 @@ namespace InstPack {
         public void Remove(int index) {
             List.RemoveAt(index);
         }
-    }
-
-    public class Inst {
-        public LRGN Region = new LRGN();
-        public Info Info = new Info();
-        public List<Connection> Art = new List<Connection>();
-
-        public Inst() { }
     }
 }

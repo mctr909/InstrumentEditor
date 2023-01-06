@@ -1,5 +1,6 @@
-using DLS;
 using System.Collections.Generic;
+
+using DLS;
 
 namespace InstPack {
     public class Pack {
@@ -13,7 +14,7 @@ namespace InstPack {
             foreach (var selectedIndex in indices) {
                 var deletable = true;
                 foreach (var inst in Inst.ToArray()) {
-                    foreach (var region in inst.Region.Array) {
+                    foreach (var region in inst.Regions.Array) {
                         if (selectedIndex == region.WaveLink.TableIndex) {
                             deletable = false;
                             break;
@@ -55,9 +56,9 @@ namespace InstPack {
             // update inst's region art
             for (var iInst = 0; iInst < Inst.Count; iInst++) {
                 var inst = Inst[iInst];
-                for (var iRgn = 0; iRgn < inst.Region.Count; iRgn++) {
-                    var rgn = inst.Region[iRgn];
-                    inst.Region[iRgn].WaveLink.TableIndex
+                for (var iRgn = 0; iRgn < inst.Regions.Count; iRgn++) {
+                    var rgn = inst.Regions[iRgn];
+                    inst.Regions[iRgn].WaveLink.TableIndex
                         = renumberingList[rgn.WaveLink.TableIndex];
                 }
             }
@@ -100,7 +101,7 @@ namespace InstPack {
             }
 
             // delete inst
-            var newInstList = new List<Inst>();
+            var newInstList = new List<INS>();
             for (var iInst = 0; iInst < Inst.Count; iInst++) {
                 if (deleteList.ContainsKey(iInst) && deleteList[iInst]) {
                     continue;

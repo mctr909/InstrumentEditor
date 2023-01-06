@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using DLS;
 using InstPack;
 
 namespace InstrumentEditor {
     public partial class InstInfoDialog : Form {
         private Pack mFile;
-        private Inst mInst;
+        private INS mInst;
 
         public InstInfoDialog(Pack file) {
             InitializeComponent();
@@ -15,13 +16,13 @@ namespace InstrumentEditor {
             mFile = file;
         }
 
-        public InstInfoDialog(Pack file, Inst inst) {
+        public InstInfoDialog(Pack file, INS inst) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mInst = inst;
             txtInstName.Text = mInst.Info[Info.TYPE.INAM];
-            envelope1.Art = mInst.Art;
+            envelope1.Art = mInst.Articulations.ART.List;
             btnAdd.Text = "反映";
         }
 
@@ -39,16 +40,16 @@ namespace InstrumentEditor {
 
         private void btnAdd_Click(object sender, EventArgs e) {
             if (null == mInst) {
-                mInst = new Inst();
+                mInst = new INS();
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
                 mFile.Inst.Add(mInst);
-                mInst.Art = new List<DLS.Connection>();
-                envelope1.SetList(mInst.Art);
+                mInst.Articulations.ART.List = new List<Connection>();
+                envelope1.SetList(mInst.Articulations.ART.List);
             } else {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
-                envelope1.SetList(mInst.Art);
+                envelope1.SetList(mInst.Articulations.ART.List);
             }
             Close();
         }

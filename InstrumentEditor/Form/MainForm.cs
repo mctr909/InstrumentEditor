@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
+using DLS;
 using InstPack;
 
 namespace InstrumentEditor {
@@ -10,7 +11,7 @@ namespace InstrumentEditor {
         private string mFilePath;
         private Pack mPack = new Pack();
         private Preset mClipboardPreset;
-        private Inst mClipboardInst;
+        private INS mClipboardInst;
 
         public MainForm() {
             InitializeComponent();
@@ -312,10 +313,10 @@ namespace InstrumentEditor {
             var filePaths = openFileDialog1.FileNames;
 
             foreach (var filePath in filePaths) {
-                if (!File.Exists(filePath)) {
+                if (!System.IO.File.Exists(filePath)) {
                     continue;
                 }
-                mPack.Wave.List.Add(new DLS.WAVE(filePath));
+                mPack.Wave.List.Add(new WAVE(filePath));
             }
 
             DispWaveList();
@@ -353,7 +354,7 @@ namespace InstrumentEditor {
 
                 var use = false;
                 foreach (var inst in mPack.Inst.ToArray()) {
-                    foreach (var rgn in inst.Region.Array) {
+                    foreach (var rgn in inst.Regions.Array) {
                         if (iWave == rgn.WaveLink.TableIndex) {
                             use = true;
                             break;
@@ -641,12 +642,12 @@ namespace InstrumentEditor {
                 return;
             }
 
-            mClipboardInst = new Inst();
+            mClipboardInst = new INS();
 
             // Region
-            mClipboardInst.Region.Clear();
-            foreach (var layer in inst.Region.Array) {
-                mClipboardInst.Region.Add(new DLS.RGN {
+            mClipboardInst.Regions.Clear();
+            foreach (var layer in inst.Regions.Array) {
+                mClipboardInst.Regions.Add(new RGN {
                     Header = layer.Header,
                     ///TODO:ART
                     //Art = layer.Art
@@ -654,9 +655,9 @@ namespace InstrumentEditor {
             }
 
             // Articulations
-            mClipboardInst.Art.Clear();
-            foreach (var art in inst.Art.ToArray()) {
-                mClipboardInst.Art.Add(art);
+            mClipboardInst.Articulations.ART.List.Clear();
+            foreach (var art in inst.Articulations.ART.List) {
+                mClipboardInst.Articulations.ART.List.Add(art);
             }
 
             // Info
@@ -730,7 +731,7 @@ namespace InstrumentEditor {
                 return;
             }
             if (1 < lst.Count) {
-                var inst = new Inst();
+                var inst = new INS();
                 var fm = new InstInfoDialog(mPack, inst);
                 fm.ShowDialog();
                 foreach (var p in lst) {
@@ -767,7 +768,7 @@ namespace InstrumentEditor {
             return list;
         }
 
-        private Inst GetSelectedInst() {
+        private INS GetSelectedInst() {
             var locale = GetInstLocale(lstInst.SelectedIndex);
             if (mPack.Inst.Count <= locale) {
                 return null;
@@ -775,9 +776,9 @@ namespace InstrumentEditor {
             return mPack.Inst[locale];
         }
 
-        private List<Inst> GetSelectedInsts() {
+        private List<INS> GetSelectedInsts() {
             var locales = GetInstLocales(lstInst.SelectedIndices);
-            var insts = new List<Inst>();
+            var insts = new List<INS>();
             foreach (var locale in locales) {
                 if (locale < mPack.Inst.Count) {
                     insts.Add(mPack.Inst[locale]);

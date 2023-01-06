@@ -74,7 +74,7 @@ namespace InstrumentEditor {
 
                 var use = false;
                 foreach (var ins in mFile.Inst.ToArray()) {
-                    foreach (var rgn in ins.Region.Array) {
+                    foreach (var rgn in ins.Regions.Array) {
                         if (count == rgn.WaveLink.TableIndex) {
                             use = true;
                             break;

@@ -636,7 +636,7 @@ namespace DLS {
     }
 
     public class LART : Riff {
-        public ART ART;
+        public ART ART = new ART();
 
         public LART() { }
 
@@ -645,7 +645,7 @@ namespace DLS {
         }
 
         public void Write(BinaryWriter bw) {
-            if (null == ART) {
+            if (0 == ART.List.Count) {
                 return;
             }
 
