@@ -88,7 +88,6 @@
     <Compile Include="InstPack\Layer.cs" />
     <Compile Include="InstPack\Preset.cs" />
     <Compile Include="InstPack\Region.cs" />
-    <Compile Include="InstPack\Struct.cs" />
     <Compile Include="Riff.cs" />
     <Compile Include="DLS\DLS.cs" />
     <Compile Include="DoubleBufferBitmap.cs" />

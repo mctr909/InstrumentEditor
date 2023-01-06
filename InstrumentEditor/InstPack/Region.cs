@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 
+using DLS;
+
 namespace InstPack {
     public class LRegion {
-        public sealed class Sort : IComparer<RGNH> {
+        public sealed class Sort : IComparer<CK_RGNH> {
             // IComparerの実装
-            public int Compare(RGNH x, RGNH y) {
-                var keyH = x.KeyHi < y.KeyLo;
-                var keyL = y.KeyHi < x.KeyLo;
-                var velH = x.VelHi < y.VelLo;
-                var velL = y.VelHi < x.VelLo;
+            public int Compare(CK_RGNH x, CK_RGNH y) {
+                var keyH = x.Key.Hi < y.Key.Lo;
+                var keyL = y.Key.Hi < x.Key.Lo;
+                var velH = x.Vel.Hi < y.Vel.Lo;
+                var velL = y.Vel.Hi < x.Vel.Lo;
                 var key = keyH || keyL;
                 var vel = velH || velL;
                 if (key || vel) {
@@ -25,7 +27,7 @@ namespace InstPack {
             }
         }
 
-        private SortedList<RGNH, Region> List = new SortedList<RGNH, Region>(new Sort());
+        private SortedList<CK_RGNH, RGN> List = new SortedList<CK_RGNH, RGN>(new Sort());
 
         public LRegion() { }
 
@@ -37,15 +39,15 @@ namespace InstPack {
             get { return List.Count; }
         }
 
-        public IList<Region> Array {
+        public IList<RGN> Array {
             get { return List.Values; }
         }
 
-        public Region this[int index] {
+        public RGN this[int index] {
             get { return List.Values[index]; }
         }
 
-        public bool Add(Region region) {
+        public bool Add(RGN region) {
             if (List.ContainsKey(region.Header)) {
                 return false;
             }
@@ -53,41 +55,41 @@ namespace InstPack {
             return true;
         }
 
-        public List<Region> Find(RGNH header) {
-            var ret = new List<Region>();
+        public List<RGN> Find(CK_RGNH header) {
+            var ret = new List<RGN>();
             foreach (var rng in List.Values) {
-                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
                     ret.Add(rng);
                 }
             }
             return ret;
         }
 
-        public Region Find(int noteNo, int velocity) {
+        public RGN Find(int noteNo, int velocity) {
             foreach (var rng in List.Values) {
-                if (noteNo <= rng.Header.KeyHi && rng.Header.KeyLo <= noteNo &&
-                    velocity <= rng.Header.VelHi && rng.Header.VelLo <= velocity) {
+                if (noteNo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= noteNo &&
+                    velocity <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= velocity) {
                     return rng;
                 }
             }
             return null;
         }
 
-        public Region FindFirst(RGNH header) {
+        public RGN FindFirst(CK_RGNH header) {
             foreach (var rng in List.Values) {
-                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
                     return rng;
                 }
             }
             return null;
         }
 
-        public bool ContainsKey(RGNH header) {
+        public bool ContainsKey(CK_RGNH header) {
             foreach (var rng in List.Values) {
-                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
                     return true;
                 }
             }
@@ -96,19 +98,19 @@ namespace InstPack {
 
         public bool ContainsKey(int noteNo, int velocity) {
             foreach (var rng in List.Values) {
-                if (noteNo <= rng.Header.KeyHi && rng.Header.KeyLo <= noteNo &&
-                    velocity <= rng.Header.VelHi && rng.Header.VelLo <= velocity) {
+                if (noteNo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= noteNo &&
+                    velocity <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= velocity) {
                     return true;
                 }
             }
             return false;
         }
 
-        public void Remove(RGNH header) {
-            var tmpRegion = new List<Region>();
+        public void Remove(CK_RGNH header) {
+            var tmpRegion = new List<RGN>();
             foreach (var rng in List.Values) {
-                if (header.KeyLo <= rng.Header.KeyHi && rng.Header.KeyLo <= header.KeyHi &&
-                    header.VelLo <= rng.Header.VelHi && rng.Header.VelLo <= header.VelHi) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
                 } else {
                     tmpRegion.Add(rng);
                 }
@@ -118,16 +120,5 @@ namespace InstPack {
                 List.Add(rgn.Header, rgn);
             }
         }
-    }
-
-    public class Region {
-        public RGNH Header;
-        public uint WaveIndex;
-        public ushort UnityNote;
-        public double FineTune;
-        public double Gain;
-        public List<DLS.Connection> Art = new List<DLS.Connection>();
-
-        public Region() { }
     }
 }

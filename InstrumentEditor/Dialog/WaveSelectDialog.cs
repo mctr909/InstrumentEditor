@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using DLS;
 using InstPack;
 
 namespace InstrumentEditor {
     public partial class WaveSelectDialog : Form {
         private Pack mFile;
-        private Region mRegion;
+        private RGN mRegion;
 
-        public WaveSelectDialog(Pack file, Region region) {
+        public WaveSelectDialog(Pack file, RGN region) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -40,7 +41,7 @@ namespace InstrumentEditor {
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstWave.SelectedIndex) {
                 var cols = lstWave.SelectedItem.ToString().Split('\t');
-                mRegion.WaveIndex = uint.Parse(cols[0]);
+                mRegion.WaveLink.TableIndex = uint.Parse(cols[0]);
             }
             Close();
         }
@@ -88,7 +89,7 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var inst in mFile.Inst.ToArray()) {
                     foreach (var rgn in inst.Region.Array) {
-                        if (count == rgn.WaveIndex) {
+                        if (count == rgn.WaveLink.TableIndex) {
                             use = true;
                             break;
                         }
@@ -108,8 +109,8 @@ namespace InstrumentEditor {
                 ++count;
             }
 
-            if (mRegion.WaveIndex < lstWave.Items.Count) {
-                lstWave.SelectedIndex = (int)mRegion.WaveIndex;
+            if (mRegion.WaveLink.TableIndex < lstWave.Items.Count) {
+                lstWave.SelectedIndex = (int)mRegion.WaveLink.TableIndex;
             }
         }
     }

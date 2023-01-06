@@ -1,6 +1,13 @@
 ﻿using System.Collections.Generic;
 
 namespace InstPack {
+    public struct PREH {
+        public bool IsDrum;
+        public byte BankMSB;
+        public byte BankLSB;
+        public byte ProgNum;
+    }
+
     public class LPreset {
         private Dictionary<PREH, Preset> List = new Dictionary<PREH, Preset>();
 

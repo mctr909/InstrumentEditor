@@ -6,13 +6,13 @@ using InstPack;
 namespace InstrumentEditor {
     public partial class RegionInfoDialog : Form {
         private Pack mFile;
-        private Region mRegion;
+        private RGN mRegion;
 
         private readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionInfoDialog(Pack file, Region region) {
+        public RegionInfoDialog(Pack file, RGN region) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 
@@ -44,7 +44,7 @@ namespace InstrumentEditor {
         }
 
         private void btnSelectWave_Click(object sender, EventArgs e) {
-            var waveIndex = mRegion.WaveIndex;
+            var waveIndex = mRegion.WaveLink.TableIndex;
 
             var fm = new WaveSelectDialog(mFile, mRegion);
             fm.ShowDialog();
@@ -64,16 +64,16 @@ namespace InstrumentEditor {
         }
 
         private void btnEditWave_Click(object sender, EventArgs e) {
-            var fm = new WaveInfoForm(mFile, (int)mRegion.WaveIndex);
+            var fm = new WaveInfoForm(mFile, (int)mRegion.WaveLink.TableIndex);
             fm.ShowDialog();
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
-            if (byte.MaxValue == mRegion.Header.KeyLo) {
-                mRegion.Header.KeyLo = (byte)numKeyLow.Value;
-                mRegion.Header.KeyHi = (byte)numKeyHigh.Value;
-                mRegion.Header.VelLo = (byte)numVelocityLow.Value;
-                mRegion.Header.VelHi = (byte)numVelocityHigh.Value;
+            if (byte.MaxValue == mRegion.Header.Key.Lo) {
+                mRegion.Header.Key.Lo = (byte)numKeyLow.Value;
+                mRegion.Header.Key.Hi = (byte)numKeyHigh.Value;
+                mRegion.Header.Vel.Lo = (byte)numVelocityLow.Value;
+                mRegion.Header.Vel.Hi = (byte)numVelocityHigh.Value;
             }
             ///TODO:ART
             //if (0 == numUnityNote.Value) {
@@ -94,7 +94,7 @@ namespace InstrumentEditor {
             //    mRegion.Art.Update(ART_TYPE.GAIN, (float)Math.Pow(10.0, gain));
             //}
 
-            envelope1.SetList(mRegion.Art);
+            //envelope1.SetList(mRegion.Art);
 
             Close();
         }
@@ -136,7 +136,8 @@ namespace InstrumentEditor {
             envelope1.Top = grbVolume.Top + grbVolume.Height + 6;
             envelope1.Left = grbUnityNote.Left;
 
-            envelope1.Art = mRegion.Art;
+            ///TODO:ART
+            //envelope1.Art = mRegion.Art;
 
             chkLoop.Top = envelope1.Top + envelope1.Height + 6;
 
@@ -186,7 +187,7 @@ namespace InstrumentEditor {
         }
 
         private void DispRegionInfo() {
-            if (byte.MaxValue == mRegion.Header.KeyLo) {
+            if (byte.MaxValue == mRegion.Header.Key.Lo) {
                 numKeyLow.Value = 63;
                 numKeyHigh.Value = 63;
                 numVelocityLow.Value = 0;
@@ -195,16 +196,16 @@ namespace InstrumentEditor {
 
                 btnAdd.Text = "追加";
             } else {
-                numKeyLow.Value = mRegion.Header.KeyLo;
-                numKeyHigh.Value = mRegion.Header.KeyHi;
-                numVelocityLow.Value = mRegion.Header.VelLo;
-                numVelocityHigh.Value = mRegion.Header.VelHi;
+                numKeyLow.Value = mRegion.Header.Key.Lo;
+                numKeyHigh.Value = mRegion.Header.Key.Hi;
+                numVelocityLow.Value = mRegion.Header.Vel.Lo;
+                numVelocityHigh.Value = mRegion.Header.Vel.Hi;
                 numKeyLow.Enabled = false;
                 numKeyHigh.Enabled = false;
                 numVelocityLow.Enabled = false;
                 numVelocityHigh.Enabled = false;
 
-                var waveIndex = (int)mRegion.WaveIndex;
+                var waveIndex = (int)mRegion.WaveLink.TableIndex;
 
                 var waveName = "";
                 if (waveIndex < mFile.Wave.List.Count) {
@@ -225,23 +226,24 @@ namespace InstrumentEditor {
                     );
                 }
 
-                foreach(var art in mRegion.Art.ToArray()) {
-                    switch (art.Destination) {
-                    case DST_TYPE.GAIN:
-                        numVolume.Value = (decimal)(20 * Math.Log10(art.Value));
-                        break;
-                    //case ART_TYPE.FINE_TUNE:
-                    //    if (1.0 == art.Value) {
-                    //        numFineTune.Value = 0;
-                    //    } else {
-                    //        numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
-                    //    }
-                    //    break;
-                    //case ART_TYPE.UNITY_KEY:
-                    //    numUnityNote.Value = (int)art.Value;
-                    //    break;
-                    }
-                }
+                ///TODO:ART
+                //foreach(var art in mRegion.Art.ToArray()) {
+                //    switch (art.Destination) {
+                //    case DST_TYPE.GAIN:
+                //        numVolume.Value = (decimal)(20 * Math.Log10(art.Value));
+                //        break;
+                //    case ART_TYPE.FINE_TUNE:
+                //        if (1.0 == art.Value) {
+                //            numFineTune.Value = 0;
+                //        } else {
+                //            numFineTune.Value = (int)(1200.0 / Math.Log(2.0, art.Value));
+                //        }
+                //        break;
+                //    case ART_TYPE.UNITY_KEY:
+                //        numUnityNote.Value = (int)art.Value;
+                //        break;
+                //    }
+                //}
 
                 btnAdd.Text = "反映";
             }

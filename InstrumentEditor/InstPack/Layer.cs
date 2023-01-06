@@ -34,8 +34,8 @@ namespace InstPack {
         public List<Layer> Find(Layer layer) {
             var ret = new List<Layer>();
             foreach (var lyr in List) {
-                if (layer.Header.KeyLo <= lyr.Header.KeyHi && lyr.Header.KeyLo <= layer.Header.KeyHi &&
-                    layer.Header.VelLo <= lyr.Header.VelHi && lyr.Header.VelLo <= layer.Header.VelHi &&
+                if (layer.Header.Key.Lo <= lyr.Header.Key.Hi && lyr.Header.Key.Lo <= layer.Header.Key.Hi &&
+                    layer.Header.Vel.Lo <= lyr.Header.Vel.Hi && lyr.Header.Vel.Lo <= layer.Header.Vel.Hi &&
                     layer.InstIndex == lyr.InstIndex) {
                     ret.Add(lyr);
                 }
@@ -46,8 +46,8 @@ namespace InstPack {
         public List<Layer> Find(int noteNo, int velocity) {
             var ret = new List<Layer>();
             foreach (var layer in List) {
-                if (noteNo <= layer.Header.KeyHi && layer.Header.KeyLo <= noteNo &&
-                    velocity <= layer.Header.VelHi && layer.Header.VelLo <= velocity) {
+                if (noteNo <= layer.Header.Key.Hi && layer.Header.Key.Lo <= noteNo &&
+                    velocity <= layer.Header.Vel.Hi && layer.Header.Vel.Lo <= velocity) {
                     ret.Add(layer);
                 }
             }
@@ -56,8 +56,8 @@ namespace InstPack {
 
         public bool ContainsKey(Layer layer) {
             foreach (var lyr in List) {
-                if (layer.Header.KeyLo <= lyr.Header.KeyHi && lyr.Header.KeyLo <= layer.Header.KeyHi &&
-                    layer.Header.VelLo <= lyr.Header.VelHi && lyr.Header.VelLo <= layer.Header.VelHi &&
+                if (layer.Header.Key.Lo <= lyr.Header.Key.Hi && lyr.Header.Key.Lo <= layer.Header.Key.Hi &&
+                    layer.Header.Vel.Lo <= lyr.Header.Vel.Hi && lyr.Header.Vel.Lo <= layer.Header.Vel.Hi &&
                     layer.InstIndex == lyr.InstIndex) {
                     return true;
                 }
@@ -67,8 +67,8 @@ namespace InstPack {
 
         public bool ContainsKey(int noteNo, int velocity) {
             foreach (var layer in List) {
-                if (noteNo <= layer.Header.KeyHi && layer.Header.KeyLo <= noteNo &&
-                    velocity <= layer.Header.VelHi && layer.Header.VelLo <= velocity) {
+                if (noteNo <= layer.Header.Key.Hi && layer.Header.Key.Lo <= noteNo &&
+                    velocity <= layer.Header.Vel.Hi && layer.Header.Vel.Lo <= velocity) {
                     return true;
                 }
             }
@@ -88,7 +88,7 @@ namespace InstPack {
     }
 
     public class Layer : Riff {
-        public RGNH Header;
+        public DLS.CK_RGNH Header;
         public int InstIndex;
         public List<DLS.Connection> Art = new List<DLS.Connection>();
 

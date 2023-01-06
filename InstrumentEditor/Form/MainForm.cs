@@ -354,7 +354,7 @@ namespace InstrumentEditor {
                 var use = false;
                 foreach (var inst in mPack.Inst.ToArray()) {
                     foreach (var rgn in inst.Region.Array) {
-                        if (iWave == rgn.WaveIndex) {
+                        if (iWave == rgn.WaveLink.TableIndex) {
                             use = true;
                             break;
                         }
@@ -646,9 +646,10 @@ namespace InstrumentEditor {
             // Region
             mClipboardInst.Region.Clear();
             foreach (var layer in inst.Region.Array) {
-                mClipboardInst.Region.Add(new Region {
+                mClipboardInst.Region.Add(new DLS.RGN {
                     Header = layer.Header,
-                    Art = layer.Art
+                    ///TODO:ART
+                    //Art = layer.Art
                 });
             }
 

@@ -108,17 +108,17 @@ namespace InstrumentEditor {
                 var range = region.Header;
                 g.FillRectangle(
                     greenFill,
-                    range.KeyLo * KEY_WIDTH,
-                    bmp.Height - (range.VelHi + 1) * VEL_HEIGHT - 1,
-                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
-                    (range.VelHi - range.VelLo + 1) * VEL_HEIGHT
+                    range.Key.Lo * KEY_WIDTH,
+                    bmp.Height - (range.Vel.Hi + 1) * VEL_HEIGHT - 1,
+                    (range.Key.Hi - range.Key.Lo + 1) * KEY_WIDTH,
+                    (range.Vel.Hi - range.Vel.Lo + 1) * VEL_HEIGHT
                 );
                 g.DrawRectangle(
                     redLine,
-                    range.KeyLo * KEY_WIDTH,
-                    bmp.Height - (range.VelHi + 1) * VEL_HEIGHT,
-                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
-                    (range.VelHi - range.VelLo + 1) * VEL_HEIGHT
+                    range.Key.Lo * KEY_WIDTH,
+                    bmp.Height - (range.Vel.Hi + 1) * VEL_HEIGHT,
+                    (range.Key.Hi - range.Key.Lo + 1) * KEY_WIDTH,
+                    (range.Vel.Hi - range.Vel.Lo + 1) * VEL_HEIGHT
                 );
             }
 
@@ -130,18 +130,18 @@ namespace InstrumentEditor {
         }
 
         private void AddRegion() {
-            var region = new InstPack.Region();
-            region.Header.KeyLo = byte.MaxValue;
+            var region = new DLS.RGN();
+            region.Header.Key.Lo = byte.MaxValue;
             var fm = new RegionInfoDialog(mFile, region);
             fm.ShowDialog();
 
-            if (byte.MaxValue != region.Header.KeyLo) {
+            if (byte.MaxValue != region.Header.Key.Lo) {
                 mInst.Region.Add(region);
                 DispRegionInfo();
             }
         }
 
-        private void EditRegion(RGNH range) {
+        private void EditRegion(DLS.CK_RGNH range) {
             if (mInst.Region.ContainsKey(range)) {
                 var region = mInst.Region.FindFirst(range);
                 var fm = new RegionInfoDialog(mFile, region);
@@ -180,12 +180,12 @@ namespace InstrumentEditor {
             return posRegion;
         }
 
-        private RGNH PosToRange() {
-            var range = new RGNH();
+        private DLS.CK_RGNH PosToRange() {
+            var range = new DLS.CK_RGNH();
             var posRegion = PosToRegion();
             foreach (var rgn in mInst.Region.Array) {
-                if (rgn.Header.KeyLo <= posRegion.X && posRegion.X <= rgn.Header.KeyHi &&
-                    rgn.Header.VelLo <= posRegion.Y && posRegion.Y <= rgn.Header.VelHi) {
+                if (rgn.Header.Key.Lo <= posRegion.X && posRegion.X <= rgn.Header.Key.Hi &&
+                    rgn.Header.Vel.Lo <= posRegion.Y && posRegion.Y <= rgn.Header.Vel.Hi) {
                     range = rgn.Header;
                     break;
                 }

@@ -14,7 +14,7 @@ namespace InstPack {
                 var deletable = true;
                 foreach (var inst in Inst.ToArray()) {
                     foreach (var region in inst.Region.Array) {
-                        if (selectedIndex == region.WaveIndex) {
+                        if (selectedIndex == region.WaveLink.TableIndex) {
                             deletable = false;
                             break;
                         }
@@ -57,7 +57,8 @@ namespace InstPack {
                 var inst = Inst[iInst];
                 for (var iRgn = 0; iRgn < inst.Region.Count; iRgn++) {
                     var rgn = inst.Region[iRgn];
-                    inst.Region[iRgn].WaveIndex = renumberingList[rgn.WaveIndex];
+                    inst.Region[iRgn].WaveLink.TableIndex
+                        = renumberingList[rgn.WaveLink.TableIndex];
                 }
             }
 

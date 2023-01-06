@@ -118,10 +118,10 @@ namespace InstrumentEditor {
                 }
 
                 tscLayer.Items.Add(string.Format("{0}|{1}|{2}|{3}|{4}|{5}",
-                    layer.Header.KeyLo.ToString("000"),
-                    layer.Header.KeyHi.ToString("000"),
-                    layer.Header.VelLo.ToString("000"),
-                    layer.Header.VelHi.ToString("000"),
+                    layer.Header.Key.Lo.ToString("000"),
+                    layer.Header.Key.Hi.ToString("000"),
+                    layer.Header.Vel.Lo.ToString("000"),
+                    layer.Header.Vel.Hi.ToString("000"),
                     (int.MaxValue == instIndex) ? "    " : instIndex.ToString("0000"),
                     instName
                 ));
@@ -166,10 +166,10 @@ namespace InstrumentEditor {
 
         private void AddLayer() {
             var layer = new Layer();
-            layer.Header.KeyLo = byte.MaxValue;
+            layer.Header.Key.Lo = byte.MaxValue;
             var fm = new LayerInfoDialog(mFile, layer);
             fm.ShowDialog();
-            if (byte.MaxValue != layer.Header.KeyLo) {
+            if (byte.MaxValue != layer.Header.Key.Lo) {
                 mPreset.Layer.Add(layer);
                 DispLayerInfo();
             }
@@ -217,8 +217,8 @@ namespace InstrumentEditor {
             var range = new Layer();
             var pos = LayerPos();
             foreach (var layer in mPreset.Layer.ToArray()) {
-                if (layer.Header.KeyLo <= pos.X && pos.X <= layer.Header.KeyHi &&
-                    layer.Header.VelLo <= pos.Y && pos.Y <= layer.Header.VelHi) {
+                if (layer.Header.Key.Lo <= pos.X && pos.X <= layer.Header.Key.Hi &&
+                    layer.Header.Vel.Lo <= pos.Y && pos.Y <= layer.Header.Vel.Hi) {
                     range.Header = layer.Header;
                     range.InstIndex = layer.InstIndex;
                     break;
