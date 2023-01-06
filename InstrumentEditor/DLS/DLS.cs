@@ -212,7 +212,7 @@ namespace DLS {
                 }
 
                 ins.Regions = new LRGN();
-                ins.Regions.List = new SortedDictionary<CK_RGNH, RGN>(new LRGN.Sort());
+                ins.Regions.List = new SortedList<CK_RGNH, RGN>(new LRGN.Sort());
                 foreach(var srcRgn in srcIns.Region.Array) {
                     var rgn = new RGN();
                     rgn.Header.Key.Hi = srcRgn.Header.Key.Hi;

@@ -438,7 +438,7 @@ namespace DLS {
             }
         }
 
-        public SortedDictionary<CK_RGNH, RGN> List = new SortedDictionary<CK_RGNH, RGN>(new Sort());
+        public SortedList<CK_RGNH, RGN> List = new SortedList<CK_RGNH, RGN>(new Sort());
 
         public LRGN() { }
 
@@ -458,6 +458,96 @@ namespace DLS {
                 bw.Write((uint)(msList.Length + 4));
                 bw.Write("lrgn".ToCharArray());
                 bw.Write(msList.ToArray());
+            }
+        }
+
+        public void Clear() {
+            List.Clear();
+        }
+
+        public int Count {
+            get { return List.Count; }
+        }
+
+        public IList<RGN> Array {
+            get { return List.Values; }
+        }
+
+        public RGN this[int index] {
+            get { return List.Values[index]; }
+        }
+
+        public bool Add(RGN region) {
+            if (List.ContainsKey(region.Header)) {
+                return false;
+            }
+            List.Add(region.Header, region);
+            return true;
+        }
+
+        public List<RGN> Find(CK_RGNH header) {
+            var ret = new List<RGN>();
+            foreach (var rng in List.Values) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
+                    ret.Add(rng);
+                }
+            }
+            return ret;
+        }
+
+        public RGN Find(int noteNo, int velocity) {
+            foreach (var rng in List.Values) {
+                if (noteNo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= noteNo &&
+                    velocity <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= velocity) {
+                    return rng;
+                }
+            }
+            return null;
+        }
+
+        public RGN FindFirst(CK_RGNH header) {
+            foreach (var rng in List.Values) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
+                    return rng;
+                }
+            }
+            return null;
+        }
+
+        public bool ContainsKey(CK_RGNH header) {
+            foreach (var rng in List.Values) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool ContainsKey(int noteNo, int velocity) {
+            foreach (var rng in List.Values) {
+                if (noteNo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= noteNo &&
+                    velocity <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= velocity) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void Remove(CK_RGNH header) {
+            var tmpRegion = new List<RGN>();
+            foreach (var rng in List.Values) {
+                if (header.Key.Lo <= rng.Header.Key.Hi && rng.Header.Key.Lo <= header.Key.Hi &&
+                    header.Vel.Lo <= rng.Header.Vel.Hi && rng.Header.Vel.Lo <= header.Vel.Hi) {
+                } else {
+                    tmpRegion.Add(rng);
+                }
+            }
+            List.Clear();
+            foreach (var rgn in tmpRegion) {
+                List.Add(rgn.Header, rgn);
             }
         }
 

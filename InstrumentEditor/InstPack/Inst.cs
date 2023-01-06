@@ -39,7 +39,7 @@ namespace InstPack {
     }
 
     public class Inst {
-        public LRegion Region = new LRegion();
+        public LRGN Region = new LRGN();
         public Info Info = new Info();
         public List<Connection> Art = new List<Connection>();
 
