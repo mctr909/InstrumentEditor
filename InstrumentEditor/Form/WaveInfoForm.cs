@@ -15,7 +15,11 @@ namespace InstrumentEditor {
         private WavePlayback mWaveOut;
 
         private Pack mFile;
-        private DLS.CK_WSMP mWaveHeader;
+        private DLS.CK_WSMP mSampler;
+        private DLS.WaveLoop mLoop = new DLS.WaveLoop {
+            Start = 0,
+            Length = 16
+        };
         private int mWaveIndex;
 
         private DoubleBufferBitmap mSpecBmp;
@@ -42,7 +46,7 @@ namespace InstrumentEditor {
 
             mFile = file;
             mWaveIndex = index;
-            mWaveHeader = mFile.Wave.List[index].Sampler;
+            mSampler = mFile.Wave.List[index].Sampler;
         }
 
         private void WaveInfoForm_Load(object sender, EventArgs e) {
@@ -119,31 +123,30 @@ namespace InstrumentEditor {
         #region クリックイベント
         private void btnPlay_Click(object sender, EventArgs e) {
             if ("再生" == btnPlay.Text) {
-                if (0 < mFile.Wave.List[mWaveIndex].Loops.Count) {
-                    ///TODO:LOOP
-                    //mWaveOut.mLoopBegin = (int)mWaveHeader[0].Start;
-                    //mWaveOut.mLoopEnd = mWaveOut.mLoopBegin + (int)mWaveHeader.Loops[0].Length;
-                }
-                else {
+                var fileLoops = mFile.Wave.List[mWaveIndex].Loops;
+                if (0 < fileLoops.Count) {
+                    mWaveOut.mLoopBegin = (int)mLoop.Start;
+                    mWaveOut.mLoopEnd = (int)mLoop.Start + (int)mLoop.Length;
+                } else {
                     mWaveOut.mLoopBegin = 0;
                     mWaveOut.mLoopEnd = mWaveData.Length;
                 }
                 mWaveOut.Play();
                 btnPlay.Text = "停止";
-            }
-            else {
+            } else {
                 mWaveOut.Stop();
                 btnPlay.Text = "再生";
             }
         }
 
         private void btnUpdate_Click(object sender, EventArgs e) {
-            if (0 < mWaveHeader.LoopCount) {
-                ///TODO:LOOP
-                //mFile.Wave[mWaveIndex].Header.Start = mWaveHeader.Start;
-                //mFile.Wave[mWaveIndex].Header.Length = mWaveHeader.Length;
-                btnUpdate.Enabled = false;
+            if (0 < mFile.Wave.List[mWaveIndex].Loops.Count) {
+                mFile.Wave.List[mWaveIndex].Loops[0] = mLoop;
+            } else {
+                mFile.Wave.List[mWaveIndex].Loops.Add(mLoop);
+                mFile.Wave.List[mWaveIndex].Sampler.LoopCount = 1;
             }
+            btnUpdate.Enabled = false;
         }
 
         private void btnUpdateAutoTune_Click(object sender, EventArgs e) {
@@ -156,26 +159,24 @@ namespace InstrumentEditor {
         }
 
         private void btnLoopCreate_Click(object sender, EventArgs e) {
-            ///TODO:LOOP
-            //if (0 < mWaveHeader.LoopEnable) {
-            //    var hd = mFile.Wave[mWaveIndex].Header;
-            //    hd.LoopBegin = 0;
-            //    hd.LoopLength = (uint)mWaveData.Length;
-            //    mWaveOut.mLoopBegin = 0;
-            //    mWaveOut.mLoopEnd = mWaveData.Length;
-            //    mWaveHeader.Start = (uint)mWaveOut.mLoopBegin;
-            //    mWaveHeader.Length = (uint)mWaveOut.mLoopEnd - (uint)mWaveOut.mLoopBegin;
-            //    mFile.Wave[mWaveIndex].Header = hd;
-            //    btnLoopCreate.Text = "ループ作成";
-            //} else {
-            //    var hd = mFile.Wave[mWaveIndex].Header;
-            //    hd.LoopBegin = (uint)hsbTime.Value;
-            //    hd.LoopLength = 128;
-            //    mWaveOut.mLoopBegin = (int)hd.LoopBegin;
-            //    mWaveOut.mLoopEnd = (int)hd.LoopBegin + (int)hd.LoopLength;
-            //    mFile.Wave[mWaveIndex].Header = hd;
-            //    btnLoopCreate.Text = "ループ削除";
-            //}
+            var fileLoops = mFile.Wave.List[mWaveIndex].Loops;
+            if (0 < fileLoops.Count) {
+                mLoop.Start = 0;
+                mLoop.Length = (uint)mWaveData.Length;
+                mWaveOut.mLoopBegin = 0;
+                mWaveOut.mLoopEnd = mWaveData.Length;
+                mFile.Wave.List[mWaveIndex].Loops.Clear();
+                mFile.Wave.List[mWaveIndex].Sampler.LoopCount = 0;
+                btnLoopCreate.Text = "ループ作成";
+            } else {
+                mLoop.Start = (uint)hsbTime.Value;
+                mLoop.Length = (uint)(mWaveData.Length < 256 ? 16 : 256);
+                mWaveOut.mLoopBegin = (int)mLoop.Start;
+                mWaveOut.mLoopEnd = (int)mLoop.Start + (int)mLoop.Length;
+                mFile.Wave.List[mWaveIndex].Loops.Add(mLoop);
+                mFile.Wave.List[mWaveIndex].Sampler.LoopCount = 1;
+                btnLoopCreate.Text = "ループ削除";
+            }
         }
         #endregion
 
@@ -227,11 +228,14 @@ namespace InstrumentEditor {
             onDragWave = false;
             onDragLoopBegin = false;
             onDragLoopEnd = false;
-            ///TODO:LOOP
-            //var fileLoop = mFile.Wave.List[mWaveIndex].Loops;
-            //btnUpdate.Enabled
-            //    = fileLoop.LoopBegin != mWaveHeader.LoopBegin
-            //    || fileLoop.LoopLength != mWaveHeader.LoopLength;
+            var fileLoops = mFile.Wave.List[mWaveIndex].Loops;
+            if (0 < fileLoops.Count) {
+                btnUpdate.Enabled
+                    = fileLoops[0].Start != mLoop.Start
+                    || fileLoops[0].Length != mLoop.Length;
+            } else {
+                btnUpdate.Enabled = true;
+            }
         }
 
         private void picWave_MouseMove(object sender, MouseEventArgs e) {
@@ -242,22 +246,18 @@ namespace InstrumentEditor {
             }
 
             if (onDragLoopBegin) {
-                ///TODO:LOOP
-                //mWaveHeader.LoopBegin = (uint)pos;
+                mLoop.Start = (uint)pos;
             }
-
             if (onDragLoopEnd) {
-                ///TODO:LOOP
-                //if ((pos - 16) < mWaveHeader.LoopBegin) {
-                //    mWaveHeader.LoopLength = 16;
-                //} else {
-                //    mWaveHeader.LoopLength = (uint)pos - mWaveHeader.LoopBegin;
-                //}
+                if ((pos - 16) < mLoop.Start) {
+                    mLoop.Length = 16;
+                } else {
+                    mLoop.Length = (uint)pos - mLoop.Start;
+                }
             }
 
-            ///TODO:LOOP
-            //mWaveOut.mLoopBegin = (int)mWaveHeader.LoopBegin;
-            //mWaveOut.mLoopEnd = (int)mWaveHeader.LoopBegin + (int)mWaveHeader.LoopLength;
+            mWaveOut.mLoopBegin = (int)mLoop.Start;
+            mWaveOut.mLoopEnd = (int)mLoop.Start + (int)mLoop.Length;
         }
 
         private void picWave_MouseEnter(object sender, EventArgs e) {
@@ -459,25 +459,24 @@ namespace InstrumentEditor {
             //
             var wave = mFile.Wave.List[mWaveIndex];
             if (0 < wave.Loops.Count) {
-                ///TODO:LOOP
-                //var loopBegin = (mWaveHeader.LoopBegin - begin) * mWaveTimeScale;
-                //var loopLength = mWaveHeader.LoopLength * mWaveTimeScale;
-                //var loopEnd = loopBegin + loopLength;
-                //graph.FillRectangle(Brushes.WhiteSmoke, loopBegin, 0, loopLength, picWave.Height);
+                var loopBegin = (mLoop.Start - begin) * mWaveTimeScale;
+                var loopLength = mLoop.Length * mWaveTimeScale;
+                var loopEnd = loopBegin + loopLength;
+                graph.FillRectangle(Brushes.WhiteSmoke, loopBegin, 0, loopLength, picWave.Height);
 
-                //if (onWaveDisp && Math.Abs(mCursolPos - loopBegin) <= 8) {
-                //    Cursor = Cursors.SizeWE;
-                //    if (onDragWave && !onDragLoopEnd) {
-                //        onDragLoopBegin = true;
-                //    }
-                //} else if (onWaveDisp && Math.Abs(mCursolPos - loopEnd) <= 8) {
-                //    Cursor = Cursors.SizeWE;
-                //    if (onDragWave && !onDragLoopBegin) {
-                //        onDragLoopEnd = true;
-                //    }
-                //} else {
-                //    Cursor = Cursors.Default;
-                //}
+                if (onWaveDisp && Math.Abs(mCursolPos - loopBegin) <= 8) {
+                    Cursor = Cursors.SizeWE;
+                    if (onDragWave && !onDragLoopEnd) {
+                        onDragLoopBegin = true;
+                    }
+                } else if (onWaveDisp && Math.Abs(mCursolPos - loopEnd) <= 8) {
+                    Cursor = Cursors.SizeWE;
+                    if (onDragWave && !onDragLoopBegin) {
+                        onDragLoopEnd = true;
+                    }
+                } else {
+                    Cursor = Cursors.Default;
+                }
             }
 
             //
