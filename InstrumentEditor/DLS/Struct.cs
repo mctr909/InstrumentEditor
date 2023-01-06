@@ -1,9 +1,9 @@
-﻿using InstPack;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
+
+using InstPack;
 
 namespace DLS {
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
@@ -748,6 +748,35 @@ namespace DLS {
             bw.Dispose();
             fs.Close();
             fs.Dispose();
+        }
+
+        public float[] ToFloat() {
+            var len = Data.Length * 8 / Format.Bits;
+            var ret = new float[len];
+            switch (Format.Bits) {
+            case 8:
+                for (int i = 0; i < len; i++) {
+                    ret[i] = (Data[i] - 128) / 128.0f;
+                }
+                return ret;
+            case 16:
+                for (int i = 0, j = 0; i < len; i++, j += 2) {
+                    ret[i] = (short)(Data[j] | Data[j + 1] << 8) / 32768.0f;
+                }
+                return ret;
+            case 24:
+                for (int i = 0, j = 0; i < len; i++, j += 3) {
+                    ret[i] = (short)(Data[j + 1] | Data[j + 2] << 8) / 32768.0f;
+                }
+                return ret;
+            case 32:
+                for (int i = 0, j = 0; i < len; i++, j += 4) {
+                    ret[i] = (short)(Data[j + 2] | Data[j + 3] << 8) / 32768.0f;
+                }
+                return ret;
+            default:
+                return ret;
+            }
         }
 
         protected override void LoadChunk(IntPtr ptr, string type, long size) {

@@ -345,14 +345,13 @@ namespace InstrumentEditor {
 
         private void SetData() {
             var wave = mFile.Wave.List[mWaveIndex];
-            var samples = wave.Data.Length;
+            var data = wave.ToFloat();
+            var samples = data.Length;
             var packSize = 24;
             samples += packSize * 2 - (samples % (packSize * 2));
 
             mWaveData = new float[samples];
-            for (var i = 0; i < wave.Data.Length; ++i) {
-                mWaveData[i] = wave.Data[i] / 32768.0f;
-            }
+            Array.Copy(data, mWaveData, data.Length);
 
             hsbTime.Value = 0;
             hsbTime.Maximum = samples;

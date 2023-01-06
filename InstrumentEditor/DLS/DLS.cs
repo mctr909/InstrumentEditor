@@ -55,7 +55,7 @@ namespace DLS {
 
             foreach (var wave in WavePool.List) {
                 var waveInfo = new WAVE();
-                waveInfo.Format.SampleRate = wave.Format.SampleRate;
+                waveInfo.Format = wave.Format;
                 if (0 < wave.Loops.Count) {
                     var loop = new WaveLoop();
                     loop.Start = wave.Loops[0].Start;
