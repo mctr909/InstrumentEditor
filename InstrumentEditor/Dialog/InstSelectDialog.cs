@@ -6,9 +6,9 @@ using InstPack;
 namespace InstrumentEditor {
     public partial class InstSelectDialog : Form {
         private Pack mFile;
-        private Layer mLayer;
+        private Region mLayer;
 
-        public InstSelectDialog(Pack file, Layer layer) {
+        public InstSelectDialog(Pack file, Region layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;

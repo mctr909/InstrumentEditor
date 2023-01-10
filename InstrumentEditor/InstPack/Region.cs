@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
 namespace InstPack {
-    public class LLayer {
-        List<Layer> mList = new List<Layer>();
+    public class LRegion {
+        List<Region> mList = new List<Region>();
 
-        public LLayer() { }
+        public LRegion() { }
 
         public void Clear() {
             mList.Clear();
@@ -14,25 +14,25 @@ namespace InstPack {
             get { return mList.Count; }
         }
 
-        public Layer this[int index] {
+        public Region this[int index] {
             get { return mList[index]; }
         }
 
-        public Layer[] ToArray() {
+        public Region[] ToArray() {
             return mList.ToArray();
         }
 
-        public void Add(Layer layer) {
+        public void Add(Region layer) {
             mList.Add(layer);
         }
 
-        public void Update(int index, Layer layer) {
+        public void Update(int index, Region layer) {
             mList[index].Header = layer.Header;
             mList[index].InstIndex = layer.InstIndex;
         }
 
-        public List<Layer> Find(Layer layer) {
-            var ret = new List<Layer>();
+        public List<Region> Find(Region layer) {
+            var ret = new List<Region>();
             foreach (var lyr in mList) {
                 if (layer.Header.Key.Lo <= lyr.Header.Key.Hi && lyr.Header.Key.Lo <= layer.Header.Key.Hi &&
                     layer.Header.Vel.Lo <= lyr.Header.Vel.Hi && lyr.Header.Vel.Lo <= layer.Header.Vel.Hi &&
@@ -43,8 +43,8 @@ namespace InstPack {
             return ret;
         }
 
-        public List<Layer> Find(int noteNo, int velocity) {
-            var ret = new List<Layer>();
+        public List<Region> Find(int noteNo, int velocity) {
+            var ret = new List<Region>();
             foreach (var layer in mList) {
                 if (noteNo <= layer.Header.Key.Hi && layer.Header.Key.Lo <= noteNo &&
                     velocity <= layer.Header.Vel.Hi && layer.Header.Vel.Lo <= velocity) {
@@ -54,7 +54,7 @@ namespace InstPack {
             return ret;
         }
 
-        public bool ContainsKey(Layer layer) {
+        public bool ContainsKey(Region layer) {
             foreach (var lyr in mList) {
                 if (layer.Header.Key.Lo <= lyr.Header.Key.Hi && lyr.Header.Key.Lo <= layer.Header.Key.Hi &&
                     layer.Header.Vel.Lo <= lyr.Header.Vel.Hi && lyr.Header.Vel.Lo <= layer.Header.Vel.Hi &&
@@ -76,7 +76,7 @@ namespace InstPack {
         }
 
         public void Remove(int index) {
-            var tmp = new List<Layer>();
+            var tmp = new List<Region>();
             for (var iLayer = 0; iLayer < mList.Count; iLayer++) {
                 if (iLayer != index) {
                     tmp.Add(mList[iLayer]);
@@ -87,11 +87,11 @@ namespace InstPack {
         }
     }
 
-    public class Layer : Riff {
+    public class Region : Riff {
         public DLS.CK_RGNH Header;
         public int InstIndex;
         public DLS.LART Articulations = new DLS.LART();
 
-        public Layer() { }
+        public Region() { }
     }
 }

@@ -72,7 +72,7 @@ namespace InstPack {
             foreach (int selectedIndex in indices) {
                 var deletable = true;
                 foreach (var preset in Preset.Values) {
-                    foreach (var layer in preset.Layer.ToArray()) {
+                    foreach (var layer in preset.Regions.ToArray()) {
                         if (selectedIndex == layer.InstIndex) {
                             deletable = false;
                             break;
@@ -113,8 +113,8 @@ namespace InstPack {
 
             // update preset's layer art
             foreach (var preset in Preset.Values) {
-                for (var iLayer = 0; iLayer < preset.Layer.Count; iLayer++) {
-                    var layer = preset.Layer[iLayer];
+                for (var iLayer = 0; iLayer < preset.Regions.Count; iLayer++) {
+                    var layer = preset.Regions[iLayer];
                     var iInst = layer.InstIndex;
                     if (renumberingList.ContainsKey(iInst)) {
                         layer.InstIndex = renumberingList[iInst];

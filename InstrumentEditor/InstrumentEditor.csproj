@@ -85,7 +85,7 @@
     </Compile>
     <Compile Include="InstPack\Inst.cs" />
     <Compile Include="InstPack\InstPack.cs" />
-    <Compile Include="InstPack\Layer.cs" />
+    <Compile Include="InstPack\Region.cs" />
     <Compile Include="InstPack\Preset.cs" />
     <Compile Include="Riff.cs" />
     <Compile Include="DLS\DLS.cs" />

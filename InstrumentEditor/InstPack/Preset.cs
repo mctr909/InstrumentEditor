@@ -45,7 +45,7 @@ namespace InstPack {
     public class Preset {
         public PREH Header;
         public DLS.LART Articulations = new DLS.LART();
-        public LLayer Layer = new LLayer();
+        public LRegion Regions = new LRegion();
         public Info Info = new Info();
 
         public Preset() { }

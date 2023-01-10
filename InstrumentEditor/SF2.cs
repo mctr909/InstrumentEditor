@@ -688,22 +688,22 @@ namespace SF2 {
                 }
 
                 foreach (var sf2PresRng in sf2Pres.Value.Range) {
-                    var layer = new Layer();
-                    layer.Header.Key.Lo = sf2PresRng.keyLo;
-                    layer.Header.Key.Hi = sf2PresRng.keyHi;
-                    layer.Header.Vel.Lo = sf2PresRng.velLo;
-                    layer.Header.Vel.Hi = sf2PresRng.velHi;
+                    var rgn = new Region();
+                    rgn.Header.Key.Lo = sf2PresRng.keyLo;
+                    rgn.Header.Key.Hi = sf2PresRng.keyHi;
+                    rgn.Header.Vel.Lo = sf2PresRng.velLo;
+                    rgn.Header.Vel.Hi = sf2PresRng.velHi;
 
                     foreach(var art in sf2PresRng.Art) {
                         switch (art.Key) {
                         case E_OPER.INITIAL_ATTENUATION:
-                            layer.Articulations.Add(new Connection {
+                            rgn.Articulations.Add(new Connection {
                                 Destination = DST_TYPE.GAIN,
                                 Value = art.Value
                             });
                             break;
                         case E_OPER.PAN:
-                            layer.Articulations.Add(new Connection {
+                            rgn.Articulations.Add(new Connection {
                                 Destination = DST_TYPE.PAN,
                                 Value = art.Value
                             });
@@ -714,17 +714,17 @@ namespace SF2 {
                             //layer.Art.Add(layerArt);
                             break;
                         case E_OPER.FINETUNE:
-                            layer.Articulations.Add(new Connection {
+                            rgn.Articulations.Add(new Connection {
                                 Destination = DST_TYPE.PITCH,
                                 Value = art.Value
                             });
                             break;
                         case E_OPER.INSTRUMENT:
-                            layer.InstIndex = (int)art.Value;
+                            rgn.InstIndex = (int)art.Value;
                             break;
                         }
                     }
-                    preset.Layer.Add(layer);
+                    preset.Regions.Add(rgn);
                 }
                 instFile.Preset.Add(preset.Header, preset);
             }

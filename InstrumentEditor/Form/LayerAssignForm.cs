@@ -109,7 +109,7 @@ namespace InstrumentEditor {
 
             tscLayer.Items.Clear();
 
-            foreach (var layer in mPreset.Layer.ToArray()) {
+            foreach (var layer in mPreset.Regions.ToArray()) {
                 var instIndex = layer.InstIndex;
                 var instName = "";
                 if (instIndex < mFile.Inst.Count) {
@@ -165,19 +165,19 @@ namespace InstrumentEditor {
         }
 
         private void AddLayer() {
-            var layer = new Layer();
-            layer.Header.Key.Lo = byte.MaxValue;
-            var fm = new LayerInfoDialog(mFile, layer);
+            var rgn = new InstPack.Region();
+            rgn.Header.Key.Lo = byte.MaxValue;
+            var fm = new LayerInfoDialog(mFile, rgn);
             fm.ShowDialog();
-            if (byte.MaxValue != layer.Header.Key.Lo) {
-                mPreset.Layer.Add(layer);
+            if (byte.MaxValue != rgn.Header.Key.Lo) {
+                mPreset.Regions.Add(rgn);
                 DispLayerInfo();
             }
         }
 
-        private void EditLayer(Layer layer) {
-            if (mPreset.Layer.ContainsKey(layer)) {
-                var fm = new LayerInfoDialog(mFile, mPreset.Layer.Find(layer)[0]);
+        private void EditLayer(InstPack.Region layer) {
+            if (mPreset.Regions.ContainsKey(layer)) {
+                var fm = new LayerInfoDialog(mFile, mPreset.Regions.Find(layer)[0]);
                 fm.ShowDialog();
                 DispLayerInfo();
                 DispLayerRanges();
@@ -213,18 +213,18 @@ namespace InstrumentEditor {
             return pos;
         }
 
-        private Layer PosToRange() {
-            var range = new Layer();
+        private InstPack.Region PosToRange() {
+            var rgn = new InstPack.Region();
             var pos = LayerPos();
-            foreach (var layer in mPreset.Layer.ToArray()) {
+            foreach (var layer in mPreset.Regions.ToArray()) {
                 if (layer.Header.Key.Lo <= pos.X && pos.X <= layer.Header.Key.Hi &&
                     layer.Header.Vel.Lo <= pos.Y && pos.Y <= layer.Header.Vel.Hi) {
-                    range.Header = layer.Header;
-                    range.InstIndex = layer.InstIndex;
+                    rgn.Header = layer.Header;
+                    rgn.InstIndex = layer.InstIndex;
                     break;
                 }
             }
-            return range;
+            return rgn;
         }
 
         private void DrawBackground() {

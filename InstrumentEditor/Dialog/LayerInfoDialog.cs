@@ -7,9 +7,9 @@ using InstPack;
 namespace InstrumentEditor {
     public partial class LayerInfoDialog : Form {
         private Pack mFile;
-        private Layer mLayer;
+        private Region mLayer;
 
-        public LayerInfoDialog(Pack file, Layer layer) {
+        public LayerInfoDialog(Pack file, Region layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 

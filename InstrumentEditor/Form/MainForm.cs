@@ -439,13 +439,13 @@ namespace InstrumentEditor {
             mClipboardPreset = new Preset();
             mClipboardPreset.Header = preset.Header;
             // Layer
-            mClipboardPreset.Layer.Clear();
-            foreach (var layer in preset.Layer.ToArray()) {
-                var tmp = new Layer {
+            mClipboardPreset.Regions.Clear();
+            foreach (var layer in preset.Regions.ToArray()) {
+                var tmp = new Region {
                     Header = layer.Header
                 };
                 tmp.Articulations.AddRange(layer.Articulations.List);
-                mClipboardPreset.Layer.Add(tmp);
+                mClipboardPreset.Regions.Add(tmp);
             }
             // Articulations
             mClipboardPreset.Articulations.Clear();
@@ -687,7 +687,7 @@ namespace InstrumentEditor {
                 var inst = mPack.Inst[iInst];
                 var use = false;
                 foreach (var preset in mPack.Preset.Values) {
-                    foreach (var layer in preset.Layer.ToArray()) {
+                    foreach (var layer in preset.Regions.ToArray()) {
                         if (iInst == layer.InstIndex) {
                             use = true;
                             break;

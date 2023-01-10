@@ -81,14 +81,14 @@ namespace DLS {
                 pres.Header.BankLSB = dlsInst.Key.BankLSB;
                 pres.Header.ProgNum = dlsInst.Key.ProgNum;
 
-                var lyr = new Layer();
-                lyr.Header.Key.Lo = 0;
-                lyr.Header.Key.Hi = 127;
-                lyr.Header.Vel.Lo = 0;
-                lyr.Header.Vel.Hi = 127;
-                lyr.InstIndex = pack.Inst.Count;
+                var rgn = new Region();
+                rgn.Header.Key.Lo = 0;
+                rgn.Header.Key.Hi = 127;
+                rgn.Header.Vel.Lo = 0;
+                rgn.Header.Vel.Hi = 127;
+                rgn.InstIndex = pack.Inst.Count;
 
-                pres.Layer.Add(lyr);
+                pres.Regions.Add(rgn);
                 pres.Info.CopyFrom(dlsInst.Value.Info);
                 pres.Info[Info.TYPE.ICRD] = now;
                 pack.Preset.Add(pres.Header, pres);
@@ -108,12 +108,12 @@ namespace DLS {
                 }
 
                 foreach (var dlsRegion in dlsInst.Value.Regions.List) {
-                    var rgn = new RGN();
-                    rgn.Header = dlsRegion.Key;
-                    rgn.WaveLink = dlsRegion.Value.WaveLink;
-                    rgn.Sampler = dlsRegion.Value.Sampler;
+                    var tmpRgn = new RGN();
+                    tmpRgn.Header = dlsRegion.Key;
+                    tmpRgn.WaveLink = dlsRegion.Value.WaveLink;
+                    tmpRgn.Sampler = dlsRegion.Value.Sampler;
                     foreach (var src in dlsRegion.Value.Loops) {
-                        rgn.Loops.Add(new WaveLoop() {
+                        tmpRgn.Loops.Add(new WaveLoop() {
                             Start = src.Start,
                             Length = src.Length
                         });
@@ -125,9 +125,9 @@ namespace DLS {
                             Destination = regionArt.Destination,
                             Value = regionArt.Value
                         };
-                        rgn.Articulations.Add(art);
+                        tmpRgn.Articulations.Add(art);
                     }
-                    inst.Regions.Add(rgn);
+                    inst.Regions.Add(tmpRgn);
                 }
                 pack.Inst.Add(inst);
             }
@@ -178,11 +178,11 @@ namespace DLS {
             saveFile.Instruments = new LINS();
             saveFile.Instruments.List = new SortedDictionary<MidiLocale, INS>(new LINS.Sort());
             foreach (var srcPre in pack.Preset.Values) {
-                if (1 != srcPre.Layer.Count) {
+                if (1 != srcPre.Regions.Count) {
                     continue;
                 }
 
-                var srcIns = pack.Inst[srcPre.Layer[0].InstIndex];
+                var srcIns = pack.Inst[srcPre.Regions[0].InstIndex];
 
                 var ins = new INS();
                 ins.Header = new CK_INSH();
