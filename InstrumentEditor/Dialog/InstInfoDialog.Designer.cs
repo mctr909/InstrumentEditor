@@ -31,7 +31,7 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.grbCategory = new System.Windows.Forms.GroupBox();
             this.cmbCategory = new System.Windows.Forms.ComboBox();
-            this.envelope1 = new InstrumentEditor.Envelope();
+            this.envelope1 = new InstrumentEditor.Articulations();
             this.groupBox5.SuspendLayout();
             this.grbCategory.SuspendLayout();
             this.SuspendLayout();
@@ -128,6 +128,6 @@
 		private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox grbCategory;
         private System.Windows.Forms.ComboBox cmbCategory;
-        private Envelope envelope1;
+        private Articulations envelope1;
     }
 }

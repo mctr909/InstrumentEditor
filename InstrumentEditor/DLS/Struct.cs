@@ -145,6 +145,42 @@ namespace DLS {
             }
         }
 
+        public string Unit {
+            get {
+                switch (Destination) {
+                case DST_TYPE.GAIN:
+                case DST_TYPE.FILTER_Q:
+                    return "db";
+                case DST_TYPE.PAN:
+                    return "-0.5 to +0.5";
+                case DST_TYPE.LFO_START_DELAY:
+                case DST_TYPE.VIB_START_DELAY:
+                case DST_TYPE.EG1_ATTACK_TIME:
+                case DST_TYPE.EG1_DECAY_TIME:
+                case DST_TYPE.EG1_RELEASE_TIME:
+                case DST_TYPE.EG1_DELAY_TIME:
+                case DST_TYPE.EG1_HOLD_TIME:
+                case DST_TYPE.EG1_SHUTDOWN_TIME:
+                case DST_TYPE.EG2_ATTACK_TIME:
+                case DST_TYPE.EG2_DECAY_TIME:
+                case DST_TYPE.EG2_RELEASE_TIME:
+                case DST_TYPE.EG2_DELAY_TIME:
+                case DST_TYPE.EG2_HOLD_TIME:
+                    return "sec";
+                case DST_TYPE.EG1_SUSTAIN_LEVEL:
+                case DST_TYPE.EG2_SUSTAIN_LEVEL:
+                    return "";
+                case DST_TYPE.PITCH:
+                case DST_TYPE.LFO_FREQUENCY:
+                case DST_TYPE.VIB_FREQUENCY:
+                case DST_TYPE.FILTER_CUTOFF:
+                    return "Hz";
+                default:
+                    return "";
+                }
+            }
+        }
+
         public void Write(BinaryWriter bw) {
             bw.Write((ushort)Source);
             bw.Write((ushort)Control);

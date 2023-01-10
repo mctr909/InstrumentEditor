@@ -44,7 +44,7 @@
             this.grbVolume = new System.Windows.Forms.GroupBox();
             this.numVolume = new System.Windows.Forms.NumericUpDown();
             this.chkLoop = new System.Windows.Forms.CheckBox();
-            this.envelope1 = new InstrumentEditor.Envelope();
+            this.envelope1 = new InstrumentEditor.Articulations();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyLow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyHigh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVelocityHigh)).BeginInit();
@@ -420,6 +420,6 @@
         private System.Windows.Forms.GroupBox grbVolume;
         private System.Windows.Forms.NumericUpDown numVolume;
         private System.Windows.Forms.CheckBox chkLoop;
-        private Envelope envelope1;
+        private Articulations envelope1;
     }
 }

@@ -78,7 +78,7 @@ namespace InstrumentEditor {
             saveFileDialog1.CheckPathExists = true;
             saveFileDialog1.ShowDialog();
             var filePath = saveFileDialog1.FileName;
-            if (!Directory.Exists(Path.GetDirectoryName(filePath))) {
+            if (string.IsNullOrWhiteSpace(filePath) || !Directory.Exists(Path.GetDirectoryName(filePath))) {
                 return;
             }
 

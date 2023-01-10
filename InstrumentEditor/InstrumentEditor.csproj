@@ -126,11 +126,11 @@
     <Compile Include="Form\WaveInfoForm.Designer.cs">
       <DependentUpon>WaveInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\Envelope.cs">
+    <Compile Include="Form\Articulations.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Form\Envelope.Designer.cs">
-      <DependentUpon>Envelope.cs</DependentUpon>
+    <Compile Include="Form\Articulations.Designer.cs">
+      <DependentUpon>Articulations.cs</DependentUpon>
     </Compile>
     <Compile Include="WaveOutLib.cs" />
     <Compile Include="WavePlayback.cs" />
@@ -183,8 +183,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Form\Envelope.resx">
-      <DependentUpon>Envelope.cs</DependentUpon>
+    <EmbeddedResource Include="Form\Articulations.resx">
+      <DependentUpon>Articulations.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
