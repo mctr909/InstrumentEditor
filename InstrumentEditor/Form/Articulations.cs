@@ -106,23 +106,23 @@ namespace InstrumentEditor {
             dataGridView1.Columns.Clear();
             dataGridView1.Rows.Clear();
 
-            var srcMenu = new DataGridViewComboBoxColumn();
-            srcMenu.Name = "Source";
+            var cmbSrc = new DataGridViewComboBoxColumn();
+            cmbSrc.Name = "Source";
             foreach (var src in Enum.GetNames(typeof(SRC_TYPE))) {
-                srcMenu.Items.Add(src);
+                cmbSrc.Items.Add(src);
             }
-            srcMenu.MinimumWidth = 100;
-            srcMenu.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns.Add(srcMenu);
+            cmbSrc.MinimumWidth = 100;
+            cmbSrc.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns.Add(cmbSrc);
             
-            var typeMenu = new DataGridViewComboBoxColumn();
-            typeMenu.Name = "Type";
+            var cmbType = new DataGridViewComboBoxColumn();
+            cmbType.Name = "Type";
             foreach (var type in Enum.GetNames(typeof(DST_TYPE))) {
-                typeMenu.Items.Add(type);
+                cmbType.Items.Add(type);
             }
-            typeMenu.MinimumWidth = 100;
-            typeMenu.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
-            dataGridView1.Columns.Add(typeMenu);
+            cmbType.MinimumWidth = 100;
+            cmbType.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
+            dataGridView1.Columns.Add(cmbType);
             
             var val = new DataGridViewTextBoxColumn();
             val.Name = "Value";
@@ -132,7 +132,6 @@ namespace InstrumentEditor {
             
             var unit = new DataGridViewTextBoxColumn();
             unit.Name = "Unit";
-            unit.MinimumWidth = 20;
             unit.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             unit.ReadOnly = true;
             dataGridView1.Columns.Add(unit);

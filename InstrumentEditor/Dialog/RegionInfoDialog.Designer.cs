@@ -44,7 +44,7 @@
             this.grbVolume = new System.Windows.Forms.GroupBox();
             this.numVolume = new System.Windows.Forms.NumericUpDown();
             this.chkLoop = new System.Windows.Forms.CheckBox();
-            this.envelope1 = new InstrumentEditor.Articulations();
+            this.artList = new InstrumentEditor.Articulations();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyLow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numKeyHigh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numVelocityHigh)).BeginInit();
@@ -347,23 +347,23 @@
             this.chkLoop.Text = "ループ有効";
             this.chkLoop.UseVisualStyleBackColor = true;
             // 
-            // envelope1
+            // artList
             // 
-            this.envelope1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.envelope1.Art = null;
-            this.envelope1.AutoSize = true;
-            this.envelope1.Location = new System.Drawing.Point(6, 139);
-            this.envelope1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.envelope1.Name = "envelope1";
-            this.envelope1.Size = new System.Drawing.Size(325, 333);
-            this.envelope1.TabIndex = 8;
+            this.artList.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.artList.Art = null;
+            this.artList.AutoSize = true;
+            this.artList.Location = new System.Drawing.Point(6, 139);
+            this.artList.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.artList.Name = "artList";
+            this.artList.Size = new System.Drawing.Size(518, 518);
+            this.artList.TabIndex = 8;
             // 
             // RegionInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(335, 388);
-            this.Controls.Add(this.envelope1);
+            this.ClientSize = new System.Drawing.Size(529, 663);
+            this.Controls.Add(this.artList);
             this.Controls.Add(this.chkLoop);
             this.Controls.Add(this.grbVolume);
             this.Controls.Add(this.grbFineTune);
@@ -420,6 +420,6 @@
         private System.Windows.Forms.GroupBox grbVolume;
         private System.Windows.Forms.NumericUpDown numVolume;
         private System.Windows.Forms.CheckBox chkLoop;
-        private Articulations envelope1;
+        private Articulations artList;
     }
 }

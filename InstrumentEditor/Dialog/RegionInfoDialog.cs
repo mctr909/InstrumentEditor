@@ -82,7 +82,7 @@ namespace InstrumentEditor {
             var gain = (int)(20 * numVolume.Value) / 400.0;
             mRegion.Sampler.Gain = (float)Math.Pow(10.0, gain);
 
-            envelope1.SetList(mRegion.Articulations);
+            artList.SetList(mRegion.Articulations);
 
             Close();
         }
@@ -121,17 +121,17 @@ namespace InstrumentEditor {
             grbVolume.Top = grbUnityNote.Top;
             grbVolume.Left = grbFineTune.Left + grbFineTune.Width + 6;
 
-            envelope1.Top = grbVolume.Top + grbVolume.Height + 6;
-            envelope1.Left = grbUnityNote.Left;
+            artList.Top = grbVolume.Top + grbVolume.Height + 6;
+            artList.Left = grbUnityNote.Left;
 
-            envelope1.Art = mRegion.Articulations.List;
+            artList.Art = mRegion.Articulations.List;
 
-            chkLoop.Top = envelope1.Top + envelope1.Height + 6;
+            chkLoop.Top = artList.Top + artList.Height + 6;
 
             btnAdd.Top = chkLoop.Top;
-            btnAdd.Left = envelope1.Right - btnAdd.Width;
+            btnAdd.Left = artList.Right - btnAdd.Width;
 
-            Width = envelope1.Left + envelope1.Width + 24;
+            Width = artList.Left + artList.Width + 24;
             Height = btnAdd.Top + btnAdd.Height + 48;
         }
 

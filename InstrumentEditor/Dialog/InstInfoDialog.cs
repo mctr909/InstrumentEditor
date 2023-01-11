@@ -22,7 +22,7 @@ namespace InstrumentEditor {
             mFile = file;
             mInst = inst;
             txtInstName.Text = mInst.Info[Info.TYPE.INAM];
-            envelope1.Art = mInst.Articulations.List;
+            artList.Art = mInst.Articulations.List;
             btnAdd.Text = "反映";
         }
 
@@ -44,11 +44,11 @@ namespace InstrumentEditor {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
                 mFile.Inst.Add(mInst);
-                envelope1.SetList(mInst.Articulations);
+                artList.SetList(mInst.Articulations);
             } else {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
-                envelope1.SetList(mInst.Articulations);
+                artList.SetList(mInst.Articulations);
             }
             Close();
         }
@@ -70,9 +70,9 @@ namespace InstrumentEditor {
         }
 
         private void setPos() {
-            btnAdd.Top = envelope1.Bottom + 4;
-            btnAdd.Left = envelope1.Right - btnAdd.Width;
-            Width = envelope1.Right + 24;
+            btnAdd.Top = artList.Bottom + 4;
+            btnAdd.Left = artList.Right - btnAdd.Width;
+            Width = artList.Right + 24;
             Height = btnAdd.Bottom + 48;
         }
     }

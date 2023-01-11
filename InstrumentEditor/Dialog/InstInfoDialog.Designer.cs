@@ -31,7 +31,7 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.grbCategory = new System.Windows.Forms.GroupBox();
             this.cmbCategory = new System.Windows.Forms.ComboBox();
-            this.envelope1 = new InstrumentEditor.Articulations();
+            this.artList = new InstrumentEditor.Articulations();
             this.groupBox5.SuspendLayout();
             this.grbCategory.SuspendLayout();
             this.SuspendLayout();
@@ -47,7 +47,7 @@
             // btnAdd
             // 
             this.btnAdd.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnAdd.Location = new System.Drawing.Point(274, 428);
+            this.btnAdd.Location = new System.Drawing.Point(462, 611);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(59, 24);
             this.btnAdd.TabIndex = 6;
@@ -91,22 +91,22 @@
             this.cmbCategory.TabIndex = 0;
             this.cmbCategory.Leave += new System.EventHandler(this.cmbCategory_Leave);
             // 
-            // envelope1
+            // artList
             // 
-            this.envelope1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.envelope1.Art = null;
-            this.envelope1.Location = new System.Drawing.Point(5, 90);
-            this.envelope1.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.envelope1.Name = "envelope1";
-            this.envelope1.Size = new System.Drawing.Size(328, 334);
-            this.envelope1.TabIndex = 7;
+            this.artList.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.artList.Art = null;
+            this.artList.Location = new System.Drawing.Point(5, 90);
+            this.artList.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
+            this.artList.Name = "artList";
+            this.artList.Size = new System.Drawing.Size(516, 517);
+            this.artList.TabIndex = 7;
             // 
             // InstInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(335, 458);
-            this.Controls.Add(this.envelope1);
+            this.ClientSize = new System.Drawing.Size(525, 640);
+            this.Controls.Add(this.artList);
             this.Controls.Add(this.grbCategory);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.btnAdd);
@@ -128,6 +128,6 @@
 		private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox grbCategory;
         private System.Windows.Forms.ComboBox cmbCategory;
-        private Articulations envelope1;
+        private Articulations artList;
     }
 }

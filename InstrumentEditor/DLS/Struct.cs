@@ -169,7 +169,7 @@ namespace DLS {
                     return "sec";
                 case DST_TYPE.EG1_SUSTAIN_LEVEL:
                 case DST_TYPE.EG2_SUSTAIN_LEVEL:
-                    return "";
+                    return "%";
                 case DST_TYPE.PITCH:
                 case DST_TYPE.LFO_FREQUENCY:
                 case DST_TYPE.VIB_FREQUENCY:
