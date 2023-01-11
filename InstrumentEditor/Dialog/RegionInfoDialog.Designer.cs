@@ -355,14 +355,14 @@
             this.artList.Location = new System.Drawing.Point(6, 139);
             this.artList.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
             this.artList.Name = "artList";
-            this.artList.Size = new System.Drawing.Size(518, 518);
+            this.artList.Size = new System.Drawing.Size(445, 518);
             this.artList.TabIndex = 8;
             // 
             // RegionInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(529, 663);
+            this.ClientSize = new System.Drawing.Size(456, 663);
             this.Controls.Add(this.artList);
             this.Controls.Add(this.chkLoop);
             this.Controls.Add(this.grbVolume);

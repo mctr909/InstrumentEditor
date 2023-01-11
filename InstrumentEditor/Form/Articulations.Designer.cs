@@ -34,7 +34,7 @@
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 21;
-            this.dataGridView1.Size = new System.Drawing.Size(506, 506);
+            this.dataGridView1.Size = new System.Drawing.Size(433, 506);
             this.dataGridView1.TabIndex = 0;
             // 
             // Articulations
@@ -45,7 +45,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
             this.Name = "Articulations";
-            this.Size = new System.Drawing.Size(512, 512);
+            this.Size = new System.Drawing.Size(439, 512);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 

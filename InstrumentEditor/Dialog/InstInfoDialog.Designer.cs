@@ -47,7 +47,7 @@
             // btnAdd
             // 
             this.btnAdd.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnAdd.Location = new System.Drawing.Point(462, 611);
+            this.btnAdd.Location = new System.Drawing.Point(391, 611);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(59, 24);
             this.btnAdd.TabIndex = 6;
@@ -98,14 +98,14 @@
             this.artList.Location = new System.Drawing.Point(5, 90);
             this.artList.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
             this.artList.Name = "artList";
-            this.artList.Size = new System.Drawing.Size(516, 517);
+            this.artList.Size = new System.Drawing.Size(445, 517);
             this.artList.TabIndex = 7;
             // 
             // InstInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(525, 640);
+            this.ClientSize = new System.Drawing.Size(455, 640);
             this.Controls.Add(this.artList);
             this.Controls.Add(this.grbCategory);
             this.Controls.Add(this.groupBox5);
