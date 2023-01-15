@@ -34,13 +34,13 @@ namespace InstrumentEditor {
         private void timer1_Tick(object sender, EventArgs e) {
             txtRegion.Text = "";
             if (mOnRange) {
-                var posRegion = PosToRegion();
+                var posKeyVel = PosToKeyVel();
                 txtRegion.Text = string.Format(
                     "強弱:{0} 音程:{1}({2}{3})",
-                    posRegion.Y.ToString("000"),
-                    posRegion.X.ToString("000"),
-                    Const.NoteName[posRegion.X % 12],
-                    (posRegion.X / 12 - 2)
+                    posKeyVel.Y.ToString("000"),
+                    posKeyVel.X.ToString("000"),
+                    Const.NoteName[posKeyVel.X % 12],
+                    (posKeyVel.X / 12 - 2)
                 );
             }
         }
@@ -79,15 +79,17 @@ namespace InstrumentEditor {
 
         #region 音程/強弱割り当て
         private void tsbAddRange_Click(object sender, EventArgs e) {
-            AddRegion();
+            tsbAddRange.Checked = true;
+            tsbDeleteRange.Checked = false;
         }
 
         private void tsbDeleteRange_Click(object sender, EventArgs e) {
-            DeleteRegion();
+            tsbAddRange.Checked = false;
+            tsbDeleteRange.Checked = true;
         }
 
         private void picRegion_DoubleClick(object sender, EventArgs e) {
-            EditRegion(PosToRange());
+            EditRegion(PosToRgnh());
         }
 
         private void picRegion_MouseEnter(object sender, EventArgs e) {
@@ -131,35 +133,32 @@ namespace InstrumentEditor {
             picRegion.Image = bmp;
         }
 
-        private void AddRegion() {
-            var region = new RGN();
-            region.Header.Key.Lo = byte.MaxValue;
-            var fm = new RegionInfoDialog(mFile, region);
-            fm.ShowDialog();
-
-            if (byte.MaxValue != region.Header.Key.Lo) {
-                mInst.Regions.Add(region);
-                DispRegionInfo();
-            }
-        }
-
         private void EditRegion(CK_RGNH range) {
-            if (mInst.Regions.ContainsKey(range)) {
-                var region = mInst.Regions.FindFirst(range);
-                var fm = new RegionInfoDialog(mFile, region);
-                fm.ShowDialog();
+            if (tsbDeleteRange.Checked) {
+                mInst.Regions.Remove(range);
                 DispRegionInfo();
             } else {
-                AddRegion();
+                if (mInst.Regions.ContainsKey(range)) {
+                    var rgn = mInst.Regions.FindFirst(range);
+                    var fm = new RegionInfoDialog(mFile, rgn);
+                    fm.ShowDialog();
+                    DispRegionInfo();
+                } else {
+                    var pos = PosToKeyVel();
+                    var rgn = new RGN();
+                    rgn.Header.Key.Lo = (byte)pos.X;
+                    rgn.Header.Key.Hi = (byte)pos.X;
+                    var fm = new RegionInfoDialog(mFile, rgn);
+                    fm.ShowDialog();
+                    if (byte.MaxValue != rgn.Header.Key.Lo) {
+                        mInst.Regions.Add(rgn);
+                        DispRegionInfo();
+                    }
+                }
             }
         }
 
-        private void DeleteRegion() {
-            //mInst.Regions.Remove(range);
-            DispRegionInfo();
-        }
-
-        private Point PosToRegion() {
+        private Point PosToKeyVel() {
             var posRegion = picRegion.PointToClient(Cursor.Position);
             if (posRegion.X < 0) {
                 posRegion.X = 0;
@@ -181,12 +180,12 @@ namespace InstrumentEditor {
             return posRegion;
         }
 
-        private CK_RGNH PosToRange() {
+        private CK_RGNH PosToRgnh() {
             var range = new CK_RGNH();
-            var posRegion = PosToRegion();
+            var posKeyVel = PosToKeyVel();
             foreach (var rgn in mInst.Regions.Array) {
-                if (rgn.Header.Key.Lo <= posRegion.X && posRegion.X <= rgn.Header.Key.Hi &&
-                    rgn.Header.Vel.Lo <= posRegion.Y && posRegion.Y <= rgn.Header.Vel.Hi) {
+                if (rgn.Header.Key.Lo <= posKeyVel.X && posKeyVel.X <= rgn.Header.Key.Hi &&
+                    rgn.Header.Vel.Lo <= posKeyVel.Y && posKeyVel.Y <= rgn.Header.Vel.Hi) {
                     range = rgn.Header;
                     break;
                 }
