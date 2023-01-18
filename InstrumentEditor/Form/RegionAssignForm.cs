@@ -147,7 +147,7 @@ namespace InstrumentEditor {
                     var pos = PosToKeyVel();
                     var rgn = new RGN();
                     rgn.Header.Key.Lo = (byte)pos.X;
-                    rgn.Header.Key.Hi = (byte)pos.X;
+                    rgn.Header.Key.Hi = byte.MaxValue;
                     var fm = new RegionInfoDialog(mFile, rgn);
                     fm.ShowDialog();
                     if (byte.MaxValue != rgn.Header.Key.Lo) {

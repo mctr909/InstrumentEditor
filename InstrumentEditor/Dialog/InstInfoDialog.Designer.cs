@@ -47,7 +47,7 @@
             // btnAdd
             // 
             this.btnAdd.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnAdd.Location = new System.Drawing.Point(391, 363);
+            this.btnAdd.Location = new System.Drawing.Point(391, 396);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(59, 24);
             this.btnAdd.TabIndex = 6;
@@ -98,21 +98,21 @@
             this.artList.Location = new System.Drawing.Point(5, 90);
             this.artList.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
             this.artList.Name = "artList";
-            this.artList.Size = new System.Drawing.Size(445, 269);
+            this.artList.Size = new System.Drawing.Size(445, 302);
             this.artList.TabIndex = 7;
             // 
             // InstInfoDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(455, 394);
+            this.ClientSize = new System.Drawing.Size(455, 422);
             this.Controls.Add(this.artList);
             this.Controls.Add(this.grbCategory);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.btnAdd);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "InstInfoDialog";
-            this.Text = "音色追加";
+            this.Text = "音色";
             this.Load += new System.EventHandler(this.InstInfoDialog_Load);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();

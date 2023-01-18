@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 using DLS;
@@ -174,9 +175,10 @@ namespace InstrumentEditor {
         }
 
         private void DispRegionInfo() {
-            if (byte.MaxValue == mRegion.Header.Key.Lo) {
-                numKeyLow.Value = 63;
-                numKeyHigh.Value = 63;
+            if (byte.MaxValue == mRegion.Header.Key.Hi) {
+                mRegion.Header.Key.Hi = mRegion.Header.Key.Lo;
+                numKeyLow.Value = mRegion.Header.Key.Lo;
+                numKeyHigh.Value = mRegion.Header.Key.Hi;
                 numVelocityLow.Value = 0;
                 numVelocityHigh.Value = 127;
                 btnEditWave.Enabled = false;
