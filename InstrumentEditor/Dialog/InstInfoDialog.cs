@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
 using DLS;
@@ -16,13 +15,18 @@ namespace InstrumentEditor {
             mFile = file;
         }
 
-        public InstInfoDialog(Pack file, INS inst) {
+        public InstInfoDialog(Pack file, INS inst, bool dispArt = true) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mInst = inst;
             txtInstName.Text = mInst.Info[Info.TYPE.INAM];
-            artList.Art = mInst.Articulations.List;
+            if (dispArt) {
+                artList.Art = mInst.Articulations.List;
+            } else {
+                artList.Visible = false;
+                txtInstName.Enabled = false;
+            }
             btnAdd.Text = "反映";
         }
 
@@ -70,10 +74,17 @@ namespace InstrumentEditor {
         }
 
         private void setPos() {
-            btnAdd.Top = artList.Bottom + 4;
-            btnAdd.Left = artList.Right - btnAdd.Width;
-            Width = artList.Right + 24;
-            Height = btnAdd.Bottom + 48;
+            if (artList.Visible) {
+                btnAdd.Top = artList.Bottom + 4;
+                btnAdd.Left = artList.Right - btnAdd.Width;
+                Width = artList.Right + 24;
+                Height = btnAdd.Bottom + 48;
+            } else {
+                btnAdd.Top = grbCategory.Bottom + 4;
+                btnAdd.Left = grbCategory.Right - btnAdd.Width;
+                Width = grbCategory.Right + 24;
+                Height = btnAdd.Bottom + 48;
+            }
         }
     }
 }

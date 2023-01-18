@@ -732,7 +732,7 @@ namespace InstrumentEditor {
             }
             if (1 < lst.Count) {
                 var inst = new INS();
-                var fm = new InstInfoDialog(mPack, inst);
+                var fm = new InstInfoDialog(mPack, inst, false);
                 fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info[Info.TYPE.ICAT] = inst.Info[Info.TYPE.ICAT];
