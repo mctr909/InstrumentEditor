@@ -185,13 +185,11 @@ namespace DLS {
                 var srcIns = pack.Inst[srcPre.Regions[0].InstIndex];
 
                 var ins = new INS();
-                ins.Header = new INS.HEADER();
-                ins.Header.Locale = new MidiLocale();
-                ins.Header.Locale.BankFlg = (byte)(srcPre.Header.IsDrum ? 0x80 : 0x00);
-                ins.Header.Locale.BankMSB = srcPre.Header.BankMSB;
-                ins.Header.Locale.BankLSB = srcPre.Header.BankLSB;
-                ins.Header.Locale.ProgNum = srcPre.Header.ProgNum;
-                ins.Header.Regions = (uint)srcIns.Regions.Count;
+                ins.Locale = new MidiLocale();
+                ins.Locale.BankFlg = (byte)(srcPre.Header.IsDrum ? 0x80 : 0x00);
+                ins.Locale.BankMSB = srcPre.Header.BankMSB;
+                ins.Locale.BankLSB = srcPre.Header.BankLSB;
+                ins.Locale.ProgNum = srcPre.Header.ProgNum;
 
                 ins.Info.CopyFrom(srcPre.Info);
 
@@ -216,7 +214,7 @@ namespace DLS {
                     ins.Regions.List.Add(rgn.Header, rgn);
                 }
 
-                saveFile.Instruments.List.Add(ins.Header.Locale, ins);
+                saveFile.Instruments.List.Add(ins.Locale, ins);
             }
 
             saveFile.Save(filePath);

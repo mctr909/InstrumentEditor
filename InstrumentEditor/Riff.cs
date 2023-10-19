@@ -4,10 +4,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-public class Riff {
+public abstract class Riff {
     public static readonly Encoding Enc = Encoding.GetEncoding("shift-jis");
 
-    protected void MainLoop(string filePath) {
+	public virtual void Write(BinaryWriter bw) { }
+
+	protected void MainLoop(string filePath) {
         using (var fs = new FileStream(filePath, FileMode.Open))
         using (var br = new BinaryReader(fs)) {
             var size = (int)fs.Length;
@@ -30,7 +32,7 @@ public class Riff {
         }
     }
 
-    protected void Load(IntPtr ptr, long size) {
+	protected void Load(IntPtr ptr, long size) {
         long pos = 0;
         while (pos < size) {
             var chunkId = Marshal.PtrToStringAnsi(ptr, 4);
@@ -57,7 +59,7 @@ public class Riff {
 
     protected virtual void LoadInfo(IntPtr ptr, string type, string value) { }
 
-    private void loopInfo(IntPtr ptr, long size) {
+	private void loopInfo(IntPtr ptr, long size) {
         long pos = 0;
         while (pos < size) {
             var infoType = Marshal.PtrToStringAnsi(ptr, 4);

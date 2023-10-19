@@ -5,6 +5,17 @@ using System.Runtime.InteropServices;
 
 namespace DLS {
 	public class WVPL : Riff {
+		[StructLayout(LayoutKind.Sequential, Pack = 8)]
+		public struct PTBL {
+			public uint Size;
+			public uint Count;
+
+			public void Write(BinaryWriter bw) {
+				bw.Write(Size);
+				bw.Write(Count);
+			}
+		}
+
 		public List<WAVE> List = new List<WAVE>();
 
 		public WVPL() { }
@@ -13,11 +24,11 @@ namespace DLS {
 			Load(ptr, size);
 		}
 
-		public void Write(BinaryWriter bw) {
+		public override void Write(BinaryWriter bw) {
 			var msPtbl = new MemoryStream();
 			var bwPtbl = new BinaryWriter(msPtbl);
 			bwPtbl.Write("ptbl".ToCharArray());
-			bwPtbl.Write((uint)(Marshal.SizeOf<CK_PTBL>() + List.Count * sizeof(uint)));
+			bwPtbl.Write((uint)(Marshal.SizeOf<PTBL>() + List.Count * sizeof(uint)));
 			bwPtbl.Write((uint)8);
 			bwPtbl.Write((uint)List.Count);
 
@@ -100,7 +111,7 @@ namespace DLS {
 			MainLoop(filePath);
 		}
 
-		public void Write(BinaryWriter bw) {
+		public override void Write(BinaryWriter bw) {
 			var msSmp = new MemoryStream();
 			var bwSmp = new BinaryWriter(msSmp);
 			bwSmp.Write("LIST".ToCharArray());

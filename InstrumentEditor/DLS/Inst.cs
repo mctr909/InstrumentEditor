@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace DLS {
 	public class LINS : Riff {
@@ -22,7 +21,7 @@ namespace DLS {
 			Load(ptr, size);
 		}
 
-		public void Write(BinaryWriter bw) {
+		public override void Write(BinaryWriter bw) {
 			var msLins = new MemoryStream();
 			var bwLins = new BinaryWriter(msLins);
 			foreach (var ins in List) {
@@ -41,10 +40,10 @@ namespace DLS {
 			switch (type) {
 			case "ins ":
 				var inst = new INS(ptr, size);
-				if (List.ContainsKey(inst.Header.Locale)) {
+				if (List.ContainsKey(inst.Locale)) {
 					return;
 				}
-				List.Add(inst.Header.Locale, inst);
+				List.Add(inst.Locale, inst);
 				break;
 			default:
 				throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
@@ -53,13 +52,7 @@ namespace DLS {
 	}
 
 	public class INS : Riff {
-		[StructLayout(LayoutKind.Sequential, Pack = 4)]
-		public struct HEADER {
-			public uint Regions;
-			public MidiLocale Locale;
-		}
-
-		public HEADER Header;
+		public MidiLocale Locale;
 		public LRGN Regions = new LRGN();
 		public LART Articulations = new LART();
 		public Info Info = new Info();
@@ -68,18 +61,20 @@ namespace DLS {
 
 		void set() {
 			cInsh = new Chunk("insh", (i) => {
-				i.Write(Header);
+				i.Write(Regions.Count);
+				i.Write(Locale);
 			}, (i) => {
-				i.Read(ref Header);
+				i.Seek(4);
+				i.Read(ref Locale);
 			});
 		}
 
 		public INS(byte programNo = 0, byte bankMSB = 0, byte bankLSB = 0, bool isDrum = false) {
 			set();
-			Header.Locale.BankFlg = (byte)(isDrum ? 0x80 : 0x00);
-			Header.Locale.ProgNum = programNo;
-			Header.Locale.BankMSB = bankMSB;
-			Header.Locale.BankLSB = bankLSB;
+			Locale.BankFlg = (byte)(isDrum ? 0x80 : 0x00);
+			Locale.ProgNum = programNo;
+			Locale.BankMSB = bankMSB;
+			Locale.BankLSB = bankLSB;
 		}
 
 		public INS(IntPtr ptr, long size) {
@@ -87,7 +82,7 @@ namespace DLS {
 			Load(ptr, size);
 		}
 
-		public void Write(BinaryWriter bw) {
+		public override void Write(BinaryWriter bw) {
 			var msIns = new MemoryStream();
 			var bwIns = new BinaryWriter(msIns);
 			bwIns.Write("LIST".ToCharArray());

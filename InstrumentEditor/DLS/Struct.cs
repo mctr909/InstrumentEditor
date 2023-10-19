@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -200,17 +199,6 @@ namespace DLS {
         }
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    public struct CK_ART1 {
-        public uint Size;
-        public uint Count;
-
-        public void Write(BinaryWriter bw) {
-            bw.Write(Size);
-            bw.Write(Count);
-        }
-    }
-
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CK_WSMP {
         private uint Size;
@@ -236,121 +224,6 @@ namespace DLS {
             bw.Write(GainInt);
             bw.Write(Options);
             bw.Write(LoopCount);
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    public struct CK_PTBL {
-        public uint Size;
-        public uint Count;
-
-        public void Write(BinaryWriter bw) {
-            bw.Write(Size);
-            bw.Write(Count);
-        }
-    }
-
-    public class LART : Riff {
-        ART mArt = new ART();
-
-        public List<Connection> List {
-            get { return mArt.List; }
-        }
-
-        public LART() { }
-
-        public LART(IntPtr ptr, long size) {
-            Load(ptr, size);
-        }
-
-        public void Write(BinaryWriter bw) {
-            if (0 == mArt.List.Count) {
-                return;
-            }
-
-            var msArt = new MemoryStream();
-            var bwArt = new BinaryWriter(msArt);
-            bwArt.Write("art1".ToCharArray());
-            bwArt.Write((uint)(Marshal.SizeOf<CK_ART1>() + mArt.List.Count * Marshal.SizeOf<Connection>()));
-            bwArt.Write((uint)8);
-            bwArt.Write((uint)mArt.List.Count);
-            foreach (var art in mArt.List) {
-                art.Write(bwArt);
-            }
-
-            if (0 < msArt.Length) {
-                bw.Write("LIST".ToCharArray());
-                bw.Write((uint)(msArt.Length + 4));
-                bw.Write("lart".ToCharArray());
-                bw.Write(msArt.ToArray());
-            }
-        }
-
-        public void Add(Connection conn) {
-            Delete(conn.Destination);
-            mArt.List.Add(conn);
-        }
-
-        public void AddRange(IEnumerable<Connection> list) {
-            mArt.List.AddRange(list);
-        }
-
-        public void Clear() {
-            mArt.List.Clear();
-        }
-
-        public void Delete(DST_TYPE type) {
-            var tmp = new List<Connection>();
-            for (int i = 0; i < mArt.List.Count; i++) {
-                var art = mArt.List[i];
-                if (type == art.Destination) {
-                    continue;
-                }
-                tmp.Add(art);
-            }
-            mArt.List = tmp;
-        }
-
-        public void Update(DST_TYPE type, double value) {
-            for (int i = 0; i < mArt.List.Count; i++) {
-                var art = mArt.List[i];
-                if (type == art.Destination) {
-                    art.Value = value;
-                    mArt.List[i] = art;
-                    return;
-                }
-            }
-            mArt.List.Add(new Connection {
-                Destination = type,
-                Value = value
-            });
-        }
-
-        protected override void LoadChunk(IntPtr ptr, string type, long size) {
-            switch (type) {
-            case "art1":
-            case "art2":
-                mArt = new ART(ptr);
-                break;
-            default:
-                throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
-            }
-        }
-    }
-
-    public class ART {
-        public List<Connection> List = new List<Connection>();
-
-        public ART() { }
-
-        public ART(IntPtr ptr) {
-            var info = Marshal.PtrToStructure<CK_ART1>(ptr);
-            ptr += Marshal.SizeOf<CK_ART1>();
-
-            for (var i = 0; i < info.Count; ++i) {
-                List.Add(Marshal.PtrToStructure<Connection>(ptr));
-                ptr += Marshal.SizeOf<Connection>();
-            }
         }
     }
 }

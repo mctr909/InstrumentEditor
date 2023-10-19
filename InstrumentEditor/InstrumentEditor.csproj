@@ -69,6 +69,7 @@
     <Compile Include="Dialog\InstInfoDialog.Designer.cs">
       <DependentUpon>InstInfoDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="DLS\Art.cs" />
     <Compile Include="DLS\Enum.cs" />
     <Compile Include="DLS\Inst.cs" />
     <Compile Include="DLS\Region.cs" />

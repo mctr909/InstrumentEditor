@@ -44,7 +44,7 @@ namespace DLS {
 			Load(ptr, size);
 		}
 
-		public void Write(BinaryWriter bw) {
+		public override void Write(BinaryWriter bw) {
 			var msList = new MemoryStream();
 			var bwList = new BinaryWriter(msList);
 			foreach (var rgn in List) {
@@ -218,7 +218,7 @@ namespace DLS {
 			Load(ptr, size);
 		}
 
-		public void Write(BinaryWriter bw) {
+		public override void Write(BinaryWriter bw) {
 			var msRgn = new MemoryStream();
 			var bwRgn = new BinaryWriter(msRgn);
 			bwRgn.Write("LIST".ToCharArray());
