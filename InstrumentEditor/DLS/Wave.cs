@@ -5,45 +5,38 @@ using System.Runtime.InteropServices;
 
 namespace DLS {
 	public class WVPL : Riff {
-		[StructLayout(LayoutKind.Sequential, Pack = 8)]
-		public struct PTBL {
-			public uint Size;
-			public uint Count;
+		public List<WAVE> List = new List<WAVE>();
+		List<uint> mOfsList = new List<uint>();
 
-			public void Write(BinaryWriter bw) {
-				bw.Write(Size);
-				bw.Write(Count);
-			}
+		Chunk cPtbl;
+
+		void set() {
+			cPtbl = new Chunk("ptbl", (i) => {
+				i.Write(8);
+				i.Write(mOfsList.Count);
+				i.Write(mOfsList);
+			}, (i) => {
+			});
 		}
 
-		public List<WAVE> List = new List<WAVE>();
-
-		public WVPL() { }
+		public WVPL() {
+			set();
+		}
 
 		public WVPL(IntPtr ptr, long size) {
+			set();
 			Load(ptr, size);
 		}
 
 		public override void Write(BinaryWriter bw) {
-			var msPtbl = new MemoryStream();
-			var bwPtbl = new BinaryWriter(msPtbl);
-			bwPtbl.Write("ptbl".ToCharArray());
-			bwPtbl.Write((uint)(Marshal.SizeOf<PTBL>() + List.Count * sizeof(uint)));
-			bwPtbl.Write((uint)8);
-			bwPtbl.Write((uint)List.Count);
-
 			var msWave = new MemoryStream();
 			var bwWave = new BinaryWriter(msWave);
 			foreach (var wave in List) {
-				bwPtbl.Write((uint)msWave.Position);
+				mOfsList.Add((uint)msWave.Position);
 				wave.Write(bwWave);
 			}
-
-			if (0 < msPtbl.Length) {
-				bw.Write(msPtbl.ToArray());
-			}
-
-			if (0 < msWave.Length) {
+			if (0 < List.Count) {
+				cPtbl.Save(bw);
 				bw.Write("LIST".ToCharArray());
 				bw.Write((uint)(msWave.Length + 4));
 				bw.Write("wvpl".ToCharArray());
