@@ -34,8 +34,8 @@ namespace InstPack {
         public List<Region> Find(Region layer) {
             var ret = new List<Region>();
             foreach (var lyr in mList) {
-                if (layer.Header.Key.Lo <= lyr.Header.Key.Hi && lyr.Header.Key.Lo <= layer.Header.Key.Hi &&
-                    layer.Header.Vel.Lo <= lyr.Header.Vel.Hi && lyr.Header.Vel.Lo <= layer.Header.Vel.Hi &&
+                if (layer.Header.KeyLo <= lyr.Header.KeyHi && lyr.Header.KeyLo <= layer.Header.KeyHi &&
+                    layer.Header.VelLo <= lyr.Header.VelHi && lyr.Header.VelLo <= layer.Header.VelHi &&
                     layer.InstIndex == lyr.InstIndex) {
                     ret.Add(lyr);
                 }
@@ -46,8 +46,8 @@ namespace InstPack {
         public List<Region> Find(int noteNo, int velocity) {
             var ret = new List<Region>();
             foreach (var layer in mList) {
-                if (noteNo <= layer.Header.Key.Hi && layer.Header.Key.Lo <= noteNo &&
-                    velocity <= layer.Header.Vel.Hi && layer.Header.Vel.Lo <= velocity) {
+                if (noteNo <= layer.Header.KeyHi && layer.Header.KeyLo <= noteNo &&
+                    velocity <= layer.Header.VelHi && layer.Header.VelLo <= velocity) {
                     ret.Add(layer);
                 }
             }
@@ -56,8 +56,8 @@ namespace InstPack {
 
         public bool ContainsKey(Region layer) {
             foreach (var lyr in mList) {
-                if (layer.Header.Key.Lo <= lyr.Header.Key.Hi && lyr.Header.Key.Lo <= layer.Header.Key.Hi &&
-                    layer.Header.Vel.Lo <= lyr.Header.Vel.Hi && lyr.Header.Vel.Lo <= layer.Header.Vel.Hi &&
+                if (layer.Header.KeyLo <= lyr.Header.KeyHi && lyr.Header.KeyLo <= layer.Header.KeyHi &&
+                    layer.Header.VelLo <= lyr.Header.VelHi && lyr.Header.VelLo <= layer.Header.VelHi &&
                     layer.InstIndex == lyr.InstIndex) {
                     return true;
                 }
@@ -67,8 +67,8 @@ namespace InstPack {
 
         public bool ContainsKey(int noteNo, int velocity) {
             foreach (var layer in mList) {
-                if (noteNo <= layer.Header.Key.Hi && layer.Header.Key.Lo <= noteNo &&
-                    velocity <= layer.Header.Vel.Hi && layer.Header.Vel.Lo <= velocity) {
+                if (noteNo <= layer.Header.KeyHi && layer.Header.KeyLo <= noteNo &&
+                    velocity <= layer.Header.VelHi && layer.Header.VelLo <= velocity) {
                     return true;
                 }
             }
@@ -88,7 +88,7 @@ namespace InstPack {
     }
 
     public class Region : Riff {
-        public DLS.CK_RGNH Header;
+        public DLS.RGN.HEADER Header = new DLS.RGN.HEADER();
         public int InstIndex;
         public DLS.LART Articulations = new DLS.LART();
 

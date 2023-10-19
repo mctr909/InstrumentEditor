@@ -70,7 +70,10 @@
       <DependentUpon>InstInfoDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="DLS\Enum.cs" />
+    <Compile Include="DLS\Inst.cs" />
+    <Compile Include="DLS\Region.cs" />
     <Compile Include="DLS\Struct.cs" />
+    <Compile Include="DLS\Wave.cs" />
     <Compile Include="Form\LayerAssignForm.cs">
       <SubType>Form</SubType>
     </Compile>

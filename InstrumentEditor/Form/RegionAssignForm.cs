@@ -112,17 +112,17 @@ namespace InstrumentEditor {
                 var range = region.Header;
                 g.FillRectangle(
                     greenFill,
-                    range.Key.Lo * KEY_WIDTH,
-                    bmp.Height - (range.Vel.Hi + 1) * VEL_HEIGHT - 1,
-                    (range.Key.Hi - range.Key.Lo + 1) * KEY_WIDTH,
-                    (range.Vel.Hi - range.Vel.Lo + 1) * VEL_HEIGHT
+                    range.KeyLo * KEY_WIDTH,
+                    bmp.Height - (range.VelHi + 1) * VEL_HEIGHT - 1,
+                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
+                    (range.VelHi - range.VelLo + 1) * VEL_HEIGHT
                 );
                 g.DrawRectangle(
                     redLine,
-                    range.Key.Lo * KEY_WIDTH,
-                    bmp.Height - (range.Vel.Hi + 1) * VEL_HEIGHT - 1,
-                    (range.Key.Hi - range.Key.Lo + 1) * KEY_WIDTH,
-                    (range.Vel.Hi - range.Vel.Lo + 1) * VEL_HEIGHT
+                    range.KeyLo * KEY_WIDTH,
+                    bmp.Height - (range.VelHi + 1) * VEL_HEIGHT - 1,
+                    (range.KeyHi - range.KeyLo + 1) * KEY_WIDTH,
+                    (range.VelHi - range.VelLo + 1) * VEL_HEIGHT
                 );
             }
 
@@ -133,7 +133,7 @@ namespace InstrumentEditor {
             picRegion.Image = bmp;
         }
 
-        private void EditRegion(CK_RGNH range) {
+        private void EditRegion(RGN.HEADER range) {
             if (tsbDeleteRange.Checked) {
                 mInst.Regions.Remove(range);
                 DispRegionInfo();
@@ -146,11 +146,11 @@ namespace InstrumentEditor {
                 } else {
                     var pos = PosToKeyVel();
                     var rgn = new RGN();
-                    rgn.Header.Key.Lo = (byte)pos.X;
-                    rgn.Header.Key.Hi = byte.MaxValue;
+                    rgn.Header.KeyLo = (byte)pos.X;
+                    rgn.Header.KeyHi = byte.MaxValue;
                     var fm = new RegionInfoDialog(mFile, rgn);
                     fm.ShowDialog();
-                    if (byte.MaxValue != rgn.Header.Key.Lo) {
+                    if (byte.MaxValue != rgn.Header.KeyLo) {
                         mInst.Regions.Add(rgn);
                         DispRegionInfo();
                     }
@@ -180,12 +180,12 @@ namespace InstrumentEditor {
             return posRegion;
         }
 
-        private CK_RGNH PosToRgnh() {
-            var range = new CK_RGNH();
+        private RGN.HEADER PosToRgnh() {
+            var range = new RGN.HEADER();
             var posKeyVel = PosToKeyVel();
             foreach (var rgn in mInst.Regions.Array) {
-                if (rgn.Header.Key.Lo <= posKeyVel.X && posKeyVel.X <= rgn.Header.Key.Hi &&
-                    rgn.Header.Vel.Lo <= posKeyVel.Y && posKeyVel.Y <= rgn.Header.Vel.Hi) {
+                if (rgn.Header.KeyLo <= posKeyVel.X && posKeyVel.X <= rgn.Header.KeyHi &&
+                    rgn.Header.VelLo <= posKeyVel.Y && posKeyVel.Y <= rgn.Header.VelHi) {
                     range = rgn.Header;
                     break;
                 }

@@ -571,10 +571,10 @@ namespace SF2 {
 
                 foreach (var sf2InstRng in sf2Inst.Range) {
                     var rgn = new RGN();
-                    rgn.Header.Key.Lo = sf2InstRng.keyLo;
-                    rgn.Header.Key.Hi = sf2InstRng.keyHi;
-                    rgn.Header.Vel.Lo = sf2InstRng.velLo;
-                    rgn.Header.Vel.Hi = sf2InstRng.velHi;
+                    rgn.Header.KeyLo = sf2InstRng.keyLo;
+                    rgn.Header.KeyHi = sf2InstRng.keyHi;
+                    rgn.Header.VelLo = sf2InstRng.velLo;
+                    rgn.Header.VelHi = sf2InstRng.velHi;
 
                     rgn.WaveLink.TableIndex = (uint)sf2InstRng.sampleId;
 
@@ -689,10 +689,10 @@ namespace SF2 {
 
                 foreach (var sf2PresRng in sf2Pres.Value.Range) {
                     var rgn = new Region();
-                    rgn.Header.Key.Lo = sf2PresRng.keyLo;
-                    rgn.Header.Key.Hi = sf2PresRng.keyHi;
-                    rgn.Header.Vel.Lo = sf2PresRng.velLo;
-                    rgn.Header.Vel.Hi = sf2PresRng.velHi;
+                    rgn.Header.KeyLo = sf2PresRng.keyLo;
+                    rgn.Header.KeyHi = sf2PresRng.keyHi;
+                    rgn.Header.VelLo = sf2PresRng.velLo;
+                    rgn.Header.VelHi = sf2PresRng.velHi;
 
                     foreach(var art in sf2PresRng.Art) {
                         switch (art.Key) {

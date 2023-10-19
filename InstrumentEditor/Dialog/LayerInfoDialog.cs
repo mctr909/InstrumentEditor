@@ -53,10 +53,10 @@ namespace InstrumentEditor {
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
-            mLayer.Header.Key.Lo = (byte)numKeyLow.Value;
-            mLayer.Header.Key.Hi = (byte)numKeyHigh.Value;
-            mLayer.Header.Vel.Lo = (byte)numVelocityLow.Value;
-            mLayer.Header.Vel.Hi = (byte)numVelocityHigh.Value;
+            mLayer.Header.KeyLo = (byte)numKeyLow.Value;
+            mLayer.Header.KeyHi = (byte)numKeyHigh.Value;
+            mLayer.Header.VelLo = (byte)numVelocityLow.Value;
+            mLayer.Header.VelHi = (byte)numVelocityHigh.Value;
             var gain = (int)(20 * numVolume.Value) / 400.0;
             if (0 == gain) {
                 mLayer.Articulations.Delete(DST_TYPE.GAIN);
@@ -146,7 +146,7 @@ namespace InstrumentEditor {
         }
 
         private void DispInfo() {
-            if (byte.MaxValue == mLayer.Header.Key.Lo) {
+            if (byte.MaxValue == mLayer.Header.KeyLo) {
                 numKeyLow.Value = 63;
                 numKeyHigh.Value = 63;
                 numVelocityLow.Value = 0;
@@ -154,10 +154,10 @@ namespace InstrumentEditor {
 
                 btnAdd.Text = "追加";
             } else {
-                numKeyLow.Value = mLayer.Header.Key.Lo;
-                numKeyHigh.Value = mLayer.Header.Key.Hi;
-                numVelocityLow.Value = mLayer.Header.Vel.Lo;
-                numVelocityHigh.Value = mLayer.Header.Vel.Hi;
+                numKeyLow.Value = mLayer.Header.KeyLo;
+                numKeyHigh.Value = mLayer.Header.KeyHi;
+                numVelocityLow.Value = mLayer.Header.VelLo;
+                numVelocityHigh.Value = mLayer.Header.VelHi;
 
                 var instIndex = mLayer.InstIndex;
                 var instName = "";

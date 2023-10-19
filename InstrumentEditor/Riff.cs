@@ -173,3 +173,103 @@ public class Info {
         }
     }
 }
+
+public class Chunk {
+    public class LoadChunk {
+        IntPtr mPtr = IntPtr.Zero;
+        public int Pos { get; private set; } = 0;
+        public int Size { get; private set; } = 0;
+        public LoadChunk(IntPtr ptr, int size) {
+            mPtr = ptr;
+            Size = size;
+        }
+        public void Seek(int seek) {
+            if (Pos + seek <= Size && mPtr != IntPtr.Zero) {
+                mPtr += seek;
+                Pos += seek;
+            }
+        }
+        public void Read<T>(ref T value) {
+            var len = Marshal.SizeOf<T>();
+            if (Pos < Size && mPtr != IntPtr.Zero) {
+                value = Marshal.PtrToStructure<T>(mPtr);
+                mPtr += len;
+                Pos += len;
+            } else {
+                value = default;
+            }
+        }
+        public void Read<T>(List<T> list) {
+            var len = Marshal.SizeOf<T>();
+            while (Pos < Size && mPtr != IntPtr.Zero) {
+                list.Add(Marshal.PtrToStructure<T>(mPtr));
+                mPtr += len;
+                Pos += len;
+            }
+        }
+    }
+
+    public class SaveChunk {
+        IntPtr mPtr = IntPtr.Zero;
+        public int Size { get; private set; } = 0;
+        public int Pos { get; private set; } = 0;
+        public SaveChunk() { }
+        public SaveChunk(IntPtr ptr, int size) {
+            mPtr = ptr;
+            Size = size;
+        }
+        public void Write<T>(T value) {
+            var len = Marshal.SizeOf<T>();
+            if (Pos + len <= Size && mPtr != IntPtr.Zero) {
+                Marshal.StructureToPtr(value, mPtr, false);
+                mPtr += len;
+            }
+            Pos += len;
+        }
+        public void Write<T>(List<T> list) {
+            var len = Marshal.SizeOf<T>();
+            foreach (var item in list) {
+                if (Pos + len <= Size && mPtr != IntPtr.Zero) {
+                    Marshal.StructureToPtr(item, mPtr, false);
+                    mPtr += len;
+                }
+                Pos += len;
+            }
+        }
+    }
+
+    public delegate void DLoad(LoadChunk instance);
+    public delegate void DSave(SaveChunk instance);
+
+    public string Id { get; private set; }
+
+    DLoad mSetFunc;
+    DSave mPutFunc;
+
+    Chunk() { }
+    public Chunk(string id, DSave putFunc, DLoad setFunc) {
+        Id = id;
+        mSetFunc = setFunc;
+        mPutFunc = putFunc;
+    }
+
+    public void Save(BinaryWriter bw) {
+        var save = new SaveChunk();
+        mPutFunc(save);
+        var size = save.Pos;
+        var pBuff = Marshal.AllocHGlobal(size);
+        save = new SaveChunk(pBuff, size);
+        mPutFunc(save);
+        var buff = new byte[size];
+        Marshal.Copy(pBuff, buff, 0, size);
+        Marshal.FreeHGlobal(pBuff);
+        bw.Write(Id.ToCharArray());
+        bw.Write(size);
+        bw.Write(buff);
+    }
+
+    public void Load(IntPtr ptr, long size) {
+        var load = new LoadChunk(ptr, (int)size);
+        mSetFunc(load);
+    }
+}

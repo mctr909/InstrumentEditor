@@ -71,11 +71,11 @@ namespace InstrumentEditor {
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
-            if (byte.MaxValue == mRegion.Header.Key.Lo) {
-                mRegion.Header.Key.Lo = (byte)numKeyLow.Value;
-                mRegion.Header.Key.Hi = (byte)numKeyHigh.Value;
-                mRegion.Header.Vel.Lo = (byte)numVelocityLow.Value;
-                mRegion.Header.Vel.Hi = (byte)numVelocityHigh.Value;
+            if (byte.MaxValue == mRegion.Header.KeyLo) {
+                mRegion.Header.KeyLo = (byte)numKeyLow.Value;
+                mRegion.Header.KeyHi = (byte)numKeyHigh.Value;
+                mRegion.Header.VelLo = (byte)numVelocityLow.Value;
+                mRegion.Header.VelHi = (byte)numVelocityHigh.Value;
             }
 
             mRegion.Sampler.UnityNote = (ushort)numUnityNote.Value;
@@ -175,20 +175,20 @@ namespace InstrumentEditor {
         }
 
         private void DispRegionInfo() {
-            if (byte.MaxValue == mRegion.Header.Key.Hi) {
-                mRegion.Header.Key.Hi = mRegion.Header.Key.Lo;
-                numKeyLow.Value = mRegion.Header.Key.Lo;
-                numKeyHigh.Value = mRegion.Header.Key.Hi;
+            if (byte.MaxValue == mRegion.Header.KeyHi) {
+                mRegion.Header.KeyHi = mRegion.Header.KeyLo;
+                numKeyLow.Value = mRegion.Header.KeyLo;
+                numKeyHigh.Value = mRegion.Header.KeyHi;
                 numVelocityLow.Value = 0;
                 numVelocityHigh.Value = 127;
                 btnEditWave.Enabled = false;
 
                 btnAdd.Text = "追加";
             } else {
-                numKeyLow.Value = mRegion.Header.Key.Lo;
-                numKeyHigh.Value = mRegion.Header.Key.Hi;
-                numVelocityLow.Value = mRegion.Header.Vel.Lo;
-                numVelocityHigh.Value = mRegion.Header.Vel.Hi;
+                numKeyLow.Value = mRegion.Header.KeyLo;
+                numKeyHigh.Value = mRegion.Header.KeyHi;
+                numVelocityLow.Value = mRegion.Header.VelLo;
+                numVelocityHigh.Value = mRegion.Header.VelHi;
                 numKeyLow.Enabled = false;
                 numKeyHigh.Enabled = false;
                 numVelocityLow.Enabled = false;

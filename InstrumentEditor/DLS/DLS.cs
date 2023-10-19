@@ -82,10 +82,10 @@ namespace DLS {
                 pres.Header.ProgNum = dlsInst.Key.ProgNum;
 
                 var rgn = new Region();
-                rgn.Header.Key.Lo = 0;
-                rgn.Header.Key.Hi = 127;
-                rgn.Header.Vel.Lo = 0;
-                rgn.Header.Vel.Hi = 127;
+                rgn.Header.KeyLo = 0;
+                rgn.Header.KeyHi = 127;
+                rgn.Header.VelLo = 0;
+                rgn.Header.VelHi = 127;
                 rgn.InstIndex = pack.Inst.Count;
 
                 pres.Regions.Add(rgn);
@@ -143,7 +143,7 @@ namespace DLS {
             saveFile.WavePool.List = new List<WAVE>();
             foreach (var wav in pack.Wave.List) {
                 var wavh = new WAVE();
-                wavh.Format = new CK_FMT();
+                wavh.Format = new WAVE.FMT();
                 wavh.Format.Tag = 1;
                 wavh.Format.Bits = 16;
                 wavh.Format.Channels = 1;
@@ -185,7 +185,7 @@ namespace DLS {
                 var srcIns = pack.Inst[srcPre.Regions[0].InstIndex];
 
                 var ins = new INS();
-                ins.Header = new CK_INSH();
+                ins.Header = new INS.HEADER();
                 ins.Header.Locale = new MidiLocale();
                 ins.Header.Locale.BankFlg = (byte)(srcPre.Header.IsDrum ? 0x80 : 0x00);
                 ins.Header.Locale.BankMSB = srcPre.Header.BankMSB;
@@ -201,7 +201,7 @@ namespace DLS {
                 }
 
                 ins.Regions = new LRGN();
-                ins.Regions.List = new SortedList<CK_RGNH, RGN>(new LRGN.Sort());
+                ins.Regions.List = new SortedList<RGN.HEADER, RGN>(new LRGN.Sort());
                 foreach(var srcRgn in srcIns.Regions.Array) {
                     var rgn = new RGN();
                     rgn.Header = srcRgn.Header;
