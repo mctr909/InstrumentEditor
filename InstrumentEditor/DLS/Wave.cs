@@ -19,6 +19,10 @@ namespace DLS {
 			});
 		}
 
+		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+			id = "wvpl";
+		}
+
 		public WVPL() {
 			set();
 		}
@@ -67,61 +71,39 @@ namespace DLS {
 		}
 
 		public FMT Format;
+		public byte[] Data;
 		public CK_WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
-		public byte[] Data;
 
-		Chunk cFmt;
-		Chunk cWsmp;
-
-		void set() {
-			cFmt = new Chunk("fmt ", (i) => {
+		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+			id = "wave";
+			chunks.Add(new Chunk("fmt ", (i) => {
 				i.Write(Format);
 			}, (i) => {
 				i.Read(ref Format);
-			});
-			cWsmp = new Chunk("wsmp", (i) => {
+			}));
+			chunks.Add(new Chunk("data", (i) => {
+				i.Write(Data);
+			}, (i) => {
+				i.Read(out Data);
+			}));
+			chunks.Add(new Chunk("wsmp", (i) => {
 				i.Write(Sampler);
 				i.Write(Loops);
 			}, (i) => {
 				i.Read(ref Sampler);
 				i.Read(Loops);
-			});
+			}));
 		}
 
-		public WAVE() {
-			set();
-		}
+		public WAVE() { }
 
 		public WAVE(IntPtr ptr, long size) {
-			set();
 			Load(ptr, size);
 		}
 
 		public WAVE(string filePath) {
-			set();
 			MainLoop(filePath);
-		}
-
-		public override void Write(BinaryWriter bw) {
-			var msSmp = new MemoryStream();
-			var bwSmp = new BinaryWriter(msSmp);
-			bwSmp.Write("LIST".ToCharArray());
-			bwSmp.Write(0xFFFFFFFF);
-			bwSmp.Write("wave".ToCharArray());
-
-			cFmt.Save(bwSmp);
-
-			bwSmp.Write("data".ToCharArray());
-			bwSmp.Write(Data.Length);
-			bwSmp.Write(Data);
-
-			Info.Write(bwSmp);
-			cWsmp.Save(bwSmp);
-
-			bwSmp.Seek(4, SeekOrigin.Begin);
-			bwSmp.Write((uint)msSmp.Length - 8);
-			bw.Write(msSmp.ToArray());
 		}
 
 		public void ToFile(string filePath) {
@@ -243,26 +225,6 @@ namespace DLS {
 			Format.Bits = 16;
 			Format.BlockAlign = (ushort)(Format.Bits * Format.Channels >> 3);
 			Format.BytesPerSec = Format.BlockAlign * Format.SampleRate;
-		}
-
-		protected override void LoadChunk(IntPtr ptr, string type, long size) {
-			switch (type) {
-			case "dlid":
-			case "guid":
-				break;
-			case "fmt ":
-				cFmt.Load(ptr, size);
-				break;
-			case "data":
-				Data = new byte[size];
-				Marshal.Copy(ptr, Data, 0, Data.Length);
-				break;
-			case "wsmp":
-				cWsmp.Load(ptr, size);
-				break;
-			default:
-				break;
-			}
 		}
 
 		protected override void LoadInfo(IntPtr ptr, string type, string value) {

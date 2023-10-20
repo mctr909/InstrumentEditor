@@ -92,6 +92,10 @@ namespace InstPack {
         public int InstIndex;
         public DLS.LART Articulations = new DLS.LART();
 
+        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+            id = "";
+        }
+
         public Region() { }
     }
 }

@@ -19,6 +19,10 @@ namespace DLS {
 			});
 		}
 
+		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+			id = "lart";
+		}
+
 		public LART() {
 			set();
 		}

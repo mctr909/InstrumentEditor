@@ -38,6 +38,10 @@ namespace DLS {
 
 		public SortedList<RGN.HEADER, RGN> List = new SortedList<RGN.HEADER, RGN>(new Sort());
 
+		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+			id = "lrgn";
+		}
+
 		public LRGN() { }
 
 		public LRGN(IntPtr ptr, long size) {
@@ -176,37 +180,41 @@ namespace DLS {
 		}
 
 		public HEADER Header;
+		public WLNK WaveLink;
 		public CK_WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
-		public WLNK WaveLink;
 		public LART Articulations = new LART();
 
-		Chunk cRgnh;
-		Chunk cWlnk;
-		Chunk cWsmp;
-
-		void set() {
-			cRgnh = new Chunk("rgnh", (i) => {
+		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+			id = "rgn ";
+			chunks.Add(new Chunk("rgnh", (i) => {
 				i.Write(Header);
 			}, (i) => {
 				i.Read(ref Header);
-			});
-			cWlnk = new Chunk("wlnk", (i) => {
+			}));
+			chunks.Add(new Chunk("wlnk", (i) => {
 				i.Write(WaveLink);
 			}, (i) => {
 				i.Read(ref WaveLink);
-			});
-			cWsmp = new Chunk("wsmp", (i) => {
+			}));
+			chunks.Add(new Chunk("wsmp", (i) => {
 				i.Write(Sampler);
 				i.Write(Loops);
 			}, (i) => {
 				i.Read(ref Sampler);
 				i.Read(Loops);
-			});
+			}));
+			riffs.Add(new RList("lart", (i) => {
+				i.Write(Articulations);
+				if (0 < Articulations.List.Count) {
+
+				}
+			}, (i) => {
+				i.Read(Articulations);
+			}));
 		}
 
 		public RGN() {
-			set();
 			Header.KeyLo = 0;
 			Header.KeyHi = 127;
 			Header.VelLo = 0;
@@ -214,45 +222,7 @@ namespace DLS {
 		}
 
 		public RGN(IntPtr ptr, long size) {
-			set();
 			Load(ptr, size);
-		}
-
-		public override void Write(BinaryWriter bw) {
-			var msRgn = new MemoryStream();
-			var bwRgn = new BinaryWriter(msRgn);
-			bwRgn.Write("LIST".ToCharArray());
-			bwRgn.Write(0xFFFFFFFF);
-			bwRgn.Write("rgn ".ToCharArray());
-
-			cRgnh.Save(bwRgn);
-			cWlnk.Save(bwRgn);
-			cWsmp.Save(bwRgn);
-			Articulations.Write(bwRgn);
-
-			bwRgn.Seek(4, SeekOrigin.Begin);
-			bwRgn.Write((uint)msRgn.Length - 8);
-			bw.Write(msRgn.ToArray());
-		}
-
-		protected override void LoadChunk(IntPtr ptr, string type, long size) {
-			switch (type) {
-			case "rgnh":
-				cRgnh.Load(ptr, size);
-				break;
-			case "wsmp":
-				cWsmp.Load(ptr, size);
-				break;
-			case "wlnk":
-				cWlnk.Load(ptr, size);
-				break;
-			case "lart":
-			case "lar2":
-				Articulations = new LART(ptr, size);
-				break;
-			default:
-				throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
-			}
 		}
 	}
 }

@@ -15,6 +15,10 @@ namespace DLS {
 
 		public SortedDictionary<MidiLocale, INS> List = new SortedDictionary<MidiLocale, INS>(new Sort());
 
+		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+			id = "lins";
+		}
+
 		public LINS() { }
 
 		public LINS(IntPtr ptr, long size) {
@@ -56,20 +60,28 @@ namespace DLS {
 		public LRGN Regions = new LRGN();
 		public LART Articulations = new LART();
 
-		Chunk cInsh;
-
-		void set() {
-			cInsh = new Chunk("insh", (i) => {
+		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+			id = "ins ";
+			chunks.Add(new Chunk("insh", (i) => {
 				i.Write(Regions.Count);
 				i.Write(Locale);
 			}, (i) => {
 				i.Seek(4);
 				i.Read(ref Locale);
-			});
+			}));
+			riffs.Add(new RList("lrgn", (i) => {
+				i.Write(Regions);
+			}, (i) => {
+				i.Read(Regions);
+			}));
+			riffs.Add(new RList("lart", (i) => {
+				i.Write(Articulations);
+			}, (i) => {
+				i.Read(Articulations);
+			}));
 		}
 
 		public INS(byte programNo = 0, byte bankMSB = 0, byte bankLSB = 0, bool isDrum = false) {
-			set();
 			Locale.BankFlg = (byte)(isDrum ? 0x80 : 0x00);
 			Locale.ProgNum = programNo;
 			Locale.BankMSB = bankMSB;
@@ -77,44 +89,7 @@ namespace DLS {
 		}
 
 		public INS(IntPtr ptr, long size) {
-			set();
 			Load(ptr, size);
-		}
-
-		public override void Write(BinaryWriter bw) {
-			var msIns = new MemoryStream();
-			var bwIns = new BinaryWriter(msIns);
-			bwIns.Write("LIST".ToCharArray());
-			bwIns.Write(0xFFFFFFFF);
-			bwIns.Write("ins ".ToCharArray());
-
-			cInsh.Save(bwIns);
-
-			Regions.Write(bwIns);
-			Articulations.Write(bwIns);
-
-			Info.Write(bwIns);
-
-			bwIns.Seek(4, SeekOrigin.Begin);
-			bwIns.Write((uint)msIns.Length - 8);
-			bw.Write(msIns.ToArray());
-		}
-
-		protected override void LoadChunk(IntPtr ptr, string type, long size) {
-			switch (type) {
-			case "insh":
-				cInsh.Load(ptr, size);
-				break;
-			case "lrgn":
-				Regions = new LRGN(ptr, size);
-				break;
-			case "lart":
-			case "lar2":
-				Articulations = new LART(ptr, size);
-				break;
-			default:
-				throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
-			}
 		}
 
 		protected override void LoadInfo(IntPtr ptr, string type, string value) {

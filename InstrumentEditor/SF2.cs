@@ -193,6 +193,10 @@ namespace SF2 {
         private PDTA mPdta;
         private SDTA mSdta;
 
+        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+            id = "";
+        }
+
         public File(string filePath) {
             mPath = filePath;
             MainLoop(filePath);
@@ -747,6 +751,10 @@ namespace SF2 {
         private List<MOD> mIMOD = new List<MOD>();
         private List<GEN> mIGEN = new List<GEN>();
 
+        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+            id = "";
+        }
+
         public PDTA(IntPtr ptr, long size) {
             Load(ptr, size);
             SetPresetList();
@@ -1003,6 +1011,10 @@ namespace SF2 {
 
     public class SDTA : Riff {
         public byte[] Data { get; private set; }
+
+        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+            id = "";
+        }
 
         public SDTA(IntPtr ptr, long size) {
             Load(ptr, size);

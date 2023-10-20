@@ -7,9 +7,13 @@ using System.Text;
 public abstract class Riff {
     public static readonly Encoding Enc = Encoding.GetEncoding("shift-jis");
 
+    public string Id { get; private set; }
     public Info Info = new Info();
 
-	protected class Chunk {
+    Dictionary<string, Chunk> mChunks = new Dictionary<string, Chunk>();
+    Dictionary<string, RList> mLists = new Dictionary<string, RList>();
+
+    protected class Chunk {
         public class Reader {
             IntPtr mPtr = IntPtr.Zero;
             public int Pos { get; private set; } = 0;
@@ -22,6 +26,14 @@ public abstract class Riff {
                 if (Pos + seek <= Size && mPtr != IntPtr.Zero) {
                     mPtr += seek;
                     Pos += seek;
+                }
+            }
+            public void Read(out byte[] data) {
+                data = new byte[Size];
+                if (Pos < Size && mPtr != IntPtr.Zero) {
+                    Marshal.Copy(mPtr, data, 0, Size);
+                    mPtr += Size;
+                    Pos += Size;
                 }
             }
             public void Read<T>(ref T value) {
@@ -119,7 +131,86 @@ public abstract class Riff {
         }
     }
 
-    public virtual void Write(BinaryWriter bw) { }
+    protected class RList {
+        public class Reader {
+            IntPtr mPtr = IntPtr.Zero;
+            public int Size { get; private set; } = 0;
+            public Reader(IntPtr ptr, int size) {
+                mPtr = ptr;
+                Size = size;
+            }
+            public void Read(Riff riff) {
+                riff.Load(mPtr, Size);
+            }
+        }
+
+        public class Writer {
+            BinaryWriter mBw = null;
+            public Writer(BinaryWriter bw) {
+                mBw = bw;
+            }
+            public void Write(Riff riff) {
+                riff.Write(mBw);
+            }
+        }
+
+        public delegate void DSetFunc(Reader instance);
+        public delegate void DPutFunc(Writer instance);
+
+        public string Id { get; private set; }
+
+        DSetFunc mSetFunc;
+        DPutFunc mPutFunc;
+
+        RList() { }
+        public RList(string id, DPutFunc putFunc, DSetFunc setFunc) {
+            Id = id;
+            mSetFunc = setFunc;
+            mPutFunc = putFunc;
+        }
+        public void Save(BinaryWriter bw) {
+            var save = new Writer(bw);
+            mPutFunc(save);
+        }
+        public void Load(IntPtr ptr, long size) {
+            var load = new Reader(ptr, (int)size);
+            mSetFunc(load);
+        }
+    }
+
+    public Riff() {
+        string id;
+        var chunks = new List<Chunk>();
+        var lists = new List<RList>();
+        Init(out id, chunks, lists);
+        Id = id;
+        foreach (var chunk in chunks) {
+            mChunks.Add(chunk.Id, chunk);
+        }
+        foreach (var list in lists) {
+            mLists.Add(list.Id, list);
+        }
+    }
+
+    public virtual void Write(BinaryWriter bw) {
+        var msCh = new MemoryStream();
+        var bwCh = new BinaryWriter(msCh);
+        bwCh.Write("LIST".ToCharArray());
+        bwCh.Write(0xFFFFFFFF);
+        bwCh.Write(Id.ToCharArray());
+        Info.Write(bwCh);
+        foreach (var chunk in mChunks.Values) {
+            chunk.Save(bwCh);
+        }
+        foreach (var list in mLists.Values) {
+            list.Save(bwCh);
+        }
+        bwCh.Seek(4, SeekOrigin.Begin);
+        bwCh.Write((uint)msCh.Length - 8);
+        bw.Write(msCh.ToArray());
+    }
+
+    protected abstract void Init(out string id, List<Chunk> chunks, List<RList> riffs);
 
     protected void MainLoop(string filePath) {
         using (var fs = new FileStream(filePath, FileMode.Open))
@@ -156,12 +247,12 @@ public abstract class Riff {
                 ptr += 4;
                 chunkSize -= 4;
                 if ("INFO" == chunkId) {
-                    LoopInfo(ptr, chunkSize);
+                    _LoopInfo(ptr, chunkSize);
                 } else {
-                    LoadChunk(ptr, chunkId, chunkSize);
+                    _LoadChunk(ptr, chunkId, chunkSize);
                 }
             } else {
-                LoadChunk(ptr, chunkId, chunkSize);
+                _LoadChunk(ptr, chunkId, chunkSize);
             }
             ptr += chunkSize;
         }
@@ -171,7 +262,17 @@ public abstract class Riff {
 
     protected virtual void LoadInfo(IntPtr ptr, string type, string value) { }
 
-    void LoopInfo(IntPtr ptr, long size) {
+    void _LoadChunk(IntPtr ptr, string type, long size) {
+        if (mChunks.ContainsKey(type)) {
+            mChunks[type].Load(ptr, size);
+        } else if (mLists.ContainsKey(type)) {
+            mLists[type].Load(ptr, size);
+        } else {
+            LoadChunk(ptr, type, size);
+        }
+    }
+
+    void _LoopInfo(IntPtr ptr, long size) {
         long pos = 0;
         while (pos < size) {
             var infoType = Marshal.PtrToStringAnsi(ptr, 4);
@@ -264,7 +365,7 @@ public class Info {
         var msInfo = new MemoryStream();
         var bwInfo = new BinaryWriter(msInfo);
         foreach (var v in mList) {
-            WriteText(bwInfo, v.Key, v.Value);
+            _Write(bwInfo, v.Key, v.Value);
         }
         if (0 < msInfo.Length) {
             bw.Write("LIST".ToCharArray());
@@ -274,7 +375,7 @@ public class Info {
         }
     }
 
-    void WriteText(BinaryWriter bw, string type, string text) {
+    void _Write(BinaryWriter bw, string type, string text) {
         if (!string.IsNullOrWhiteSpace(text)) {
             var pad = 2 - (Riff.Enc.GetBytes(text).Length % 2);
             for (int i = 0; i < pad; ++i) {
