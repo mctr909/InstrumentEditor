@@ -12,7 +12,6 @@ namespace DLS {
 
         public LINS Instruments = new LINS();
         public WVPL WavePool = new WVPL();
-        public Info Info = new Info();
 
         public File() { }
 

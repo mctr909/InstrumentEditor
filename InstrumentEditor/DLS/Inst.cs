@@ -55,7 +55,6 @@ namespace DLS {
 		public MidiLocale Locale;
 		public LRGN Regions = new LRGN();
 		public LART Articulations = new LART();
-		public Info Info = new Info();
 
 		Chunk cInsh;
 

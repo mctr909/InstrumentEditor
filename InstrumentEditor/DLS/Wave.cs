@@ -70,7 +70,6 @@ namespace DLS {
 		public CK_WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
 		public byte[] Data;
-		public Info Info = new Info();
 
 		Chunk cFmt;
 		Chunk cWsmp;
@@ -132,20 +131,17 @@ namespace DLS {
 			bw.Write((uint)0);
 			bw.Write("WAVE".ToCharArray());
 
-			cFmt.Save(bw);
-			{
-				// data chunk
-				var ptr = Marshal.AllocHGlobal(Data.Length);
-				Marshal.Copy(Data, 0, ptr, Data.Length);
-				var arr = new byte[Data.Length];
-				Marshal.Copy(ptr, arr, 0, Data.Length);
-				Marshal.FreeHGlobal(ptr);
-				bw.Write("data".ToCharArray());
-				bw.Write(arr.Length);
-				bw.Write(arr);
-			}
+			Chunk.Save("fmt ", (i) => {
+				i.Write(Format);
+			}, bw);
+			Chunk.Save("data", (i) => {
+				i.Write(Data);
+			}, bw);
 			Info.Write(bw);
-			cWsmp.Save(bw);
+			Chunk.Save("wsmp", (i) => {
+				i.Write(Sampler);
+				i.Write(Loops);
+			}, bw);
 
 			fs.Seek(4, SeekOrigin.Begin);
 			bw.Write((uint)(fs.Length - 8));
