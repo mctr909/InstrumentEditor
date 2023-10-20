@@ -1,56 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace DLS {
 	public class LART : Riff {
 		public List<Connection> List = new List<Connection>();
 
-		Chunk cArt;
-
-		void set() {
-			cArt = new Chunk("art1", (i) => {
+		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+			id = "lart";
+			chunks.Add(new Chunk("art1", (i) => {
+				if (0 == List.Count) {
+					return;
+				}
 				i.Write(8);
 				i.Write(List.Count);
 				i.Write(List);
 			}, (i) => {
 				i.Seek(8);
 				i.Read(List);
-			});
+			}));
 		}
 
-		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
-			id = "lart";
-		}
-
-		public LART() {
-			set();
-		}
+		public LART() { }
 
 		public LART(IntPtr ptr, long size) {
-			set();
 			Load(ptr, size);
 		}
 
-		public override void Write(BinaryWriter bw) {
-			if (0 == List.Count) {
-				return;
-			}
-			var msArt = new MemoryStream();
-			var bwArt = new BinaryWriter(msArt);
-			bwArt.Write("LIST".ToCharArray());
-			bwArt.Write(0xFFFFFFFF);
-			bwArt.Write("lart".ToCharArray());
-
-			cArt.Save(bwArt);
-
-			bwArt.Seek(4, SeekOrigin.Begin);
-			bwArt.Write((uint)msArt.Length - 8);
-			bw.Write(msArt.ToArray());
-		}
-
 		public void Add(Connection conn) {
-			Delete(conn.Destination);
+			if (List.Contains(conn)) {
+				List.Remove(conn);
+			}
 			List.Add(conn);
 		}
 
@@ -87,17 +66,6 @@ namespace DLS {
 				Destination = type,
 				Value = value
 			});
-		}
-
-		protected override void LoadChunk(IntPtr ptr, string type, long size) {
-			switch (type) {
-			case "art1":
-			case "art2":
-				cArt.Load(ptr, size);
-				break;
-			default:
-				throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
-			}
 		}
 	}
 }

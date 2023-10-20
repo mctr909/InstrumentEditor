@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace DLS {
 	public class LINS : Riff {
@@ -15,43 +14,22 @@ namespace DLS {
 
 		public SortedDictionary<MidiLocale, INS> List = new SortedDictionary<MidiLocale, INS>(new Sort());
 
-		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "lins";
+			riffs.Add(new LIST("ins ", (i) => {
+				foreach (var ins in List.Values) {
+					ins.Write(i);
+				}
+			}, (ptr, size) => {
+				var ins = new INS(ptr, size);
+				List.Add(ins.Locale, ins);
+			}));
 		}
 
 		public LINS() { }
 
 		public LINS(IntPtr ptr, long size) {
 			Load(ptr, size);
-		}
-
-		public override void Write(BinaryWriter bw) {
-			var msLins = new MemoryStream();
-			var bwLins = new BinaryWriter(msLins);
-			foreach (var ins in List) {
-				ins.Value.Write(bwLins);
-			}
-
-			if (0 < msLins.Length) {
-				bw.Write("LIST".ToCharArray());
-				bw.Write((uint)(msLins.Length + 4));
-				bw.Write("lins".ToCharArray());
-				bw.Write(msLins.ToArray());
-			}
-		}
-
-		protected override void LoadChunk(IntPtr ptr, string type, long size) {
-			switch (type) {
-			case "ins ":
-				var inst = new INS(ptr, size);
-				if (List.ContainsKey(inst.Locale)) {
-					return;
-				}
-				List.Add(inst.Locale, inst);
-				break;
-			default:
-				throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
-			}
 		}
 	}
 
@@ -60,24 +38,24 @@ namespace DLS {
 		public LRGN Regions = new LRGN();
 		public LART Articulations = new LART();
 
-		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "ins ";
 			chunks.Add(new Chunk("insh", (i) => {
-				i.Write(Regions.Count);
+				i.Write(Regions.List.Count);
 				i.Write(Locale);
 			}, (i) => {
 				i.Seek(4);
 				i.Read(ref Locale);
 			}));
-			riffs.Add(new RList("lrgn", (i) => {
-				i.Write(Regions);
-			}, (i) => {
-				i.Read(Regions);
+			riffs.Add(new LIST("lrgn", (i) => {
+				Regions.Write(i);
+			}, (ptr, size) => {
+				Regions = new LRGN(ptr, size);
 			}));
-			riffs.Add(new RList("lart", (i) => {
-				i.Write(Articulations);
-			}, (i) => {
-				i.Read(Articulations);
+			riffs.Add(new LIST("lart", (i) => {
+				Articulations.Write(i);
+			}, (ptr, size) => {
+				Articulations = new LART(ptr, size);
 			}));
 		}
 

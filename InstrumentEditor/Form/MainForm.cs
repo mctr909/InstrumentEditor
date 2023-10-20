@@ -645,7 +645,7 @@ namespace InstrumentEditor {
             mClipboardInst = new INS();
 
             // Region
-            mClipboardInst.Regions.Clear();
+            mClipboardInst.Regions.List.Clear();
             foreach (var layer in inst.Regions.Array) {
                 var rgn = new RGN {
                     Header = layer.Header

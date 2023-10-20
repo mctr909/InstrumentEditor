@@ -13,7 +13,7 @@ namespace DLS {
         public LINS Instruments = new LINS();
         public WVPL WavePool = new WVPL();
 
-        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+        protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
             id = "";
         }
 

@@ -6,56 +6,23 @@ using System.Runtime.InteropServices;
 namespace DLS {
 	public class WVPL : Riff {
 		public List<WAVE> List = new List<WAVE>();
-		List<uint> mOfsList = new List<uint>();
 
-		Chunk cPtbl;
-
-		void set() {
-			cPtbl = new Chunk("ptbl", (i) => {
-				i.Write(8);
-				i.Write(mOfsList.Count);
-				i.Write(mOfsList);
-			}, (i) => {
-			});
-		}
-
-		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "wvpl";
+			riffs.Add(new LIST("wave", (i) => {
+				foreach (var wave in List) {
+					wave.Write(i);
+				}
+			}, (ptr, size) => {
+				var ins = new WAVE(ptr, size);
+				List.Add(ins);
+			}));
 		}
 
-		public WVPL() {
-			set();
-		}
+		public WVPL() { }
 
 		public WVPL(IntPtr ptr, long size) {
-			set();
 			Load(ptr, size);
-		}
-
-		public override void Write(BinaryWriter bw) {
-			var msWave = new MemoryStream();
-			var bwWave = new BinaryWriter(msWave);
-			foreach (var wave in List) {
-				mOfsList.Add((uint)msWave.Position);
-				wave.Write(bwWave);
-			}
-			if (0 < List.Count) {
-				cPtbl.Save(bw);
-				bw.Write("LIST".ToCharArray());
-				bw.Write((uint)(msWave.Length + 4));
-				bw.Write("wvpl".ToCharArray());
-				bw.Write(msWave.ToArray());
-			}
-		}
-
-		protected override void LoadChunk(IntPtr ptr, string type, long size) {
-			switch (type) {
-			case "wave":
-				List.Add(new WAVE(ptr, size));
-				break;
-			default:
-				throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
-			}
 		}
 	}
 
@@ -75,7 +42,7 @@ namespace DLS {
 		public CK_WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
 
-		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "wave";
 			chunks.Add(new Chunk("fmt ", (i) => {
 				i.Write(Format);

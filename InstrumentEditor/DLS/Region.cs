@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace DLS {
-	[StructLayout(LayoutKind.Sequential, Pack = 2)]
-	public struct WLNK {
-		public ushort Options;
-		public ushort PhaseGroup;
-		public uint Channel;
-		public uint TableIndex;
-	}
-
 	public class LRGN : Riff {
 		public sealed class Sort : IComparer<RGN.HEADER> {
 			// IComparerの実装
@@ -38,37 +29,22 @@ namespace DLS {
 
 		public SortedList<RGN.HEADER, RGN> List = new SortedList<RGN.HEADER, RGN>(new Sort());
 
-		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "lrgn";
+			riffs.Add(new LIST("rgn ", (i) => {
+				foreach (var rgn in List.Values) {
+					rgn.Write(i);
+				}
+			}, (ptr, size) => {
+				var rgn = new RGN(ptr, size);
+				List.Add(rgn.Header, rgn);
+			}));
 		}
 
 		public LRGN() { }
 
 		public LRGN(IntPtr ptr, long size) {
 			Load(ptr, size);
-		}
-
-		public override void Write(BinaryWriter bw) {
-			var msList = new MemoryStream();
-			var bwList = new BinaryWriter(msList);
-			foreach (var rgn in List) {
-				rgn.Value.Write(bwList);
-			}
-
-			if (0 < msList.Length) {
-				bw.Write("LIST".ToCharArray());
-				bw.Write((uint)(msList.Length + 4));
-				bw.Write("lrgn".ToCharArray());
-				bw.Write(msList.ToArray());
-			}
-		}
-
-		public void Clear() {
-			List.Clear();
-		}
-
-		public int Count {
-			get { return List.Count; }
 		}
 
 		public IList<RGN> Array {
@@ -152,19 +128,6 @@ namespace DLS {
 				List.Add(rgn.Header, rgn);
 			}
 		}
-
-		protected override void LoadChunk(IntPtr ptr, string type, long size) {
-			switch (type) {
-			case "rgn ":
-				var rgn = new RGN(ptr, size);
-				if (!List.ContainsKey(rgn.Header)) {
-					List.Add(rgn.Header, rgn);
-				}
-				break;
-			default:
-				throw new Exception(string.Format("Unknown ChunkType [{0}]", type));
-			}
-		}
 	}
 
 	public class RGN : Riff {
@@ -178,6 +141,13 @@ namespace DLS {
 			public ushort KeyGroup;
 			public ushort Layer;
 		}
+		[StructLayout(LayoutKind.Sequential, Pack = 4)]
+		public struct WLNK {
+			public ushort Options;
+			public ushort PhaseGroup;
+			public uint Channel;
+			public uint TableIndex;
+		}
 
 		public HEADER Header;
 		public WLNK WaveLink;
@@ -185,7 +155,7 @@ namespace DLS {
 		public List<WaveLoop> Loops = new List<WaveLoop>();
 		public LART Articulations = new LART();
 
-		protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "rgn ";
 			chunks.Add(new Chunk("rgnh", (i) => {
 				i.Write(Header);
@@ -204,13 +174,10 @@ namespace DLS {
 				i.Read(ref Sampler);
 				i.Read(Loops);
 			}));
-			riffs.Add(new RList("lart", (i) => {
-				i.Write(Articulations);
-				if (0 < Articulations.List.Count) {
-
-				}
-			}, (i) => {
-				i.Read(Articulations);
+			riffs.Add(new LIST("lart", (i) => {
+				Articulations.Write(i);
+			}, (ptr, size) => {
+				Articulations = new LART(ptr, size);
 			}));
 		}
 

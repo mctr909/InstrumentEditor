@@ -193,7 +193,7 @@ namespace SF2 {
         private PDTA mPdta;
         private SDTA mSdta;
 
-        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+        protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
             id = "";
         }
 
@@ -751,7 +751,7 @@ namespace SF2 {
         private List<MOD> mIMOD = new List<MOD>();
         private List<GEN> mIGEN = new List<GEN>();
 
-        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+        protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
             id = "";
         }
 
@@ -1012,7 +1012,7 @@ namespace SF2 {
     public class SDTA : Riff {
         public byte[] Data { get; private set; }
 
-        protected override void Init(out string id, List<Chunk> chunks, List<RList> riffs) {
+        protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
             id = "";
         }
 

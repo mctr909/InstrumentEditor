@@ -56,7 +56,7 @@ namespace InstPack {
             // update inst's region art
             for (var iInst = 0; iInst < Inst.Count; iInst++) {
                 var inst = Inst[iInst];
-                for (var iRgn = 0; iRgn < inst.Regions.Count; iRgn++) {
+                for (var iRgn = 0; iRgn < inst.Regions.List.Count; iRgn++) {
                     var rgn = inst.Regions[iRgn];
                     inst.Regions[iRgn].WaveLink.TableIndex
                         = renumberingList[rgn.WaveLink.TableIndex];
