@@ -5,7 +5,7 @@ using System.Windows.Forms;
 namespace InstrumentEditor {
     public partial class AddPresetDialog : Form {
         private Pack mFile;
-        private Preset mPreset;
+        private DLS.INS mPreset;
 
         private readonly string[] GM_INST_NAME = new string[] {
             "Acoustic Grand Piano",
@@ -275,7 +275,7 @@ namespace InstrumentEditor {
             mFile = file;
         }
 
-        public AddPresetDialog(Pack file, Preset preset) {
+        public AddPresetDialog(Pack file, DLS.INS preset) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -312,26 +312,26 @@ namespace InstrumentEditor {
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
-            var id = new PREH {
+            var id = new DLS.MidiLocale {
                 ProgNum = (byte)lstPrgNo.SelectedIndex,
                 BankMSB = (byte)lstBankMSB.SelectedIndex,
                 BankLSB = (byte)lstBankLSB.SelectedIndex,
-                IsDrum = rbDrum.Checked
+                BankFlg = (byte)(rbDrum.Checked ? 0x80 : 0x00)
             };
-            if (mFile.Preset.ContainsKey(id)) {
+            if (mFile.Inst.List.ContainsKey(id)) {
                 MessageBox.Show("既に同じ識別子の音色が存在します。");
                 return;
             }
-            var preset = new Preset();
-            preset.Header = id;
+            var preset = new DLS.INS();
+            preset.Locale = id;
             preset.Info[Info.TYPE.INAM] = txtInstName.Text;
             preset.Info[Info.TYPE.ICAT] = cmbCategory.Text;
             if (null != mPreset) {
-                mPreset.Header = id;
+                mPreset.Locale = id;
                 mPreset.Info.CopyFrom(preset.Info);
                 preset = mPreset;
             }
-            mFile.Preset.Add(id, preset);
+            mFile.Inst.List.Add(id, preset);
             Close();
         }
 
@@ -339,7 +339,7 @@ namespace InstrumentEditor {
             lstPrgNo.Items.Clear();
 
             if (null != mPreset) {
-                rbDrum.Checked = mPreset.Header.IsDrum;
+                rbDrum.Checked = mPreset.Locale.BankFlg == 0x80;
                 rbDrum.Enabled = false;
                 rbNote.Enabled = false;
                 txtInstName.Text = mPreset.Info[Info.TYPE.INAM].Trim();
@@ -347,16 +347,16 @@ namespace InstrumentEditor {
 
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
-                foreach (var preset in mFile.Preset.Keys) {
+                foreach (var preset in mFile.Inst.List.Keys) {
                     if (rbDrum.Checked) {
-                        if (preset.IsDrum) {
+                        if (preset.BankFlg == 0x80) {
                             if (i == preset.ProgNum) {
                                 strUse = "*";
                                 break;
                             }
                         }
                     } else {
-                        if (!preset.IsDrum) {
+                        if (preset.BankFlg != 0x80) {
                             if (i == preset.ProgNum) {
                                 strUse = "*";
                                 break;
@@ -372,7 +372,7 @@ namespace InstrumentEditor {
                 }
             }
             if (null != mPreset) {
-                lstPrgNo.SelectedIndex = mPreset.Header.ProgNum;
+                lstPrgNo.SelectedIndex = mPreset.Locale.ProgNum;
             }
         }
 
@@ -386,9 +386,9 @@ namespace InstrumentEditor {
 
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
-                foreach (var preset in mFile.Preset.Keys) {
+                foreach (var preset in mFile.Inst.List.Keys) {
                     if (rbDrum.Checked) {
-                        if (preset.IsDrum) {
+                        if (preset.BankFlg == 0x80) {
                             if (prgIndex == preset.ProgNum &&
                                 i == preset.BankMSB
                             ) {
@@ -397,7 +397,7 @@ namespace InstrumentEditor {
                             }
                         }
                     } else {
-                        if (!preset.IsDrum) {
+                        if (preset.BankFlg != 0x80) {
                             if (prgIndex == preset.ProgNum &&
                                 i == preset.BankMSB
                             ) {
@@ -411,7 +411,7 @@ namespace InstrumentEditor {
             }
 
             if (null != mPreset) {
-                lstBankMSB.SelectedIndex = mPreset.Header.BankMSB;
+                lstBankMSB.SelectedIndex = mPreset.Locale.BankMSB;
             }
         }
 
@@ -429,9 +429,9 @@ namespace InstrumentEditor {
 
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
-                foreach (var preset in mFile.Preset.Keys) {
+                foreach (var preset in mFile.Inst.List.Keys) {
                     if (rbDrum.Checked) {
-                        if (preset.IsDrum) {
+                        if (preset.BankFlg == 0x80) {
                             if (prgIndex == preset.ProgNum &&
                                 msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
@@ -441,7 +441,7 @@ namespace InstrumentEditor {
                             }
                         }
                     } else {
-                        if (!preset.IsDrum) {
+                        if (preset.BankFlg != 0x80) {
                             if (prgIndex == preset.ProgNum &&
                                 msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
@@ -456,7 +456,7 @@ namespace InstrumentEditor {
             }
 
             if (null != mPreset) {
-                lstBankLSB.SelectedIndex = mPreset.Header.BankLSB;
+                lstBankLSB.SelectedIndex = mPreset.Locale.BankLSB;
             }
         }
 
@@ -466,7 +466,7 @@ namespace InstrumentEditor {
             if (!string.IsNullOrWhiteSpace(tmpCategory)) {
                 cmbCategory.Items.Add(tmpCategory);
             }
-            foreach (var preset in mFile.Preset.Values) {
+            foreach (var preset in mFile.Inst.List.Values) {
                 var cat = preset.Info[Info.TYPE.ICAT];
                 if ("" != cat) {
                     if (!cmbCategory.Items.Contains(cat.Trim())) {

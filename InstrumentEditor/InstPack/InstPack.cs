@@ -5,15 +5,15 @@ using DLS;
 namespace InstPack {
     public class Pack {
         public WVPL Wave = new WVPL();
-        public LInst Inst = new LInst();
-        public LPreset Preset = new LPreset();
+        public LINS Inst = new LINS();
+        public LINS Preset = new LINS();
 
         public bool DeleteWave(List<uint> indices) {
             // find deletable wave
             var deleteList = new Dictionary<uint, bool>();
             foreach (var selectedIndex in indices) {
                 var deletable = true;
-                foreach (var inst in Inst.ToArray()) {
+                foreach (var inst in Inst.List.Values) {
                     foreach (var region in inst.Regions.Array) {
                         if (selectedIndex == region.WaveLink.TableIndex) {
                             deletable = false;
@@ -54,8 +54,7 @@ namespace InstPack {
             Wave.List.AddRange(waveList);
 
             // update inst's region art
-            for (var iInst = 0; iInst < Inst.Count; iInst++) {
-                var inst = Inst[iInst];
+            foreach(var inst in Inst.List.Values) {
                 for (var iRgn = 0; iRgn < inst.Regions.List.Count; iRgn++) {
                     var rgn = inst.Regions[iRgn];
                     inst.Regions[iRgn].WaveLink.TableIndex
@@ -71,17 +70,6 @@ namespace InstPack {
             var deleteList = new Dictionary<int, bool>();
             foreach (int selectedIndex in indices) {
                 var deletable = true;
-                foreach (var preset in Preset.Values) {
-                    foreach (var layer in preset.Regions.ToArray()) {
-                        if (selectedIndex == layer.InstIndex) {
-                            deletable = false;
-                            break;
-                        }
-                    }
-                    if (!deletable) {
-                        break;
-                    }
-                }
                 deleteList.Add(selectedIndex, deletable);
             }
 
@@ -92,35 +80,34 @@ namespace InstPack {
             // renumbering
             var newIndex = 0;
             var renumberingList = new Dictionary<int, int>();
-            for (var iInst = 0; iInst < Inst.Count; iInst++) {
+            for (var iInst = 0; iInst < Inst.List.Count; iInst++) {
                 if (deleteList.ContainsKey(iInst) && deleteList[iInst]) {
                     continue;
                 }
                 renumberingList.Add(iInst, newIndex);
                 ++newIndex;
             }
-
-            // delete inst
-            var newInstList = new List<INS>();
-            for (var iInst = 0; iInst < Inst.Count; iInst++) {
-                if (deleteList.ContainsKey(iInst) && deleteList[iInst]) {
-                    continue;
-                }
-                newInstList.Add(Inst[iInst]);
-            }
-            Inst.Clear();
-            Inst.AddRange(newInstList);
-
-            // update preset's layer art
-            foreach (var preset in Preset.Values) {
-                for (var iLayer = 0; iLayer < preset.Regions.Count; iLayer++) {
-                    var layer = preset.Regions[iLayer];
-                    var iInst = layer.InstIndex;
-                    if (renumberingList.ContainsKey(iInst)) {
-                        layer.InstIndex = renumberingList[iInst];
-                    }
-                }
-            }
+            ///TODO:RGN
+            //// delete inst
+            //var newInstList = new Dictionary<MidiLocale, INS>();
+            //for (var iInst = 0; iInst < Inst.List.Count; iInst++) {
+            //    if (deleteList.ContainsKey(iInst) && deleteList[iInst]) {
+            //        continue;
+            //    }
+            //    newInstList.Add(Inst.List[iInst]);
+            //}
+            //Inst.List.Clear();
+            //Inst.List.AddRange(newInstList);
+            //// update preset's layer art
+            //foreach (var preset in Preset.Values) {
+            //    for (var iLayer = 0; iLayer < preset.Regions.Count; iLayer++) {
+            //        var layer = preset.Regions[iLayer];
+            //        var iInst = layer.InstIndex;
+            //        if (renumberingList.ContainsKey(iInst)) {
+            //            layer.InstIndex = renumberingList[iInst];
+            //        }
+            //    }
+            //}
 
             return true;
         }

@@ -2,13 +2,14 @@
 using System.Windows.Forms;
 
 using InstPack;
+using DLS;
 
 namespace InstrumentEditor {
     public partial class InstSelectDialog : Form {
         private Pack mFile;
-        private Region mLayer;
+        private RGN mLayer;
 
-        public InstSelectDialog(Pack file, Region layer) {
+        public InstSelectDialog(Pack file, RGN layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -27,7 +28,7 @@ namespace InstrumentEditor {
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstInst.SelectedIndex) {
                 var cols = lstInst.SelectedItem.ToString().Split('|');
-                mLayer.InstIndex = int.Parse(cols[0]);
+                //mLayer.InstIndex = int.Parse(cols[0]);
             }
             Close();
         }
@@ -59,21 +60,18 @@ namespace InstrumentEditor {
         private void DispList(string keyword) {
             lstInst.Items.Clear();
             int count = 0;
-            for (var iInst = 0; iInst < mFile.Inst.Count; iInst++) {
-                var inst = mFile.Inst[iInst];
+            foreach (var inst in mFile.Inst.List.Values) {
                 var name = "";
                 if (string.IsNullOrWhiteSpace(inst.Info[Info.TYPE.INAM])) {
                     name = string.Format("Inst[{0}]", count);
                 } else {
                     name = inst.Info[Info.TYPE.INAM];
                 }
-
                 if (!string.IsNullOrEmpty(keyword) && name.IndexOf(keyword) < 0) {
                     continue;
                 }
-
                 var use = false;
-                foreach (var ins in mFile.Inst.ToArray()) {
+                foreach (var ins in mFile.Inst.List.Values) {
                     foreach (var rgn in ins.Regions.Array) {
                         if (count == rgn.WaveLink.TableIndex) {
                             use = true;
@@ -84,10 +82,9 @@ namespace InstrumentEditor {
                         break;
                     }
                 }
-
                 lstInst.Items.Add(string.Format(
                     "{0}|{1}|{2}",
-                    iInst.ToString("0000"),
+                    count.ToString("0000"),
                     use ? "*" : " ",
                     name
                 ));

@@ -7,9 +7,9 @@ using InstPack;
 namespace InstrumentEditor {
     public partial class LayerInfoDialog : Form {
         private Pack mFile;
-        private Region mLayer;
+        private RGN mLayer;
 
-        public LayerInfoDialog(Pack file, Region layer) {
+        public LayerInfoDialog(Pack file, RGN layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 
@@ -39,17 +39,17 @@ namespace InstrumentEditor {
         private void btnSelect_Click(object sender, EventArgs e) {
             var fm = new InstSelectDialog(mFile, mLayer);
             fm.ShowDialog();
-            var instIndex = mLayer.InstIndex;
-            if (instIndex < mFile.Inst.Count) {
-                var inst = mFile.Inst[instIndex];
-                txtInst.Text = string.Format(
-                    "{0} {1}",
-                    instIndex.ToString("0000"),
-                    inst.Info[Info.TYPE.INAM]
-                );
-            } else {
-                txtInst.Text = "";
-            }
+            //var instIndex = mLayer.InstIndex;
+            //if (instIndex < mFile.Inst.Count) {
+            //    var inst = mFile.Inst[instIndex];
+            //    txtInst.Text = string.Format(
+            //        "{0} {1}",
+            //        instIndex.ToString("0000"),
+            //        inst.Info[Info.TYPE.INAM]
+            //    );
+            //} else {
+            //    txtInst.Text = "";
+            //}
         }
 
         private void btnAdd_Click(object sender, EventArgs e) {
@@ -159,22 +159,22 @@ namespace InstrumentEditor {
                 numVelocityLow.Value = mLayer.Header.VelLo;
                 numVelocityHigh.Value = mLayer.Header.VelHi;
 
-                var instIndex = mLayer.InstIndex;
-                var instName = "";
-                if (instIndex < mFile.Inst.Count) {
-                    var inst = mFile.Inst[instIndex];
-                    instName = inst.Info[Info.TYPE.INAM];
-                }
+                //var instIndex = mLayer.InstIndex;
+                //var instName = "";
+                //if (instIndex < mFile.Inst.Count) {
+                //    var inst = mFile.Inst[instIndex];
+                //    instName = inst.Info[Info.TYPE.INAM];
+                //}
 
-                if (int.MaxValue == instIndex) {
-                    txtInst.Text = "";
-                } else {
-                    txtInst.Text = string.Format(
-                        "{0} {1}",
-                        instIndex.ToString("0000"),
-                        instName
-                    );
-                }
+                //if (int.MaxValue == instIndex) {
+                //    txtInst.Text = "";
+                //} else {
+                //    txtInst.Text = string.Format(
+                //        "{0} {1}",
+                //        instIndex.ToString("0000"),
+                //        instName
+                //    );
+                //}
 
                 var cent = 0;
                 foreach(var art in mLayer.Articulations.List) {

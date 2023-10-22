@@ -44,16 +44,9 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.tbpPresetList = new System.Windows.Forms.TabPage();
-            this.lstPreset = new System.Windows.Forms.ListBox();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.tsbAddPreset = new System.Windows.Forms.ToolStripButton();
-            this.tsbDeletePreset = new System.Windows.Forms.ToolStripButton();
-            this.tsbCopyPreset = new System.Windows.Forms.ToolStripButton();
-            this.tsbPastePreset = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.txtSearchPreset = new System.Windows.Forms.ToolStripTextBox();
             this.tbpWaveList = new System.Windows.Forms.TabPage();
             this.lstWave = new System.Windows.Forms.ListBox();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
@@ -80,7 +73,6 @@
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.menuStrip1.SuspendLayout();
-            this.tbpPresetList.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.tbpWaveList.SuspendLayout();
             this.toolStrip3.SuspendLayout();
@@ -204,105 +196,19 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // tbpPresetList
-            // 
-            this.tbpPresetList.Controls.Add(this.lstPreset);
-            this.tbpPresetList.Controls.Add(this.toolStrip2);
-            this.tbpPresetList.Font = new System.Drawing.Font("Meiryo UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.tbpPresetList.Location = new System.Drawing.Point(8, 39);
-            this.tbpPresetList.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.tbpPresetList.Name = "tbpPresetList";
-            this.tbpPresetList.Padding = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.tbpPresetList.Size = new System.Drawing.Size(751, 687);
-            this.tbpPresetList.TabIndex = 0;
-            this.tbpPresetList.Text = "プリセット一覧";
-            this.tbpPresetList.UseVisualStyleBackColor = true;
-            // 
-            // lstPreset
-            // 
-            this.lstPreset.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lstPreset.FormattingEnabled = true;
-            this.lstPreset.ItemHeight = 29;
-            this.lstPreset.Location = new System.Drawing.Point(13, 82);
-            this.lstPreset.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.lstPreset.Name = "lstPreset";
-            this.lstPreset.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lstPreset.Size = new System.Drawing.Size(450, 265);
-            this.lstPreset.TabIndex = 3;
-            this.lstPreset.DoubleClick += new System.EventHandler(this.lstPreset_DoubleClick);
-            this.lstPreset.KeyUp += new System.Windows.Forms.KeyEventHandler(this.lstPreset_KeyUp);
-            this.lstPreset.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lstPreset_MouseUp);
-            // 
             // toolStrip2
             // 
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbAddPreset,
-            this.tsbDeletePreset,
-            this.tsbCopyPreset,
-            this.tsbPastePreset,
             this.toolStripSeparator3,
-            this.toolStripLabel2,
-            this.txtSearchPreset});
+            this.toolStripLabel2});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.toolStrip2.Size = new System.Drawing.Size(634, 38);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
-            // 
-            // tsbAddPreset
-            // 
-            this.tsbAddPreset.AutoSize = false;
-            this.tsbAddPreset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAddPreset.Image = global::InstrumentEditor.Properties.Resources.plus;
-            this.tsbAddPreset.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbAddPreset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbAddPreset.Name = "tsbAddPreset";
-            this.tsbAddPreset.Size = new System.Drawing.Size(23, 35);
-            this.tsbAddPreset.Text = "toolStripButton1";
-            this.tsbAddPreset.ToolTipText = "プリセット追加";
-            this.tsbAddPreset.Click += new System.EventHandler(this.tsbAddPreset_Click);
-            // 
-            // tsbDeletePreset
-            // 
-            this.tsbDeletePreset.AutoSize = false;
-            this.tsbDeletePreset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbDeletePreset.Image = global::InstrumentEditor.Properties.Resources.minus;
-            this.tsbDeletePreset.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbDeletePreset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbDeletePreset.Name = "tsbDeletePreset";
-            this.tsbDeletePreset.Size = new System.Drawing.Size(23, 35);
-            this.tsbDeletePreset.Text = "toolStripButton2";
-            this.tsbDeletePreset.ToolTipText = "プリセット削除";
-            this.tsbDeletePreset.Click += new System.EventHandler(this.tsbDeletePreset_Click);
-            // 
-            // tsbCopyPreset
-            // 
-            this.tsbCopyPreset.AutoSize = false;
-            this.tsbCopyPreset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbCopyPreset.Image = global::InstrumentEditor.Properties.Resources.copy;
-            this.tsbCopyPreset.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbCopyPreset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCopyPreset.Name = "tsbCopyPreset";
-            this.tsbCopyPreset.Size = new System.Drawing.Size(23, 35);
-            this.tsbCopyPreset.Text = "toolStripButton3";
-            this.tsbCopyPreset.ToolTipText = "プリセットコピー";
-            this.tsbCopyPreset.Click += new System.EventHandler(this.tsbCopyPreset_Click);
-            // 
-            // tsbPastePreset
-            // 
-            this.tsbPastePreset.AutoSize = false;
-            this.tsbPastePreset.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbPastePreset.Image = global::InstrumentEditor.Properties.Resources.paste;
-            this.tsbPastePreset.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbPastePreset.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbPastePreset.Name = "tsbPastePreset";
-            this.tsbPastePreset.Size = new System.Drawing.Size(23, 35);
-            this.tsbPastePreset.Text = "toolStripButton4";
-            this.tsbPastePreset.ToolTipText = "プリセット貼り付け";
-            this.tsbPastePreset.Click += new System.EventHandler(this.tsbPastePreset_Click);
             // 
             // toolStripSeparator3
             // 
@@ -315,15 +221,6 @@
             this.toolStripLabel2.Name = "toolStripLabel2";
             this.toolStripLabel2.Size = new System.Drawing.Size(118, 35);
             this.toolStripLabel2.Text = "名称検索:";
-            // 
-            // txtSearchPreset
-            // 
-            this.txtSearchPreset.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtSearchPreset.Font = new System.Drawing.Font("ＭＳ ゴシック", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtSearchPreset.Name = "txtSearchPreset";
-            this.txtSearchPreset.Size = new System.Drawing.Size(401, 38);
-            this.txtSearchPreset.Leave += new System.EventHandler(this.txtSearchPreset_Leave);
-            this.txtSearchPreset.TextChanged += new System.EventHandler(this.txtSearchPreset_TextChanged);
             // 
             // tbpWaveList
             // 
@@ -430,7 +327,6 @@
             // tabControl
             // 
             this.tabControl.Controls.Add(this.tbpWaveList);
-            this.tabControl.Controls.Add(this.tbpPresetList);
             this.tabControl.Controls.Add(this.tbpInstList);
             this.tabControl.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tabControl.Location = new System.Drawing.Point(15, 48);
@@ -604,8 +500,6 @@
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tbpPresetList.ResumeLayout(false);
-            this.tbpPresetList.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             this.tbpWaveList.ResumeLayout(false);
@@ -640,8 +534,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 		private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.TabPage tbpPresetList;
-        private System.Windows.Forms.ListBox lstPreset;
         private System.Windows.Forms.TabPage tbpWaveList;
         private System.Windows.Forms.ListBox lstWave;
         private System.Windows.Forms.ToolStrip toolStrip3;
@@ -660,13 +552,8 @@
         private System.Windows.Forms.TabPage tbpInstList;
         private System.Windows.Forms.ListBox lstInst;
         private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripButton tsbAddPreset;
-        private System.Windows.Forms.ToolStripButton tsbDeletePreset;
-        private System.Windows.Forms.ToolStripButton tsbCopyPreset;
-        private System.Windows.Forms.ToolStripButton tsbPastePreset;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripTextBox txtSearchPreset;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton tsbAddInst;
         private System.Windows.Forms.ToolStripButton tsbDeleteInst;

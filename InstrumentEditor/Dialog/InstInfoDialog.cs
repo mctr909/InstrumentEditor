@@ -47,7 +47,7 @@ namespace InstrumentEditor {
                 mInst = new INS();
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
                 mInst.Info[Info.TYPE.ICAT] = cmbCategory.Text;
-                mFile.Inst.Add(mInst);
+                mFile.Inst.List.Add(mInst.Locale, mInst);
                 artList.SetList(mInst.Articulations);
             } else {
                 mInst.Info[Info.TYPE.INAM] = txtInstName.Text;
@@ -63,7 +63,7 @@ namespace InstrumentEditor {
             if (!string.IsNullOrWhiteSpace(tmpCategory)) {
                 cmbCategory.Items.Add(tmpCategory);
             }
-            foreach (var inst in mFile.Inst.ToArray()) {
+            foreach (var inst in mFile.Inst.List.Values) {
                 if ("" != inst.Info[Info.TYPE.ICAT]) {
                     if (!cmbCategory.Items.Contains(inst.Info[Info.TYPE.ICAT].Trim())) {
                         cmbCategory.Items.Add(inst.Info[Info.TYPE.ICAT].Trim());

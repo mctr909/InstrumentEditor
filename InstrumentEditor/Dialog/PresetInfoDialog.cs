@@ -6,9 +6,9 @@ using InstPack;
 namespace InstrumentEditor {
 	public partial class PresetInfoDialog : Form {
         private Pack mFile;
-        private Preset mPreset;
+        private DLS.INS mPreset;
 
-        public PresetInfoDialog(Pack file, Preset preset, bool multi = false) {
+        public PresetInfoDialog(Pack file, DLS.INS preset, bool multi = false) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -57,7 +57,7 @@ namespace InstrumentEditor {
         private void setCategoryList() {
             cmbCategory.Items.Clear();
             cmbCategory.Items.Add(mPreset.Info[Info.TYPE.ICAT]);
-            foreach (var preset in mFile.Preset.Values) {
+            foreach (var preset in mFile.Inst.List.Values) {
                 if ("" != preset.Info[Info.TYPE.ICAT]) {
                     if (!cmbCategory.Items.Contains(preset.Info[Info.TYPE.ICAT].Trim())) {
                         cmbCategory.Items.Add(preset.Info[Info.TYPE.ICAT].Trim());

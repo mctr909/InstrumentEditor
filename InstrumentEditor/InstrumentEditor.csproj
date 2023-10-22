@@ -75,22 +75,13 @@
     <Compile Include="DLS\Region.cs" />
     <Compile Include="DLS\Struct.cs" />
     <Compile Include="DLS\Wave.cs" />
-    <Compile Include="Form\LayerAssignForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\LayerAssignForm.Designer.cs">
-      <DependentUpon>LayerAssignForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form\RegionAssignForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form\RegionAssignForm.Designer.cs">
       <DependentUpon>RegionAssignForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="InstPack\Inst.cs" />
     <Compile Include="InstPack\InstPack.cs" />
-    <Compile Include="InstPack\Region.cs" />
-    <Compile Include="InstPack\Preset.cs" />
     <Compile Include="Riff.cs" />
     <Compile Include="DLS\DLS.cs" />
     <Compile Include="DoubleBufferBitmap.cs" />
@@ -152,9 +143,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\InstInfoDialog.resx">
       <DependentUpon>InstInfoDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form\LayerAssignForm.resx">
-      <DependentUpon>LayerAssignForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\RegionAssignForm.resx">
       <DependentUpon>RegionAssignForm.cs</DependentUpon>

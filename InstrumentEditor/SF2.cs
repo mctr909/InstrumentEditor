@@ -648,51 +648,51 @@ namespace SF2 {
                     inst.Regions.Add(rgn);
                 }
 
-                instFile.Inst.Add(inst);
+                instFile.Inst.List.Add(inst.Locale, inst);
             }
 
             foreach (var sf2Pres in mPdta.PresetList) {
-                var preset = new InstPack.Preset();
-                preset.Header.IsDrum = 0 < sf2Pres.Key.bankFlg;
-                preset.Header.BankMSB = sf2Pres.Key.bankMSB;
-                preset.Header.BankLSB = sf2Pres.Key.bankLSB;
-                preset.Header.ProgNum = sf2Pres.Key.progNum;
+                var preset = new INS();
+                preset.Locale.BankFlg = (byte)(0 < sf2Pres.Key.bankFlg ? 0x80 : 0x00);
+                preset.Locale.BankMSB = sf2Pres.Key.bankMSB;
+                preset.Locale.BankLSB = sf2Pres.Key.bankLSB;
+                preset.Locale.ProgNum = sf2Pres.Key.progNum;
 
                 preset.Info[Info.TYPE.INAM] = sf2Pres.Value.Name.Replace("\0", "");
                 preset.Info[Info.TYPE.ICRD] = now;
 
-                foreach (var art in sf2Pres.Value.GlobalArt) {
-                    switch (art.Key) {
-                    case E_OPER.INITIAL_ATTENUATION:
-                        preset.Articulations.Add(new Connection {
-                            Destination = DST_TYPE.GAIN,
-                            Value = art.Value
-                        });
-                        break;
-                    case E_OPER.PAN:
-                        preset.Articulations.Add(new Connection {
-                            Destination = DST_TYPE.PAN,
-                            Value = art.Value
-                        });
-                        break;
-                    case E_OPER.COARSE_TUNE:
-                        ///TODO:ART
-                        //globalArt.Type = ART_TYPE.COASE_TUNE;
-                        //preset.Art.Add(globalArt);
-                        break;
-                    case E_OPER.FINETUNE:
-                        preset.Articulations.Add(new Connection {
-                            Destination = DST_TYPE.PITCH,
-                            Value = art.Value
-                        });
-                        break;
-                    case E_OPER.INSTRUMENT:
-                        break;
-                    }
-                }
+                ///TODO:ART
+                //foreach (var art in sf2Pres.Value.GlobalArt) {
+                //    switch (art.Key) {
+                //    case E_OPER.INITIAL_ATTENUATION:
+                //        preset.Articulations.Add(new Connection {
+                //            Destination = DST_TYPE.GAIN,
+                //            Value = art.Value
+                //        });
+                //        break;
+                //    case E_OPER.PAN:
+                //        preset.Articulations.Add(new Connection {
+                //            Destination = DST_TYPE.PAN,
+                //            Value = art.Value
+                //        });
+                //        break;
+                //    case E_OPER.COARSE_TUNE:
+                //        globalArt.Type = ART_TYPE.COASE_TUNE;
+                //        preset.Art.Add(globalArt);
+                //        break;
+                //    case E_OPER.FINETUNE:
+                //        preset.Articulations.Add(new Connection {
+                //            Destination = DST_TYPE.PITCH,
+                //            Value = art.Value
+                //        });
+                //        break;
+                //    case E_OPER.INSTRUMENT:
+                //        break;
+                //    }
+                //}
 
                 foreach (var sf2PresRng in sf2Pres.Value.Range) {
-                    var rgn = new Region();
+                    var rgn = new RGN();
                     rgn.Header.KeyLo = sf2PresRng.keyLo;
                     rgn.Header.KeyHi = sf2PresRng.keyHi;
                     rgn.Header.VelLo = sf2PresRng.velLo;
@@ -724,13 +724,14 @@ namespace SF2 {
                             });
                             break;
                         case E_OPER.INSTRUMENT:
-                            rgn.InstIndex = (int)art.Value;
+                            ///TODO:RGN
+                            //rgn.InstIndex = (int)art.Value;
                             break;
                         }
                     }
                     preset.Regions.Add(rgn);
                 }
-                instFile.Preset.Add(preset.Header, preset);
+                instFile.Inst.List.Add(preset.Locale, preset);
             }
 
             return instFile;

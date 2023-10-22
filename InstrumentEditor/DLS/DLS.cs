@@ -78,25 +78,22 @@ namespace DLS {
             }
 
             foreach (var dlsInst in Instruments.List) {
-                var pres = new Preset();
-                pres.Header.IsDrum = 0 < (dlsInst.Key.BankFlg & 0x80);
-                pres.Header.BankMSB = dlsInst.Key.BankMSB;
-                pres.Header.BankLSB = dlsInst.Key.BankLSB;
-                pres.Header.ProgNum = dlsInst.Key.ProgNum;
+                var pres = new INS();
+                pres.Locale = dlsInst.Key;
 
-                var rgn = new Region();
+                var rgn = new RGN();
                 rgn.Header.KeyLo = 0;
                 rgn.Header.KeyHi = 127;
                 rgn.Header.VelLo = 0;
                 rgn.Header.VelHi = 127;
-                rgn.InstIndex = pack.Inst.Count;
 
                 pres.Regions.Add(rgn);
                 pres.Info.CopyFrom(dlsInst.Value.Info);
                 pres.Info[Info.TYPE.ICRD] = now;
-                pack.Preset.Add(pres.Header, pres);
+                pack.Preset.List.Add(pres.Locale, pres);
 
                 var inst = new INS();
+                inst.Locale = pres.Locale;
                 inst.Info.CopyFrom(dlsInst.Value.Info);
                 inst.Info[Info.TYPE.ICRD] = now;
 
@@ -132,7 +129,7 @@ namespace DLS {
                     }
                     inst.Regions.Add(tmpRgn);
                 }
-                pack.Inst.Add(inst);
+                pack.Inst.List.Add(inst.Locale, inst);
             }
 
             return pack;
@@ -180,30 +177,23 @@ namespace DLS {
             // Inst
             saveFile.Instruments = new LINS();
             saveFile.Instruments.List = new SortedDictionary<MidiLocale, INS>(new LINS.Sort());
-            foreach (var srcPre in pack.Preset.Values) {
-                if (1 != srcPre.Regions.Count) {
+            foreach (var srcPre in pack.Preset.List.Values) {
+                if (1 != srcPre.Regions.List.Count) {
                     continue;
                 }
 
-                var srcIns = pack.Inst[srcPre.Regions[0].InstIndex];
-
                 var ins = new INS();
-                ins.Locale = new MidiLocale();
-                ins.Locale.BankFlg = (byte)(srcPre.Header.IsDrum ? 0x80 : 0x00);
-                ins.Locale.BankMSB = srcPre.Header.BankMSB;
-                ins.Locale.BankLSB = srcPre.Header.BankLSB;
-                ins.Locale.ProgNum = srcPre.Header.ProgNum;
-
+                ins.Locale = srcPre.Locale;
                 ins.Info.CopyFrom(srcPre.Info);
 
                 ins.Articulations = new LART();
-                foreach (var srcArt in srcIns.Articulations.List) {
+                foreach (var srcArt in srcPre.Articulations.List) {
                     ins.Articulations.Add(srcArt);
                 }
 
                 ins.Regions = new LRGN();
                 ins.Regions.List = new SortedList<RGN.HEADER, RGN>(new LRGN.Sort());
-                foreach(var srcRgn in srcIns.Regions.Array) {
+                foreach(var srcRgn in srcPre.Regions.Array) {
                     var rgn = new RGN();
                     rgn.Header = srcRgn.Header;
                     rgn.WaveLink = srcRgn.WaveLink;
