@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 
-using InstPack;
 using DLS;
 
 namespace InstrumentEditor {
     public partial class InstSelectDialog : Form {
-        private Pack mFile;
+        private File mFile;
         private RGN mLayer;
 
-        public InstSelectDialog(Pack file, RGN layer) {
+        public InstSelectDialog(File file, RGN layer) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;

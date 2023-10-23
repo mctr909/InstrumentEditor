@@ -27,9 +27,9 @@ namespace InstrumentEditor {
             art.Clear();
             foreach (DataGridViewRow row in dataGridView1.Rows) {
                 var c = row.Cells;
-                var oSrc = c["Source"].Value;
-                var oDst = c["Type"].Value;
-                var oVal = c["Value"].Value;
+                var oSrc = c["入力"].Value;
+                var oDst = c["種類"].Value;
+                var oVal = c["値"].Value;
                 if (null == oSrc || null == oDst || null == oVal) {
                     continue;
                 }
@@ -89,12 +89,12 @@ namespace InstrumentEditor {
 
             foreach (var art in mLart) {
                 var idx = dataGridView1.Rows.Add();
-                dataGridView1.Rows[idx].Cells["Source"].Value = Enum.GetName(typeof(SRC_TYPE), art.Source);
-                dataGridView1.Rows[idx].Cells["Source"].ReadOnly = true;
-                dataGridView1.Rows[idx].Cells["Type"].Value = Enum.GetName(typeof(DST_TYPE), art.Destination);
-                dataGridView1.Rows[idx].Cells["Type"].ReadOnly = true;
-                dataGridView1.Rows[idx].Cells["Value"].Value = art.Value.ToString("0.000");
-                dataGridView1.Rows[idx].Cells["Unit"].Value = art.Unit;
+                dataGridView1.Rows[idx].Cells["入力"].Value = Enum.GetName(typeof(SRC_TYPE), art.Source);
+                dataGridView1.Rows[idx].Cells["入力"].ReadOnly = true;
+                dataGridView1.Rows[idx].Cells["種類"].Value = Enum.GetName(typeof(DST_TYPE), art.Destination);
+                dataGridView1.Rows[idx].Cells["種類"].ReadOnly = true;
+                dataGridView1.Rows[idx].Cells["値"].Value = art.Value.ToString("0.000");
+                dataGridView1.Rows[idx].Cells["単位"].Value = art.Unit;
             }
         }
     }

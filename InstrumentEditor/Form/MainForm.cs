@@ -4,12 +4,11 @@ using System.IO;
 using System.Windows.Forms;
 
 using DLS;
-using InstPack;
 
 namespace InstrumentEditor {
     public partial class MainForm : Form {
         private string mFilePath;
-        private Pack mPack = new Pack();
+        private DLS.File mPack = new DLS.File();
         private INS mClipboardInst;
 
         public MainForm() {
@@ -23,7 +22,7 @@ namespace InstrumentEditor {
 
         #region メニューバー[ファイル]
         private void 新規作成NToolStripMenuItem_Click(object sender, EventArgs e) {
-            mPack = new Pack();
+            mPack = new DLS.File();
             DispInstList();
             DispWaveList();
             tabControl.SelectedIndex = 0;
@@ -236,7 +235,7 @@ namespace InstrumentEditor {
             var indices = lstWave.SelectedIndices;
             foreach (var idx in indices) {
                 var cols = lstWave.Items[(int)idx].ToString().Split('|');
-                var wave = mPack.Wave.List[int.Parse(cols[0])];
+                var wave = mPack.Wave[int.Parse(cols[0])];
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     wave.ToFile(Path.Combine(folderPath, string.Format("Wave{0}.wav", idx)));
                 }
@@ -257,7 +256,7 @@ namespace InstrumentEditor {
                 if (!System.IO.File.Exists(filePath)) {
                     continue;
                 }
-                mPack.Wave.List.Add(new WAVE(filePath));
+                mPack.Wave.Add(new WAVE(filePath));
             }
 
             DispWaveList();
@@ -278,8 +277,8 @@ namespace InstrumentEditor {
 
             lstWave.Items.Clear();
             int count = 0;
-            for (uint iWave = 0; iWave < mPack.Wave.List.Count; iWave++) {
-                var wave = mPack.Wave.List[(int)iWave];
+            for (uint iWave = 0; iWave < mPack.Wave.Count; iWave++) {
+                var wave = mPack.Wave[(int)iWave];
                 string name;
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);

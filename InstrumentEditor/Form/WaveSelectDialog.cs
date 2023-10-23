@@ -2,14 +2,13 @@
 using System.Windows.Forms;
 
 using DLS;
-using InstPack;
 
 namespace InstrumentEditor {
     public partial class WaveSelectDialog : Form {
-        private Pack mFile;
+        private File mFile;
         private RGN mRegion;
 
-        public WaveSelectDialog(Pack file, RGN region) {
+        public WaveSelectDialog(File file, RGN region) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -73,8 +72,8 @@ namespace InstrumentEditor {
         private void DispWaveList(string keyword) {
             lstWave.Items.Clear();
             int count = 0;
-            for (uint iWave = 0; iWave < mFile.Wave.List.Count; iWave++) {
-                var wave = mFile.Wave.List[(int)iWave];
+            for (uint iWave = 0; iWave < mFile.Wave.Count; iWave++) {
+                var wave = mFile.Wave[(int)iWave];
                 var name = "";
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);

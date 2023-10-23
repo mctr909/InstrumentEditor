@@ -2,18 +2,17 @@
 using System.Windows.Forms;
 
 using DLS;
-using InstPack;
 
 namespace InstrumentEditor {
     public partial class RegionInfoDialog : Form {
-        private Pack mFile;
+        private File mFile;
         private RGN mRegion;
 
         private readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
-        public RegionInfoDialog(Pack file, RGN region) {
+        public RegionInfoDialog(File file, RGN region) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 
@@ -50,8 +49,8 @@ namespace InstrumentEditor {
             var fm = new WaveSelectDialog(mFile, mRegion);
             fm.ShowDialog();
 
-            if (waveIndex < mFile.Wave.List.Count) {
-                var wave = mFile.Wave.List[(int)waveIndex];
+            if (waveIndex < mFile.Wave.Count) {
+                var wave = mFile.Wave[(int)waveIndex];
                 btnEditWave.Enabled = true;
                 txtWave.Text = string.Format(
                     "{0} {1}",
@@ -200,8 +199,8 @@ namespace InstrumentEditor {
                 var waveIndex = (int)mRegion.WaveLink.TableIndex;
 
                 var waveName = "";
-                if (waveIndex < mFile.Wave.List.Count) {
-                    var wave = mFile.Wave.List[waveIndex];
+                if (waveIndex < mFile.Wave.Count) {
+                    var wave = mFile.Wave[waveIndex];
                     waveName = wave.Info[Info.TYPE.INAM];
                     btnEditWave.Enabled = true;
                 } else {

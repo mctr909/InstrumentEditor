@@ -5,24 +5,44 @@ using System.Runtime.InteropServices;
 
 namespace DLS {
 	public class WVPL : Riff {
-		public List<WAVE> List = new List<WAVE>();
+		List<WAVE> mList = new List<WAVE>();
+
+		public int Count { get { return mList.Count; } }
+
+		public WAVE[] Array { get { return mList.ToArray(); } }
 
 		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "wvpl";
 			riffs.Add(new LIST("wave", (i) => {
-				foreach (var wave in List) {
+				foreach (var wave in mList) {
 					wave.Write(i);
 				}
 			}, (ptr, size) => {
 				var ins = new WAVE(ptr, size);
-				List.Add(ins);
+				Add(ins);
 			}));
+		}
+
+		public WAVE this[int index] {
+			get { return mList[index]; }
 		}
 
 		public WVPL() { }
 
 		public WVPL(IntPtr ptr, long size) {
 			Load(ptr, size);
+		}
+
+		public void Add(WAVE wave) {
+			mList.Add(wave);
+		}
+
+		public void AddRange(List<WAVE> waves) {
+			mList.AddRange(waves);
+		}
+
+		public void Clear() {
+			mList.Clear();
 		}
 	}
 

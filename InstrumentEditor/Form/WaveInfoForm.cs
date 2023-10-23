@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
-using InstPack;
+using DLS;
 
 namespace InstrumentEditor {
     unsafe public partial class WaveInfoForm : Form {
@@ -14,9 +14,9 @@ namespace InstrumentEditor {
 
         private WavePlayback mWaveOut;
 
-        private Pack mFile;
-        private DLS.CK_WSMP mSampler;
-        private DLS.WaveLoop mLoop = new DLS.WaveLoop {
+        private File mFile;
+        private CK_WSMP mSampler;
+        private WaveLoop mLoop = new WaveLoop {
             Start = 0,
             Length = 16
         };
@@ -40,21 +40,21 @@ namespace InstrumentEditor {
         private int mDetectNote;
         private int mDetectTune;
 
-        public WaveInfoForm(Pack file, int index) {
+        public WaveInfoForm(File file, int index) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
 
             mFile = file;
             mWaveIndex = index;
-            mSampler = mFile.Wave.List[index].Sampler;
-            if (0 < mFile.Wave.List[index].Loops.Count) {
-                mLoop = mFile.Wave.List[index].Loops[0];
+            mSampler = mFile.Wave[index].Sampler;
+            if (0 < mFile.Wave[index].Loops.Count) {
+                mLoop = mFile.Wave[index].Loops[0];
             }
         }
 
         private void WaveInfoForm_Load(object sender, EventArgs e) {
             mWaveOut = new WavePlayback();
-            mWaveOut.SetValue(mFile.Wave.List[mWaveIndex]);
+            mWaveOut.SetValue(mFile.Wave[mWaveIndex]);
 
             mSpecBmp = new DoubleBufferBitmap(picSpectrum);
             mWaveGraph = new DoubleBufferGraphic(picWave, null);
@@ -126,7 +126,7 @@ namespace InstrumentEditor {
         #region クリックイベント
         private void btnPlay_Click(object sender, EventArgs e) {
             if ("再生" == btnPlay.Text) {
-                var fileLoops = mFile.Wave.List[mWaveIndex].Loops;
+                var fileLoops = mFile.Wave[mWaveIndex].Loops;
                 if (0 < fileLoops.Count) {
                     mWaveOut.mLoopBegin = (int)mLoop.Start;
                     mWaveOut.mLoopEnd = (int)mLoop.Start + (int)mLoop.Length;
@@ -143,11 +143,11 @@ namespace InstrumentEditor {
         }
 
         private void btnUpdate_Click(object sender, EventArgs e) {
-            if (0 < mFile.Wave.List[mWaveIndex].Loops.Count) {
-                mFile.Wave.List[mWaveIndex].Loops[0] = mLoop;
+            if (0 < mFile.Wave[mWaveIndex].Loops.Count) {
+                mFile.Wave[mWaveIndex].Loops[0] = mLoop;
             } else {
-                mFile.Wave.List[mWaveIndex].Loops.Add(mLoop);
-                mFile.Wave.List[mWaveIndex].Sampler.LoopCount = 1;
+                mFile.Wave[mWaveIndex].Loops.Add(mLoop);
+                mFile.Wave[mWaveIndex].Sampler.LoopCount = 1;
             }
             btnUpdate.Enabled = false;
         }
@@ -156,28 +156,28 @@ namespace InstrumentEditor {
             if (0 <= mDetectNote) {
                 numUnityNote.Value = mDetectNote;
                 numFineTune.Value = mDetectTune;
-                mFile.Wave.List[mWaveIndex].Sampler.UnityNote = (byte)mDetectNote;
-                mFile.Wave.List[mWaveIndex].Sampler.FineTune = (short)mDetectTune;
+                mFile.Wave[mWaveIndex].Sampler.UnityNote = (byte)mDetectNote;
+                mFile.Wave[mWaveIndex].Sampler.FineTune = (short)mDetectTune;
             }
         }
 
         private void btnLoopCreate_Click(object sender, EventArgs e) {
-            var fileLoops = mFile.Wave.List[mWaveIndex].Loops;
+            var fileLoops = mFile.Wave[mWaveIndex].Loops;
             if (0 < fileLoops.Count) {
                 mLoop.Start = 0;
                 mLoop.Length = (uint)mWaveData.Length;
                 mWaveOut.mLoopBegin = 0;
                 mWaveOut.mLoopEnd = mWaveData.Length;
-                mFile.Wave.List[mWaveIndex].Loops.Clear();
-                mFile.Wave.List[mWaveIndex].Sampler.LoopCount = 0;
+                mFile.Wave[mWaveIndex].Loops.Clear();
+                mFile.Wave[mWaveIndex].Sampler.LoopCount = 0;
                 btnLoopCreate.Text = "ループ作成";
             } else {
                 mLoop.Start = (uint)hsbTime.Value;
                 mLoop.Length = (uint)(mWaveData.Length < 256 ? 16 : 256);
                 mWaveOut.mLoopBegin = (int)mLoop.Start;
                 mWaveOut.mLoopEnd = (int)mLoop.Start + (int)mLoop.Length;
-                mFile.Wave.List[mWaveIndex].Loops.Add(mLoop);
-                mFile.Wave.List[mWaveIndex].Sampler.LoopCount = 1;
+                mFile.Wave[mWaveIndex].Loops.Add(mLoop);
+                mFile.Wave[mWaveIndex].Sampler.LoopCount = 1;
                 btnLoopCreate.Text = "ループ削除";
             }
         }
@@ -185,7 +185,7 @@ namespace InstrumentEditor {
 
         #region チェンジイベント
         private void txtName_TextChanged(object sender, EventArgs e) {
-            mFile.Wave.List[mWaveIndex].Info[Info.TYPE.INAM] = txtName.Text;
+            mFile.Wave[mWaveIndex].Info[Info.TYPE.INAM] = txtName.Text;
         }
 
         private void numWaveScale_ValueChanged(object sender, EventArgs e) {
@@ -206,7 +206,7 @@ namespace InstrumentEditor {
 
         private void numVolume_ValueChanged(object sender, EventArgs e) {
             var gain = (int)(20 * numVolume.Value) / 400.0;
-            mFile.Wave.List[mWaveIndex].Sampler.Gain = Math.Pow(10.0, gain);
+            mFile.Wave[mWaveIndex].Sampler.Gain = Math.Pow(10.0, gain);
             mWaveOut.mVolume = gain;
         }
 
@@ -214,11 +214,11 @@ namespace InstrumentEditor {
             var oct = (int)numUnityNote.Value / 12 - 2;
             var note = (int)numUnityNote.Value % 12;
             lblUnityNote.Text = string.Format("{0}{1}", Const.NoteName[note], oct);
-            mFile.Wave.List[mWaveIndex].Sampler.UnityNote = (byte)numUnityNote.Value;
+            mFile.Wave[mWaveIndex].Sampler.UnityNote = (byte)numUnityNote.Value;
         }
 
         private void numFineTune_ValueChanged(object sender, EventArgs e) {
-            mFile.Wave.List[mWaveIndex].Sampler.FineTune = (short)numFineTune.Value;
+            mFile.Wave[mWaveIndex].Sampler.FineTune = (short)numFineTune.Value;
         }
         #endregion
 
@@ -231,7 +231,7 @@ namespace InstrumentEditor {
             onDragWave = false;
             onDragLoopBegin = false;
             onDragLoopEnd = false;
-            var fileLoops = mFile.Wave.List[mWaveIndex].Loops;
+            var fileLoops = mFile.Wave[mWaveIndex].Loops;
             if (0 < fileLoops.Count) {
                 btnUpdate.Enabled
                     = fileLoops[0].Start != mLoop.Start
@@ -348,7 +348,7 @@ namespace InstrumentEditor {
 
         private void SetData() {
             var packSize = 24;
-            var wave = mFile.Wave.List[mWaveIndex];
+            var wave = mFile.Wave[mWaveIndex];
             mWaveData = wave.GetFloat(packSize);
             var samples = mWaveData.Length;
             
@@ -455,7 +455,7 @@ namespace InstrumentEditor {
             var begin = hsbTime.Value;
 
             //
-            var wave = mFile.Wave.List[mWaveIndex];
+            var wave = mFile.Wave[mWaveIndex];
             if (0 < wave.Loops.Count) {
                 var loopBegin = (mLoop.Start - begin) * mWaveTimeScale;
                 var loopLength = mLoop.Length * mWaveTimeScale;

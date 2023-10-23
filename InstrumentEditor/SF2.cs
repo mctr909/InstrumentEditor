@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
 
-using InstPack;
 using DLS;
 
 namespace SF2 {
@@ -463,9 +462,9 @@ namespace SF2 {
             sw.Dispose();
         }
 
-        public Pack ToPack() {
+        public DLS.File ToPack() {
             var now = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-            var instFile = new Pack();
+            var instFile = new DLS.File();
 
             for (var idx = 0; idx < mPdta.SampleList.Count - 1; idx++) {
                 var smpl = mPdta.SampleList[idx];
@@ -500,7 +499,7 @@ namespace SF2 {
                 wi.Info[Info.TYPE.INAM] = Encoding.ASCII.GetString(smpl.name).Replace("\0", "");
                 wi.Info[Info.TYPE.ICRD] = now;
 
-                instFile.Wave.List.Add(wi);
+                instFile.Wave.Add(wi);
             }
 
             foreach (var sf2Inst in mPdta.InstList) {

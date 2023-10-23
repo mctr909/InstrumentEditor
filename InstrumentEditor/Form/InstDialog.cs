@@ -1,12 +1,11 @@
-﻿using InstPack;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 using DLS;
 
 namespace InstrumentEditor {
     public partial class InstDialog : Form {
-        private Pack mFile;
+        private File mFile;
         private INS mPreset;
 
         private readonly string[] GM_INST_NAME = new string[] {
@@ -271,7 +270,7 @@ namespace InstrumentEditor {
             ""
         };
 
-        public InstDialog(Pack file) {
+        public InstDialog(File file) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -282,7 +281,7 @@ namespace InstrumentEditor {
             setCategoryList();
         }
 
-        public InstDialog(Pack file, INS preset) {
+        public InstDialog(File file, INS preset) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -329,7 +328,8 @@ namespace InstrumentEditor {
             };
             INS preset;
             if (null == mPreset || !mFile.Inst.ContainsKey(mPreset.Locale)) {
-                preset = new INS();
+                mPreset = new INS();
+                preset = mPreset;
             } else if (mFile.Inst.ContainsKey(newId)) {
                 preset = mFile.Inst[newId];
                 mFile.Inst.Remove(newId);
@@ -354,8 +354,8 @@ namespace InstrumentEditor {
                 btnApply.Top = artList.Bottom + 4;
                 btnApply.Left = artList.Right - btnApply.Width;
             } else {
-                btnApply.Top = grbProg.Bottom + 4;
-                btnApply.Left = grbProg.Right - btnApply.Width;
+                btnApply.Top = grbLSB.Bottom + 4;
+                btnApply.Left = grbLSB.Right - btnApply.Width;
             }
             artList.Visible = enableArt;
             Width = btnApply.Right + 20;

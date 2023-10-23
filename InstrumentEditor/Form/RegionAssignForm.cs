@@ -3,17 +3,16 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using DLS;
-using InstPack;
 
 namespace InstrumentEditor {
     public partial class RegionAssignForm : Form {
-        private Pack mFile;
+        private File mFile;
         private INS mInst;
         private bool mOnRange;
         private const int KEY_WIDTH = 6;
         private const int VEL_HEIGHT = 4;
 
-        public RegionAssignForm(Pack file, INS inst) {
+        public RegionAssignForm(File file, INS inst) {
             mFile = file;
             mInst = inst;
             InitializeComponent();
