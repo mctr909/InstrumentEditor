@@ -386,7 +386,9 @@ namespace InstrumentEditor {
                     lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM_INST_NAME[i]));
                 }
             }
-            if (null != mPreset) {
+            if (null == mPreset) {
+                lstPrgNo.SelectedIndex = 0;
+            } else {
                 lstPrgNo.SelectedIndex = mPreset.Locale.ProgNum;
             }
         }
@@ -421,7 +423,9 @@ namespace InstrumentEditor {
                 }
                 lstBankMSB.Items.Add(string.Format("{0}{1}", i.ToString("000"), strUse));
             }
-            if (null != mPreset) {
+            if (null == mPreset) {
+                lstBankMSB.SelectedIndex = 0;
+            } else {
                 lstBankMSB.SelectedIndex = mPreset.Locale.BankMSB;
             }
         }
@@ -463,7 +467,9 @@ namespace InstrumentEditor {
                 }
                 lstBankLSB.Items.Add(string.Format("{0}{1}", i.ToString("000"), strUse));
             }
-            if (null != mPreset) {
+            if (null == mPreset) {
+                lstBankLSB.SelectedIndex = 0;
+            } else {
                 lstBankLSB.SelectedIndex = mPreset.Locale.BankLSB;
             }
         }
