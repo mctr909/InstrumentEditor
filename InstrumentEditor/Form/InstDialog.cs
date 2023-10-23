@@ -3,7 +3,7 @@ using System;
 using System.Windows.Forms;
 
 namespace InstrumentEditor {
-    public partial class AddPresetDialog : Form {
+    public partial class InstDialog : Form {
         private Pack mFile;
         private DLS.INS mPreset;
 
@@ -187,8 +187,8 @@ namespace InstrumentEditor {
             "",
             "",
             "",
-            "",
             "Orchestra",
+            "",
             "",
             "",
             "",
@@ -269,33 +269,43 @@ namespace InstrumentEditor {
             ""
         };
 
-        public AddPresetDialog(Pack file) {
+        public InstDialog(Pack file) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
+            setLayout(rbTypeNote.Checked);
+            setProgramList();
+            setBankMsbList();
+            setBankLsbList();
+            setCategoryList();
         }
 
-        public AddPresetDialog(Pack file, DLS.INS preset) {
+        public InstDialog(Pack file, DLS.INS preset) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             mPreset = preset;
-        }
-
-        private void AddPresetDialog_Load(object sender, EventArgs e) {
+            var enableArt = false;
+            if (null != mPreset) {
+                enableArt = mPreset.Locale.BankFlg != 0x80;
+                artList.Art = mPreset.Articulations.List;
+                rbTypeDrum.Checked = mPreset.Locale.BankFlg == 0x80;
+                rbTypeDrum.Enabled = false;
+                rbTypeNote.Enabled = false;
+                txtInstName.Text = mPreset.Info[Info.TYPE.INAM].Trim();
+            }
+            setLayout(enableArt);
             setProgramList();
             setBankMsbList();
             setBankLsbList();
-            if (null != mPreset) {
-                cmbCategory.SelectedText = mPreset.Info[Info.TYPE.ICAT];
-            }
             setCategoryList();
         }
 
-        private void rbDrum_CheckedChanged(object sender, EventArgs e) {
+        private void rbType_CheckedChanged(object sender, EventArgs e) {
             setProgramList();
             setBankMsbList();
             setBankLsbList();
+            setLayout(rbTypeNote.Checked);
         }
 
         private void cmbCategory_Leave(object sender, EventArgs e) {
@@ -311,15 +321,15 @@ namespace InstrumentEditor {
             setBankLsbList();
         }
 
-        private void btnAdd_Click(object sender, EventArgs e) {
+        private void btnApply_Click(object sender, EventArgs e) {
             var id = new DLS.MidiLocale {
                 ProgNum = (byte)lstPrgNo.SelectedIndex,
                 BankMSB = (byte)lstBankMSB.SelectedIndex,
                 BankLSB = (byte)lstBankLSB.SelectedIndex,
-                BankFlg = (byte)(rbDrum.Checked ? 0x80 : 0x00)
+                BankFlg = (byte)(rbTypeDrum.Checked ? 0x80 : 0x00)
             };
             if (mFile.Inst.List.ContainsKey(id)) {
-                MessageBox.Show("既に同じ識別子の音色が存在します。");
+                MessageBox.Show("既に同じ識別子のプリセットが存在します。");
                 return;
             }
             var preset = new DLS.INS();
@@ -335,20 +345,26 @@ namespace InstrumentEditor {
             Close();
         }
 
+        private void setLayout(bool enableArt) {
+            if (enableArt) {
+                artList.Top = grbLSB.Bottom + 4;
+                btnApply.Top = artList.Bottom + 4;
+                btnApply.Left = artList.Right - btnApply.Width;
+            } else {
+                btnApply.Top = grbLSB.Bottom + 4;
+                btnApply.Left = grbLSB.Right - btnApply.Width;
+            }
+            artList.Visible = enableArt;
+            Width = btnApply.Right + 20;
+            Height = btnApply.Bottom + 44;
+        }
+
         private void setProgramList() {
             lstPrgNo.Items.Clear();
-
-            if (null != mPreset) {
-                rbDrum.Checked = mPreset.Locale.BankFlg == 0x80;
-                rbDrum.Enabled = false;
-                rbNote.Enabled = false;
-                txtInstName.Text = mPreset.Info[Info.TYPE.INAM].Trim();
-            }
-
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
                 foreach (var preset in mFile.Inst.List.Keys) {
-                    if (rbDrum.Checked) {
+                    if (rbTypeDrum.Checked) {
                         if (preset.BankFlg == 0x80) {
                             if (i == preset.ProgNum) {
                                 strUse = "*";
@@ -364,8 +380,7 @@ namespace InstrumentEditor {
                         }
                     }
                 }
-
-                if (rbDrum.Checked) {
+                if (rbTypeDrum.Checked) {
                     lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM2_DRUM_NAME[i]));
                 } else {
                     lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM_INST_NAME[i]));
@@ -387,7 +402,7 @@ namespace InstrumentEditor {
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
                 foreach (var preset in mFile.Inst.List.Keys) {
-                    if (rbDrum.Checked) {
+                    if (rbTypeDrum.Checked) {
                         if (preset.BankFlg == 0x80) {
                             if (prgIndex == preset.ProgNum &&
                                 i == preset.BankMSB
@@ -430,7 +445,7 @@ namespace InstrumentEditor {
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
                 foreach (var preset in mFile.Inst.List.Keys) {
-                    if (rbDrum.Checked) {
+                    if (rbTypeDrum.Checked) {
                         if (preset.BankFlg == 0x80) {
                             if (prgIndex == preset.ProgNum &&
                                 msbIndex == preset.BankMSB &&

@@ -42,6 +42,8 @@ namespace InstrumentEditor {
         }
 
         private void disp() {
+            dataGridView1.Top = 0;
+            dataGridView1.Left = 0;
             dataGridView1.Width = Width;
             dataGridView1.Height = Height;
             dataGridView1.ScrollBars = ScrollBars.Both;

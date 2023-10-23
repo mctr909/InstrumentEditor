@@ -331,7 +331,7 @@ namespace InstrumentEditor {
             if (e.Button != MouseButtons.Right) {
                 return;
             }
-            MultiSelectInst();
+            SelectInst();
         }
 
         private void lstInst_DoubleClick(object sender, EventArgs e) {
@@ -340,7 +340,7 @@ namespace InstrumentEditor {
 
         private void lstInst_KeyUp(object sender, KeyEventArgs e) {
             if (e.KeyCode == Keys.Space) {
-                MultiSelectInst();
+                SelectInst();
                 return;
             }
             if (e.KeyCode == Keys.Enter && e.Shift) {
@@ -350,7 +350,7 @@ namespace InstrumentEditor {
         }
 
         private void AddInst() {
-            var fm = new InstInfoDialog(mPack);
+            var fm = new InstDialog(mPack);
             fm.ShowDialog();
             DispInstList();
         }
@@ -408,7 +408,7 @@ namespace InstrumentEditor {
             if (null == mClipboardInst) {
                 return;
             }
-            var fm = new InstInfoDialog(mPack, mClipboardInst);
+            var fm = new InstDialog(mPack, mClipboardInst);
             fm.ShowDialog();
             DispInstList();
         }
@@ -450,17 +450,17 @@ namespace InstrumentEditor {
             DispInstList();
         }
 
-        private void MultiSelectInst() {
+        private void SelectInst() {
             var lst = GetSelectedInsts();
             if (1 == lst.Count) {
-                var fm = new InstInfoDialog(mPack, lst[0]);
+                var fm = new InstDialog(mPack, lst[0]);
                 fm.ShowDialog();
                 DispInstList();
                 return;
             }
             if (1 < lst.Count) {
                 var inst = new INS();
-                var fm = new InstInfoDialog(mPack, inst, false);
+                var fm = new InstDialog(mPack, inst);
                 fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info[Info.TYPE.ICAT] = inst.Info[Info.TYPE.ICAT];
@@ -495,9 +495,7 @@ namespace InstrumentEditor {
                 return list;
             }
             foreach (int index in indeces) {
-                var cols = lstInst.Items[index].ToString().Split('|');
-                var locale = new MidiLocale();
-                list.Add(locale);
+                list.Add(GetInstLocale(index));
             }
             return list;
         }
