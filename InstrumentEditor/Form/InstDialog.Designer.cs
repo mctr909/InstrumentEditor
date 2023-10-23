@@ -69,7 +69,6 @@
 			this.lstPrgNo.Name = "lstPrgNo";
 			this.lstPrgNo.Size = new System.Drawing.Size(214, 136);
 			this.lstPrgNo.TabIndex = 0;
-			this.lstPrgNo.SelectedIndexChanged += new System.EventHandler(this.lstPrgNo_SelectedIndexChanged);
 			// 
 			// lstBankMSB
 			// 
@@ -95,6 +94,7 @@
 			this.lstBankLSB.Name = "lstBankLSB";
 			this.lstBankLSB.Size = new System.Drawing.Size(49, 136);
 			this.lstBankLSB.TabIndex = 0;
+			this.lstBankLSB.SelectedIndexChanged += new System.EventHandler(this.lstBankLSB_SelectedIndexChanged);
 			// 
 			// btnApply
 			// 
@@ -150,7 +150,7 @@
 			// 
 			this.grbProg.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbProg.Controls.Add(this.lstPrgNo);
-			this.grbProg.Location = new System.Drawing.Point(5, 92);
+			this.grbProg.Location = new System.Drawing.Point(127, 92);
 			this.grbProg.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbProg.Name = "grbProg";
 			this.grbProg.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
@@ -163,7 +163,7 @@
 			// 
 			this.grbMSB.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbMSB.Controls.Add(this.lstBankMSB);
-			this.grbMSB.Location = new System.Drawing.Point(231, 92);
+			this.grbMSB.Location = new System.Drawing.Point(5, 92);
 			this.grbMSB.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbMSB.Name = "grbMSB";
 			this.grbMSB.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
@@ -176,7 +176,7 @@
 			// 
 			this.grbLSB.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbLSB.Controls.Add(this.lstBankLSB);
-			this.grbLSB.Location = new System.Drawing.Point(292, 92);
+			this.grbLSB.Location = new System.Drawing.Point(66, 92);
 			this.grbLSB.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbLSB.Name = "grbLSB";
 			this.grbLSB.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);

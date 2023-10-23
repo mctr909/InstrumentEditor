@@ -274,9 +274,9 @@ namespace InstrumentEditor {
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
             setLayout(rbTypeNote.Checked);
-            setProgramList();
             setBankMsbList();
             setBankLsbList();
+            setProgramList();
             setCategoryList();
         }
 
@@ -295,16 +295,16 @@ namespace InstrumentEditor {
                 txtInstName.Text = mPreset.Info[Info.TYPE.INAM].Trim();
             }
             setLayout(enableArt);
-            setProgramList();
             setBankMsbList();
             setBankLsbList();
+            setProgramList();
             setCategoryList();
         }
 
         private void rbType_CheckedChanged(object sender, EventArgs e) {
-            setProgramList();
             setBankMsbList();
             setBankLsbList();
+            setProgramList();
             setLayout(rbTypeNote.Checked);
         }
 
@@ -312,13 +312,13 @@ namespace InstrumentEditor {
             setCategoryList();
         }
 
-        private void lstPrgNo_SelectedIndexChanged(object sender, EventArgs e) {
-            setBankMsbList();
-            setBankLsbList();
-        }
-
         private void lstBankMSB_SelectedIndexChanged(object sender, EventArgs e) {
             setBankLsbList();
+            setProgramList();
+        }
+
+        private void lstBankLSB_SelectedIndexChanged(object sender, EventArgs e) {
+            setProgramList();
         }
 
         private void btnApply_Click(object sender, EventArgs e) {
@@ -332,95 +332,58 @@ namespace InstrumentEditor {
                 MessageBox.Show("既に同じ識別子のプリセットが存在します。");
                 return;
             }
-            var preset = new DLS.INS();
+
+            DLS.INS preset;
+            if (null == mPreset || !mFile.Inst.List.ContainsKey(mPreset.Locale)) {
+                preset = new DLS.INS();
+            } else {
+                preset = mFile.Inst.List[mPreset.Locale];
+                mFile.Inst.List.Remove(mPreset.Locale);
+            }
             preset.Locale = id;
             preset.Info[Info.TYPE.INAM] = txtInstName.Text;
             preset.Info[Info.TYPE.ICAT] = cmbCategory.Text;
-            if (null != mPreset) {
-                mPreset.Locale = id;
-                mPreset.Info.CopyFrom(preset.Info);
-                preset = mPreset;
-            }
             mFile.Inst.List.Add(id, preset);
             Close();
         }
 
         private void setLayout(bool enableArt) {
             if (enableArt) {
-                artList.Top = grbLSB.Bottom + 4;
+                artList.Top = grbProg.Bottom + 4;
                 btnApply.Top = artList.Bottom + 4;
                 btnApply.Left = artList.Right - btnApply.Width;
             } else {
-                btnApply.Top = grbLSB.Bottom + 4;
-                btnApply.Left = grbLSB.Right - btnApply.Width;
+                btnApply.Top = grbProg.Bottom + 4;
+                btnApply.Left = grbProg.Right - btnApply.Width;
             }
             artList.Visible = enableArt;
             Width = btnApply.Right + 20;
             Height = btnApply.Bottom + 44;
         }
 
-        private void setProgramList() {
-            lstPrgNo.Items.Clear();
-            for (byte i = 0; i < 128; ++i) {
-                var strUse = " ";
-                foreach (var preset in mFile.Inst.List.Keys) {
-                    if (rbTypeDrum.Checked) {
-                        if (preset.BankFlg == 0x80) {
-                            if (i == preset.ProgNum) {
-                                strUse = "*";
-                                break;
-                            }
-                        }
-                    } else {
-                        if (preset.BankFlg != 0x80) {
-                            if (i == preset.ProgNum) {
-                                strUse = "*";
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (rbTypeDrum.Checked) {
-                    lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM2_DRUM_NAME[i]));
-                } else {
-                    lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM_INST_NAME[i]));
-                }
-            }
-            if (null != mPreset) {
-                lstPrgNo.SelectedIndex = mPreset.Locale.ProgNum;
-            }
-        }
-
         private void setBankMsbList() {
-            var prgIndex = lstPrgNo.SelectedIndex;
-            if (prgIndex < 0) {
-                prgIndex = 0;
-            }
-
             lstBankMSB.Items.Clear();
-
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
                 foreach (var preset in mFile.Inst.List.Keys) {
                     if (rbTypeDrum.Checked) {
                         if (preset.BankFlg == 0x80) {
-                            if (prgIndex == preset.ProgNum &&
-                                i == preset.BankMSB
-                            ) {
-                                strUse = "*";
+                            if (i == preset.BankMSB) {
+                                strUse = "+";
                                 break;
                             }
                         }
                     } else {
                         if (preset.BankFlg != 0x80) {
-                            if (prgIndex == preset.ProgNum &&
-                                i == preset.BankMSB
-                            ) {
-                                strUse = "*";
+                            if (i == preset.BankMSB) {
+                                strUse = "+";
                                 break;
                             }
                         }
                     }
+                }
+                if (null != mPreset && i == mPreset.Locale.BankMSB) {
+                    strUse = "*";
                 }
                 lstBankMSB.Items.Add(string.Format("{0}{1}", i.ToString("000"), strUse));
             }
@@ -431,47 +394,92 @@ namespace InstrumentEditor {
         }
 
         private void setBankLsbList() {
-            var prgIndex = lstPrgNo.SelectedIndex;
             var msbIndex = lstBankMSB.SelectedIndex;
-            if (prgIndex < 0) {
-                prgIndex = 0;
-            }
             if (msbIndex < 0) {
                 msbIndex = 0;
             }
-
             lstBankLSB.Items.Clear();
-
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
                 foreach (var preset in mFile.Inst.List.Keys) {
                     if (rbTypeDrum.Checked) {
                         if (preset.BankFlg == 0x80) {
-                            if (prgIndex == preset.ProgNum &&
-                                msbIndex == preset.BankMSB &&
+                            if (msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
                             ) {
-                                strUse = "*";
+                                strUse = "+";
                                 break;
                             }
                         }
                     } else {
                         if (preset.BankFlg != 0x80) {
-                            if (prgIndex == preset.ProgNum &&
-                                msbIndex == preset.BankMSB &&
+                            if (msbIndex == preset.BankMSB &&
                                 i == preset.BankLSB
                             ) {
-                                strUse = "*";
+                                strUse = "+";
                                 break;
                             }
                         }
                     }
+                }
+                if (null != mPreset &&
+                    lstBankMSB.SelectedIndex == mPreset.Locale.BankMSB &&
+                    i == mPreset.Locale.BankLSB) {
+                    strUse = "*";
                 }
                 lstBankLSB.Items.Add(string.Format("{0}{1}", i.ToString("000"), strUse));
             }
 
             if (null != mPreset) {
                 lstBankLSB.SelectedIndex = mPreset.Locale.BankLSB;
+            }
+        }
+
+        private void setProgramList() {
+            var msbIndex = lstBankMSB.SelectedIndex;
+            if (msbIndex < 0) {
+                msbIndex = 0;
+            }
+            var lsbIndex = lstBankLSB.SelectedIndex;
+            if (lsbIndex < 0) {
+                lsbIndex = 0;
+            }
+            lstPrgNo.Items.Clear();
+            for (byte i = 0; i < 128; ++i) {
+                var strUse = " ";
+                foreach (var preset in mFile.Inst.List.Keys) {
+                    if (rbTypeDrum.Checked) {
+                        if (msbIndex == preset.BankMSB &&
+                            lsbIndex == preset.BankLSB &&
+                            i == preset.ProgNum &&
+                            preset.BankFlg == 0x80) {
+                            strUse = "+";
+                            break;
+                        }
+                    } else {
+                        if (msbIndex == preset.BankMSB &&
+                            lsbIndex == preset.BankLSB &&
+                            i == preset.ProgNum &&
+                            preset.BankFlg != 0x80) {
+                            strUse = "+";
+                            break;
+                        }
+                    }
+                }
+                if (null != mPreset &&
+                    lstBankMSB.SelectedIndex == mPreset.Locale.BankMSB &&
+                    lstBankLSB.SelectedIndex == mPreset.Locale.BankLSB &&
+                    i == mPreset.Locale.ProgNum) {
+                    strUse = "*";
+                }
+                if (rbTypeDrum.Checked) {
+                    lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM2_DRUM_NAME[i]));
+                } else {
+                    lstPrgNo.Items.Add(string.Format("{0} {1} {2}", i.ToString("000"), strUse, GM_INST_NAME[i]));
+                }
+            }
+            if (null != mPreset) {
+                lstPrgNo.SelectedIndex = mPreset.Locale.ProgNum;
             }
         }
 
