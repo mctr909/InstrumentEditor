@@ -26,6 +26,40 @@ namespace DLS {
 			}));
 		}
 
+		public INS this[MidiLocale locale] {
+			get { return List[locale]; }
+		}
+
+		public void Add(INS ins) {
+			if (!List.ContainsKey(ins.Locale)) {
+				List.Add(ins.Locale, ins);
+			}
+		}
+
+		public void Remove(MidiLocale locale) {
+			if (List.ContainsKey(locale)) {
+				List.Remove(locale);
+			}
+		}
+
+		public bool RemoveRange(List<MidiLocale> deleteList) {
+			var temp = new SortedDictionary<MidiLocale, INS>(new Sort());
+			foreach (var item in List) {
+				if (!deleteList.Contains(item.Key)) {
+					temp.Add(item.Key, item.Value);
+				}
+			}
+			if (temp.Count == List.Count) {
+				return false;
+			}
+			List = temp;
+			return true;
+		}
+
+		public bool ContainsKey(MidiLocale locale) {
+			return List.ContainsKey(locale);
+		}
+
 		public LINS() { }
 
 		public LINS(IntPtr ptr, long size) {

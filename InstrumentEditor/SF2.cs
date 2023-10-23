@@ -648,7 +648,7 @@ namespace SF2 {
                     inst.Regions.Add(rgn);
                 }
 
-                instFile.Inst.List.Add(inst.Locale, inst);
+                instFile.Inst.Add(inst);
             }
 
             foreach (var sf2Pres in mPdta.PresetList) {
@@ -731,7 +731,7 @@ namespace SF2 {
                     }
                     preset.Regions.Add(rgn);
                 }
-                instFile.Inst.List.Add(preset.Locale, preset);
+                instFile.Inst.Add(preset);
             }
 
             return instFile;

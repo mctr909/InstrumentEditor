@@ -268,7 +268,7 @@ namespace InstrumentEditor {
             foreach (var item in lstWave.SelectedItems) {
                 idxs.Add(uint.Parse(((string)item).Split('|')[0]));
             }
-            if (mPack.DeleteWave(idxs)) {
+            if (mPack.RemoveWaves(idxs)) {
                 DispWaveList();
             }
         }
@@ -361,11 +361,18 @@ namespace InstrumentEditor {
             }
 
             var index = lstInst.SelectedIndex;
-            var idxs = new List<int>();
+            var deleteList = new List<MidiLocale>();
             foreach (var item in lstInst.SelectedItems) {
-                idxs.Add(int.Parse(((string)item).Split('|')[0]));
+                var line = (string)item;
+                var cols = line.Split('|');
+                var id = new MidiLocale();
+                id.BankFlg = (byte)(cols[0] == "Drum" ? 0x80 : 0x00);
+                id.ProgNum = byte.Parse(cols[1]);
+                id.BankMSB = byte.Parse(cols[2]);
+                id.BankLSB = byte.Parse(cols[3]);
+                deleteList.Add(id);
             }
-            if (mPack.DeleteInst(idxs)) {
+            if (mPack.Inst.RemoveRange(deleteList)) {
                 DispInstList();
                 DispWaveList();
                 if (index < lstInst.Items.Count) {
@@ -427,9 +434,9 @@ namespace InstrumentEditor {
                 lstInst.Items.Add(string.Format(
                     "{0}|{1}|{2}|{3}|{4}|{5}",
                     inst.Locale.BankFlg == 0x80 ? "Drum" : "Note",
+                    inst.Locale.ProgNum.ToString().PadLeft(3, '0'),
                     inst.Locale.BankMSB.ToString().PadLeft(3, '0'),
                     inst.Locale.BankLSB.ToString().PadLeft(3, '0'),
-                    inst.Locale.ProgNum.ToString().PadLeft(3, '0'),
                     inst.Info[Info.TYPE.ICAT].PadRight(16, ' ').Substring(0, 16),
                     inst.Info[Info.TYPE.INAM]
                 ));
@@ -480,9 +487,9 @@ namespace InstrumentEditor {
             }
             var cols = lstInst.Items[index].ToString().Split('|');
             locale.BankFlg = (byte)(cols[0] == "Drum" ? 0x80 : 0x00);
-            locale.BankMSB = byte.Parse(cols[1]);
-            locale.BankLSB = byte.Parse(cols[2]);
-            locale.ProgNum = byte.Parse(cols[3]);
+            locale.ProgNum = byte.Parse(cols[1]);
+            locale.BankMSB = byte.Parse(cols[2]);
+            locale.BankLSB = byte.Parse(cols[3]);
             return locale;
         }
 
@@ -502,8 +509,8 @@ namespace InstrumentEditor {
 
         private INS GetSelectedInst() {
             var locale = GetInstLocale(lstInst.SelectedIndex);
-            if (mPack.Inst.List.ContainsKey(locale)) {
-                return mPack.Inst.List[locale];
+            if (mPack.Inst.ContainsKey(locale)) {
+                return mPack.Inst[locale];
             }
             return null;
         }
@@ -512,8 +519,8 @@ namespace InstrumentEditor {
             var locales = GetInstLocales(lstInst.SelectedIndices);
             var insts = new List<INS>();
             foreach (var locale in locales) {
-                if (mPack.Inst.List.ContainsKey(locale)) {
-                    insts.Add(mPack.Inst.List[locale]);
+                if (mPack.Inst.ContainsKey(locale)) {
+                    insts.Add(mPack.Inst[locale]);
                 }
             }
             return insts;

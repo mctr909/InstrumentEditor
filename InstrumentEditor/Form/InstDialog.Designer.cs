@@ -67,8 +67,9 @@
             "000 * 0----+----1----+----2----"});
 			this.lstPrgNo.Location = new System.Drawing.Point(5, 16);
 			this.lstPrgNo.Name = "lstPrgNo";
-			this.lstPrgNo.Size = new System.Drawing.Size(214, 136);
+			this.lstPrgNo.Size = new System.Drawing.Size(214, 124);
 			this.lstPrgNo.TabIndex = 0;
+			this.lstPrgNo.SelectedIndexChanged += new System.EventHandler(this.lstPrgNo_SelectedIndexChanged);
 			// 
 			// lstBankMSB
 			// 
@@ -79,7 +80,7 @@
             "999*"});
 			this.lstBankMSB.Location = new System.Drawing.Point(5, 16);
 			this.lstBankMSB.Name = "lstBankMSB";
-			this.lstBankMSB.Size = new System.Drawing.Size(49, 136);
+			this.lstBankMSB.Size = new System.Drawing.Size(49, 124);
 			this.lstBankMSB.TabIndex = 0;
 			this.lstBankMSB.SelectedIndexChanged += new System.EventHandler(this.lstBankMSB_SelectedIndexChanged);
 			// 
@@ -92,14 +93,13 @@
             "999*"});
 			this.lstBankLSB.Location = new System.Drawing.Point(5, 17);
 			this.lstBankLSB.Name = "lstBankLSB";
-			this.lstBankLSB.Size = new System.Drawing.Size(49, 136);
+			this.lstBankLSB.Size = new System.Drawing.Size(49, 124);
 			this.lstBankLSB.TabIndex = 0;
-			this.lstBankLSB.SelectedIndexChanged += new System.EventHandler(this.lstBankLSB_SelectedIndexChanged);
 			// 
 			// btnApply
 			// 
 			this.btnApply.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.btnApply.Location = new System.Drawing.Point(337, 464);
+			this.btnApply.Location = new System.Drawing.Point(337, 449);
 			this.btnApply.Name = "btnApply";
 			this.btnApply.Size = new System.Drawing.Size(59, 24);
 			this.btnApply.TabIndex = 6;
@@ -150,11 +150,11 @@
 			// 
 			this.grbProg.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbProg.Controls.Add(this.lstPrgNo);
-			this.grbProg.Location = new System.Drawing.Point(127, 92);
+			this.grbProg.Location = new System.Drawing.Point(5, 92);
 			this.grbProg.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbProg.Name = "grbProg";
 			this.grbProg.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbProg.Size = new System.Drawing.Size(224, 158);
+			this.grbProg.Size = new System.Drawing.Size(224, 145);
 			this.grbProg.TabIndex = 3;
 			this.grbProg.TabStop = false;
 			this.grbProg.Text = "プログラムナンバー";
@@ -163,11 +163,11 @@
 			// 
 			this.grbMSB.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbMSB.Controls.Add(this.lstBankMSB);
-			this.grbMSB.Location = new System.Drawing.Point(5, 92);
+			this.grbMSB.Location = new System.Drawing.Point(231, 92);
 			this.grbMSB.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbMSB.Name = "grbMSB";
 			this.grbMSB.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbMSB.Size = new System.Drawing.Size(59, 158);
+			this.grbMSB.Size = new System.Drawing.Size(59, 145);
 			this.grbMSB.TabIndex = 4;
 			this.grbMSB.TabStop = false;
 			this.grbMSB.Text = "MSB";
@@ -176,11 +176,11 @@
 			// 
 			this.grbLSB.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbLSB.Controls.Add(this.lstBankLSB);
-			this.grbLSB.Location = new System.Drawing.Point(66, 92);
+			this.grbLSB.Location = new System.Drawing.Point(292, 92);
 			this.grbLSB.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbLSB.Name = "grbLSB";
 			this.grbLSB.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbLSB.Size = new System.Drawing.Size(59, 158);
+			this.grbLSB.Size = new System.Drawing.Size(59, 145);
 			this.grbLSB.TabIndex = 5;
 			this.grbLSB.TabStop = false;
 			this.grbLSB.Text = "LSB";
@@ -225,17 +225,17 @@
 			// 
 			this.artList.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
 			this.artList.Art = null;
-			this.artList.Location = new System.Drawing.Point(5, 256);
+			this.artList.Location = new System.Drawing.Point(5, 241);
 			this.artList.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.artList.Name = "artList";
-			this.artList.Size = new System.Drawing.Size(391, 203);
+			this.artList.Size = new System.Drawing.Size(416, 203);
 			this.artList.TabIndex = 7;
 			// 
 			// InstDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(403, 494);
+			this.ClientSize = new System.Drawing.Size(428, 479);
 			this.Controls.Add(this.artList);
 			this.Controls.Add(this.grbCategory);
 			this.Controls.Add(this.grbPreset);

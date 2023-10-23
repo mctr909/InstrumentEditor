@@ -69,7 +69,7 @@
     <Compile Include="Form\RegionAssignForm.Designer.cs">
       <DependentUpon>RegionAssignForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="InstPack\InstPack.cs" />
+    <Compile Include="InstPack.cs" />
     <Compile Include="Riff.cs" />
     <Compile Include="DLS\DLS.cs" />
     <Compile Include="DoubleBufferBitmap.cs" />

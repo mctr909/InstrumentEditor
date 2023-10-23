@@ -78,22 +78,8 @@ namespace DLS {
             }
 
             foreach (var dlsInst in Instruments.List) {
-                var pres = new INS();
-                pres.Locale = dlsInst.Key;
-
-                var rgn = new RGN();
-                rgn.Header.KeyLo = 0;
-                rgn.Header.KeyHi = 127;
-                rgn.Header.VelLo = 0;
-                rgn.Header.VelHi = 127;
-
-                pres.Regions.Add(rgn);
-                pres.Info.CopyFrom(dlsInst.Value.Info);
-                pres.Info[Info.TYPE.ICRD] = now;
-                pack.Preset.List.Add(pres.Locale, pres);
-
                 var inst = new INS();
-                inst.Locale = pres.Locale;
+                inst.Locale = dlsInst.Key;
                 inst.Info.CopyFrom(dlsInst.Value.Info);
                 inst.Info[Info.TYPE.ICRD] = now;
 
@@ -129,7 +115,7 @@ namespace DLS {
                     }
                     inst.Regions.Add(tmpRgn);
                 }
-                pack.Inst.List.Add(inst.Locale, inst);
+                pack.Inst.Add(inst);
             }
 
             return pack;
@@ -177,7 +163,7 @@ namespace DLS {
             // Inst
             saveFile.Instruments = new LINS();
             saveFile.Instruments.List = new SortedDictionary<MidiLocale, INS>(new LINS.Sort());
-            foreach (var srcPre in pack.Preset.List.Values) {
+            foreach (var srcPre in pack.Inst.List.Values) {
                 if (1 != srcPre.Regions.List.Count) {
                     continue;
                 }
@@ -207,7 +193,7 @@ namespace DLS {
                     ins.Regions.List.Add(rgn.Header, rgn);
                 }
 
-                saveFile.Instruments.List.Add(ins.Locale, ins);
+                saveFile.Instruments.Add(ins);
             }
 
             saveFile.Save(filePath);
