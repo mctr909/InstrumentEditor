@@ -14,7 +14,9 @@ namespace InstrumentEditor {
         }
 
         public List<Connection> Art {
-            get { return mLart; }
+            get {
+                return mLart;
+            }
             set {
                 mLart = value;
                 disp();
@@ -52,31 +54,31 @@ namespace InstrumentEditor {
             dataGridView1.Rows.Clear();
 
             var cmbSrc = new DataGridViewComboBoxColumn();
-            cmbSrc.Name = "Source";
+            cmbSrc.Name = "入力";
             foreach (var src in Enum.GetNames(typeof(SRC_TYPE))) {
                 cmbSrc.Items.Add(src);
             }
             cmbSrc.MinimumWidth = 100;
             cmbSrc.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns.Add(cmbSrc);
-            
+
             var cmbType = new DataGridViewComboBoxColumn();
-            cmbType.Name = "Type";
+            cmbType.Name = "種類";
             foreach (var type in Enum.GetNames(typeof(DST_TYPE))) {
                 cmbType.Items.Add(type);
             }
             cmbType.MinimumWidth = 100;
             cmbType.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns.Add(cmbType);
-            
+
             var val = new DataGridViewTextBoxColumn();
-            val.Name = "Value";
+            val.Name = "値";
             val.MinimumWidth = 30;
             val.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             dataGridView1.Columns.Add(val);
-            
+
             var unit = new DataGridViewTextBoxColumn();
-            unit.Name = "Unit";
+            unit.Name = "単位";
             unit.AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
             unit.ReadOnly = true;
             dataGridView1.Columns.Add(unit);

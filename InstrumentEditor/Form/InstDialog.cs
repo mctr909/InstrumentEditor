@@ -340,6 +340,10 @@ namespace InstrumentEditor {
             preset.Locale = newId;
             preset.Info[Info.TYPE.INAM] = txtInstName.Text;
             preset.Info[Info.TYPE.ICAT] = cmbCategory.Text;
+            preset.Articulations.Clear();
+            if (null != artList.Art) {
+                artList.SetList(preset.Articulations);
+            }
             mFile.Inst.Add(preset);
             Close();
         }
