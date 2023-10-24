@@ -506,6 +506,7 @@ namespace InstrumentEditor {
         private void DrawLoop() {
             var graph = mLoopGraph.Graphics;
             var green = new Pen(Color.FromArgb(0, 168, 0), 1.0f);
+            var cyan = new Pen(Color.FromArgb(127, 0, 255, 255), 1.0f).Brush;
 
             var amp = picLoop.Height - 1;
             var halfWidth = (int)(picLoop.Width / 2.0f - 1);
@@ -533,12 +534,14 @@ namespace InstrumentEditor {
                 if (1.0 < w2) w2 = 1.0f;
                 var y1 = (0.5f - 0.5f * w1) * amp;
                 var y2 = (0.5f - 0.5f * w2) * amp;
-
                 graph.DrawLine(green, x1, y1, x2, y2);
+                if (4 <= mLoopTimeScale) {
+                    graph.FillEllipse(cyan, x1 - 2, y1 - 2, 4, 4);
+                    graph.FillEllipse(cyan, x2 - 2, y2 - 2, 4, 4);
+                }
                 x1 += mLoopTimeScale;
                 x2 += mLoopTimeScale;
             }
-
             //
             x1 = halfWidth;
             x2 = halfWidth - mLoopTimeScale;
@@ -551,8 +554,11 @@ namespace InstrumentEditor {
                 if (1.0 < w2) w2 = 1.0f;
                 var y1 = (0.5f - 0.5f * w1) * amp;
                 var y2 = (0.5f - 0.5f * w2) * amp;
-
                 graph.DrawLine(green, x1, y1, x2, y2);
+                if (4 <= mLoopTimeScale) {
+                    graph.FillEllipse(cyan, x1 - 2, y1 - 2, 4, 4);
+                    graph.FillEllipse(cyan, x2 - 2, y2 - 2, 4, 4);
+                }
                 x1 -= mLoopTimeScale;
                 x2 -= mLoopTimeScale;
             }
