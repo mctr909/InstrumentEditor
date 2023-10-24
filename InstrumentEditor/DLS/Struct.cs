@@ -186,19 +186,6 @@ namespace DLS {
         public uint Length;
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    public struct CK_VERS {
-        public uint MSB;
-        public uint LSB;
-
-        public void Write(BinaryWriter bw) {
-            bw.Write("vers".ToCharArray());
-            bw.Write(Marshal.SizeOf<CK_VERS>());
-            bw.Write(MSB);
-            bw.Write(LSB);
-        }
-    }
-
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct CK_WSMP {
         private uint Size;

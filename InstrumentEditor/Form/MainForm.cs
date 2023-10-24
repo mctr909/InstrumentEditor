@@ -44,7 +44,7 @@ namespace InstrumentEditor {
                 mFile = new SF2.File(filePath).ToPack();
                 break;
             case ".dls":
-                mFile = new DLS.File(filePath).ToPack();
+                mFile = new DLS.File(filePath);
                 break;
             }
 
@@ -75,7 +75,7 @@ namespace InstrumentEditor {
 
             switch (Path.GetExtension(filePath)) {
             case ".dls":
-                DLS.File.SaveFromPack(filePath, mFile);
+                mFile.Save(filePath);
                 break;
             }
 

@@ -9,8 +9,6 @@ namespace DLS {
 
 		public int Count { get { return mList.Count; } }
 
-		public WAVE[] Array { get { return mList.ToArray(); } }
-
 		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "wvpl";
 			riffs.Add(new LIST("wave", (i) => {
@@ -99,22 +97,19 @@ namespace DLS {
 			bw.Write("RIFF".ToCharArray());
 			bw.Write((uint)0);
 			bw.Write("WAVE".ToCharArray());
-
 			Chunk.Save("fmt ", (i) => {
 				i.Write(Format);
 			}, bw);
 			Chunk.Save("data", (i) => {
 				i.Write(Data);
 			}, bw);
-			Info.Write(bw);
 			Chunk.Save("wsmp", (i) => {
 				i.Write(Sampler);
 				i.Write(Loops);
 			}, bw);
-
+			Info.Write(bw);
 			fs.Seek(4, SeekOrigin.Begin);
 			bw.Write((uint)(fs.Length - 8));
-
 			bw.Dispose();
 			fs.Close();
 			fs.Dispose();

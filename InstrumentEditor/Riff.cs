@@ -168,25 +168,16 @@ public abstract class Riff {
         }
     }
 
+    public void Save(string path) {
+        var fs = new FileStream(path, FileMode.Create);
+        var bw = new BinaryWriter(fs);
+        _Write(bw, "RIFF");
+        fs.Close();
+        fs.Dispose();
+    }
+
     public void Write(BinaryWriter bw) {
-        var msCh = new MemoryStream();
-        var bwCh = new BinaryWriter(msCh);
-        bwCh.Write("LIST".ToCharArray());
-        bwCh.Write(0xFFFFFFFF);
-        bwCh.Write(Id.ToCharArray());
-        Info.Write(bwCh);
-        foreach (var chunk in mChunks.Values) {
-            chunk.Save(bwCh);
-        }
-        foreach (var list in mLists.Values) {
-            list.Save(bwCh);
-        }
-        if (12 == msCh.Length) {
-            return;
-        }
-        bwCh.Seek(4, SeekOrigin.Begin);
-        bwCh.Write((uint)msCh.Length - 8);
-        bw.Write(msCh.ToArray());
+        _Write(bw, "LIST");
     }
 
     protected abstract void Init(out string id, List<Chunk> chunks, List<LIST> riffs);
@@ -269,6 +260,27 @@ public abstract class Riff {
             LoadInfo(ptr, infoType, text);
             ptr += infoSize;
         }
+    }
+
+    void _Write(BinaryWriter bw, string type) {
+        var msCh = new MemoryStream();
+        var bwCh = new BinaryWriter(msCh);
+        bwCh.Write(type.ToCharArray());
+        bwCh.Write(0xFFFFFFFF);
+        bwCh.Write(Id.ToCharArray());
+        foreach (var chunk in mChunks.Values) {
+            chunk.Save(bwCh);
+        }
+        foreach (var list in mLists.Values) {
+            list.Save(bwCh);
+        }
+        Info.Write(bwCh);
+        if (12 == msCh.Length) {
+            return;
+        }
+        bwCh.Seek(4, SeekOrigin.Begin);
+        bwCh.Write((uint)msCh.Length - 8);
+        bw.Write(msCh.ToArray());
     }
 }
 
