@@ -30,6 +30,13 @@ namespace DLS {
                 i.Write((uint)1);
             }, (i) => {
             }));
+            chunks.Add(new Chunk("ptbl", (i) => {
+                var cues = Wave.GetCues();
+                i.Write((uint)8);
+                i.Write(cues.Count);
+                i.Write(cues);
+            }, (i) => {
+            }));
             riffs.Add(new LIST("lins", (i) => {
                 Inst.Write(i);
             }, (ptr, size) => {

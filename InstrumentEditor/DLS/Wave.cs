@@ -21,6 +21,17 @@ namespace DLS {
 			}));
 		}
 
+		public List<uint> GetCues() {
+			var ms = new MemoryStream();
+			var bw = new BinaryWriter(ms);
+			var cues = new List<uint>();
+			foreach (var wave in mList) {
+				cues.Add((uint)ms.Position);
+				wave.Write(bw);
+			}
+			return cues;
+		}
+
 		public WAVE this[int index] {
 			get { return mList[index]; }
 		}
