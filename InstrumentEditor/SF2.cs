@@ -481,7 +481,6 @@ namespace SF2 {
                     loop.Start = smpl.loopstart - smpl.start;
                     loop.Length = smpl.loopend - smpl.loopstart;
                     wi.Loops.Add(loop);
-                    wi.Sampler.LoopCount = 1;
                 }
 
                 wi.Sampler.UnityNote = smpl.originalKey;

@@ -151,7 +151,7 @@ namespace DLS {
 
 		public HEADER Header;
 		public WLNK WaveLink;
-		public CK_WSMP Sampler;
+		public WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
 		public LART Articulations = new LART();
 
@@ -169,9 +169,11 @@ namespace DLS {
 			}));
 			chunks.Add(new Chunk("wsmp", (i) => {
 				i.Write(Sampler);
+				i.Write(Loops.Count);
 				i.Write(Loops);
 			}, (i) => {
 				i.Read(ref Sampler);
+				i.Seek(4);
 				i.Read(Loops);
 			}));
 			riffs.Add(new LIST("lart", (i) => {

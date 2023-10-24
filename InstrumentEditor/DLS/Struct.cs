@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace DLS {
@@ -13,17 +12,6 @@ namespace DLS {
         private byte Reserve2;
         private byte Reserve3;
         private byte Reserve4;
-
-        public void Write(BinaryWriter bw) {
-            bw.Write(BankLSB);
-            bw.Write(BankMSB);
-            bw.Write(Reserve1);
-            bw.Write(BankFlg);
-            bw.Write(ProgNum);
-            bw.Write(Reserve2);
-            bw.Write(Reserve3);
-            bw.Write(Reserve4);
-        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -168,14 +156,6 @@ namespace DLS {
                 }
             }
         }
-
-        public void Write(BinaryWriter bw) {
-            bw.Write((ushort)Source);
-            bw.Write((ushort)Control);
-            bw.Write((ushort)Destination);
-            bw.Write(Transform);
-            bw.Write(Scale);
-        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
@@ -187,13 +167,12 @@ namespace DLS {
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct CK_WSMP {
+    public struct WSMP {
         private uint Size;
         public ushort UnityNote;
         public short FineTune;
         public int GainInt;
         public uint Options;
-        public uint LoopCount;
 
         public double Gain {
             get {
@@ -202,15 +181,6 @@ namespace DLS {
             set {
                 GainInt = (int)(Math.Log10(value) * 200 * 65536);
             }
-        }
-
-        public void Write(BinaryWriter bw) {
-            bw.Write(20 + 16 * LoopCount);
-            bw.Write(UnityNote);
-            bw.Write(FineTune);
-            bw.Write(GainInt);
-            bw.Write(Options);
-            bw.Write(LoopCount);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace DLS {
 
 		public FMT Format;
 		public byte[] Data;
-		public CK_WSMP Sampler;
+		public WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
 
 		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
@@ -74,9 +74,11 @@ namespace DLS {
 			}));
 			chunks.Add(new Chunk("wsmp", (i) => {
 				i.Write(Sampler);
+				i.Write(Loops.Count);
 				i.Write(Loops);
 			}, (i) => {
 				i.Read(ref Sampler);
+				i.Seek(4);
 				i.Read(Loops);
 			}));
 		}

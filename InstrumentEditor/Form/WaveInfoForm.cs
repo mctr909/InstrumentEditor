@@ -15,7 +15,7 @@ namespace InstrumentEditor {
         private WavePlayback mWaveOut;
 
         private File mFile;
-        private CK_WSMP mSampler;
+        private WSMP mSampler;
         private WaveLoop mLoop = new WaveLoop {
             Start = 0,
             Length = 16
@@ -147,7 +147,6 @@ namespace InstrumentEditor {
                 mFile.Wave[mWaveIndex].Loops[0] = mLoop;
             } else {
                 mFile.Wave[mWaveIndex].Loops.Add(mLoop);
-                mFile.Wave[mWaveIndex].Sampler.LoopCount = 1;
             }
             btnUpdate.Enabled = false;
         }
@@ -169,7 +168,6 @@ namespace InstrumentEditor {
                 mWaveOut.mLoopBegin = 0;
                 mWaveOut.mLoopEnd = mWaveData.Length;
                 mFile.Wave[mWaveIndex].Loops.Clear();
-                mFile.Wave[mWaveIndex].Sampler.LoopCount = 0;
                 btnLoopCreate.Text = "ループ作成";
             } else {
                 mLoop.Start = (uint)hsbTime.Value;
@@ -177,7 +175,6 @@ namespace InstrumentEditor {
                 mWaveOut.mLoopBegin = (int)mLoop.Start;
                 mWaveOut.mLoopEnd = (int)mLoop.Start + (int)mLoop.Length;
                 mFile.Wave[mWaveIndex].Loops.Add(mLoop);
-                mFile.Wave[mWaveIndex].Sampler.LoopCount = 1;
                 btnLoopCreate.Text = "ループ削除";
             }
         }
