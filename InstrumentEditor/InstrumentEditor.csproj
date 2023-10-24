@@ -51,12 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Const.cs" />
-    <Compile Include="Form\InstSelectDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\InstSelectDialog.Designer.cs">
-      <DependentUpon>InstSelectDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="DLS\Art.cs" />
     <Compile Include="DLS\Enum.cs" />
     <Compile Include="DLS\Inst.cs" />
@@ -80,11 +74,11 @@
     <Compile Include="Form\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\InstDialog.cs">
+    <Compile Include="Form\InstInfoDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\InstDialog.Designer.cs">
-      <DependentUpon>InstDialog.cs</DependentUpon>
+    <Compile Include="Form\InstInfoDialog.Designer.cs">
+      <DependentUpon>InstInfoDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\RegionInfoDialog.cs">
       <SubType>Form</SubType>
@@ -116,17 +110,14 @@
     <Compile Include="Form\WaveSelectDialog.Designer.cs">
       <DependentUpon>WaveSelectDialog.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form\InstSelectDialog.resx">
-      <DependentUpon>InstSelectDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form\RegionAssignForm.resx">
       <DependentUpon>RegionAssignForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\InstDialog.resx">
-      <DependentUpon>InstDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Form\InstInfoDialog.resx">
+      <DependentUpon>InstInfoDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\RegionInfoDialog.resx">
       <DependentUpon>RegionInfoDialog.cs</DependentUpon>

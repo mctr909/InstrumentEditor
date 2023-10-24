@@ -372,10 +372,12 @@
 			this.Controls.Add(this.grbWave);
 			this.Controls.Add(this.grbVelocity);
 			this.Controls.Add(this.grbKey);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "RegionInfoDialog";
-			this.Text = "リージョン情報編集";
+			this.Text = "リージョン情報";
 			((System.ComponentModel.ISupportInitialize)(this.numKeyLow)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numKeyHigh)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numVelocityHigh)).EndInit();

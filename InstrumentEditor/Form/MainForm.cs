@@ -310,8 +310,7 @@ namespace InstrumentEditor {
                     (use ? "use" : "   "),
                     (0 < wave.Loops.Count ? "loop" : "    "),
                     Const.NoteName[wave.Sampler.UnityNote % 12]
-                        + (wave.Sampler.UnityNote < 12 ? "" : "+")
-                        + (wave.Sampler.UnityNote / 12 - 2).ToString("00"),
+                        + (wave.Sampler.UnityNote / 12 - 2).ToString().PadLeft(2, ' '),
                     wave.Info[Info.TYPE.ICAT].PadRight(16, ' ').Substring(0, 16),
                     name
                 ));
@@ -349,7 +348,7 @@ namespace InstrumentEditor {
         }
 
         private void AddInst() {
-            var fm = new InstDialog(mPack);
+            var fm = new InstInfoDialog(mPack);
             fm.ShowDialog();
             DispInstList();
         }
@@ -414,7 +413,7 @@ namespace InstrumentEditor {
             if (null == mClipboardInst) {
                 return;
             }
-            var fm = new InstDialog(mPack, mClipboardInst);
+            var fm = new InstInfoDialog(mPack, mClipboardInst);
             fm.ShowDialog();
             DispInstList();
         }
@@ -459,14 +458,14 @@ namespace InstrumentEditor {
         private void SelectInst() {
             var lst = GetSelectedInsts();
             if (1 == lst.Count) {
-                var fm = new InstDialog(mPack, lst[0]);
+                var fm = new InstInfoDialog(mPack, lst[0]);
                 fm.ShowDialog();
                 DispInstList();
                 return;
             }
             if (1 < lst.Count) {
                 var inst = new INS();
-                var fm = new InstDialog(mPack, inst);
+                var fm = new InstInfoDialog(mPack, inst);
                 fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info[Info.TYPE.ICAT] = inst.Info[Info.TYPE.ICAT];

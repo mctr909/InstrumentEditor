@@ -17,18 +17,13 @@ namespace InstrumentEditor {
 
         private void WaveSelectDialog_Load(object sender, EventArgs e) {
             DispWaveList("");
-            SetSize();
-        }
-
-        private void WaveSelectDialog_SizeChanged(object sender, EventArgs e) {
-            SetSize();
         }
 
         private void lstWave_DoubleClick(object sender, EventArgs e) {
             if (0 == lstWave.Items.Count) {
                 return;
             }
-            var cols = lstWave.SelectedItem.ToString().Split('\t');
+            var cols = lstWave.SelectedItem.ToString().Split('|');
             var idx = int.Parse(cols[0]);
             var fm = new WaveInfoForm(mFile, idx);
             var index = lstWave.SelectedIndex;
@@ -39,7 +34,7 @@ namespace InstrumentEditor {
 
         private void btnSelect_Click(object sender, EventArgs e) {
             if (0 <= lstWave.SelectedIndex) {
-                var cols = lstWave.SelectedItem.ToString().Split('\t');
+                var cols = lstWave.SelectedItem.ToString().Split('|');
                 mRegion.WaveLink.TableIndex = uint.Parse(cols[0]);
             }
             Close();
@@ -47,26 +42,6 @@ namespace InstrumentEditor {
 
         private void txtSearch_TextChanged(object sender, EventArgs e) {
             DispWaveList(txtSearch.Text);
-        }
-
-        private void SetSize() {
-            var offsetX = 24;
-            var offsetY = 48;
-
-            btnSelect.Width = 60;
-            btnSelect.Height = 24;
-
-            lstWave.Left = 4;
-            lstWave.Top = 4;
-            lstWave.Width = Width - offsetX;
-            lstWave.Height = Height - btnSelect.Height - 6 - offsetY;
-
-            txtSearch.Top = lstWave.Top + lstWave.Height + 6;
-            txtSearch.Left = lstWave.Left;
-            txtSearch.Width = 200;
-
-            btnSelect.Top = txtSearch.Top;
-            btnSelect.Left = Width - btnSelect.Width - offsetX;
         }
 
         private void DispWaveList(string keyword) {
@@ -99,10 +74,12 @@ namespace InstrumentEditor {
                 }
 
                 lstWave.Items.Add(string.Format(
-                    "{0}\t{1}\t{2}\t{3}",
+                    "{0}|{1}|{2}|{3}|{4}",
                     iWave.ToString("0000"),
                     use ? "use" : "   ",
                     0 < wave.Loops.Count ? "loop" : "    ",
+                    Const.NoteName[wave.Sampler.UnityNote % 12]
+                        + (wave.Sampler.UnityNote / 12 - 2).ToString().PadLeft(2, ' '),
                     name
                 ));
                 ++count;

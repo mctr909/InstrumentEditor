@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using DLS;
 
 namespace InstrumentEditor {
-    public partial class InstDialog : Form {
+    public partial class InstInfoDialog : Form {
         private File mFile;
         private INS mPreset;
 
@@ -270,7 +270,7 @@ namespace InstrumentEditor {
             ""
         };
 
-        public InstDialog(File file) {
+        public InstInfoDialog(File file) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
@@ -281,7 +281,7 @@ namespace InstrumentEditor {
             setCategoryList();
         }
 
-        public InstDialog(File file, INS preset) {
+        public InstInfoDialog(File file, INS preset) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;

@@ -140,7 +140,7 @@ namespace DLS {
                 case DST_TYPE.FILTER_Q:
                     return "db";
                 case DST_TYPE.PAN:
-                    return "-0.5 to +0.5";
+                    return "-50% to +50%";
                 case DST_TYPE.LFO_START_DELAY:
                 case DST_TYPE.VIB_START_DELAY:
                 case DST_TYPE.EG1_ATTACK_TIME:
