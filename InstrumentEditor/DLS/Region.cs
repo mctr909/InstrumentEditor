@@ -139,7 +139,6 @@ namespace DLS {
 			public ushort VelHi;
 			public ushort Options;
 			public ushort KeyGroup;
-			public ushort Layer;
 		}
 		[StructLayout(LayoutKind.Sequential, Pack = 4)]
 		public struct WLNK {
@@ -150,6 +149,7 @@ namespace DLS {
 		}
 
 		public HEADER Header;
+		public ushort Layer;
 		public WLNK WaveLink;
 		public WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
@@ -159,8 +159,12 @@ namespace DLS {
 			id = "rgn ";
 			chunks.Add(new Chunk("rgnh", (i) => {
 				i.Write(Header);
+				if (0 != Layer) {
+					i.Write(Layer);
+				}
 			}, (i) => {
 				i.Read(ref Header);
+				i.Read(ref Layer);
 			}));
 			chunks.Add(new Chunk("wlnk", (i) => {
 				i.Write(WaveLink);
