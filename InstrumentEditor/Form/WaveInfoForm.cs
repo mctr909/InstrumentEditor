@@ -307,7 +307,7 @@ namespace InstrumentEditor {
 
         private void SetPosition() {
             //
-            picSpectrum.Height = 192;
+            picSpectrum.Height = 96;
             //
             hsbTime.Height = 19;
 
@@ -359,7 +359,7 @@ namespace InstrumentEditor {
             mSpecTimeDiv = 1.0f / (float)delta / packSize;
             mSpecData = new byte[(int)(samples * mSpecTimeDiv)][];
 
-            var sp = new Spectrum(wave.Format.SampleRate, 27.5, 24, (uint)picSpectrum.Height);
+            var sp = new Spectrum(wave.Format.SampleRate, 27.5, 12, (uint)picSpectrum.Height);
             var time = 0.0;
             for (var s = 0; s < mSpecData.Length; ++s) {
                 for (var i = 0; i < packSize && time < samples; ++i) {

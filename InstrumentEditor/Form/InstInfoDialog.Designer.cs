@@ -39,15 +39,15 @@
 			this.grbMSB = new System.Windows.Forms.GroupBox();
 			this.grbLSB = new System.Windows.Forms.GroupBox();
 			this.grbPreset = new System.Windows.Forms.GroupBox();
-			this.grbCategory = new System.Windows.Forms.GroupBox();
-			this.cmbCategory = new System.Windows.Forms.ComboBox();
+			this.grbGroup = new System.Windows.Forms.GroupBox();
+			this.cmbGroup = new System.Windows.Forms.ComboBox();
 			this.artList = new InstrumentEditor.Articulations();
 			this.grbType.SuspendLayout();
 			this.grbProg.SuspendLayout();
 			this.grbMSB.SuspendLayout();
 			this.grbLSB.SuspendLayout();
 			this.grbPreset.SuspendLayout();
-			this.grbCategory.SuspendLayout();
+			this.grbGroup.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// txtInstName
@@ -198,29 +198,29 @@
 			this.grbPreset.TabStop = false;
 			this.grbPreset.Text = "音色名";
 			// 
-			// grbCategory
+			// grbGroup
 			// 
-			this.grbCategory.BackColor = System.Drawing.SystemColors.ControlLight;
-			this.grbCategory.Controls.Add(this.cmbCategory);
-			this.grbCategory.Location = new System.Drawing.Point(118, 49);
-			this.grbCategory.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbCategory.Name = "grbCategory";
-			this.grbCategory.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbCategory.Size = new System.Drawing.Size(233, 38);
-			this.grbCategory.TabIndex = 2;
-			this.grbCategory.TabStop = false;
-			this.grbCategory.Text = "カテゴリ";
+			this.grbGroup.BackColor = System.Drawing.SystemColors.ControlLight;
+			this.grbGroup.Controls.Add(this.cmbGroup);
+			this.grbGroup.Location = new System.Drawing.Point(118, 49);
+			this.grbGroup.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+			this.grbGroup.Name = "grbGroup";
+			this.grbGroup.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
+			this.grbGroup.Size = new System.Drawing.Size(233, 38);
+			this.grbGroup.TabIndex = 2;
+			this.grbGroup.TabStop = false;
+			this.grbGroup.Text = "グループ";
 			// 
-			// cmbCategory
+			// cmbGroup
 			// 
-			this.cmbCategory.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.cmbCategory.FormattingEnabled = true;
-			this.cmbCategory.Location = new System.Drawing.Point(4, 12);
-			this.cmbCategory.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.cmbCategory.Name = "cmbCategory";
-			this.cmbCategory.Size = new System.Drawing.Size(224, 23);
-			this.cmbCategory.TabIndex = 0;
-			this.cmbCategory.Leave += new System.EventHandler(this.cmbCategory_Leave);
+			this.cmbGroup.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.cmbGroup.FormattingEnabled = true;
+			this.cmbGroup.Location = new System.Drawing.Point(4, 12);
+			this.cmbGroup.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+			this.cmbGroup.Name = "cmbGroup";
+			this.cmbGroup.Size = new System.Drawing.Size(224, 23);
+			this.cmbGroup.TabIndex = 0;
+			this.cmbGroup.Leave += new System.EventHandler(this.cmbGroup_Leave);
 			// 
 			// artList
 			// 
@@ -238,7 +238,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(428, 517);
 			this.Controls.Add(this.artList);
-			this.Controls.Add(this.grbCategory);
+			this.Controls.Add(this.grbGroup);
 			this.Controls.Add(this.grbPreset);
 			this.Controls.Add(this.grbLSB);
 			this.Controls.Add(this.grbMSB);
@@ -257,7 +257,7 @@
 			this.grbLSB.ResumeLayout(false);
 			this.grbPreset.ResumeLayout(false);
 			this.grbPreset.PerformLayout();
-			this.grbCategory.ResumeLayout(false);
+			this.grbGroup.ResumeLayout(false);
 			this.ResumeLayout(false);
 
         }
@@ -276,8 +276,8 @@
 		private System.Windows.Forms.GroupBox grbMSB;
 		private System.Windows.Forms.GroupBox grbLSB;
 		private System.Windows.Forms.GroupBox grbPreset;
-        private System.Windows.Forms.GroupBox grbCategory;
-        private System.Windows.Forms.ComboBox cmbCategory;
+        private System.Windows.Forms.GroupBox grbGroup;
+        private System.Windows.Forms.ComboBox cmbGroup;
 		private Articulations artList;
 	}
 }

@@ -35,7 +35,7 @@
 			this.grbWave = new System.Windows.Forms.GroupBox();
 			this.btnSelectWave = new System.Windows.Forms.Button();
 			this.btnEditWave = new System.Windows.Forms.Button();
-			this.btnAdd = new System.Windows.Forms.Button();
+			this.btnApply = new System.Windows.Forms.Button();
 			this.grbFineTune = new System.Windows.Forms.GroupBox();
 			this.numFineTune = new System.Windows.Forms.NumericUpDown();
 			this.grbUnityNote = new System.Windows.Forms.GroupBox();
@@ -62,6 +62,7 @@
 			// 
 			// numKeyLow
 			// 
+			this.numKeyLow.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.numKeyLow.Location = new System.Drawing.Point(3, 15);
 			this.numKeyLow.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.numKeyLow.Maximum = new decimal(new int[] {
@@ -70,12 +71,13 @@
             0,
             0});
 			this.numKeyLow.Name = "numKeyLow";
-			this.numKeyLow.Size = new System.Drawing.Size(55, 19);
+			this.numKeyLow.Size = new System.Drawing.Size(55, 22);
 			this.numKeyLow.TabIndex = 0;
 			this.numKeyLow.ValueChanged += new System.EventHandler(this.numKeyLow_ValueChanged);
 			// 
 			// numKeyHigh
 			// 
+			this.numKeyHigh.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.numKeyHigh.Location = new System.Drawing.Point(61, 15);
 			this.numKeyHigh.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.numKeyHigh.Maximum = new decimal(new int[] {
@@ -84,12 +86,13 @@
             0,
             0});
 			this.numKeyHigh.Name = "numKeyHigh";
-			this.numKeyHigh.Size = new System.Drawing.Size(55, 19);
+			this.numKeyHigh.Size = new System.Drawing.Size(55, 22);
 			this.numKeyHigh.TabIndex = 1;
 			this.numKeyHigh.ValueChanged += new System.EventHandler(this.numKeyHigh_ValueChanged);
 			// 
 			// numVelocityHigh
 			// 
+			this.numVelocityHigh.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.numVelocityHigh.Location = new System.Drawing.Point(61, 15);
 			this.numVelocityHigh.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.numVelocityHigh.Maximum = new decimal(new int[] {
@@ -98,12 +101,13 @@
             0,
             0});
 			this.numVelocityHigh.Name = "numVelocityHigh";
-			this.numVelocityHigh.Size = new System.Drawing.Size(55, 19);
+			this.numVelocityHigh.Size = new System.Drawing.Size(55, 22);
 			this.numVelocityHigh.TabIndex = 1;
 			this.numVelocityHigh.ValueChanged += new System.EventHandler(this.numVelocityHigh_ValueChanged);
 			// 
 			// numVelocityLow
 			// 
+			this.numVelocityLow.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.numVelocityLow.Location = new System.Drawing.Point(3, 15);
 			this.numVelocityLow.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.numVelocityLow.Maximum = new decimal(new int[] {
@@ -112,7 +116,7 @@
             0,
             0});
 			this.numVelocityLow.Name = "numVelocityLow";
-			this.numVelocityLow.Size = new System.Drawing.Size(55, 19);
+			this.numVelocityLow.Size = new System.Drawing.Size(55, 22);
 			this.numVelocityLow.TabIndex = 0;
 			this.numVelocityLow.ValueChanged += new System.EventHandler(this.numVelocityLow_ValueChanged);
 			// 
@@ -135,20 +139,22 @@
 			// lblKeyLow
 			// 
 			this.lblKeyLow.AutoSize = true;
-			this.lblKeyLow.Location = new System.Drawing.Point(3, 32);
+			this.lblKeyLow.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.lblKeyLow.Location = new System.Drawing.Point(2, 32);
 			this.lblKeyLow.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.lblKeyLow.Name = "lblKeyLow";
-			this.lblKeyLow.Size = new System.Drawing.Size(41, 12);
+			this.lblKeyLow.Size = new System.Drawing.Size(53, 15);
 			this.lblKeyLow.TabIndex = 6;
 			this.lblKeyLow.Text = "Bb-2 5";
 			// 
 			// lblKeyHigh
 			// 
 			this.lblKeyHigh.AutoSize = true;
+			this.lblKeyHigh.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.lblKeyHigh.Location = new System.Drawing.Point(59, 32);
 			this.lblKeyHigh.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.lblKeyHigh.Name = "lblKeyHigh";
-			this.lblKeyHigh.Size = new System.Drawing.Size(41, 12);
+			this.lblKeyHigh.Size = new System.Drawing.Size(53, 15);
 			this.lblKeyHigh.TabIndex = 7;
 			this.lblKeyHigh.Text = "Bb-2 5";
 			// 
@@ -157,7 +163,7 @@
 			this.grbVelocity.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbVelocity.Controls.Add(this.numVelocityLow);
 			this.grbVelocity.Controls.Add(this.numVelocityHigh);
-			this.grbVelocity.Location = new System.Drawing.Point(138, 6);
+			this.grbVelocity.Location = new System.Drawing.Point(163, 6);
 			this.grbVelocity.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbVelocity.Name = "grbVelocity";
 			this.grbVelocity.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
@@ -168,12 +174,12 @@
 			// 
 			// txtWave
 			// 
-			this.txtWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.txtWave.Location = new System.Drawing.Point(3, 15);
+			this.txtWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.txtWave.Location = new System.Drawing.Point(3, 12);
 			this.txtWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.txtWave.Name = "txtWave";
 			this.txtWave.ReadOnly = true;
-			this.txtWave.Size = new System.Drawing.Size(190, 19);
+			this.txtWave.Size = new System.Drawing.Size(190, 22);
 			this.txtWave.TabIndex = 0;
 			// 
 			// grbWave
@@ -186,7 +192,7 @@
 			this.grbWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbWave.Name = "grbWave";
 			this.grbWave.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbWave.Size = new System.Drawing.Size(261, 38);
+			this.grbWave.Size = new System.Drawing.Size(286, 38);
 			this.grbWave.TabIndex = 2;
 			this.grbWave.TabStop = false;
 			this.grbWave.Text = "波形";
@@ -205,7 +211,7 @@
 			// 
 			// btnEditWave
 			// 
-			this.btnEditWave.Location = new System.Drawing.Point(220, 13);
+			this.btnEditWave.Location = new System.Drawing.Point(237, 13);
 			this.btnEditWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.btnEditWave.Name = "btnEditWave";
 			this.btnEditWave.Size = new System.Drawing.Size(42, 20);
@@ -214,23 +220,23 @@
 			this.btnEditWave.UseVisualStyleBackColor = true;
 			this.btnEditWave.Click += new System.EventHandler(this.btnEditWave_Click);
 			// 
-			// btnAdd
+			// btnApply
 			// 
-			this.btnAdd.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.btnAdd.Location = new System.Drawing.Point(218, 350);
-			this.btnAdd.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.btnAdd.Name = "btnAdd";
-			this.btnAdd.Size = new System.Drawing.Size(55, 32);
-			this.btnAdd.TabIndex = 6;
-			this.btnAdd.Text = "追加";
-			this.btnAdd.UseVisualStyleBackColor = true;
-			this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+			this.btnApply.Font = new System.Drawing.Font("MS UI Gothic", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.btnApply.Location = new System.Drawing.Point(391, 442);
+			this.btnApply.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+			this.btnApply.Name = "btnApply";
+			this.btnApply.Size = new System.Drawing.Size(55, 32);
+			this.btnApply.TabIndex = 8;
+			this.btnApply.Text = "追加";
+			this.btnApply.UseVisualStyleBackColor = true;
+			this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
 			// 
 			// grbFineTune
 			// 
 			this.grbFineTune.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbFineTune.Controls.Add(this.numFineTune);
-			this.grbFineTune.Location = new System.Drawing.Point(112, 99);
+			this.grbFineTune.Location = new System.Drawing.Point(111, 100);
 			this.grbFineTune.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbFineTune.Name = "grbFineTune";
 			this.grbFineTune.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
@@ -241,7 +247,7 @@
 			// 
 			// numFineTune
 			// 
-			this.numFineTune.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.numFineTune.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.numFineTune.Location = new System.Drawing.Point(3, 12);
 			this.numFineTune.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.numFineTune.Maximum = new decimal(new int[] {
@@ -255,7 +261,7 @@
             0,
             -2147483648});
 			this.numFineTune.Name = "numFineTune";
-			this.numFineTune.Size = new System.Drawing.Size(55, 19);
+			this.numFineTune.Size = new System.Drawing.Size(55, 22);
 			this.numFineTune.TabIndex = 0;
 			// 
 			// grbUnityNote
@@ -263,7 +269,7 @@
 			this.grbUnityNote.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbUnityNote.Controls.Add(this.numUnityNote);
 			this.grbUnityNote.Controls.Add(this.lblUnityNote);
-			this.grbUnityNote.Location = new System.Drawing.Point(6, 99);
+			this.grbUnityNote.Location = new System.Drawing.Point(6, 100);
 			this.grbUnityNote.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbUnityNote.Name = "grbUnityNote";
 			this.grbUnityNote.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
@@ -274,7 +280,7 @@
 			// 
 			// numUnityNote
 			// 
-			this.numUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.numUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.numUnityNote.Location = new System.Drawing.Point(3, 12);
 			this.numUnityNote.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.numUnityNote.Maximum = new decimal(new int[] {
@@ -283,30 +289,30 @@
             0,
             0});
 			this.numUnityNote.Name = "numUnityNote";
-			this.numUnityNote.Size = new System.Drawing.Size(55, 19);
+			this.numUnityNote.Size = new System.Drawing.Size(55, 22);
 			this.numUnityNote.TabIndex = 0;
 			this.numUnityNote.ValueChanged += new System.EventHandler(this.numUnityNote_ValueChanged);
 			// 
 			// lblUnityNote
 			// 
 			this.lblUnityNote.AutoSize = true;
-			this.lblUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.lblUnityNote.Location = new System.Drawing.Point(61, 14);
+			this.lblUnityNote.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.lblUnityNote.Location = new System.Drawing.Point(58, 14);
 			this.lblUnityNote.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
 			this.lblUnityNote.Name = "lblUnityNote";
-			this.lblUnityNote.Size = new System.Drawing.Size(35, 12);
+			this.lblUnityNote.Size = new System.Drawing.Size(45, 15);
 			this.lblUnityNote.TabIndex = 11;
-			this.lblUnityNote.Text = "label1";
+			this.lblUnityNote.Text = "Bb -2";
 			// 
 			// grbVolume
 			// 
 			this.grbVolume.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbVolume.Controls.Add(this.numVolume);
-			this.grbVolume.Location = new System.Drawing.Point(192, 99);
+			this.grbVolume.Location = new System.Drawing.Point(222, 100);
 			this.grbVolume.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbVolume.Name = "grbVolume";
 			this.grbVolume.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbVolume.Size = new System.Drawing.Size(75, 35);
+			this.grbVolume.Size = new System.Drawing.Size(70, 35);
 			this.grbVolume.TabIndex = 5;
 			this.grbVolume.TabStop = false;
 			this.grbVolume.Text = "音量(db)";
@@ -314,7 +320,7 @@
 			// numVolume
 			// 
 			this.numVolume.DecimalPlaces = 1;
-			this.numVolume.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.numVolume.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.numVolume.Increment = new decimal(new int[] {
             1,
             0,
@@ -333,17 +339,17 @@
             0,
             -2147483648});
 			this.numVolume.Name = "numVolume";
-			this.numVolume.Size = new System.Drawing.Size(55, 19);
+			this.numVolume.Size = new System.Drawing.Size(55, 22);
 			this.numVolume.TabIndex = 0;
 			// 
 			// chkLoop
 			// 
 			this.chkLoop.AutoSize = true;
-			this.chkLoop.Location = new System.Drawing.Point(6, 350);
+			this.chkLoop.Location = new System.Drawing.Point(6, 139);
 			this.chkLoop.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.chkLoop.Name = "chkLoop";
 			this.chkLoop.Size = new System.Drawing.Size(77, 16);
-			this.chkLoop.TabIndex = 7;
+			this.chkLoop.TabIndex = 6;
 			this.chkLoop.Text = "ループ有効";
 			this.chkLoop.UseVisualStyleBackColor = true;
 			// 
@@ -352,23 +358,23 @@
 			this.artList.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
 			this.artList.Art = null;
 			this.artList.AutoSize = true;
-			this.artList.Location = new System.Drawing.Point(6, 139);
+			this.artList.Location = new System.Drawing.Point(6, 158);
 			this.artList.Margin = new System.Windows.Forms.Padding(0, 1, 0, 1);
 			this.artList.Name = "artList";
 			this.artList.Size = new System.Drawing.Size(445, 281);
-			this.artList.TabIndex = 8;
+			this.artList.TabIndex = 7;
 			// 
 			// RegionInfoDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(456, 420);
+			this.ClientSize = new System.Drawing.Size(452, 479);
 			this.Controls.Add(this.artList);
 			this.Controls.Add(this.chkLoop);
 			this.Controls.Add(this.grbVolume);
 			this.Controls.Add(this.grbFineTune);
 			this.Controls.Add(this.grbUnityNote);
-			this.Controls.Add(this.btnAdd);
+			this.Controls.Add(this.btnApply);
 			this.Controls.Add(this.grbWave);
 			this.Controls.Add(this.grbVelocity);
 			this.Controls.Add(this.grbKey);
@@ -413,7 +419,7 @@
         private System.Windows.Forms.GroupBox grbWave;
         private System.Windows.Forms.Button btnSelectWave;
         private System.Windows.Forms.Button btnEditWave;
-        private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.GroupBox grbFineTune;
         private System.Windows.Forms.NumericUpDown numFineTune;
         private System.Windows.Forms.GroupBox grbUnityNote;

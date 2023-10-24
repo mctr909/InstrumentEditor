@@ -5,10 +5,10 @@ using DLS;
 
 namespace InstrumentEditor {
     public partial class InstInfoDialog : Form {
-        private File mFile;
-        private INS mPreset;
+        File mFile;
+        INS mPreset;
 
-        private readonly string[] GM_INST_NAME = new string[] {
+        readonly string[] GM_INST_NAME = new string[] {
             "Acoustic Grand Piano",
             "Bright Acoustic Piano",
             "Electoric Grand Piano",
@@ -139,7 +139,7 @@ namespace InstrumentEditor {
             "Gunshot"
         };
 
-        private readonly string[] GM2_DRUM_NAME = new string[] {
+        readonly string[] GM2_DRUM_NAME = new string[] {
             "Standard",
             "",
             "",
@@ -274,11 +274,11 @@ namespace InstrumentEditor {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
-            setLayout(rbTypeNote.Checked);
-            setProgramList();
-            setBankMsbList();
-            setBankLsbList();
-            setCategoryList();
+            SetLayout(rbTypeNote.Checked);
+            SetProgramList();
+            SetBankMsbList();
+            SetBankLsbList();
+            SetGroupList();
         }
 
         public InstInfoDialog(File file, INS preset) {
@@ -292,31 +292,32 @@ namespace InstrumentEditor {
             rbTypeDrum.Enabled = false;
             rbTypeNote.Enabled = false;
             txtInstName.Text = preset.Info[Info.TYPE.INAM].Trim();
-            setLayout(enableArt);
-            setProgramList();
-            setBankMsbList();
-            setBankLsbList();
-            setCategoryList();
+            SetLayout(enableArt);
+            SetProgramList();
+            SetBankMsbList();
+            SetBankLsbList();
+            SetGroupList();
+            cmbGroup.SelectedText = preset.Info[Info.TYPE.ICAT];
         }
 
         private void rbType_CheckedChanged(object sender, EventArgs e) {
-            setProgramList();
-            setBankMsbList();
-            setBankLsbList();
-            setLayout(rbTypeNote.Checked);
+            SetProgramList();
+            SetBankMsbList();
+            SetBankLsbList();
+            SetLayout(rbTypeNote.Checked);
         }
 
-        private void cmbCategory_Leave(object sender, EventArgs e) {
-            setCategoryList();
+        private void cmbGroup_Leave(object sender, EventArgs e) {
+            SetGroupList();
         }
 
         private void lstPrgNo_SelectedIndexChanged(object sender, EventArgs e) {
-            setBankMsbList();
-            setBankLsbList();
+            SetBankMsbList();
+            SetBankLsbList();
         }
 
         private void lstBankMSB_SelectedIndexChanged(object sender, EventArgs e) {
-            setBankLsbList();
+            SetBankLsbList();
         }
 
         private void btnApply_Click(object sender, EventArgs e) {
@@ -339,7 +340,7 @@ namespace InstrumentEditor {
             }
             preset.Locale = newId;
             preset.Info[Info.TYPE.INAM] = txtInstName.Text;
-            preset.Info[Info.TYPE.ICAT] = cmbCategory.Text;
+            preset.Info[Info.TYPE.ICAT] = cmbGroup.Text;
             preset.Articulations.Clear();
             if (null != artList.Art) {
                 artList.SetList(preset.Articulations);
@@ -348,7 +349,7 @@ namespace InstrumentEditor {
             Close();
         }
 
-        private void setLayout(bool enableArt) {
+        void SetLayout(bool enableArt) {
             if (enableArt) {
                 artList.Top = grbProg.Bottom + 4;
                 btnApply.Top = artList.Bottom + 4;
@@ -362,7 +363,7 @@ namespace InstrumentEditor {
             Height = btnApply.Bottom + 44;
         }
 
-        private void setProgramList() {
+        void SetProgramList() {
             lstPrgNo.Items.Clear();
             for (byte i = 0; i < 128; ++i) {
                 var strUse = " ";
@@ -397,7 +398,7 @@ namespace InstrumentEditor {
             }
         }
 
-        private void setBankMsbList() {
+        void SetBankMsbList() {
             var prgNo = lstPrgNo.SelectedIndex;
             if (prgNo < 0) {
                 prgNo = 0;
@@ -434,7 +435,7 @@ namespace InstrumentEditor {
             }
         }
 
-        private void setBankLsbList() {
+        void SetBankLsbList() {
             var prgNo = lstPrgNo.SelectedIndex;
             if (prgNo < 0) {
                 prgNo = 0;
@@ -478,21 +479,21 @@ namespace InstrumentEditor {
             }
         }
 
-        private void setCategoryList() {
-            var tmpCategory = cmbCategory.SelectedText;
-            cmbCategory.Items.Clear();
-            if (!string.IsNullOrWhiteSpace(tmpCategory)) {
-                cmbCategory.Items.Add(tmpCategory);
+        void SetGroupList() {
+            var tmpGroup = cmbGroup.SelectedText;
+            cmbGroup.Items.Clear();
+            if (!string.IsNullOrWhiteSpace(tmpGroup)) {
+                cmbGroup.Items.Add(tmpGroup);
             }
             foreach (var preset in mFile.Inst.List.Values) {
                 var cat = preset.Info[Info.TYPE.ICAT];
                 if ("" != cat) {
-                    if (!cmbCategory.Items.Contains(cat.Trim())) {
-                        cmbCategory.Items.Add(cat.Trim());
+                    if (!cmbGroup.Items.Contains(cat.Trim())) {
+                        cmbGroup.Items.Add(cat.Trim());
                     }
                 }
             }
-            cmbCategory.SelectedText = tmpCategory;
+            cmbGroup.SelectedText = tmpGroup;
         }
     }
 }

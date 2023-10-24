@@ -173,9 +173,8 @@ namespace InstrumentEditor {
             }
 
             posRegion.Y = picRegion.Height - posRegion.Y - 1;
-            posRegion.X = posRegion.X / KEY_WIDTH;
-            posRegion.Y = posRegion.Y / VEL_HEIGHT;
-
+            posRegion.X /= KEY_WIDTH;
+            posRegion.Y /= VEL_HEIGHT;
             return posRegion;
         }
 

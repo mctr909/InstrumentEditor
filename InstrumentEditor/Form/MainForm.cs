@@ -8,7 +8,7 @@ using DLS;
 namespace InstrumentEditor {
     public partial class MainForm : Form {
         private string mFilePath;
-        private DLS.File mPack = new DLS.File();
+        private DLS.File mFile = new DLS.File();
         private INS mClipboardInst;
 
         public MainForm() {
@@ -22,7 +22,7 @@ namespace InstrumentEditor {
 
         #region メニューバー[ファイル]
         private void 新規作成NToolStripMenuItem_Click(object sender, EventArgs e) {
-            mPack = new DLS.File();
+            mFile = new DLS.File();
             DispInstList();
             DispWaveList();
             tabControl.SelectedIndex = 0;
@@ -41,10 +41,10 @@ namespace InstrumentEditor {
 
             switch(Path.GetExtension(filePath)) {
             case ".sf2":
-                mPack = new SF2.File(filePath).ToPack();
+                mFile = new SF2.File(filePath).ToPack();
                 break;
             case ".dls":
-                mPack = new DLS.File(filePath).ToPack();
+                mFile = new DLS.File(filePath).ToPack();
                 break;
             }
 
@@ -75,7 +75,7 @@ namespace InstrumentEditor {
 
             switch (Path.GetExtension(filePath)) {
             case ".dls":
-                DLS.File.SaveFromPack(filePath, mPack);
+                DLS.File.SaveFromPack(filePath, mFile);
                 break;
             }
 
@@ -218,7 +218,7 @@ namespace InstrumentEditor {
 
             var cols = lstWave.SelectedItem.ToString().Split('|');
             var idx = int.Parse(cols[0]);
-            var fm = new WaveInfoForm(mPack, idx);
+            var fm = new WaveInfoForm(mFile, idx);
             var index = lstWave.SelectedIndex;
             fm.ShowDialog();
             DispWaveList();
@@ -235,7 +235,7 @@ namespace InstrumentEditor {
             var indices = lstWave.SelectedIndices;
             foreach (var idx in indices) {
                 var cols = lstWave.Items[(int)idx].ToString().Split('|');
-                var wave = mPack.Wave[int.Parse(cols[0])];
+                var wave = mFile.Wave[int.Parse(cols[0])];
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     wave.ToFile(Path.Combine(folderPath, string.Format("Wave{0}.wav", idx)));
                 }
@@ -256,7 +256,7 @@ namespace InstrumentEditor {
                 if (!System.IO.File.Exists(filePath)) {
                     continue;
                 }
-                mPack.Wave.Add(new WAVE(filePath));
+                mFile.Wave.Add(new WAVE(filePath));
             }
 
             DispWaveList();
@@ -267,7 +267,7 @@ namespace InstrumentEditor {
             foreach (var item in lstWave.SelectedItems) {
                 idxs.Add(uint.Parse(((string)item).Split('|')[0]));
             }
-            if (mPack.RemoveWaves(idxs)) {
+            if (mFile.RemoveWaves(idxs)) {
                 DispWaveList();
             }
         }
@@ -277,8 +277,8 @@ namespace InstrumentEditor {
 
             lstWave.Items.Clear();
             int count = 0;
-            for (uint iWave = 0; iWave < mPack.Wave.Count; iWave++) {
-                var wave = mPack.Wave[(int)iWave];
+            for (uint iWave = 0; iWave < mFile.Wave.Count; iWave++) {
+                var wave = mFile.Wave[(int)iWave];
                 string name;
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);
@@ -293,7 +293,7 @@ namespace InstrumentEditor {
                 }
 
                 var use = false;
-                foreach (var inst in mPack.Inst.List.Values) {
+                foreach (var inst in mFile.Inst.List.Values) {
                     foreach (var rgn in inst.Regions.Array) {
                         if (iWave == rgn.WaveLink.TableIndex) {
                             use = true;
@@ -348,7 +348,7 @@ namespace InstrumentEditor {
         }
 
         private void AddInst() {
-            var fm = new InstInfoDialog(mPack);
+            var fm = new InstInfoDialog(mFile);
             fm.ShowDialog();
             DispInstList();
         }
@@ -363,14 +363,14 @@ namespace InstrumentEditor {
             foreach (var item in lstInst.SelectedItems) {
                 var line = (string)item;
                 var cols = line.Split('|');
-                var id = new MidiLocale();
-                id.BankFlg = (byte)(cols[0] == "Drum" ? 0x80 : 0x00);
-                id.ProgNum = byte.Parse(cols[1]);
-                id.BankMSB = byte.Parse(cols[2]);
-                id.BankLSB = byte.Parse(cols[3]);
-                deleteList.Add(id);
+                deleteList.Add(new MidiLocale() {
+                    BankFlg = (byte)(cols[0] == "Drum" ? 0x80 : 0x00),
+                    ProgNum = byte.Parse(cols[1]),
+                    BankMSB = byte.Parse(cols[2]),
+                    BankLSB = byte.Parse(cols[3])
+                });
             }
-            if (mPack.Inst.RemoveRange(deleteList)) {
+            if (mFile.Inst.RemoveRange(deleteList)) {
                 DispInstList();
                 DispWaveList();
                 if (index < lstInst.Items.Count) {
@@ -413,7 +413,7 @@ namespace InstrumentEditor {
             if (null == mClipboardInst) {
                 return;
             }
-            var fm = new InstInfoDialog(mPack, mClipboardInst);
+            var fm = new InstInfoDialog(mFile, mClipboardInst);
             fm.ShowDialog();
             DispInstList();
         }
@@ -422,7 +422,7 @@ namespace InstrumentEditor {
             var idx = lstInst.SelectedIndex;
 
             lstInst.Items.Clear();
-            foreach (var inst in mPack.Inst.List.Values) {
+            foreach (var inst in mFile.Inst.List.Values) {
                 if (!string.IsNullOrEmpty(txtSearchInst.Text)
                     && inst.Info[Info.TYPE.INAM]
                         .IndexOf(txtSearchInst.Text, StringComparison.InvariantCultureIgnoreCase) < 0
@@ -450,7 +450,7 @@ namespace InstrumentEditor {
             if (null == inst) {
                 return;
             }
-            var fm = new RegionAssignForm(mPack, inst);
+            var fm = new RegionAssignForm(mFile, inst);
             fm.ShowDialog();
             DispInstList();
         }
@@ -458,14 +458,14 @@ namespace InstrumentEditor {
         private void SelectInst() {
             var lst = GetSelectedInsts();
             if (1 == lst.Count) {
-                var fm = new InstInfoDialog(mPack, lst[0]);
+                var fm = new InstInfoDialog(mFile, lst[0]);
                 fm.ShowDialog();
                 DispInstList();
                 return;
             }
             if (1 < lst.Count) {
                 var inst = new INS();
-                var fm = new InstInfoDialog(mPack, inst);
+                var fm = new GroupAssignDialog(mFile, inst);
                 fm.ShowDialog();
                 foreach (var p in lst) {
                     p.Info[Info.TYPE.ICAT] = inst.Info[Info.TYPE.ICAT];
@@ -507,8 +507,8 @@ namespace InstrumentEditor {
 
         private INS GetSelectedInst() {
             var locale = GetInstLocale(lstInst.SelectedIndex);
-            if (mPack.Inst.ContainsKey(locale)) {
-                return mPack.Inst[locale];
+            if (mFile.Inst.ContainsKey(locale)) {
+                return mFile.Inst[locale];
             }
             return null;
         }
@@ -517,8 +517,8 @@ namespace InstrumentEditor {
             var locales = GetInstLocales(lstInst.SelectedIndices);
             var insts = new List<INS>();
             foreach (var locale in locales) {
-                if (mPack.Inst.ContainsKey(locale)) {
-                    insts.Add(mPack.Inst[locale]);
+                if (mFile.Inst.ContainsKey(locale)) {
+                    insts.Add(mFile.Inst[locale]);
                 }
             }
             return insts;

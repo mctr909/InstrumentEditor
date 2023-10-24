@@ -5,10 +5,10 @@ using DLS;
 
 namespace InstrumentEditor {
     public partial class RegionInfoDialog : Form {
-        private File mFile;
-        private RGN mRegion;
+        File mFile;
+        RGN mRegion;
 
-        private readonly string[] NoteName = new string[] {
+        readonly string[] NoteName = new string[] {
             "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
         };
 
@@ -68,7 +68,7 @@ namespace InstrumentEditor {
             fm.ShowDialog();
         }
 
-        private void btnAdd_Click(object sender, EventArgs e) {
+        private void btnApply_Click(object sender, EventArgs e) {
             if (byte.MaxValue == mRegion.Header.KeyLo) {
                 mRegion.Header.KeyLo = (byte)numKeyLow.Value;
                 mRegion.Header.KeyHi = (byte)numKeyHigh.Value;
@@ -86,11 +86,11 @@ namespace InstrumentEditor {
             Close();
         }
 
-        private void SetPosition() {
+        void SetPosition() {
             numKeyLow.Top = 12;
             numKeyHigh.Top = 12;
-            lblKeyLow.Top = numKeyLow.Top + numKeyLow.Height + 2;
-            lblKeyHigh.Top = numKeyHigh.Top + numKeyHigh.Height + 2;
+            lblKeyLow.Top = numKeyLow.Bottom + 2;
+            lblKeyHigh.Top = numKeyHigh.Bottom + 2;
 
             grbKey.Top = 4;
             grbKey.Height
@@ -101,78 +101,80 @@ namespace InstrumentEditor {
 
             numVelocityLow.Top = numKeyLow.Top;
             numVelocityHigh.Top = numKeyHigh.Top;
-            grbVelocity.Left = grbKey.Left + grbKey.Width + 36;
+            grbVelocity.Left = grbKey.Right + 36;
             grbVelocity.Top = grbKey.Top;
             grbVelocity.Height = grbKey.Height;
 
             txtWave.Top = 12;
             btnSelectWave.Top = 12;
             btnEditWave.Top = 12;
-            btnSelectWave.Left = txtWave.Left + txtWave.Width + 4;
-            btnEditWave.Left = btnSelectWave.Left + btnSelectWave.Width + 4;
-            grbWave.Top = grbVelocity.Top + grbVelocity.Height + 6;
+            btnSelectWave.Left = txtWave.Right + 4;
+            btnEditWave.Left = btnSelectWave.Right + 4;
+            grbWave.Top = grbVelocity.Bottom + 4;
             grbWave.Width = grbKey.Width + grbVelocity.Width + 36;
-            grbWave.Height = txtWave.Top + txtWave.Height + 6;
+            grbWave.Height = txtWave.Bottom + 6;
 
-            grbUnityNote.Top = grbWave.Top + grbWave.Height + 6;
+            grbUnityNote.Top = grbWave.Bottom + 4;
+            grbUnityNote.Height = numUnityNote.Bottom + 6;
             grbFineTune.Top = grbUnityNote.Top;
-            grbFineTune.Left = grbUnityNote.Left + grbUnityNote.Width + 6;
+            grbFineTune.Left = grbUnityNote.Right + 4;
+            grbFineTune.Height = numFineTune.Bottom + 6;
             grbVolume.Top = grbUnityNote.Top;
-            grbVolume.Left = grbFineTune.Left + grbFineTune.Width + 6;
+            grbVolume.Left = grbWave.Right - grbVolume.Width;
+            grbVolume.Height = numVolume.Bottom + 6;
 
-            artList.Top = grbVolume.Top + grbVolume.Height + 6;
-            artList.Left = grbUnityNote.Left;
+            chkLoop.Top = grbVolume.Bottom + 4;
 
+            artList.Top = chkLoop.Bottom + 4;
+            artList.Left = chkLoop.Left;
             artList.Art = mRegion.Articulations.List;
 
-            chkLoop.Top = artList.Top + artList.Height + 6;
+            btnApply.Top = artList.Bottom;
+            btnApply.Left = artList.Right - btnApply.Width;
 
-            btnAdd.Top = chkLoop.Top;
-            btnAdd.Left = artList.Right - btnAdd.Width;
-
-            Width = artList.Left + artList.Width + 24;
-            Height = btnAdd.Top + btnAdd.Height + 48;
+            Width = btnApply.Right + 20;
+            Height = btnApply.Bottom + 44;
         }
 
-        private void SetKeyLow() {
+        void SetKeyLow() {
             var oct = (int)numKeyLow.Value / 12 - 2;
             var note = (int)numKeyLow.Value % 12;
-            lblKeyLow.Text = string.Format("{0}{1}", NoteName[note], oct);
+            lblKeyLow.Text = string.Format("{0} {1}", NoteName[note], oct);
 
             if (numKeyHigh.Value < numKeyLow.Value) {
                 numKeyHigh.Value = numKeyLow.Value;
             }
         }
 
-        private void SetKeyHigh() {
+        void SetKeyHigh() {
             var oct = (int)numKeyHigh.Value / 12 - 2;
             var note = (int)numKeyHigh.Value % 12;
-            lblKeyHigh.Text = string.Format("{0}{1}", NoteName[note], oct);
+            lblKeyHigh.Text = string.Format("{0} {1}", NoteName[note], oct);
 
             if (numKeyHigh.Value < numKeyLow.Value) {
                 numKeyLow.Value = numKeyHigh.Value;
             }
         }
 
-        private void SetVelocityLow() {
+        void SetVelocityLow() {
             if (numVelocityHigh.Value < numVelocityLow.Value) {
                 numVelocityHigh.Value = numVelocityLow.Value;
             }
         }
 
-        private void SetVelocityHigh() {
+        void SetVelocityHigh() {
             if (numVelocityHigh.Value < numVelocityLow.Value) {
                 numVelocityLow.Value = numVelocityHigh.Value;
             }
         }
 
-        private void SetUnityNote() {
+        void SetUnityNote() {
             var oct = (int)numUnityNote.Value / 12 - 2;
             var note = (int)numUnityNote.Value % 12;
-            lblUnityNote.Text = string.Format("{0}{1}", NoteName[note], oct);
+            lblUnityNote.Text = string.Format("{0} {1}", NoteName[note], oct);
         }
 
-        private void DispRegionInfo() {
+        void DispRegionInfo() {
             if (byte.MaxValue == mRegion.Header.KeyHi) {
                 mRegion.Header.KeyHi = mRegion.Header.KeyLo;
                 numKeyLow.Value = mRegion.Header.KeyLo;
@@ -181,7 +183,7 @@ namespace InstrumentEditor {
                 numVelocityHigh.Value = 127;
                 btnEditWave.Enabled = false;
 
-                btnAdd.Text = "追加";
+                btnApply.Text = "追加";
             } else {
                 numKeyLow.Value = mRegion.Header.KeyLo;
                 numKeyHigh.Value = mRegion.Header.KeyHi;
@@ -219,7 +221,7 @@ namespace InstrumentEditor {
 
                 chkLoop.Checked = 0 < mRegion.Loops.Count;
 
-                btnAdd.Text = "反映";
+                btnApply.Text = "反映";
             }
             SetKeyLow();
             SetKeyHigh();

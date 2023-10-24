@@ -49,7 +49,7 @@ namespace InstrumentEditor {
             int count = 0;
             for (uint iWave = 0; iWave < mFile.Wave.Count; iWave++) {
                 var wave = mFile.Wave[(int)iWave];
-                var name = "";
+                string name;
                 if (string.IsNullOrWhiteSpace(wave.Info[Info.TYPE.INAM])) {
                     name = string.Format("Wave[{0}]", count);
                 } else {
