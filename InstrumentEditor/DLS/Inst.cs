@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DLS {
 	public class LINS : Riff {
@@ -62,7 +63,7 @@ namespace DLS {
 
 		public LINS() { }
 
-		public LINS(IntPtr ptr, long size) : base(ptr, size) { }
+		public LINS(BinaryReader br, long size) : base(br, size) { }
 	}
 
 	public class INS : Riff {
@@ -98,6 +99,6 @@ namespace DLS {
 			Locale.BankLSB = bankLSB;
 		}
 
-		public INS(IntPtr ptr, long size) : base(ptr, size) { }
+		public INS(BinaryReader br, long size) : base(br, size) { }
 	}
 }

@@ -785,7 +785,7 @@ namespace SF2 {
             }));
         }
 
-        public PDTA(IntPtr ptr, long size) : base(ptr, size) {
+        public PDTA(BinaryReader br, long size) : base(br, size) {
             SetPresetList();
             SetInstList();
         }
@@ -997,6 +997,6 @@ namespace SF2 {
             }));
         }
 
-        public SDTA(IntPtr ptr, long size) : base(ptr, size) { }
+        public SDTA(BinaryReader br, long size) : base(br, size) { }
 	}
 }

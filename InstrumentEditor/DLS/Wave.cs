@@ -38,7 +38,7 @@ namespace DLS {
 
 		public WVPL() { }
 
-		public WVPL(IntPtr ptr, long size) : base(ptr, size) { }
+		public WVPL(BinaryReader br, long size) : base(br, size) { }
 
 		public void Add(WAVE wave) {
 			mList.Add(wave);
@@ -96,7 +96,7 @@ namespace DLS {
 
 		public WAVE(string filePath) : base(filePath) { }
 
-		public WAVE(IntPtr ptr, long size) : base(ptr, size) { }
+		public WAVE(BinaryReader br, long size) : base(br, size) { }
 
 		public void ToFile(string filePath) {
 			var fs = new FileStream(filePath, FileMode.Create);

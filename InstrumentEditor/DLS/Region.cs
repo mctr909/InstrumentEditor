@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace DLS {
@@ -43,7 +44,7 @@ namespace DLS {
 
 		public LRGN() { }
 
-		public LRGN(IntPtr ptr, long size) : base(ptr, size) { }
+		public LRGN(BinaryReader br, long size) : base(br, size) { }
 
 		public IList<RGN> Array {
 			get { return List.Values; }
@@ -192,6 +193,6 @@ namespace DLS {
 			Header.VelHi = 127;
 		}
 
-		public RGN(IntPtr ptr, long size) : base(ptr, size) { }
+		public RGN(BinaryReader br, long size) : base(br, size) { }
 	}
 }

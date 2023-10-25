@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DLS {
 	public class LART : Riff {
@@ -22,7 +23,7 @@ namespace DLS {
 
 		public LART() { }
 
-		public LART(IntPtr ptr, long size) : base(ptr, size) { }
+		public LART(BinaryReader br, long size) : base(br, size) { }
 
 		public void Add(Connection conn) {
 			if (List.Contains(conn)) {
