@@ -21,8 +21,8 @@ namespace DLS {
 				foreach (var ins in List.Values) {
 					ins.Write(i);
 				}
-			}, (ptr, size) => {
-				var ins = new INS(ptr, size);
+			}, (br, size) => {
+				var ins = new INS(br, size);
 				List.Add(ins.Locale, ins);
 			}));
 		}
@@ -82,13 +82,13 @@ namespace DLS {
 			}));
 			riffs.Add(new LIST("lrgn", (i) => {
 				Regions.Write(i);
-			}, (ptr, size) => {
-				Regions = new LRGN(ptr, size);
+			}, (br, size) => {
+				Regions = new LRGN(br, size);
 			}));
 			riffs.Add(new LIST("lart", (i) => {
 				Articulations.Write(i);
-			}, (ptr, size) => {
-				Articulations = new LART(ptr, size);
+			}, (br, size) => {
+				Articulations = new LART(br, size);
 			}));
 		}
 

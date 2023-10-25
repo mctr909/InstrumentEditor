@@ -33,13 +33,13 @@ namespace DLS {
 			}));
 			riffs.Add(new LIST("lins", (i) => {
 				Inst.Write(i);
-			}, (ptr, size) => {
-				Inst = new LINS(ptr, size);
+			}, (br, size) => {
+				Inst = new LINS(br, size);
 			}));
 			riffs.Add(new LIST("wvpl", (i) => {
 				Wave.Write(i);
-			}, (ptr, size) => {
-				Wave = new WVPL(ptr, size);
+			}, (br, size) => {
+				Wave = new WVPL(br, size);
 			}));
 		}
 

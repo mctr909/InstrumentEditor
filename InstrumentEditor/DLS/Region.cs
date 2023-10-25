@@ -36,8 +36,8 @@ namespace DLS {
 				foreach (var rgn in List.Values) {
 					rgn.Write(i);
 				}
-			}, (ptr, size) => {
-				var rgn = new RGN(ptr, size);
+			}, (br, size) => {
+				var rgn = new RGN(br, size);
 				List.Add(rgn.Header, rgn);
 			}));
 		}
@@ -181,8 +181,8 @@ namespace DLS {
 			}));
 			riffs.Add(new LIST("lart", (i) => {
 				Articulations.Write(i);
-			}, (ptr, size) => {
-				Articulations = new LART(ptr, size);
+			}, (br, size) => {
+				Articulations = new LART(br, size);
 			}));
 		}
 

@@ -196,12 +196,12 @@ namespace SF2 {
         protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
             id = "";
             riffs.Add(new LIST("pdta", (i) => {
-            }, (ptr, size) => {
-                mPdta = new PDTA(ptr, size);
+            }, (br, size) => {
+                mPdta = new PDTA(br, size);
             }));
             riffs.Add(new LIST("sdta", (i) => {
-            }, (ptr, size) => {
-                mSdta = new SDTA(ptr, size);
+            }, (br, size) => {
+                mSdta = new SDTA(br, size);
             }));
         }
 

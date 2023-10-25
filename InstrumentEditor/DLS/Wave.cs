@@ -15,8 +15,8 @@ namespace DLS {
 				foreach (var wave in mList) {
 					wave.Write(i);
 				}
-			}, (ptr, size) => {
-				var ins = new WAVE(ptr, size);
+			}, (br, size) => {
+				var ins = new WAVE(br, size);
 				Add(ins);
 			}));
 		}

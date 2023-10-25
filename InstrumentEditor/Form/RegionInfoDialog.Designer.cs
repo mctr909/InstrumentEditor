@@ -163,7 +163,7 @@
 			this.grbVelocity.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbVelocity.Controls.Add(this.numVelocityLow);
 			this.grbVelocity.Controls.Add(this.numVelocityHigh);
-			this.grbVelocity.Location = new System.Drawing.Point(163, 6);
+			this.grbVelocity.Location = new System.Drawing.Point(177, 6);
 			this.grbVelocity.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbVelocity.Name = "grbVelocity";
 			this.grbVelocity.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
@@ -192,18 +192,18 @@
 			this.grbWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbWave.Name = "grbWave";
 			this.grbWave.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.grbWave.Size = new System.Drawing.Size(286, 38);
+			this.grbWave.Size = new System.Drawing.Size(300, 38);
 			this.grbWave.TabIndex = 2;
 			this.grbWave.TabStop = false;
 			this.grbWave.Text = "波形";
 			// 
 			// btnSelectWave
 			// 
-			this.btnSelectWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.btnSelectWave.Location = new System.Drawing.Point(193, 13);
+			this.btnSelectWave.Font = new System.Drawing.Font("ＭＳ ゴシック", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.btnSelectWave.Location = new System.Drawing.Point(195, 10);
 			this.btnSelectWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.btnSelectWave.Name = "btnSelectWave";
-			this.btnSelectWave.Size = new System.Drawing.Size(42, 20);
+			this.btnSelectWave.Size = new System.Drawing.Size(49, 24);
 			this.btnSelectWave.TabIndex = 1;
 			this.btnSelectWave.Text = "選択";
 			this.btnSelectWave.UseVisualStyleBackColor = true;
@@ -211,10 +211,11 @@
 			// 
 			// btnEditWave
 			// 
-			this.btnEditWave.Location = new System.Drawing.Point(237, 13);
+			this.btnEditWave.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.btnEditWave.Location = new System.Drawing.Point(246, 10);
 			this.btnEditWave.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.btnEditWave.Name = "btnEditWave";
-			this.btnEditWave.Size = new System.Drawing.Size(42, 20);
+			this.btnEditWave.Size = new System.Drawing.Size(49, 24);
 			this.btnEditWave.TabIndex = 2;
 			this.btnEditWave.Text = "編集";
 			this.btnEditWave.UseVisualStyleBackColor = true;
@@ -308,7 +309,7 @@
 			// 
 			this.grbVolume.BackColor = System.Drawing.SystemColors.ControlLight;
 			this.grbVolume.Controls.Add(this.numVolume);
-			this.grbVolume.Location = new System.Drawing.Point(222, 100);
+			this.grbVolume.Location = new System.Drawing.Point(236, 100);
 			this.grbVolume.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbVolume.Name = "grbVolume";
 			this.grbVolume.Padding = new System.Windows.Forms.Padding(1, 2, 1, 2);
