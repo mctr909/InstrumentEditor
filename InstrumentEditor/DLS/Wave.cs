@@ -112,6 +112,7 @@ namespace DLS {
 			}, bw);
 			Chunk.Save("wsmp", (i) => {
 				i.Write(Sampler);
+				i.Write(Loops.Count);
 				i.Write(Loops);
 			}, bw);
 			Info.Write(bw);
