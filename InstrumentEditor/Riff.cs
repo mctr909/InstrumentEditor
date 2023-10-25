@@ -262,24 +262,25 @@ public abstract class Riff {
 	}
 
 	void Write(BinaryWriter bw, string type) {
-		var msCh = new MemoryStream();
-		var bwCh = new BinaryWriter(msCh);
-		bwCh.Write(type.ToCharArray());
-		bwCh.Write(0xFFFFFFFF);
-		bwCh.Write(Id.ToCharArray());
+		bw.Write(type.ToCharArray());
+		var sizePos = bw.BaseStream.Position;
+		bw.Write(0xFFFFFFFF);
+		bw.Write(Id.ToCharArray());
 		foreach (var chunk in mChunks.Values) {
-			chunk.Save(bwCh);
+			chunk.Save(bw);
 		}
 		foreach (var list in mLists.Values) {
-			list.Save(bwCh);
+			list.Save(bw);
 		}
-		Info.Write(bwCh);
-		if (12 == msCh.Length) {
-			return;
+		Info.Write(bw);
+		var size = bw.BaseStream.Position - sizePos;
+		if (8 == size) {
+			bw.BaseStream.Position = sizePos - 4;
+		} else {
+			bw.BaseStream.Position = sizePos;
+			bw.Write((uint)size - 4);
+			bw.BaseStream.Position = sizePos + size;
 		}
-		bwCh.Seek(4, SeekOrigin.Begin);
-		bwCh.Write((uint)msCh.Length - 8);
-		bw.Write(msCh.ToArray());
 	}
 }
 
