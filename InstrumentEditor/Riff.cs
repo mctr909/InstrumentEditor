@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,13 +15,13 @@ public abstract class Riff {
 	protected class Chunk {
 		public class Reader {
 			BinaryReader mBR = null;
-			public int Pos { get; private set; } = 0;
-			public int Size { get; private set; } = 0;
-			public Reader(BinaryReader br, int size) {
+			public long Pos { get; private set; } = 0;
+			public long Size { get; private set; } = 0;
+			public Reader(BinaryReader br, long size) {
 				mBR = br;
 				Size = size;
 			}
-			public void Seek(int seek) {
+			public void Seek(long seek) {
 				if (Pos + seek <= Size && mBR != null) {
 					mBR.BaseStream.Position += seek;
 					Pos += seek;
@@ -30,7 +29,7 @@ public abstract class Riff {
 			}
 			public void Read(out byte[] data) {
 				if (Pos < Size && mBR != null) {
-					data = mBR.ReadBytes(Size);
+					data = mBR.ReadBytes((int)Size);
 					Pos += Size;
 				} else {
 					data = default;
@@ -63,39 +62,46 @@ public abstract class Riff {
 		}
 
 		public class Writer {
-			IntPtr mPtr = IntPtr.Zero;
-			public int Size { get; private set; } = 0;
-			public int Pos { get; private set; } = 0;
+			BinaryWriter mBW = null;
+			public long Size { get; private set; } = 0;
+			public long Pos { get; private set; } = 0;
 			public Writer() { }
-			public Writer(IntPtr ptr, int size) {
-				mPtr = ptr;
+			public Writer(BinaryWriter bw, long size) {
+				mBW = bw;
 				Size = size;
 			}
 			public void Write(byte[] data) {
 				var len = data.Length;
-				if (Pos + len <= Size && mPtr != IntPtr.Zero) {
-					Marshal.Copy(data, 0, mPtr, len);
-					mPtr += len;
+				if (Pos + len <= Size && mBW != null) {
+					mBW.Write(data);
 				}
 				Pos += len;
 			}
 			public void Write<T>(T value) {
 				var len = Marshal.SizeOf<T>();
-				if (Pos + len <= Size && mPtr != IntPtr.Zero) {
-					Marshal.StructureToPtr(value, mPtr, false);
-					mPtr += len;
+				if (Pos + len <= Size && mBW != null) {
+					var ptr = Marshal.AllocHGlobal(len);
+					Marshal.StructureToPtr(value, ptr, false);
+					var arr = new byte[len];
+					Marshal.Copy(ptr, arr, 0, len);
+					Marshal.FreeHGlobal(ptr);
+					mBW.Write(arr);
 				}
 				Pos += len;
 			}
 			public void Write<T>(List<T> list) {
 				var len = Marshal.SizeOf<T>();
+				var ptr = Marshal.AllocHGlobal(len);
+				var arr = new byte[len];
 				foreach (var item in list) {
-					if (Pos + len <= Size && mPtr != IntPtr.Zero) {
-						Marshal.StructureToPtr(item, mPtr, false);
-						mPtr += len;
+					if (Pos + len <= Size && mBW != null) {
+						Marshal.StructureToPtr(item, ptr, false);
+						Marshal.Copy(ptr, arr, 0, len);
+						mBW.Write(arr);
 					}
 					Pos += len;
 				}
+				Marshal.FreeHGlobal(ptr);
 			}
 		}
 
@@ -121,22 +127,19 @@ public abstract class Riff {
 			if (0 == size) {
 				return;
 			}
-			var pBuff = Marshal.AllocHGlobal(size);
-			save = new Writer(pBuff, size);
-			putFunc(save);
-			var buff = new byte[size];
-			Marshal.Copy(pBuff, buff, 0, size);
-			Marshal.FreeHGlobal(pBuff);
 			bw.Write(id.ToCharArray());
-			bw.Write(size);
-			bw.Write(buff);
+			var sizePos = bw.BaseStream.Position;
+			bw.Write(0xFFFFFFFF);
+			putFunc(new Writer(bw, size));
+			bw.BaseStream.Position = sizePos;
+			bw.Write((uint)size);
+			bw.BaseStream.Position += size;
 		}
 		public void Save(BinaryWriter bw) {
 			Save(Id, mPutFunc, bw);
 		}
 		public void Load(BinaryReader br, long size) {
-			var load = new Reader(br, (int)size);
-			mSetFunc(load);
+			mSetFunc(new Reader(br, size));
 		}
 	}
 
