@@ -156,13 +156,13 @@
 			// grbMain
 			// 
 			this.grbMain.BackColor = System.Drawing.SystemColors.ControlLight;
+			this.grbMain.Controls.Add(this.btnLoopCreate);
+			this.grbMain.Controls.Add(this.btnUpdate);
 			this.grbMain.Controls.Add(this.picSpectrum);
 			this.grbMain.Controls.Add(this.numWaveAmp);
-			this.grbMain.Controls.Add(this.btnLoopCreate);
 			this.grbMain.Controls.Add(this.picWave);
 			this.grbMain.Controls.Add(this.numWaveScale);
 			this.grbMain.Controls.Add(this.hsbTime);
-			this.grbMain.Controls.Add(this.btnUpdate);
 			this.grbMain.Location = new System.Drawing.Point(6, 48);
 			this.grbMain.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbMain.Name = "grbMain";

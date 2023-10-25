@@ -400,6 +400,9 @@ namespace InstrumentEditor {
             grbLoop.Width = Width - grbLoop.Left - 22;
             picLoop.Width = Width - (picLoop.Left + grbLoop.Left) * 2 - 16;
 
+            btnUpdate.Left = picLoop.Right - btnUpdate.Width;
+            btnLoopCreate.Left = btnUpdate.Left - btnLoopCreate.Width - 4;
+
             if (null != mSpecBmp) {
                 mSpecBmp.SizeChange(picSpectrum);
             }
