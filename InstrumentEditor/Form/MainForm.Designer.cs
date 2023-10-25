@@ -246,6 +246,7 @@
             this.lstWave.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lstWave.Size = new System.Drawing.Size(576, 352);
             this.lstWave.TabIndex = 1;
+            this.lstWave.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lstWave_MouseUp);
             this.lstWave.DoubleClick += new System.EventHandler(this.lstWave_DoubleClick);
             // 
             // toolStrip3

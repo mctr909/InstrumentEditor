@@ -6,13 +6,13 @@ using DLS;
 namespace InstrumentEditor {
     public partial class GroupAssignDialog : Form {
         File mFile;
-        INS mPreset;
+        Riff mRiff;
 
-        public GroupAssignDialog(File file, INS preset) {
+        public GroupAssignDialog(File file, Riff riff) {
             InitializeComponent();
             StartPosition = FormStartPosition.CenterParent;
             mFile = file;
-            mPreset = preset;
+            mRiff = riff;
             SetGroupList();
         }
 
@@ -21,7 +21,7 @@ namespace InstrumentEditor {
         }
 
         private void btnApply_Click(object sender, EventArgs e) {
-            mPreset.Info[Info.TYPE.ICAT] = cmbGroup.Text;
+            mRiff.Info[Info.TYPE.ICAT] = cmbGroup.Text;
             Close();
         }
 
@@ -31,11 +31,24 @@ namespace InstrumentEditor {
             if (!string.IsNullOrWhiteSpace(tmpGroup)) {
                 cmbGroup.Items.Add(tmpGroup);
             }
-            foreach (var preset in mFile.Inst.List.Values) {
-                var cat = preset.Info[Info.TYPE.ICAT];
-                if ("" != cat) {
-                    if (!cmbGroup.Items.Contains(cat.Trim())) {
-                        cmbGroup.Items.Add(cat.Trim());
+            if (mRiff.GetType() == typeof(INS)) {
+                foreach (var preset in mFile.Inst.List.Values) {
+                    var cat = preset.Info[Info.TYPE.ICAT];
+                    if ("" != cat) {
+                        if (!cmbGroup.Items.Contains(cat.Trim())) {
+                            cmbGroup.Items.Add(cat.Trim());
+                        }
+                    }
+                }
+            }
+            if (mRiff.GetType() == typeof(WAVE)) {
+                for (uint iWave = 0; iWave < mFile.Wave.Count; iWave++) {
+                    var wave = mFile.Wave[(int)iWave];
+                    var cat = wave.Info[Info.TYPE.ICAT];
+                    if ("" != cat) {
+                        if (!cmbGroup.Items.Contains(cat.Trim())) {
+                            cmbGroup.Items.Add(cat.Trim());
+                        }
                     }
                 }
             }

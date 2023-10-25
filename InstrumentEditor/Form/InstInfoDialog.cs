@@ -328,15 +328,22 @@ namespace InstrumentEditor {
                 BankFlg = (byte)(rbTypeDrum.Checked ? 0x80 : 0x00)
             };
             INS preset;
-            if (null == mPreset || !mFile.Inst.ContainsKey(mPreset.Locale)) {
-                mPreset = new INS();
-                preset = mPreset;
-            } else if (mFile.Inst.ContainsKey(newId)) {
-                preset = mFile.Inst[newId];
-                mFile.Inst.Remove(newId);
+            if (null == mPreset) {
+                if (mFile.Inst.ContainsKey(newId)) {
+                    MessageBox.Show("同一識別子の音色が存在しています");
+                    return;
+                }
+                preset = new INS();
             } else {
+                if (mPreset.Locale.Equals(newId)) {
+                    mFile.Inst.Remove(newId);
+                } else {
+                    if (mFile.Inst.ContainsKey(newId)) {
+                        MessageBox.Show("同一識別子の音色が存在しています");
+                        return;
+                    }
+                }
                 preset = mPreset;
-                mFile.Inst.Remove(preset.Locale);
             }
             preset.Locale = newId;
             preset.Info[Info.TYPE.INAM] = txtInstName.Text;

@@ -211,11 +211,32 @@ namespace InstrumentEditor {
         #endregion
 
         #region 波形一覧
+        private void lstWave_MouseUp(object sender, MouseEventArgs e) {
+            if (e.Button != MouseButtons.Right) {
+                return;
+            }
+            var indexes = lstWave.SelectedIndices;
+            var waves = new List<WAVE>();
+            foreach (int index in indexes) {
+                var cols = ((string)lstWave.Items[index]).Split('|');
+                waves.Add(mFile.Wave[int.Parse(cols[0])]);
+            }
+            if (0 == waves.Count) {
+                return;
+            }
+            var wave = new WAVE();
+            var fm = new GroupAssignDialog(mFile, wave);
+            fm.ShowDialog();
+            foreach (var p in waves) {
+                p.Info[Info.TYPE.ICAT] = wave.Info[Info.TYPE.ICAT];
+            }
+            DispWaveList();
+        }
+
         private void lstWave_DoubleClick(object sender, EventArgs e) {
             if (0 == lstWave.Items.Count) {
                 return;
             }
-
             var cols = lstWave.SelectedItem.ToString().Split('|');
             var idx = int.Parse(cols[0]);
             var fm = new WaveInfoForm(mFile, idx);
@@ -388,23 +409,24 @@ namespace InstrumentEditor {
             }
 
             mClipboardInst = new INS();
+            mClipboardInst.Locale = inst.Locale;
 
             // Region
-            mClipboardInst.Regions.List.Clear();
             foreach (var layer in inst.Regions.Array) {
                 var rgn = new RGN {
-                    Header = layer.Header
+                    Header = layer.Header,
+                    Layer = layer.Layer,
+                    WaveLink = layer.WaveLink,
+                    Sampler = layer.Sampler
                 };
+                rgn.Loops.AddRange(layer.Loops);
                 rgn.Articulations.AddRange(layer.Articulations.List);
                 mClipboardInst.Regions.Add(rgn);
             }
-
             // Articulations
-            mClipboardInst.Articulations.Clear();
             foreach (var art in inst.Articulations.List) {
                 mClipboardInst.Articulations.Add(art);
             }
-
             // Info
             mClipboardInst.Info.CopyFrom(inst.Info);
         }
