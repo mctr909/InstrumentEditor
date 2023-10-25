@@ -36,9 +36,9 @@
 			this.numWaveScale = new System.Windows.Forms.NumericUpDown();
 			this.picLoop = new System.Windows.Forms.PictureBox();
 			this.grbMain = new System.Windows.Forms.GroupBox();
-			this.numWaveAmp = new System.Windows.Forms.NumericUpDown();
 			this.btnLoopCreate = new System.Windows.Forms.Button();
 			this.btnUpdate = new System.Windows.Forms.Button();
+			this.numWaveAmp = new System.Windows.Forms.NumericUpDown();
 			this.grbLoop = new System.Windows.Forms.GroupBox();
 			this.numLoopAmp = new System.Windows.Forms.NumericUpDown();
 			this.numLoopScale = new System.Windows.Forms.NumericUpDown();
@@ -122,7 +122,7 @@
 			// numWaveScale
 			// 
 			this.numWaveScale.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.numWaveScale.Location = new System.Drawing.Point(97, 0);
+			this.numWaveScale.Location = new System.Drawing.Point(107, 0);
 			this.numWaveScale.Maximum = new decimal(new int[] {
             40,
             0,
@@ -163,6 +163,7 @@
 			this.grbMain.Controls.Add(this.picWave);
 			this.grbMain.Controls.Add(this.numWaveScale);
 			this.grbMain.Controls.Add(this.hsbTime);
+			this.grbMain.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.grbMain.Location = new System.Drawing.Point(6, 48);
 			this.grbMain.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbMain.Name = "grbMain";
@@ -172,10 +173,37 @@
 			this.grbMain.TabStop = false;
 			this.grbMain.Text = "ループ範囲選択";
 			// 
+			// btnLoopCreate
+			// 
+			this.btnLoopCreate.BackColor = System.Drawing.SystemColors.Control;
+			this.btnLoopCreate.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.btnLoopCreate.Location = new System.Drawing.Point(371, 0);
+			this.btnLoopCreate.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+			this.btnLoopCreate.Name = "btnLoopCreate";
+			this.btnLoopCreate.Size = new System.Drawing.Size(93, 24);
+			this.btnLoopCreate.TabIndex = 2;
+			this.btnLoopCreate.Text = "ループ作成";
+			this.btnLoopCreate.UseVisualStyleBackColor = true;
+			this.btnLoopCreate.Click += new System.EventHandler(this.btnLoopCreate_Click);
+			// 
+			// btnUpdate
+			// 
+			this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
+			this.btnUpdate.Enabled = false;
+			this.btnUpdate.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.btnUpdate.Location = new System.Drawing.Point(252, 0);
+			this.btnUpdate.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
+			this.btnUpdate.Name = "btnUpdate";
+			this.btnUpdate.Size = new System.Drawing.Size(117, 24);
+			this.btnUpdate.TabIndex = 1;
+			this.btnUpdate.Text = "ループ範囲反映";
+			this.btnUpdate.UseVisualStyleBackColor = true;
+			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+			// 
 			// numWaveAmp
 			// 
 			this.numWaveAmp.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.numWaveAmp.Location = new System.Drawing.Point(162, 0);
+			this.numWaveAmp.Location = new System.Drawing.Point(172, 0);
 			this.numWaveAmp.Maximum = new decimal(new int[] {
             20,
             0,
@@ -197,33 +225,6 @@
             0});
 			this.numWaveAmp.ValueChanged += new System.EventHandler(this.numWaveAmp_ValueChanged);
 			// 
-			// btnLoopCreate
-			// 
-			this.btnLoopCreate.BackColor = System.Drawing.SystemColors.Control;
-			this.btnLoopCreate.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.btnLoopCreate.Location = new System.Drawing.Point(361, 0);
-			this.btnLoopCreate.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.btnLoopCreate.Name = "btnLoopCreate";
-			this.btnLoopCreate.Size = new System.Drawing.Size(93, 24);
-			this.btnLoopCreate.TabIndex = 2;
-			this.btnLoopCreate.Text = "ループ作成";
-			this.btnLoopCreate.UseVisualStyleBackColor = true;
-			this.btnLoopCreate.Click += new System.EventHandler(this.btnLoopCreate_Click);
-			// 
-			// btnUpdate
-			// 
-			this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
-			this.btnUpdate.Enabled = false;
-			this.btnUpdate.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.btnUpdate.Location = new System.Drawing.Point(242, 0);
-			this.btnUpdate.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
-			this.btnUpdate.Name = "btnUpdate";
-			this.btnUpdate.Size = new System.Drawing.Size(117, 24);
-			this.btnUpdate.TabIndex = 1;
-			this.btnUpdate.Text = "ループ範囲反映";
-			this.btnUpdate.UseVisualStyleBackColor = true;
-			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-			// 
 			// grbLoop
 			// 
 			this.grbLoop.BackColor = System.Drawing.SystemColors.ControlLight;
@@ -231,6 +232,7 @@
 			this.grbLoop.Controls.Add(this.numLoopScale);
 			this.grbLoop.Controls.Add(this.picLoop);
 			this.grbLoop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			this.grbLoop.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.grbLoop.Location = new System.Drawing.Point(6, 328);
 			this.grbLoop.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.grbLoop.Name = "grbLoop";
@@ -238,12 +240,12 @@
 			this.grbLoop.Size = new System.Drawing.Size(774, 151);
 			this.grbLoop.TabIndex = 6;
 			this.grbLoop.TabStop = false;
-			this.grbLoop.Text = "ループ範囲表示";
+			this.grbLoop.Text = "ループ接続部";
 			// 
 			// numLoopAmp
 			// 
 			this.numLoopAmp.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.numLoopAmp.Location = new System.Drawing.Point(162, 0);
+			this.numLoopAmp.Location = new System.Drawing.Point(171, 0);
 			this.numLoopAmp.Maximum = new decimal(new int[] {
             20,
             0,
@@ -268,7 +270,7 @@
 			// numLoopScale
 			// 
 			this.numLoopScale.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-			this.numLoopScale.Location = new System.Drawing.Point(97, 0);
+			this.numLoopScale.Location = new System.Drawing.Point(107, 0);
 			this.numLoopScale.Maximum = new decimal(new int[] {
             64,
             0,
