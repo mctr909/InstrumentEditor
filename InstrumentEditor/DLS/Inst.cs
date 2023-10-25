@@ -14,7 +14,7 @@ namespace DLS {
 
 		public SortedDictionary<MidiLocale, INS> List = new SortedDictionary<MidiLocale, INS>(new Sort());
 
-		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+		protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "lins";
 			riffs.Add(new LIST("ins ", (i) => {
 				foreach (var ins in List.Values) {
@@ -62,9 +62,7 @@ namespace DLS {
 
 		public LINS() { }
 
-		public LINS(IntPtr ptr, long size) {
-			Load(ptr, size);
-		}
+		public LINS(IntPtr ptr, long size) : base(ptr, size) { }
 	}
 
 	public class INS : Riff {
@@ -72,7 +70,7 @@ namespace DLS {
 		public LRGN Regions = new LRGN();
 		public LART Articulations = new LART();
 
-		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+		protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "ins ";
 			chunks.Add(new Chunk("insh", (i) => {
 				i.Write(Regions.List.Count);
@@ -100,12 +98,6 @@ namespace DLS {
 			Locale.BankLSB = bankLSB;
 		}
 
-		public INS(IntPtr ptr, long size) {
-			Load(ptr, size);
-		}
-
-		protected override void LoadInfo(IntPtr ptr, string type, string value) {
-			Info[type] = value;
-		}
+		public INS(IntPtr ptr, long size) : base(ptr, size) { }
 	}
 }

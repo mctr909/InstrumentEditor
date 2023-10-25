@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 
 using DLS;
+using System.Drawing;
 
 namespace SF2 {
     #region enum
@@ -188,36 +189,30 @@ namespace SF2 {
     }
 
     public class File : Riff {
-        private string mPath;
-        private PDTA mPdta;
-        private SDTA mSdta;
+        string mPath;
+        PDTA mPdta;
+        SDTA mSdta;
 
-        protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+        protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
             id = "";
+            riffs.Add(new LIST("pdta", (i) => {
+            }, (ptr, size) => {
+                mPdta = new PDTA(ptr, size);
+            }));
+            riffs.Add(new LIST("sdta", (i) => {
+            }, (ptr, size) => {
+                mSdta = new SDTA(ptr, size);
+            }));
         }
 
-        public File(string filePath) {
+        public File(string filePath) : base(filePath) {
             mPath = filePath;
-            MainLoop(filePath);
             //OutputPresetList();
             //OutputInstList();
             //OutputSampleList();
         }
 
-        protected override void LoadChunk(IntPtr ptr, string type, long size) {
-            switch (type) {
-            case "pdta":
-                mPdta = new PDTA(ptr, size);
-                break;
-            case "sdta":
-                mSdta = new SDTA(ptr, size);
-                break;
-            default:
-                break;
-            }
-        }
-
-        private void OutputPresetList() {
+        void OutputPresetList() {
             var sw = new StreamWriter(Path.GetDirectoryName(mPath) + "\\" + Path.GetFileNameWithoutExtension(mPath) + "_preset.csv");
             foreach (var preset in mPdta.PresetList) {
                 sw.Write("{0},{1},\"{2}\n{3}\"",
@@ -266,7 +261,7 @@ namespace SF2 {
             sw.Dispose();
         }
 
-        private void OutputInstList() {
+        void OutputInstList() {
             var sw = new StreamWriter(Path.GetDirectoryName(mPath)
                 + "\\" + Path.GetFileNameWithoutExtension(mPath) + "_inst.csv");
             int instNo = 0;
@@ -442,7 +437,7 @@ namespace SF2 {
             sw.Dispose();
         }
 
-        private void OutputSampleList() {
+        void OutputSampleList() {
             var sw = new StreamWriter(Path.GetDirectoryName(mPath)
                 + "\\" + Path.GetFileNameWithoutExtension(mPath) + "_sample.csv");
             int no = 0;
@@ -741,26 +736,61 @@ namespace SF2 {
         public List<Inst> InstList = new List<Inst>();
         public List<SHDR> SampleList = new List<SHDR>();
 
-        private List<PHDR> mPHDR = new List<PHDR>();
-        private List<BAG> mPBAG = new List<BAG>();
-        private List<MOD> mPMOD = new List<MOD>();
-        private List<GEN> mPGEN = new List<GEN>();
-        private List<INST> mINST = new List<INST>();
-        private List<BAG> mIBAG = new List<BAG>();
-        private List<MOD> mIMOD = new List<MOD>();
-        private List<GEN> mIGEN = new List<GEN>();
+        List<PHDR> mPHDR = new List<PHDR>();
+        List<BAG> mPBAG = new List<BAG>();
+        List<MOD> mPMOD = new List<MOD>();
+        List<GEN> mPGEN = new List<GEN>();
+        List<INST> mINST = new List<INST>();
+        List<BAG> mIBAG = new List<BAG>();
+        List<MOD> mIMOD = new List<MOD>();
+        List<GEN> mIGEN = new List<GEN>();
 
-        protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
-            id = "";
+        protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
+            id = "pdta";
+            chunks.Add(new Chunk("phdr", (i) => {
+            }, (i) => {
+                i.Read(mPHDR);
+            }));
+            chunks.Add(new Chunk("pbag", (i) => {
+            }, (i) => {
+                i.Read(mPBAG);
+            }));
+            chunks.Add(new Chunk("pmod", (i) => {
+            }, (i) => {
+                i.Read(mPMOD);
+            }));
+            chunks.Add(new Chunk("pgen", (i) => {
+            }, (i) => {
+                i.Read(mPGEN);
+            }));
+            chunks.Add(new Chunk("inst", (i) => {
+            }, (i) => {
+                i.Read(mINST);
+            }));
+            chunks.Add(new Chunk("ibag", (i) => {
+            }, (i) => {
+                i.Read(mIBAG);
+            }));
+            chunks.Add(new Chunk("imod", (i) => {
+            }, (i) => {
+                i.Read(mIMOD);
+            }));
+            chunks.Add(new Chunk("igen", (i) => {
+            }, (i) => {
+                i.Read(mIGEN);
+            }));
+            chunks.Add(new Chunk("shdr", (i) => {
+            }, (i) => {
+                i.Read(SampleList);
+            }));
         }
 
-        public PDTA(IntPtr ptr, long size) {
-            Load(ptr, size);
+        public PDTA(IntPtr ptr, long size) : base(ptr, size) {
             SetPresetList();
             SetInstList();
         }
 
-        private void SetPresetList() {
+        void SetPresetList() {
             for (int i = 0; i < mPHDR.Count; i++) {
                 var phdr = mPHDR[i];
                 int bagCount;
@@ -844,7 +874,7 @@ namespace SF2 {
             mPMOD.Clear();
         }
 
-        private void SetInstList() {
+        void SetInstList() {
             for (int i = 0; i < mINST.Count; i++) {
                 var inst = mINST[i];
                 int bagCount;
@@ -954,80 +984,19 @@ namespace SF2 {
             mIGEN.Clear();
             mIMOD.Clear();
         }
-
-        protected override void LoadChunk(IntPtr ptr, string type, long size) {
-            switch (type) {
-            case "phdr":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<PHDR>()) {
-                    mPHDR.Add(Marshal.PtrToStructure<PHDR>(ptr + pos));
-                }
-                break;
-            case "pbag":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<BAG>()) {
-                    mPBAG.Add(Marshal.PtrToStructure<BAG>(ptr + pos));
-                }
-                break;
-            case "pmod":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<MOD>()) {
-                    mPMOD.Add(Marshal.PtrToStructure<MOD>(ptr + pos));
-                }
-                break;
-            case "pgen":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<GEN>()) {
-                    mPGEN.Add(Marshal.PtrToStructure<GEN>(ptr + pos));
-                }
-                break;
-            case "inst":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<INST>()) {
-                    mINST.Add(Marshal.PtrToStructure<INST>(ptr + pos));
-                }
-                break;
-            case "ibag":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<BAG>()) {
-                    mIBAG.Add(Marshal.PtrToStructure<BAG>(ptr + pos));
-                }
-                break;
-            case "imod":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<MOD>()) {
-                    mIMOD.Add(Marshal.PtrToStructure<MOD>(ptr + pos));
-                }
-                break;
-            case "igen":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<GEN>()) {
-                    mIGEN.Add(Marshal.PtrToStructure<GEN>(ptr + pos));
-                }
-                break;
-            case "shdr":
-                for (int pos = 0; pos < size; pos += Marshal.SizeOf<SHDR>()) {
-                    SampleList.Add(Marshal.PtrToStructure<SHDR>(ptr + pos));
-                }
-                break;
-            default:
-                break;
-            }
-        }
     }
 
     public class SDTA : Riff {
-        public byte[] Data { get; private set; }
+        public byte[] Data;
 
-        protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
-            id = "";
+        protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
+            id = "sdta";
+            chunks.Add(new Chunk("smpl", (i) => {
+            }, (i) => {
+                i.Read(out Data);
+            }));
         }
 
-        public SDTA(IntPtr ptr, long size) {
-            Load(ptr, size);
-        }
-
-        protected override void LoadChunk(IntPtr ptr, string type, long size) {
-            switch (type) {
-            case "smpl":
-                Data = new byte[size];
-                Marshal.Copy(ptr, Data, 0, (int)size);
-                break;
-            default:
-                break;
-            }
-        }
-    }
+        public SDTA(IntPtr ptr, long size) : base(ptr, size) { }
+	}
 }

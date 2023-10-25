@@ -29,7 +29,7 @@ namespace DLS {
 
 		public SortedList<RGN.HEADER, RGN> List = new SortedList<RGN.HEADER, RGN>(new Sort());
 
-		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+		protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "lrgn";
 			riffs.Add(new LIST("rgn ", (i) => {
 				foreach (var rgn in List.Values) {
@@ -43,9 +43,7 @@ namespace DLS {
 
 		public LRGN() { }
 
-		public LRGN(IntPtr ptr, long size) {
-			Load(ptr, size);
-		}
+		public LRGN(IntPtr ptr, long size) : base(ptr, size) { }
 
 		public IList<RGN> Array {
 			get { return List.Values; }
@@ -155,7 +153,7 @@ namespace DLS {
 		public List<WaveLoop> Loops = new List<WaveLoop>();
 		public LART Articulations = new LART();
 
-		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+		protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "rgn ";
 			chunks.Add(new Chunk("rgnh", (i) => {
 				i.Write(Header);
@@ -194,8 +192,6 @@ namespace DLS {
 			Header.VelHi = 127;
 		}
 
-		public RGN(IntPtr ptr, long size) {
-			Load(ptr, size);
-		}
+		public RGN(IntPtr ptr, long size) : base(ptr, size) { }
 	}
 }

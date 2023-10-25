@@ -5,7 +5,7 @@ namespace DLS {
 	public class LART : Riff {
 		public List<Connection> List = new List<Connection>();
 
-		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+		protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "lart";
 			chunks.Add(new Chunk("art1", (i) => {
 				if (0 == List.Count) {
@@ -22,9 +22,7 @@ namespace DLS {
 
 		public LART() { }
 
-		public LART(IntPtr ptr, long size) {
-			Load(ptr, size);
-		}
+		public LART(IntPtr ptr, long size) : base(ptr, size) { }
 
 		public void Add(Connection conn) {
 			if (List.Contains(conn)) {

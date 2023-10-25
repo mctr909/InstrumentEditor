@@ -155,35 +155,12 @@ public abstract class Riff {
     }
 
     public Riff() {
-        string id;
-        var chunks = new List<Chunk>();
-        var lists = new List<LIST>();
-        Init(out id, chunks, lists);
-        Id = id;
-        foreach (var chunk in chunks) {
-            mChunks.Add(chunk.Id, chunk);
-        }
-        foreach (var list in lists) {
-            mLists.Add(list.Id, list);
-        }
+        Init();
     }
 
-    public void Save(string path) {
-        var fs = new FileStream(path, FileMode.Create);
-        var bw = new BinaryWriter(fs);
-        _Write(bw, "RIFF");
-        fs.Close();
-        fs.Dispose();
-    }
-
-    public void Write(BinaryWriter bw) {
-        _Write(bw, "LIST");
-    }
-
-    protected abstract void Init(out string id, List<Chunk> chunks, List<LIST> riffs);
-
-    protected void MainLoop(string filePath) {
-        using (var fs = new FileStream(filePath, FileMode.Open))
+    public Riff(string path) {
+        Init();
+        using (var fs = new FileStream(path, FileMode.Open))
         using (var br = new BinaryReader(fs)) {
             var size = (int)fs.Length;
             var pBuff = Marshal.AllocHGlobal(size);
@@ -205,7 +182,40 @@ public abstract class Riff {
         }
     }
 
-    protected void Load(IntPtr ptr, long size) {
+    public Riff(IntPtr ptr, long size) {
+        Init();
+        Load(ptr, size);
+    }
+
+    public void Save(string path) {
+        var fs = new FileStream(path, FileMode.Create);
+        var bw = new BinaryWriter(fs);
+        Write(bw, "RIFF");
+        fs.Close();
+        fs.Dispose();
+    }
+
+    public void Write(BinaryWriter bw) {
+        Write(bw, "LIST");
+    }
+
+    protected abstract void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs);
+
+    void Init() {
+        string id;
+        var chunks = new List<Chunk>();
+        var lists = new List<LIST>();
+        Initialize(out id, chunks, lists);
+        Id = id;
+        foreach (var chunk in chunks) {
+            mChunks.Add(chunk.Id, chunk);
+        }
+        foreach (var list in lists) {
+            mLists.Add(list.Id, list);
+        }
+    }
+
+    void Load(IntPtr ptr, long size) {
         long pos = 0;
         while (pos < size) {
             var chunkId = Marshal.PtrToStringAnsi(ptr, 4);
@@ -217,32 +227,27 @@ public abstract class Riff {
                 ptr += 4;
                 chunkSize -= 4;
                 if ("INFO" == chunkId) {
-                    _LoopInfo(ptr, chunkSize);
+                    LoadInfo(ptr, chunkSize);
                 } else {
-                    _LoadChunk(ptr, chunkId, chunkSize);
+                    LoadChunk(ptr, chunkId, chunkSize);
                 }
             } else {
-                _LoadChunk(ptr, chunkId, chunkSize);
+                LoadChunk(ptr, chunkId, chunkSize);
             }
             ptr += chunkSize;
         }
     }
 
-    protected virtual void LoadChunk(IntPtr ptr, string type, long size) { }
-
-    protected virtual void LoadInfo(IntPtr ptr, string type, string value) { }
-
-    void _LoadChunk(IntPtr ptr, string type, long size) {
+    void LoadChunk(IntPtr ptr, string type, long size) {
         if (mChunks.ContainsKey(type)) {
             mChunks[type].Load(ptr, size);
-        } else if (mLists.ContainsKey(type)) {
+        }
+        if (mLists.ContainsKey(type)) {
             mLists[type].Load(ptr, size);
-        } else {
-            LoadChunk(ptr, type, size);
         }
     }
 
-    void _LoopInfo(IntPtr ptr, long size) {
+    void LoadInfo(IntPtr ptr, long size) {
         long pos = 0;
         while (pos < size) {
             var infoType = Marshal.PtrToStringAnsi(ptr, 4);
@@ -255,14 +260,12 @@ public abstract class Riff {
 
             var arr = new byte[infoSize];
             Marshal.Copy(ptr, arr, 0, infoSize);
-            var text = Enc.GetString(arr).Replace("\0", "");
-
-            LoadInfo(ptr, infoType, text);
+            Info[infoType] = Enc.GetString(arr).Replace("\0", "");
             ptr += infoSize;
         }
     }
 
-    void _Write(BinaryWriter bw, string type) {
+    void Write(BinaryWriter bw, string type) {
         var msCh = new MemoryStream();
         var bwCh = new BinaryWriter(msCh);
         bwCh.Write(type.ToCharArray());

@@ -9,7 +9,7 @@ namespace DLS {
 
 		public int Count { get { return mList.Count; } }
 
-		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+		protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "wvpl";
 			riffs.Add(new LIST("wave", (i) => {
 				foreach (var wave in mList) {
@@ -38,9 +38,7 @@ namespace DLS {
 
 		public WVPL() { }
 
-		public WVPL(IntPtr ptr, long size) {
-			Load(ptr, size);
-		}
+		public WVPL(IntPtr ptr, long size) : base(ptr, size) { }
 
 		public void Add(WAVE wave) {
 			mList.Add(wave);
@@ -71,7 +69,7 @@ namespace DLS {
 		public WSMP Sampler;
 		public List<WaveLoop> Loops = new List<WaveLoop>();
 
-		protected override void Init(out string id, List<Chunk> chunks, List<LIST> riffs) {
+		protected override void Initialize(out string id, List<Chunk> chunks, List<LIST> riffs) {
 			id = "wave";
 			chunks.Add(new Chunk("fmt ", (i) => {
 				i.Write(Format);
@@ -96,13 +94,9 @@ namespace DLS {
 
 		public WAVE() { }
 
-		public WAVE(IntPtr ptr, long size) {
-			Load(ptr, size);
-		}
+		public WAVE(string filePath) : base(filePath) { }
 
-		public WAVE(string filePath) {
-			MainLoop(filePath);
-		}
+		public WAVE(IntPtr ptr, long size) : base(ptr, size) { }
 
 		public void ToFile(string filePath) {
 			var fs = new FileStream(filePath, FileMode.Create);
@@ -220,10 +214,6 @@ namespace DLS {
 			Format.Bits = 16;
 			Format.BlockAlign = (ushort)(Format.Bits * Format.Channels >> 3);
 			Format.BytesPerSec = Format.BlockAlign * Format.SampleRate;
-		}
-
-		protected override void LoadInfo(IntPtr ptr, string type, string value) {
-			Info[type] = value;
 		}
 	}
 }
