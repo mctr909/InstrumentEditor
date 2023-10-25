@@ -156,9 +156,9 @@
 			// grbMain
 			// 
 			this.grbMain.BackColor = System.Drawing.SystemColors.ControlLight;
+			this.grbMain.Controls.Add(this.picSpectrum);
 			this.grbMain.Controls.Add(this.numWaveAmp);
 			this.grbMain.Controls.Add(this.btnLoopCreate);
-			this.grbMain.Controls.Add(this.picSpectrum);
 			this.grbMain.Controls.Add(this.picWave);
 			this.grbMain.Controls.Add(this.numWaveScale);
 			this.grbMain.Controls.Add(this.hsbTime);
@@ -200,10 +200,11 @@
 			// btnLoopCreate
 			// 
 			this.btnLoopCreate.BackColor = System.Drawing.SystemColors.Control;
-			this.btnLoopCreate.Location = new System.Drawing.Point(350, 0);
+			this.btnLoopCreate.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.btnLoopCreate.Location = new System.Drawing.Point(361, 0);
 			this.btnLoopCreate.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.btnLoopCreate.Name = "btnLoopCreate";
-			this.btnLoopCreate.Size = new System.Drawing.Size(74, 21);
+			this.btnLoopCreate.Size = new System.Drawing.Size(93, 24);
 			this.btnLoopCreate.TabIndex = 2;
 			this.btnLoopCreate.Text = "ループ作成";
 			this.btnLoopCreate.UseVisualStyleBackColor = true;
@@ -213,10 +214,11 @@
 			// 
 			this.btnUpdate.BackColor = System.Drawing.SystemColors.Control;
 			this.btnUpdate.Enabled = false;
-			this.btnUpdate.Location = new System.Drawing.Point(256, 0);
+			this.btnUpdate.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+			this.btnUpdate.Location = new System.Drawing.Point(242, 0);
 			this.btnUpdate.Margin = new System.Windows.Forms.Padding(1, 2, 1, 2);
 			this.btnUpdate.Name = "btnUpdate";
-			this.btnUpdate.Size = new System.Drawing.Size(92, 21);
+			this.btnUpdate.Size = new System.Drawing.Size(117, 24);
 			this.btnUpdate.TabIndex = 1;
 			this.btnUpdate.Text = "ループ範囲反映";
 			this.btnUpdate.UseVisualStyleBackColor = true;
